@@ -1,0 +1,18 @@
+@if (label()) {
+  <label class="dm-form-field__label" [attr.for]="controlId()">
+    {{ label() }}
+    @if (required()) {
+      <span class="dm-form-field__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div class="dm-form-field__control">
+  <ng-content />
+</div>
+
+@if (error()) {
+  <p class="dm-form-field__error" [id]="errorId" role="alert">{{ error() }}</p>
+} @else if (hint()) {
+  <p class="dm-form-field__hint" [id]="hintId">{{ hint() }}</p>
+}

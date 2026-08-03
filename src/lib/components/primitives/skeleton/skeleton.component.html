@@ -1,0 +1,10 @@
+@for (item of items(); track $index) {
+  <span
+    class="dm-skeleton__item"
+    [attr.data-variant]="variant()"
+    [attr.data-animation]="animation()"
+    [attr.data-rounded]="rounded()"
+    [style.width]="cssWidth()"
+    [style.height]="cssHeight()"
+  ></span>
+}

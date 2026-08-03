@@ -1,0 +1,18 @@
+<button
+  type="button"
+  role="switch"
+  class="dm-switch__control"
+  [id]="buttonId()"
+  [attr.data-size]="size()"
+  [attr.aria-checked]="checked()"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-labelledby]="ariaLabel() ? null : labelId"
+  [disabled]="isDisabled()"
+  (click)="toggle()"
+>
+  <span class="dm-switch__thumb" aria-hidden="true"></span>
+</button>
+
+<label class="dm-switch__label" [id]="labelId" [attr.for]="buttonId()">
+  <ng-content />
+</label>

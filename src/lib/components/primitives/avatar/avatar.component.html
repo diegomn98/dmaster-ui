@@ -1,0 +1,19 @@
+@if (showImage()) {
+  <img class="dm-avatar__img" [src]="src()" [alt]="alt()" (error)="failed.set(true)" />
+} @else if (initials()) {
+  <span class="dm-avatar__initials" aria-hidden="true">{{ initials() }}</span>
+} @else {
+  <svg
+    class="dm-avatar__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+  </svg>
+}

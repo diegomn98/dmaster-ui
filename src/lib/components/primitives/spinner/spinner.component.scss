@@ -1,0 +1,45 @@
+@use 'mixins';
+
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  animation: dm-spinner-rotate 0.8s linear infinite;
+}
+
+// Track más ligero: sugiere la órbita sin competir con el arco.
+.dm-spinner__track {
+  stroke: currentcolor;
+  opacity: 0.15;
+}
+
+.dm-spinner__arc {
+  stroke: currentcolor;
+  stroke-linecap: round;
+
+  // Arco de ~240° sobre una circunferencia de 2π·10 ≈ 62.8: el hueco de 120°
+  // marca el ritmo del giro con más claridad que el arco casi cerrado.
+  stroke-dasharray: 42 20.8;
+
+  // Halo del propio color a baja opacidad: presencia sobre cualquier
+  // superficie (botones, empty states) sin cambiar de tono ni de tamaño.
+  filter: drop-shadow(0 0 3px color-mix(in srgb, currentcolor 35%, transparent));
+}
+
+@keyframes dm-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Reduced motion: arco estático, el estado lo comunica el contexto (aria-busy,
+// role="status"…), no el giro.
+@include mixins.reduced-motion {
+  svg {
+    animation: none;
+  }
+}

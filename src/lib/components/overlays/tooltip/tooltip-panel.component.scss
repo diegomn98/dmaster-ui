@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  max-width: 16rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: var(--dm-radius-md);
+  background: var(--dm-tooltip-bg, var(--dm-fg));
+  color: var(--dm-tooltip-fg, var(--dm-bg));
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  letter-spacing: 0.01em;
+  line-height: var(--dm-leading-snug);
+  text-wrap: balance;
+
+  // Anillo exterior de 1px teñido con el fg del tooltip (claro sobre la
+  // píldora oscura en tema light, oscuro sobre la clara en dark), que la
+  // separa del fondo en ambos temas; después, sombra de dos capas
+  // (contacto + ambiente) y un brillo interior en el borde superior.
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--dm-tooltip-fg, var(--dm-bg)) 12%, transparent),
+    0 2px 4px rgb(0 0 0 / 14%),
+    0 8px 20px rgb(0 0 0 / 16%),
+    inset 0 1px 0 rgb(255 255 255 / 8%);
+  animation: dm-tooltip-in var(--dm-duration-fast) var(--dm-ease-out);
+}
+
+// Genérica a propósito: el CDK no expone la posición final en el DOM, así que
+// crece desde el centro — direccionalmente neutra y correcta en los flips.
+@keyframes dm-tooltip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}

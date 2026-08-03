@@ -1,0 +1,64 @@
+@use 'mixins';
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+.dm-form-field__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+// Slightly superscripted and toned toward the foreground so the asterisk
+// reads as part of the label instead of a floating alarm.
+.dm-form-field__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+.dm-form-field__control {
+  display: grid;
+}
+
+.dm-form-field__hint,
+.dm-form-field__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-form-field__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-form-field__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+  animation: dm-form-field-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-form-field-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+// Redundant with the zeroed duration tokens, but explicit is safer here:
+// an entrance animation must never play for reduced-motion users.
+@include mixins.reduced-motion {
+  .dm-form-field__error {
+    animation: none;
+  }
+}

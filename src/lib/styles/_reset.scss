@@ -1,0 +1,58 @@
+// ============================================================================
+// ngx-dmaster-ui · Minimal reset
+// Deliberately small: normalizes the pieces components rely on without
+// fighting the host app's own styles.
+// ============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-base);
+  line-height: var(--dm-leading-normal);
+  color: var(--dm-fg);
+  background-color: var(--dm-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  overflow-wrap: break-word;
+}

@@ -1,0 +1,135 @@
+// ============================================================================
+// ngx-dmaster-ui · Design tokens (theme-independent)
+// Emits `:root` custom properties: typography, spacing, radii, motion,
+// z-index, breakpoints and density scales. Colors live in _themes.scss.
+// ============================================================================
+@use 'sass:map';
+@use 'mixins';
+
+:root {
+  // --------------------------------------------------------------------------
+  // Typography
+  // --------------------------------------------------------------------------
+  --dm-font-sans:
+    'Inter var', 'Inter', 'Geist Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', sans-serif;
+  --dm-font-mono:
+    'Geist Mono', 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas,
+    monospace;
+  --dm-text-xs: 0.75rem;
+  --dm-text-sm: 0.875rem;
+  --dm-text-base: 1rem;
+  --dm-text-lg: 1.125rem;
+  --dm-text-xl: 1.25rem;
+  --dm-text-2xl: 1.5rem;
+  --dm-text-3xl: 1.875rem;
+  --dm-leading-tight: 1.25;
+  --dm-leading-snug: 1.375;
+  --dm-leading-normal: 1.5;
+  --dm-leading-relaxed: 1.625;
+  --dm-font-regular: 400;
+  --dm-font-medium: 500;
+  --dm-font-semibold: 600;
+  --dm-font-bold: 700;
+
+  // Tabular numbers for data-heavy UI (tables, counters, timers).
+  --dm-numeric: 'tnum' 1, 'cv03' 1, 'cv04' 1;
+
+  // --------------------------------------------------------------------------
+  // Spacing (rem-based, 4px grid)
+  // --------------------------------------------------------------------------
+  --dm-space-0: 0;
+  --dm-space-1: 0.25rem;
+  --dm-space-2: 0.5rem;
+  --dm-space-3: 0.75rem;
+  --dm-space-4: 1rem;
+  --dm-space-5: 1.25rem;
+  --dm-space-6: 1.5rem;
+  --dm-space-8: 2rem;
+  --dm-space-10: 2.5rem;
+  --dm-space-12: 3rem;
+  --dm-space-16: 4rem;
+
+  // --------------------------------------------------------------------------
+  // Radii
+  // --------------------------------------------------------------------------
+  --dm-radius-sm: 0.375rem; // 6px
+  --dm-radius-md: 0.5rem; // 8px
+  --dm-radius-lg: 0.625rem; // 10px
+  --dm-radius-xl: 0.75rem; // 12px
+  --dm-radius-full: 9999px;
+
+  // --------------------------------------------------------------------------
+  // Motion
+  // --------------------------------------------------------------------------
+  --dm-duration-fast: 150ms;
+  --dm-duration-base: 200ms;
+  --dm-duration-slow: 300ms;
+  --dm-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dm-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dm-ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+
+  // --------------------------------------------------------------------------
+  // Z-index scale
+  // --------------------------------------------------------------------------
+  --dm-z-dropdown: 1000;
+  --dm-z-sticky: 1020;
+  --dm-z-overlay: 1030;
+  --dm-z-modal: 1040;
+  --dm-z-popover: 1050;
+  --dm-z-toast: 1060;
+
+  // --------------------------------------------------------------------------
+  // Breakpoints (informative mirror of the SCSS map, for JS consumers;
+  // media queries must use the `respond-to()` mixin).
+  // --------------------------------------------------------------------------
+  @each $name, $value in mixins.$breakpoints {
+    --dm-breakpoint-#{$name}: #{$value};
+  }
+
+  // --------------------------------------------------------------------------
+  // Density · comfortable (default)
+  // --------------------------------------------------------------------------
+  --dm-control-height-sm: 2rem;
+  --dm-control-height: 2.25rem;
+  --dm-control-height-lg: 2.75rem;
+  --dm-control-padding-x: 0.75rem;
+  --dm-content-gap: 1rem;
+}
+
+// Density variants, driven by the `data-dm-density` attribute that
+// `provideDmasterUI` / DensityService stamp on <html>.
+[data-dm-density='compact'] {
+  --dm-control-height-sm: 1.75rem;
+  --dm-control-height: 2rem;
+  --dm-control-height-lg: 2.5rem;
+  --dm-control-padding-x: 0.625rem;
+  --dm-content-gap: 0.75rem;
+}
+
+[data-dm-density='spacious'] {
+  --dm-control-height-sm: 2.25rem;
+  --dm-control-height: 2.5rem;
+  --dm-control-height-lg: 3rem;
+  --dm-control-padding-x: 1rem;
+  --dm-content-gap: 1.25rem;
+}
+
+// On touch devices, never let density shrink targets below 44px.
+@media (pointer: coarse) {
+  :root,
+  [data-dm-density='compact'] {
+    --dm-control-height: 2.75rem;
+    --dm-control-height-lg: 2.75rem;
+  }
+}
+
+// Reduced motion: zeroing the duration tokens makes every component that
+// honors them instant, without per-component overrides.
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dm-duration-fast: 0.01ms;
+    --dm-duration-base: 0.01ms;
+    --dm-duration-slow: 0.01ms;
+  }
+}

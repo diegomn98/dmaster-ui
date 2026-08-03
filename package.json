@@ -1,0 +1,26 @@
+{
+  "name": "ngx-dmaster-ui",
+  "version": "0.1.0",
+  "description": "Modern, premium Angular UI components. Standalone, signals-based, themeable via CSS variables.",
+  "license": "MIT",
+  "author": "Diego Maestro",
+  "keywords": [
+    "angular",
+    "components",
+    "ui",
+    "standalone",
+    "signals",
+    "dark-mode",
+    "design-system"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/cdk": "^20.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

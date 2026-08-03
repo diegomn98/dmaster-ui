@@ -1,0 +1,21 @@
+// ============================================================================
+// ngx-dmaster-ui · Global stylesheet entry
+//
+// Consumers import this ONCE in their global styles:
+//
+//   // styles.scss (with `stylePreprocessorOptions.includePaths` configured)
+//   @use 'index';
+//
+//   // or from the published package:
+//   @use 'ngx-dmaster-ui/styles/index';
+//
+// Emits: reset + design tokens + light/dark themes.
+// Component styles never import this file — they only use 'mixins'.
+// ============================================================================
+
+@forward 'mixins';
+@use 'reset';
+@use 'tokens';
+@use 'themes';
+@use 'forms';
+@use 'overlays';

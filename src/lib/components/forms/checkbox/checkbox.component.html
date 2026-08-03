@@ -1,0 +1,47 @@
+<label
+  class="dm-checkbox"
+  [class.dm-checkbox--checked]="checked()"
+  [class.dm-checkbox--indeterminate]="showIndeterminate()"
+  [class.dm-checkbox--disabled]="isDisabled()"
+>
+  <input
+    type="checkbox"
+    class="dm-checkbox__input"
+    [id]="inputId() || null"
+    [checked]="checked()"
+    [disabled]="isDisabled()"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-checked]="showIndeterminate() ? 'mixed' : null"
+    (change)="onNativeChange($event)"
+    (blur)="markTouched()"
+  />
+
+  <span class="dm-checkbox__box" aria-hidden="true">
+    @if (showIndeterminate()) {
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+      >
+        <path d="M6 12h12" />
+      </svg>
+    } @else {
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
+    }
+  </span>
+
+  <span class="dm-checkbox__label">
+    <ng-content />
+  </span>
+</label>

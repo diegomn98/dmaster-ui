@@ -1,0 +1,164 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+// Ring sutil del mismo tono en las subtle; sheen + sombra de contacto en las
+// solid; velo casi imperceptible del propio tono en las outline.
+:host([data-appearance='subtle']) {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentcolor 14%, transparent);
+}
+
+:host([data-appearance='solid']) {
+  box-shadow:
+    var(--dm-sheen),
+    0 1px 1px rgb(0 0 0 / 6%);
+}
+
+:host([data-appearance='outline']) {
+  background: color-mix(in srgb, currentcolor 5%, transparent);
+}
+
+:host([data-size='md']) {
+  padding: 0.1875rem 0.5625rem;
+  font-size: var(--dm-text-xs);
+}
+
+// Cuanto más pequeño el cuerpo, más tracking necesita para respirar.
+:host([data-size='sm']) {
+  padding: 0.0625rem 0.4375rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+}
+
+:host([data-pill]) {
+  border-radius: var(--dm-radius-full);
+}
+
+// Las pills piden algo más de aire horizontal para compensar la curva.
+:host([data-pill][data-size='md']) {
+  padding-inline: 0.625rem;
+}
+
+:host([data-pill][data-size='sm']) {
+  padding-inline: 0.5rem;
+}
+
+.dm-badge__dot {
+  flex-shrink: 0;
+  width: 0.375em;
+  height: 0.375em;
+  border-radius: var(--dm-radius-full);
+  background: currentcolor;
+
+  // Glow del mismo tono: el punto se lee como una señal de estado "viva".
+  box-shadow: 0 0 6px color-mix(in srgb, currentcolor 65%, transparent);
+}
+
+// ---- neutral ---------------------------------------------------------------
+:host([data-variant='neutral'][data-appearance='subtle']) {
+  background: var(--dm-bg-muted);
+  color: var(--dm-fg-muted);
+}
+
+:host([data-variant='neutral'][data-appearance='solid']) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dm-fg) 88%, white 12%),
+    var(--dm-fg)
+  );
+  color: var(--dm-bg);
+}
+
+:host([data-variant='neutral'][data-appearance='outline']) {
+  border-color: var(--dm-border-strong);
+  color: var(--dm-fg-muted);
+}
+
+// ---- primary ---------------------------------------------------------------
+:host([data-variant='primary'][data-appearance='subtle']) {
+  background: var(--dm-primary-subtle);
+  color: var(--dm-primary);
+}
+
+:host([data-variant='primary'][data-appearance='solid']) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dm-primary) 86%, white 14%),
+    var(--dm-primary)
+  );
+  color: var(--dm-primary-fg);
+}
+
+:host([data-variant='primary'][data-appearance='outline']) {
+  border-color: color-mix(in srgb, var(--dm-primary) 40%, transparent);
+  color: var(--dm-primary);
+}
+
+// ---- success ---------------------------------------------------------------
+:host([data-variant='success'][data-appearance='subtle']) {
+  background: var(--dm-success-subtle);
+  color: var(--dm-success);
+}
+
+:host([data-variant='success'][data-appearance='solid']) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dm-success) 86%, white 14%),
+    var(--dm-success)
+  );
+  color: var(--dm-primary-fg);
+}
+
+:host([data-variant='success'][data-appearance='outline']) {
+  border-color: color-mix(in srgb, var(--dm-success) 40%, transparent);
+  color: var(--dm-success);
+}
+
+// ---- warning ---------------------------------------------------------------
+:host([data-variant='warning'][data-appearance='subtle']) {
+  background: var(--dm-warning-subtle);
+  color: var(--dm-warning);
+}
+
+:host([data-variant='warning'][data-appearance='solid']) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dm-warning) 86%, white 14%),
+    var(--dm-warning)
+  );
+  color: var(--dm-primary-fg);
+}
+
+:host([data-variant='warning'][data-appearance='outline']) {
+  border-color: color-mix(in srgb, var(--dm-warning) 40%, transparent);
+  color: var(--dm-warning);
+}
+
+// ---- danger ----------------------------------------------------------------
+:host([data-variant='danger'][data-appearance='subtle']) {
+  background: var(--dm-danger-subtle);
+  color: var(--dm-danger);
+}
+
+:host([data-variant='danger'][data-appearance='solid']) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dm-danger) 86%, white 14%),
+    var(--dm-danger)
+  );
+  color: var(--dm-primary-fg);
+}
+
+:host([data-variant='danger'][data-appearance='outline']) {
+  border-color: color-mix(in srgb, var(--dm-danger) 40%, transparent);
+  color: var(--dm-danger);
+}

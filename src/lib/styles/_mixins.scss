@@ -1,0 +1,120 @@
+// ============================================================================
+// ngx-dmaster-ui · Mixins & functions
+// Pure SCSS utilities: importing this file emits NO CSS.
+// Component styles should only ever `@use 'mixins'` from here.
+// ============================================================================
+@use 'sass:map';
+
+// ----------------------------------------------------------------------------
+// Breakpoints (mobile-first). Single source of truth for media queries.
+// Mirrored as CSS custom properties in _tokens.scss for JS consumers.
+// ----------------------------------------------------------------------------
+$breakpoints: (
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px,
+);
+
+/// Mobile-first media query: styles apply from the given breakpoint upwards.
+/// @example @include respond-to(md) { ... }
+@mixin respond-to($breakpoint) {
+  @if not map.has-key($breakpoints, $breakpoint) {
+    @error 'Unknown breakpoint `#{$breakpoint}`. Expected one of: #{map.keys($breakpoints)}.';
+  }
+
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+/// Container query variant of respond-to: adapts to the container, not the
+/// viewport. The queried ancestor must declare `container-type: inline-size`.
+/// Accepts a breakpoint name or an explicit length.
+/// @example @include container-above(md) { ... }
+/// @example @include container-above(24rem) { ... }
+@mixin container-above($size) {
+  $resolved: if(map.has-key($breakpoints, $size), map.get($breakpoints, $size), $size);
+
+  @container (min-width: #{$resolved}) {
+    @content;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Motion
+// ----------------------------------------------------------------------------
+
+/// Wraps styles in a prefers-reduced-motion guard.
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Standard transition helper using the global motion tokens.
+/// @example @include transition(background-color, border-color);
+@mixin transition($properties...) {
+  transition-property: $properties;
+  transition-duration: var(--dm-duration-base);
+  transition-timing-function: var(--dm-ease-out);
+}
+
+// ----------------------------------------------------------------------------
+// Accessibility
+// ----------------------------------------------------------------------------
+
+/// Consistent focus ring. Apply under `:focus-visible`.
+@mixin focus-ring {
+  outline: 2px solid var(--dm-ring);
+  outline-offset: 2px;
+}
+
+/// Hides content visually while keeping it available to screen readers.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Guarantees the minimum 44x44px touch target on interactive elements
+/// without changing their visual size. The element MUST already be positioned
+/// (relative, absolute…): the mixin deliberately does not set `position`, so
+/// it composes with absolutely-positioned elements instead of overriding them.
+@mixin touch-target {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Text
+// ----------------------------------------------------------------------------
+
+/// Single-line ellipsis truncation.
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/// Multi-line clamp.
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+  overflow: hidden;
+}

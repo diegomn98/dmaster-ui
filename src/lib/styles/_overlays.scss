@@ -1,0 +1,82 @@
+// ============================================================================
+// ngx-dmaster-ui · Global overlay styles (dialog panel/backdrop)
+// Global on purpose: CDK overlays attach to the body-level overlay container,
+// outside any component's encapsulation scope. Emitted from index.scss.
+//
+// Consumers must also load the CDK structural styles once:
+//   "styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", ...]
+// ============================================================================
+@use 'mixins';
+
+.dm-dialog-backdrop {
+  // Radial vignette on top of the blur: slightly lighter where the panel sits,
+  // denser towards the edges, so the eye is pulled to the dialog.
+  background: radial-gradient(120% 120% at 50% 42%, rgb(0 0 0 / 38%) 0%, rgb(0 0 0 / 56%) 100%);
+  backdrop-filter: blur(3px);
+  animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
+}
+
+.dm-dialog-panel {
+  display: block;
+  max-width: calc(100vw - 2rem);
+  max-height: min(85dvh, calc(100dvh - 2rem));
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--dm-space-5);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-xl);
+  background: var(--dm-bg-elevated);
+  color: var(--dm-fg);
+
+  // Multi-layer ambient shadow + lit top edge. The highlight is invisible on
+  // pure-white light surfaces and reads as ambient light in dark mode.
+  box-shadow:
+    var(--dm-shadow-lg),
+    inset 0 1px 0 rgb(255 255 255 / 10%);
+  animation: dm-dialog-in var(--dm-duration-slow) var(--dm-ease-snappy);
+
+  // Mobile-first: tighter padding at (100vw - 2rem); roomier from `sm` up.
+  @include mixins.respond-to(sm) {
+    padding: var(--dm-space-6);
+  }
+
+  &--sm {
+    width: 22rem;
+  }
+
+  &--md {
+    width: 30rem;
+  }
+
+  &--lg {
+    width: 42rem;
+  }
+}
+
+@keyframes dm-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+// Cinematic entrance: the panel rises and settles with a barely-there
+// overshoot. Duration tokens zero out under prefers-reduced-motion.
+@keyframes dm-dialog-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(0.625rem);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  80% {
+    transform: scale(1.005) translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

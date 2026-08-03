@@ -1,0 +1,124 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance):
+//   --dm-skeleton-bg         base surface, inherits --dm-bg-muted
+//   --dm-skeleton-highlight  wave gradient highlight, theme-provided
+//   --dm-skeleton-duration   animation cycle length
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dm-space-2);
+  width: 100%;
+}
+
+.dm-skeleton__item {
+  --dm-skeleton-wave: var(--dm-skeleton-highlight, rgb(255 255 255 / 60%));
+
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: var(--dm-skeleton-bg, var(--dm-bg-muted));
+
+  // Hairline interior: define cada bloque sobre fondos casi idénticos
+  // (cards sobre --dm-bg-subtle, celdas de tabla) sin leerse como un borde.
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 4%, transparent);
+
+  // ---- Variants ------------------------------------------------------------
+  &[data-variant='text'] {
+    height: 1em;
+    border-radius: var(--dm-radius-sm);
+
+    // Multi-line text blocks read more natural with a shorter last line.
+    &:last-child:not(:first-child) {
+      width: 80%;
+    }
+  }
+
+  &[data-variant='rectangular'] {
+    height: 6rem;
+    border-radius: 0;
+  }
+
+  &[data-variant='rounded'] {
+    height: 6rem;
+
+    &[data-rounded='sm'] {
+      border-radius: var(--dm-radius-sm);
+    }
+
+    &[data-rounded='md'] {
+      border-radius: var(--dm-radius-md);
+    }
+
+    &[data-rounded='lg'] {
+      border-radius: var(--dm-radius-lg);
+    }
+
+    &[data-rounded='full'] {
+      border-radius: var(--dm-radius-full);
+    }
+  }
+
+  &[data-variant='circular'] {
+    width: 2.5rem;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: var(--dm-radius-full);
+  }
+
+  // ---- Animations ----------------------------------------------------------
+  &[data-animation='pulse'] {
+    animation: dm-skeleton-pulse var(--dm-skeleton-duration, 1.6s) var(--dm-ease-in-out) infinite;
+  }
+
+  // Banda inclinada y estrecha con caída suave a ambos lados: el brillo
+  // recorre el bloque como una luz, no como una cortina plana.
+  &[data-animation='wave']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      color-mix(in srgb, var(--dm-skeleton-wave) 55%, transparent) 44%,
+      var(--dm-skeleton-wave) 50%,
+      color-mix(in srgb, var(--dm-skeleton-wave) 55%, transparent) 56%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: dm-skeleton-wave var(--dm-skeleton-duration, 1.6s) var(--dm-ease-in-out) infinite;
+  }
+}
+
+// Respiración asimétrica: exhala despacio hasta el valle (55%) y se recupera
+// algo más rápido — menos "parpadeo", más organico que el 50/50 simétrico.
+@keyframes dm-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  55% {
+    opacity: 0.62;
+  }
+}
+
+@keyframes dm-skeleton-wave {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Static placeholder when the user prefers reduced motion.
+@include mixins.reduced-motion {
+  .dm-skeleton__item {
+    animation: none;
+
+    &::after {
+      content: none;
+      animation: none;
+    }
+  }
+}

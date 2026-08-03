@@ -1,0 +1,124 @@
+@use 'mixins';
+
+:host {
+  display: block;
+}
+
+.dm-toasts {
+  display: grid;
+  gap: var(--dm-space-3);
+  width: min(22rem, calc(100vw - 2rem));
+}
+
+.dm-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dm-space-3);
+  padding: var(--dm-space-3) var(--dm-space-4);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-lg);
+
+  // Glass: superficie translúcida con blur sobre el contenido de detrás.
+  // saturate() enriquece los colores que atraviesan el cristal en vez de
+  // limitarse a esmerilarlos.
+  background: color-mix(in srgb, var(--dm-bg-elevated) 82%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  color: var(--dm-fg);
+  transform-origin: 100% 50%;
+
+  // Sombra de contacto (corta y densa) + ambiente multicapa + brillo interior.
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 8%),
+    var(--dm-shadow-lg),
+    inset 0 1px 0 rgb(255 255 255 / 8%);
+  animation: dm-toast-in var(--dm-duration-slow) var(--dm-ease-out);
+
+  &[data-variant='success'] .dm-toast__icon {
+    background: var(--dm-success-subtle);
+    color: var(--dm-success);
+  }
+
+  &[data-variant='warning'] .dm-toast__icon {
+    background: var(--dm-warning-subtle);
+    color: var(--dm-warning);
+  }
+
+  &[data-variant='danger'] .dm-toast__icon {
+    background: var(--dm-danger-subtle);
+    color: var(--dm-danger);
+  }
+
+  &[data-variant='neutral'] .dm-toast__icon {
+    background: var(--dm-bg-muted);
+    color: var(--dm-fg-muted);
+  }
+}
+
+.dm-toast__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--dm-radius-full);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.dm-toast__message {
+  flex: 1;
+  min-width: 0;
+
+  // Centra ópticamente la primera línea con el círculo del icono (1.5rem).
+  padding-block-start: calc((1.5rem - var(--dm-leading-snug) * 1em) / 2);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-snug);
+  overflow-wrap: break-word;
+}
+
+.dm-toast__dismiss {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  margin: 0 -0.25rem 0 0;
+  border: none;
+  border-radius: var(--dm-radius-sm);
+  background: transparent;
+  color: var(--dm-fg-subtle);
+  cursor: pointer;
+
+  @include mixins.transition(background-color, color);
+  @include mixins.touch-target;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  &:hover {
+    background: var(--dm-bg-muted);
+    color: var(--dm-fg);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+// Entra deslizándose desde el borde derecho mientras crece desde ese mismo
+// borde (transform-origin 100% 50%): un único gesto, no dos movimientos.
+@keyframes dm-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--dm-space-4)) scale(0.95);
+  }
+}

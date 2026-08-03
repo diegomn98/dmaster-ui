@@ -1,0 +1,37 @@
+# Toast (`DmToastService`)
+
+Notification queue. Toasts stack bottom-right, auto-dismiss (configurable) and are announced politely (`role="status"`).
+
+> Requires the CDK structural styles once per app:
+> `"styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", ...]`
+
+```ts
+private readonly toast = inject(DmToastService);
+
+this.toast.success('Changes saved');
+this.toast.danger('Something went wrong', { duration: 0 });
+this.toast.show('Heads up', { variant: 'warning', dismissible: false });
+```
+
+## API
+
+- `show(message, options?)` → `DmToastRef { id, dismiss() }`
+- `success | warning | danger(message, options?)` — variant helpers.
+- `dismiss(id)` / `dismissAll()`
+- Signal `toasts` (read-only) with the active queue.
+
+### `DmToastOptions`
+
+| Option        | Type                                              | Default     | Description                          |
+| ------------- | ------------------------------------------------- | ----------- | ------------------------------------ |
+| `variant`     | `'neutral' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic color + icon.               |
+| `duration`    | `number`                                          | `4000`      | Auto-dismiss in ms; `0` disables it. |
+| `dismissible` | `boolean`                                         | `true`      | Shows the dismiss button.            |
+
+Global defaults (including `dismissLabel`, the only built-in copy — override per app language): `provideToastDefaults({...})` / `TOAST_DEFAULTS`.
+
+## Accessibility
+
+- Each toast is `role="status"`: announced without interrupting.
+- Dismiss button with configurable `aria-label` and ≥44px touch target.
+- Entrance animation honors reduced-motion via the duration tokens.

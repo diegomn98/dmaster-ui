@@ -1,0 +1,49 @@
+<button
+  class="dm-loading-button"
+  [type]="type()"
+  [disabled]="isDisabled()"
+  [attr.data-variant]="variant()"
+  [attr.data-size]="size()"
+  [attr.data-state]="state()"
+  [attr.aria-busy]="isLoading()"
+  (click)="onClick($event)"
+>
+  <span class="dm-loading-button__label">
+    <ng-content />
+  </span>
+
+  @if (state() !== 'idle') {
+    <span class="dm-loading-button__indicator" aria-hidden="true">
+      @switch (state()) {
+        @case ('loading') {
+          <dm-spinner size="1em" [strokeWidth]="3" />
+        }
+        @case ('success') {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        }
+        @case ('error') {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        }
+      }
+    </span>
+  }
+
+  <span class="dm-loading-button__live" aria-live="polite">{{ liveMessage() }}</span>
+</button>
