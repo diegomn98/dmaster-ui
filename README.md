@@ -1,64 +1,149 @@
-# NgxDmasterUi
+# @dmaster/ui
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
+Modern, premium Angular UI component library. Standalone components built with signals, fully themeable via CSS custom properties, and inspired by the HeroUI design language.
 
-## Code scaffolding
+[![npm](https://img.shields.io/npm/v/@dmaster/ui?color=006FEE&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
+[![license](https://img.shields.io/npm/l/@dmaster/ui?style=flat-square)](https://github.com/diegomn98/dmaster-ui/blob/main/LICENSE)
+[![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=flat-square&logo=angular)](https://angular.dev)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Features
 
-```bash
-ng generate component component-name
-```
+- **Standalone** — no NgModule required, just import what you need
+- **Signals-based** — `input()`, `output()`, `model()`, `computed()` throughout; zero decorators
+- **Zoneless-ready** — works with `provideZonelessChangeDetection()`
+- **Themeable** — light / dark / custom via CSS custom properties (`--dm-*`)
+- **HeroUI design language** — flat colors, pill radii, elastic press, color × variant system
+- **Accessible** — ARIA attributes on host, `:focus-visible` focus rings, touch targets ≥ 44px
+- **Angular CDK** — overlays (tooltip, dialog, toast) built on `@angular/cdk`
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the library, run:
+## Installation
 
 ```bash
-ng build @dmaster/ui
+npm install @dmaster/ui
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-
-   ```bash
-   cd dist/@dmaster/ui
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Peer dependencies
 
 ```bash
-ng test
+npm install @angular/cdk
 ```
 
-## Running end-to-end tests
+## Setup
 
-For end-to-end (e2e) testing, run:
+### 1. Import the global styles
 
-```bash
-ng e2e
+In your `styles.scss` (or `angular.json` styles array):
+
+```scss
+@use '@dmaster/ui/styles/index';
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+For overlay components (tooltip, dialog, toast), also add the CDK prebuilt styles in `angular.json`:
 
-## Additional Resources
+```json
+"styles": [
+  "node_modules/@angular/cdk/overlay-prebuilt.css",
+  "src/styles.scss"
+]
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 2. Configure the provider (optional)
+
+```ts
+import { provideDmasterUI } from '@dmaster/ui';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideDmasterUI({ theme: 'auto', density: 'comfortable' }),
+  ],
+});
+```
+
+## Usage
+
+Import only the components you need — all are standalone:
+
+```ts
+import { DmButtonComponent, DmBadgeComponent } from '@dmaster/ui';
+
+@Component({
+  imports: [DmButtonComponent, DmBadgeComponent],
+  template: `
+    <dm-button color="primary" variant="solid">Save</dm-button>
+    <dm-badge color="success" variant="flat">Active</dm-badge>
+  `,
+})
+export class MyComponent {}
+```
+
+## Components
+
+### Primitives
+| Component | Selector | Description |
+|---|---|---|
+| Button | `dm-button` | color × variant (solid, flat, faded, bordered, light, ghost, shadow) |
+| Badge / Chip | `dm-badge` | color × variant with dot, solid, flat, bordered, light, shadow |
+| Avatar | `dm-avatar` | image with fallback initials |
+| Spinner | `dm-spinner` | animated loading indicator |
+| Skeleton | `dm-skeleton` | content placeholder with shimmer |
+
+### Forms
+| Component | Selector | Description |
+|---|---|---|
+| Switch | `dm-switch` | toggle, ControlValueAccessor |
+| Checkbox | `dm-checkbox` | checkbox, ControlValueAccessor |
+| Form Field | `dm-form-field` + `dmInput` | label + hint + error wrapper for native inputs |
+| Select | `dm-select` | combobox with CDK overlay, keyboard nav, typeahead, CVA |
+| Paginated Select | `dm-paginated-select` | async-loadable select with pagination |
+| Radio Group | `dm-radio-group` + `dm-radio` | radio group, ControlValueAccessor |
+
+### Layout
+| Component | Selector | Description |
+|---|---|---|
+| Card | `dm-card` | container with container queries |
+| Accordion | `dm-accordion` + `dm-accordion-item` | animated collapsible sections |
+
+### Navigation
+| Component | Selector | Description |
+|---|---|---|
+| Tabs | `dm-tabs` + `dm-tab` + `dm-tab-panel` | 5 variants (solid, bordered, light, underlined, segment), sliding indicator |
+
+### Overlays (require CDK)
+| Component | Selector / Service | Description |
+|---|---|---|
+| Tooltip | `dmTooltip` directive | CDK-powered tooltip with configurable placement |
+| Dialog | `DmDialogService` | CDK dialog with typed data and return value |
+| Toast | `DmToastService` | queued toast notifications with signal-based state |
+
+## Theming
+
+Set the theme via the `data-dm-theme` attribute on `<html>`:
+
+```ts
+// Auto (follows prefers-color-scheme)
+provideDmasterUI({ theme: 'auto' })
+
+// Manual
+document.documentElement.setAttribute('data-dm-theme', 'dark');
+```
+
+Override any token in your own stylesheet:
+
+```scss
+:root {
+  --dm-primary: #7c3aed;
+  --dm-radius-full: 0.5rem; // make buttons rectangular instead of pill
+}
+```
+
+## Density
+
+Three density levels via `data-dm-density`:
+
+```ts
+provideDmasterUI({ density: 'compact' }) // compact | comfortable | spacious
+```
+
+## License
+
+MIT © [Diego Maestro](https://github.com/diegomn98)
