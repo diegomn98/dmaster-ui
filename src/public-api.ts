@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ngx-dmaster-ui
+ * Public API Surface of @dmaster/ui
  */
 
 // Core: configuration, providers, services, base types, utilities
@@ -12,15 +12,25 @@ export * from './lib/components/primitives/skeleton';
 export * from './lib/components/primitives/spinner';
 
 // Components · layout
+export * from './lib/components/layout/accordion';
 export * from './lib/components/layout/card';
 
 // Components · buttons
-export * from './lib/components/buttons/loading-button';
+export * from './lib/components/buttons/button';
 
 // Components · forms
 export * from './lib/components/forms/checkbox';
 export * from './lib/components/forms/form-field';
+export * from './lib/components/forms/paginated-select';
+export * from './lib/components/forms/radio-group';
+export * from './lib/components/forms/select';
 export * from './lib/components/forms/switch';
+
+// Components · navigation
+export * from './lib/components/navigation/tabs';
+
+// Components · data-display
+export * from './lib/components/data-display/table';
 
 // Components · overlays
 export * from './lib/components/overlays/dialog';

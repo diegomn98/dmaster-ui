@@ -1,0 +1,322 @@
+<div
+  class="dm-table"
+  [attr.data-density]="density()"
+  [attr.data-variant]="variant()"
+  [attr.data-hover]="hover() ? '' : null"
+>
+  <!-- ---- Toolbar ---------------------------------------------------------- -->
+  @if (searchable() || selectedCount() > 0) {
+    <div class="dm-table__toolbar">
+      <div class="dm-table__toolbar-start">
+        @if (searchable()) {
+          <div class="dm-table__search" [class.dm-table__search--filled]="searchTerm().length > 0">
+            <svg
+              class="dm-table__search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3-3" />
+            </svg>
+            <input
+              #search
+              type="search"
+              class="dm-table__search-input"
+              [value]="searchTerm()"
+              [placeholder]="searchPlaceholder()"
+              [attr.aria-label]="searchPlaceholder()"
+              (input)="onSearchInput(search.value)"
+            />
+            @if (searchTerm().length > 0) {
+              <button
+                type="button"
+                class="dm-table__search-clear"
+                [attr.aria-label]="clearSelectionLabel()"
+                (click)="clearSearch()"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+            }
+          </div>
+        }
+
+        @if (selectedCount() > 0) {
+          <div class="dm-table__selection" role="status">
+            <span class="dm-table__selection-count">{{ selectedLabel()(selectedCount()) }}</span>
+            <button type="button" class="dm-table__selection-clear" (click)="clearSelection()">
+              {{ clearSelectionLabel() }}
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="dm-table__toolbar-end">
+        <ng-content select="[dmTableActions]" />
+      </div>
+    </div>
+  }
+
+  <!-- ---- Scroll container + table ---------------------------------------- -->
+  <div class="dm-table__scroll" [class.dm-table__scroll--sticky]="sticky()">
+    <table
+      class="dm-table__table"
+      [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-busy]="loading() ? 'true' : null"
+    >
+      @if (caption()) {
+        <caption class="dm-table__caption">
+          {{
+            caption()
+          }}
+        </caption>
+      }
+
+      <thead class="dm-table__head">
+        <tr>
+          @if (hasSelection()) {
+            <th scope="col" class="dm-table__th dm-table__th--select">
+              @if (showSelectAll()) {
+                <dm-checkbox
+                  [checked]="allSelected()"
+                  [indeterminate]="someSelected()"
+                  [ariaLabel]="selectAllLabel()"
+                  (checkedChange)="toggleAll()"
+                />
+              }
+            </th>
+          }
+          @for (col of visibleColumns(); track col.key) {
+            <th
+              scope="col"
+              class="dm-table__th"
+              [attr.data-align]="col.align || 'start'"
+              [attr.data-sortable]="col.sortable ? '' : null"
+              [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+              [attr.aria-sort]="ariaSortFor(col)"
+              [style.width]="col.width || null"
+            >
+              @if (col.sortable) {
+                <button
+                  type="button"
+                  class="dm-table__sort-btn"
+                  [attr.data-sort]="sortDataAttr(col)"
+                  (click)="onSort(col)"
+                >
+                  <span class="dm-table__sort-label">{{ col.header }}</span>
+                  <svg
+                    class="dm-table__sort-icon"
+                    viewBox="0 0 8 12"
+                    width="8"
+                    height="12"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      class="dm-table__sort-arrow dm-table__sort-arrow--up"
+                      d="M4 0 L8 4 L0 4 Z"
+                    />
+                    <path
+                      class="dm-table__sort-arrow dm-table__sort-arrow--down"
+                      d="M4 12 L0 8 L8 8 Z"
+                    />
+                  </svg>
+                </button>
+              } @else {
+                <span class="dm-table__label">{{ col.header }}</span>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody class="dm-table__body">
+        @if (loading()) {
+          @for (r of skeletonRows(); track r) {
+            <tr class="dm-table__tr dm-table__tr--skeleton">
+              @if (hasSelection()) {
+                <td class="dm-table__td dm-table__td--select">
+                  <dm-skeleton variant="rounded" rounded="sm" [width]="16" [height]="16" />
+                </td>
+              }
+              @for (col of visibleColumns(); track col.key) {
+                <td class="dm-table__td">
+                  <dm-skeleton height="0.75rem" [width]="col.align === 'end' ? '40%' : '70%'" />
+                </td>
+              }
+            </tr>
+          }
+        } @else if (isEmpty()) {
+          <tr>
+            <td [attr.colspan]="colspan()" class="dm-table__empty-cell">
+              <div class="dm-table__empty">
+                <svg
+                  class="dm-table__empty-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  @if (isFilteredEmpty()) {
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-3-3" />
+                  } @else {
+                    <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
+                  }
+                </svg>
+                <p class="dm-table__empty-text">
+                  {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
+                </p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (row of pagedRows(); track trackFn(row, $index); let idx = $index) {
+            <tr
+              class="dm-table__tr"
+              [attr.data-selected]="isSelected(row, idx) ? '' : null"
+              [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
+              (click)="onRowClick(row, idx)"
+            >
+              @if (hasSelection()) {
+                <td class="dm-table__td dm-table__td--select" (click)="$event.stopPropagation()">
+                  <dm-checkbox
+                    [checked]="isSelected(row, idx)"
+                    [ariaLabel]="selectRowLabel()"
+                    (checkedChange)="toggleRow(row, idx)"
+                  />
+                </td>
+              }
+              @for (col of visibleColumns(); track col.key) {
+                <td
+                  class="dm-table__td"
+                  [attr.data-align]="col.align || 'start'"
+                  [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+                >
+                  {{ getCellValue(row, col) }}
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ---- Footer / pagination --------------------------------------------- -->
+  @if (showPagination()) {
+    <div class="dm-table__footer">
+      <p class="dm-table__footer-info" aria-live="polite">
+        {{ rangeLabel()(rangeStart(), rangeEnd(), totalRows()) }}
+      </p>
+
+      <div class="dm-table__footer-controls">
+        @if (pageSizeOptions().length > 0) {
+          <label class="dm-table__page-size">
+            <span class="dm-table__page-size-label">{{ rowsPerPageLabel() }}</span>
+            <span class="dm-table__page-size-field">
+              <select
+                #pageSizeSelect
+                class="dm-table__page-size-select"
+                [attr.aria-label]="rowsPerPageLabel()"
+                (change)="onPageSizeChange(pageSizeSelect.value)"
+              >
+                @for (opt of pageSizeOptions(); track opt) {
+                  <option [value]="opt" [selected]="opt === pageSize()">{{ opt }}</option>
+                }
+              </select>
+              <svg
+                class="dm-table__page-size-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </label>
+        }
+
+        <nav class="dm-table__pager" [attr.aria-label]="pageLabel()(safePage(), pageCount())">
+          <button
+            type="button"
+            class="dm-table__pager-arrow"
+            [attr.aria-label]="prevPageLabel()"
+            [disabled]="safePage() <= 1"
+            (click)="prevPage()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+
+          @for (item of pageItems(); track item.kind === 'page' ? 'p' + item.page : item.id) {
+            @if (item.kind === 'page') {
+              <button
+                type="button"
+                class="dm-table__page"
+                [class.dm-table__page--active]="item.page === safePage()"
+                [attr.aria-current]="item.page === safePage() ? 'page' : null"
+                [attr.aria-label]="'Page ' + item.page"
+                (click)="setPage(item.page)"
+              >
+                {{ item.page }}
+              </button>
+            } @else {
+              <span class="dm-table__page-gap" aria-hidden="true">…</span>
+            }
+          }
+
+          <button
+            type="button"
+            class="dm-table__pager-arrow"
+            [attr.aria-label]="nextPageLabel()"
+            [disabled]="safePage() >= pageCount()"
+            (click)="nextPage()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </div>
+  }
+</div>

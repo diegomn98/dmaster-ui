@@ -1,19 +1,19 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DmLoadingButtonComponent } from './loading-button.component';
-import { LOADING_BUTTON_DEFAULTS } from './loading-button.tokens';
+import { DmButtonComponent } from './button.component';
+import { BUTTON_DEFAULTS } from './button.tokens';
 
-describe('DmLoadingButtonComponent', () => {
-  let fixture: ComponentFixture<DmLoadingButtonComponent>;
+describe('DmButtonComponent', () => {
+  let fixture: ComponentFixture<DmButtonComponent>;
 
   function createComponent(): void {
-    fixture = TestBed.createComponent(DmLoadingButtonComponent);
+    fixture = TestBed.createComponent(DmButtonComponent);
     fixture.detectChanges();
   }
 
   function button(): HTMLButtonElement {
-    return fixture.nativeElement.querySelector('.dm-loading-button');
+    return fixture.nativeElement.querySelector('.dm-button');
   }
 
   beforeEach(() => {
@@ -22,24 +22,30 @@ describe('DmLoadingButtonComponent', () => {
     });
   });
 
-  it('renders a primary/md/idle button of type button by default', () => {
+  it('renders a primary/solid/full/md/idle button of type button by default', () => {
     createComponent();
 
-    expect(button().getAttribute('data-variant')).toBe('primary');
+    expect(button().getAttribute('data-color')).toBe('primary');
+    expect(button().getAttribute('data-variant')).toBe('solid');
+    expect(button().getAttribute('data-radius')).toBe('full');
     expect(button().getAttribute('data-size')).toBe('md');
     expect(button().getAttribute('data-state')).toBe('idle');
     expect(button().type).toBe('button');
     expect(button().disabled).toBe(false);
   });
 
-  it('reflects variant, size and state as data attributes', () => {
+  it('reflects color, variant, radius, size and state as data attributes', () => {
     createComponent();
-    fixture.componentRef.setInput('variant', 'outline');
+    fixture.componentRef.setInput('color', 'secondary');
+    fixture.componentRef.setInput('variant', 'flat');
+    fixture.componentRef.setInput('radius', 'full');
     fixture.componentRef.setInput('size', 'lg');
     fixture.componentRef.setInput('state', 'success');
     fixture.detectChanges();
 
-    expect(button().getAttribute('data-variant')).toBe('outline');
+    expect(button().getAttribute('data-color')).toBe('secondary');
+    expect(button().getAttribute('data-variant')).toBe('flat');
+    expect(button().getAttribute('data-radius')).toBe('full');
     expect(button().getAttribute('data-size')).toBe('lg');
     expect(button().getAttribute('data-state')).toBe('success');
   });
@@ -85,7 +91,7 @@ describe('DmLoadingButtonComponent', () => {
     fixture.componentRef.setInput('state', 'loading');
     fixture.detectChanges();
 
-    const live = fixture.nativeElement.querySelector('.dm-loading-button__live');
+    const live = fixture.nativeElement.querySelector('.dm-button__live');
     expect(live.getAttribute('aria-live')).toBe('polite');
     expect(live.textContent).toContain('Saving…');
 
@@ -97,20 +103,20 @@ describe('DmLoadingButtonComponent', () => {
 
   it('projects its content as the label', () => {
     createComponent();
-    // Content projection is exercised in the host-template test below;
-    // here we assert the label wrapper exists and stays in the DOM while loading.
     fixture.componentRef.setInput('state', 'loading');
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.dm-loading-button__label')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.dm-button__label')).toBeTruthy();
   });
 
-  it('honors defaults injected via LOADING_BUTTON_DEFAULTS', () => {
-    TestBed.overrideProvider(LOADING_BUTTON_DEFAULTS, {
-      useValue: { variant: 'ghost', size: 'sm' },
+  it('honors defaults injected via BUTTON_DEFAULTS', () => {
+    TestBed.overrideProvider(BUTTON_DEFAULTS, {
+      useValue: { color: 'danger', variant: 'flat', size: 'sm', radius: 'lg' },
     });
     createComponent();
 
-    expect(button().getAttribute('data-variant')).toBe('ghost');
+    expect(button().getAttribute('data-color')).toBe('danger');
+    expect(button().getAttribute('data-variant')).toBe('flat');
     expect(button().getAttribute('data-size')).toBe('sm');
+    expect(button().getAttribute('data-radius')).toBe('lg');
   });
 });

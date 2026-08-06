@@ -1,0 +1,138 @@
+@if (label()) {
+  <label class="dm-select__label" [id]="labelId" [attr.for]="triggerId">
+    {{ label() }}
+    @if (required()) {
+      <span class="dm-select__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<button
+  #triggerEl
+  type="button"
+  class="dm-select__trigger"
+  role="combobox"
+  [id]="triggerId"
+  [attr.data-color]="color()"
+  [attr.data-variant]="variant()"
+  [attr.data-size]="size()"
+  [attr.data-radius]="radius()"
+  [attr.data-open]="open() ? '' : null"
+  [attr.data-invalid]="error() ? '' : null"
+  [attr.aria-haspopup]="'listbox'"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="listboxId"
+  [attr.aria-activedescendant]="activeOptionId()"
+  [attr.aria-labelledby]="label() ? labelId : null"
+  [attr.aria-label]="!label() && ariaLabel() ? ariaLabel() : null"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-invalid]="error() ? 'true' : null"
+  [attr.aria-required]="required() ? 'true' : null"
+  [disabled]="isDisabled()"
+  (click)="toggle()"
+  (keydown)="onKeydown($event)"
+  (blur)="onTriggerBlur()"
+>
+  <span class="dm-select__value" [class.dm-select__value--placeholder]="hasPlaceholder()">
+    {{ displayText() }}
+  </span>
+  @if (showClearButton()) {
+    <span
+      class="dm-select__clear"
+      aria-hidden="true"
+      [attr.title]="clearAriaLabel()"
+      (click)="onClearClick($event)"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </span>
+  }
+  <svg
+    class="dm-select__chevron"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="triggerEl"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="overlayPositions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayWidth]="triggerWidth"
+  (backdropClick)="close(false)"
+  (detach)="close(false)"
+>
+  <ul
+    #listboxEl
+    class="dm-select__panel"
+    role="listbox"
+    [id]="listboxId"
+    [attr.data-color]="color()"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    (mousedown)="$event.preventDefault()"
+  >
+    @for (item of items(); track item.value; let i = $index) {
+      <li
+        class="dm-select__option"
+        role="option"
+        tabindex="-1"
+        [id]="uid + '-option-' + i"
+        [attr.data-active]="i === activeIndex() ? '' : null"
+        [attr.data-selected]="item.value === value() ? '' : null"
+        [attr.data-disabled]="item.disabled ? '' : null"
+        [attr.aria-selected]="item.value === value()"
+        [attr.aria-disabled]="item.disabled ? 'true' : null"
+        (click)="onOptionClick(i, $event)"
+        (keydown)="onKeydown($event)"
+        (mouseenter)="onOptionHover(i)"
+      >
+        <span class="dm-select__option-text">
+          <span class="dm-select__option-label">{{ item.label }}</span>
+          @if (item.description) {
+            <span class="dm-select__option-description">{{ item.description }}</span>
+          }
+        </span>
+        @if (item.value === value()) {
+          <svg
+            class="dm-select__option-check"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>
+
+@if (error()) {
+  <p class="dm-select__error" [id]="errorId" role="alert">{{ error() }}</p>
+} @else if (description()) {
+  <p class="dm-select__hint" [id]="hintId">{{ description() }}</p>
+}

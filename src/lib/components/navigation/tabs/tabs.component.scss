@@ -1,0 +1,306 @@
+@use 'mixins';
+
+// Component tokens (set on .dm-tabs__list, cascade down to <dm-tab> children):
+//   --dm-tab-h        tab height          (from data-size)
+//   --dm-tab-px       tab inline padding  (from data-size)
+//   --dm-tab-fs       tab font-size       (from data-size)
+//   --dm-tab-r        container radius    (from data-radius)
+//   --dm-tab-radius   effective tab radius (variant-specific)
+//   --dm-tab-active / --dm-tab-fg / --dm-tab-subtle / --dm-tab-line
+//                     color mapping consumed by <dm-tab> selected states
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.dm-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dm-space-4);
+  min-width: 0;
+
+  // Vertical layout: tablist to the start, panels grow.
+  &[data-placement='start'] {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--dm-space-6);
+  }
+}
+
+.dm-tabs__panels {
+  flex: 1;
+  min-width: 0;
+
+  // Hide the empty slot wrapper when no dm-tab-panel is projected (e.g. when
+  // dm-tabs is used as a pure segmented switch control without panels).
+  &:not(:has(*)) {
+    display: none;
+  }
+}
+
+.dm-tabs__list {
+  position: relative; // anchor for the sliding indicator
+  display: inline-flex;
+  align-self: flex-start; // don't stretch in the column flex-parent when fullWidth=false
+  align-items: center;
+  gap: var(--dm-space-1);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mixins.transition(background-color, border-color, box-shadow);
+
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  // ---- Sizes → per-tab CSS variables --------------------------------------
+  &[data-size='sm'] {
+    --dm-tab-h: 2rem; // 32px
+    --dm-tab-px: 0.75rem;
+    --dm-tab-fs: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    --dm-tab-h: 2.5rem; // 40px
+    --dm-tab-px: 1rem;
+    --dm-tab-fs: var(--dm-text-sm);
+  }
+
+  &[data-size='lg'] {
+    --dm-tab-h: 3rem; // 48px
+    --dm-tab-px: 1.25rem;
+    --dm-tab-fs: var(--dm-text-base);
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    --dm-tab-r: 0;
+  }
+  &[data-radius='sm'] {
+    --dm-tab-r: var(--dm-radius-sm);
+  }
+  &[data-radius='md'] {
+    --dm-tab-r: var(--dm-radius-md);
+  }
+  &[data-radius='lg'] {
+    --dm-tab-r: var(--dm-radius-lg);
+  }
+  &[data-radius='full'] {
+    --dm-tab-r: var(--dm-radius-full);
+  }
+
+  // ---- Colors → generic tab vars ------------------------------------------
+  &[data-color='default'] {
+    --dm-tab-active: var(--dm-default);
+    --dm-tab-fg: var(--dm-default-fg);
+    --dm-tab-subtle: var(--dm-default-subtle);
+    --dm-tab-line: var(--dm-fg);
+  }
+
+  &[data-color='primary'] {
+    --dm-tab-active: var(--dm-primary);
+    --dm-tab-fg: var(--dm-primary-fg);
+    --dm-tab-subtle: var(--dm-primary-subtle);
+    --dm-tab-line: var(--dm-primary);
+  }
+
+  &[data-color='secondary'] {
+    --dm-tab-active: var(--dm-secondary);
+    --dm-tab-fg: var(--dm-secondary-fg);
+    --dm-tab-subtle: var(--dm-secondary-subtle);
+    --dm-tab-line: var(--dm-secondary);
+  }
+
+  &[data-color='success'] {
+    --dm-tab-active: var(--dm-success);
+    --dm-tab-fg: var(--dm-success-fg);
+    --dm-tab-subtle: var(--dm-success-subtle);
+    --dm-tab-line: var(--dm-success);
+  }
+
+  &[data-color='warning'] {
+    --dm-tab-active: var(--dm-warning);
+    --dm-tab-fg: var(--dm-warning-fg);
+    --dm-tab-subtle: var(--dm-warning-subtle);
+    --dm-tab-line: var(--dm-warning);
+  }
+
+  &[data-color='danger'] {
+    --dm-tab-active: var(--dm-danger);
+    --dm-tab-fg: var(--dm-danger-fg);
+    --dm-tab-subtle: var(--dm-danger-subtle);
+    --dm-tab-line: var(--dm-danger);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  // Solid: HeroUI-style pill container. The active tab reads as a lifted pill.
+  &[data-variant='solid'] {
+    padding: 0.25rem;
+    background: var(--dm-bg-subtle);
+    border: 1px solid var(--dm-border);
+    border-radius: var(--dm-tab-r, var(--dm-radius-md));
+
+    --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-md)) - 0.25rem);
+  }
+
+  // Bordered: same layout, outline border, no fill.
+  &[data-variant='bordered'] {
+    padding: 0.25rem;
+    background: transparent;
+    border: 1px solid var(--dm-border-strong);
+    border-radius: var(--dm-tab-r, var(--dm-radius-md));
+
+    --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-md)) - 0.25rem);
+  }
+
+  // Light: no container chrome, tabs get their own subtle wash when selected.
+  &[data-variant='light'] {
+    padding: 0;
+    background: transparent;
+    border: 0;
+
+    --dm-tab-radius: var(--dm-tab-r, var(--dm-radius-md));
+  }
+
+  // Underlined: naked list; the active tab's colored line is the indicator and
+  // the base rule comes from the `divider` option below.
+  &[data-variant='underlined'] {
+    padding: 0;
+    gap: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+
+    --dm-tab-radius: 0;
+  }
+
+  // Segment: iOS-style segmented control. Always pill-shaped container; the
+  // active tab is lifted with an elevated neutral background (color-agnostic).
+  &[data-variant='segment'] {
+    padding: 0.25rem;
+    background: var(--dm-bg-subtle);
+    border: 1px solid var(--dm-border);
+    border-radius: var(--dm-tab-r, var(--dm-radius-full));
+
+    --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-full)) - 0.25rem);
+  }
+
+  // ---- Divider: a separator rule for the flat variants ---------------------
+  // Contained variants (solid / bordered) are self-bounded, so the divider is
+  // a no-op there. Horizontal → bottom rule; vertical → inline-end rule.
+  &[data-divider][data-variant='light'],
+  &[data-divider][data-variant='underlined'] {
+    border-bottom: 1px solid var(--dm-border);
+  }
+
+  &[aria-orientation='vertical'][data-divider][data-variant='light'],
+  &[aria-orientation='vertical'][data-divider][data-variant='underlined'] {
+    border-bottom: 0;
+    border-inline-end: 1px solid var(--dm-border);
+  }
+
+  // ---- Full width: tabs share the row equally (flex on the tab itself, via
+  // :host-context in tab.component.scss — scoped to horizontal orientation) --
+  &[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  // ---- Overflow fade: hint that more tabs are scrollable off-edge ----------
+  &[data-overflow]:not([aria-orientation='vertical']) {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.5rem,
+      #000 calc(100% - 1.5rem),
+      transparent
+    );
+  }
+
+  // ---- Vertical (placement='start') ---------------------------------------
+  &[aria-orientation='vertical'] {
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible auto;
+
+    &[data-variant='underlined'] {
+      border-bottom: 0;
+      border-inline-end: 1px solid var(--dm-border);
+    }
+  }
+}
+
+// ---- Sliding indicator -----------------------------------------------------
+// A single element that glides + resizes to sit under the active tab. Its
+// geometry comes from CSS variables the component writes after each render.
+.dm-tabs__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: var(--dm-tabs-ind-w, 0);
+  height: var(--dm-tabs-ind-h, 0);
+  opacity: var(--dm-tabs-ind-o, 0);
+  pointer-events: none;
+  transform: translate(var(--dm-tabs-ind-x, 0), var(--dm-tabs-ind-y, 0));
+  transition:
+    transform var(--dm-duration-base) var(--dm-ease-snappy),
+    width var(--dm-duration-base) var(--dm-ease-snappy),
+    height var(--dm-duration-base) var(--dm-ease-snappy),
+    opacity var(--dm-duration-fast) var(--dm-ease-out);
+
+  @include mixins.reduced-motion {
+    transition: opacity var(--dm-duration-fast) var(--dm-ease-out);
+  }
+}
+
+// Variant-specific look of the indicator.
+.dm-tabs__list[data-variant='solid'] .dm-tabs__indicator {
+  background: var(--dm-bg);
+  border-radius: var(--dm-tab-radius, var(--dm-radius-md));
+  box-shadow: var(--dm-shadow-sm);
+}
+
+.dm-tabs__list[data-variant='bordered'] .dm-tabs__indicator {
+  background: var(--dm-tab-active, var(--dm-default));
+  border-radius: var(--dm-tab-radius, var(--dm-radius-md));
+}
+
+.dm-tabs__list[data-variant='light'] .dm-tabs__indicator {
+  background: var(--dm-tab-subtle, var(--dm-bg-muted));
+  border-radius: var(--dm-tab-radius, var(--dm-radius-md));
+}
+
+// Underlined: the indicator is a colored rule at the bottom edge, not a pill.
+.dm-tabs__list[data-variant='underlined'] .dm-tabs__indicator {
+  top: auto;
+  bottom: 0;
+  height: 2px;
+  background: var(--dm-tab-line, var(--dm-fg));
+  border-radius: var(--dm-radius-full);
+}
+
+// Vertical underlined: the rule moves to the inline-end edge and runs vertical.
+.dm-tabs__list[aria-orientation='vertical'][data-variant='underlined'] .dm-tabs__indicator {
+  top: 0;
+  bottom: auto;
+  inset-inline-end: 0;
+  width: 2px;
+  height: var(--dm-tabs-ind-h, 0);
+}
+
+// Segment: neutral elevated pill — same visual as solid but colour-agnostic.
+.dm-tabs__list[data-variant='segment'] .dm-tabs__indicator {
+  background: var(--dm-bg-elevated);
+  border-radius: var(--dm-tab-radius, var(--dm-radius-full));
+  box-shadow: var(--dm-shadow-sm);
+}

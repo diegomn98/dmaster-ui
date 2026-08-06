@@ -1,5 +1,5 @@
 // ============================================================================
-// ngx-dmaster-ui · Global styles for native form controls (`dmInput`)
+// @dmaster/ui · Global styles for native form controls (`dmInput`)
 // Global on purpose: `dmInput` is a directive and directives cannot carry
 // component stylesheets. Emitted from index.scss.
 // ============================================================================
@@ -9,15 +9,16 @@
   width: 100%;
   min-height: var(--dm-control-height);
   padding: 0 var(--dm-control-padding-x);
-  border: 1px solid var(--dm-border-strong);
-  border-radius: var(--dm-radius-md);
-  background-color: var(--dm-bg-elevated);
 
-  // The second layer is the focus ring parked at 0 spread, so on focus it
-  // grows out of the border instead of popping in.
-  box-shadow:
-    inset 0 1px 2px rgb(0 0 0 / 4%),
-    0 0 0 0 var(--dm-primary-subtle);
+  // HeroUI "flat" field: soft filled surface, transparent border. No inset
+  // gloss — the fill carries the affordance.
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+
+  // Single layer: the focus ring parked at 0 spread, so on focus it grows
+  // out of the field instead of popping in.
+  box-shadow: 0 0 0 0 var(--dm-primary-subtle);
   color: var(--dm-fg);
   caret-color: var(--dm-primary);
   font-family: var(--dm-font-sans);
@@ -34,16 +35,17 @@
   }
 
   &:hover:not(:disabled, :focus) {
-    border-color: color-mix(in srgb, var(--dm-fg) 28%, transparent);
-    background-color: color-mix(in srgb, var(--dm-fg) 2%, var(--dm-bg-elevated));
+    // Nudge the fill a shade more contrasty (darker in light, lighter in dark).
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
   }
 
   &:focus {
     outline: none;
     border-color: var(--dm-primary);
-    box-shadow:
-      inset 0 1px 2px rgb(0 0 0 / 0%),
-      0 0 0 3.5px var(--dm-primary-subtle);
+
+    // Lift to the elevated surface so the active field reads as "raised".
+    background-color: var(--dm-bg-elevated);
+    box-shadow: 0 0 0 3.5px var(--dm-primary-subtle);
 
     // Quiet the placeholder while typing focus is on the field.
     &::placeholder {
@@ -55,7 +57,7 @@
   // (`color-scheme` on the theme keeps the UA's autofill text legible.)
   &:autofill {
     box-shadow:
-      inset 0 0 0 62.5rem var(--dm-bg-elevated),
+      inset 0 0 0 62.5rem var(--dm-bg-muted),
       0 0 0 0 var(--dm-primary-subtle);
 
     &:focus {
@@ -66,10 +68,10 @@
   }
 
   &:disabled {
-    border-color: var(--dm-border);
+    border-color: transparent;
     background-color: var(--dm-bg-muted);
-    box-shadow: none;
     color: var(--dm-fg-muted);
+    opacity: 0.6;
     cursor: not-allowed;
 
     &::placeholder {
@@ -79,22 +81,18 @@
 
   &[aria-invalid='true'] {
     border-color: var(--dm-danger);
-    background-color: color-mix(in srgb, var(--dm-danger) 3%, var(--dm-bg-elevated));
-    box-shadow:
-      inset 0 1px 2px rgb(0 0 0 / 4%),
-      0 0 0 0 var(--dm-danger-subtle);
+    background-color: color-mix(in srgb, var(--dm-danger) 6%, var(--dm-bg-muted));
+    box-shadow: 0 0 0 0 var(--dm-danger-subtle);
 
     &:hover:not(:disabled, :focus) {
-      border-color: color-mix(in srgb, var(--dm-danger) 80%, var(--dm-fg));
-      background-color: color-mix(in srgb, var(--dm-danger) 4%, var(--dm-bg-elevated));
+      background-color: color-mix(in srgb, var(--dm-danger) 9%, var(--dm-bg-muted));
     }
 
     &:focus {
       border-color: var(--dm-danger);
+      background-color: color-mix(in srgb, var(--dm-danger) 5%, var(--dm-bg-elevated));
       caret-color: var(--dm-danger);
-      box-shadow:
-        inset 0 1px 2px rgb(0 0 0 / 0%),
-        0 0 0 3.5px var(--dm-danger-subtle);
+      box-shadow: 0 0 0 3.5px var(--dm-danger-subtle);
     }
   }
 }

@@ -15,22 +15,19 @@
   align-items: flex-start;
   gap: var(--dm-space-3);
   padding: var(--dm-space-3) var(--dm-space-4);
-  border: 1px solid var(--dm-border);
   border-radius: var(--dm-radius-lg);
 
-  // Glass: superficie translúcida con blur sobre el contenido de detrás.
-  // saturate() enriquece los colores que atraviesan el cristal en vez de
-  // limitarse a esmerilarlos.
-  background: color-mix(in srgb, var(--dm-bg-elevated) 82%, transparent);
+  // HeroUI glass: una superficie translúcida limpia con blur + saturate sobre
+  // el contenido de detrás. saturate() enriquece los colores que atraviesan el
+  // cristal en vez de limitarse a esmerilarlos.
+  background: color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent);
   backdrop-filter: blur(16px) saturate(160%);
   color: var(--dm-fg);
   transform-origin: 100% 50%;
 
-  // Sombra de contacto (corta y densa) + ambiente multicapa + brillo interior.
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 8%),
-    var(--dm-shadow-lg),
-    inset 0 1px 0 rgb(255 255 255 / 8%);
+  // Elevación HeroUI: una única sombra amplia, suave y difusa. Sin hairline
+  // duro, sin sheen interior.
+  box-shadow: var(--dm-shadow-lg);
   animation: dm-toast-in var(--dm-duration-slow) var(--dm-ease-out);
 
   &[data-variant='success'] .dm-toast__icon {

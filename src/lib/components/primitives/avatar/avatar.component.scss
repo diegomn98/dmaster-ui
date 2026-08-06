@@ -6,38 +6,15 @@
   overflow: hidden;
   flex-shrink: 0;
 
-  // Superficie con luz: un halo radial arriba-izquierda sobre el degradado
-  // diagonal de marca — más profundidad que un linear plano.
-  background:
-    radial-gradient(
-      130% 130% at 28% 18%,
-      color-mix(in srgb, var(--dm-primary) 20%, transparent),
-      transparent 58%
-    ),
-    linear-gradient(
-      165deg,
-      var(--dm-primary-subtle),
-      color-mix(in srgb, var(--dm-primary) 26%, transparent)
-    );
+  // HeroUI: relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
+  // gradientes ni halos.
+  background: var(--dm-primary-subtle);
   color: var(--dm-primary);
-  border: 1px solid color-mix(in srgb, var(--dm-primary) 22%, var(--dm-border));
 
-  // Sombra de contacto: asienta el avatar sobre la superficie.
+  // Borde limpio de 1px + sombra de contacto muy sutil que lo asienta.
+  border: 1px solid var(--dm-border);
   box-shadow: var(--dm-shadow-sm);
   user-select: none;
-}
-
-// Ring interior de luz por encima de cualquier contenido (también fotos):
-// define el borde interno y da acabado "pulido" sin ensuciar el color.
-:host::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 18%),
-    inset 0 0 0 1px rgb(255 255 255 / 8%);
-  pointer-events: none;
 }
 
 :host([data-shape='circle']) {
@@ -54,21 +31,18 @@
   object-fit: cover;
 }
 
-// Iniciales con el gradiente de marca recortado en el texto: identidad
-// índigo→violeta también en el fallback.
+// Iniciales en color de marca PLANO (HeroUI no recorta gradientes en texto).
 .dm-avatar__initials {
   font-weight: var(--dm-font-semibold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1;
-  background: var(--dm-gradient-brand);
-  background-clip: text;
-  color: transparent;
+  color: var(--dm-primary);
 }
 
-// Icono genérico teñido hacia la marca: silencioso, pero de la familia.
+// Icono genérico silencioso, en el gris sutil del tema.
 .dm-avatar__icon {
   width: 55%;
   height: 55%;
-  color: color-mix(in srgb, var(--dm-primary) 55%, var(--dm-fg-subtle));
+  color: var(--dm-fg-subtle);
 }

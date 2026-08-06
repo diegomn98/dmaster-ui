@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/ngx-dmaster-ui",
+  "dest": "../../dist/dmaster-ui",
   "assets": [
     {
       "glob": "**/*.scss",

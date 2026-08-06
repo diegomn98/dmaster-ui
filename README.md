@@ -21,7 +21,7 @@ ng generate --help
 To build the library, run:
 
 ```bash
-ng build ngx-dmaster-ui
+ng build @dmaster/ui
 ```
 
 This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
@@ -33,7 +33,7 @@ Once the project is built, you can publish your library by following these steps
 1. Navigate to the `dist` directory:
 
    ```bash
-   cd dist/ngx-dmaster-ui
+   cd dist/@dmaster/ui
    ```
 
 2. Run the `npm publish` command to publish your library to the npm registry:

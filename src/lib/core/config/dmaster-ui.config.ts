@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 import { DmDensity, DmTheme } from '../types/common.types';
 
-/** Global configuration for ngx-dmaster-ui, provided via `provideDmasterUI()`. */
+/** Global configuration for @dmaster/ui, provided via `provideDmasterUI()`. */
 export interface DmasterUIConfig {
   /** Initial theme. `auto` follows the OS preference. Default: `'auto'`. */
   theme: DmTheme;

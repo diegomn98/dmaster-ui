@@ -1,0 +1,78 @@
+# Tabs (`dm-tabs`)
+
+Composite tabs with a HeroUI-style color × variant API, an **animated sliding indicator**, roving-tabindex keyboard navigation and full ARIA wiring. Panels are matched to their trigger by `value`. By default tabs are **full width** with an **underlined** look and a separator rule — a clean nav-bar out of the box.
+
+## Usage
+
+```ts
+import { DmTabPanelComponent, DmTabComponent, DmTabsComponent } from '@dmaster/ui';
+```
+
+```html
+<dm-tabs [(selectedValue)]="tab" color="primary" variant="solid" ariaLabel="Sections">
+  <dm-tab value="overview">Overview</dm-tab>
+  <dm-tab value="pricing">Pricing</dm-tab>
+  <dm-tab value="faq" [disabled]="true">FAQ</dm-tab>
+
+  <dm-tab-panel value="overview">…</dm-tab-panel>
+  <dm-tab-panel value="pricing">…</dm-tab-panel>
+  <dm-tab-panel value="faq">…</dm-tab-panel>
+</dm-tabs>
+```
+
+If `selectedValue` is left undefined the first enabled tab becomes active on render — the component always has a resolved selection to drive its UI.
+
+## API — `<dm-tabs>`
+
+| Input           | Type                                                                          | Default        | Description                                                 |
+| --------------- | ----------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------- |
+| `selectedValue` | `string \| undefined`                                                         | first tab      | Value of the active tab. Two-way (`[(selectedValue)]`).     |
+| `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`    | Semantic color.                                             |
+| `variant`       | `'solid' \| 'bordered' \| 'light' \| 'underlined'`                            | `'underlined'` | Visual variant.                                             |
+| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`         | Size scale (32/40/48px tabs).                               |
+| `radius`        | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                    | `'md'`         | Corner rounding. Ignored by the `underlined` variant.       |
+| `placement`     | `'top' \| 'start'`                                                            | `'top'`        | `start` renders the tablist vertically at the inline start. |
+| `fullWidth`     | `boolean`                                                                     | `true`         | Stretch tabs to share the row (horizontal) equally.         |
+| `divider`       | `boolean`                                                                     | `true`         | Separator rule under the tablist (`light` / `underlined`).  |
+| `disabled`      | `boolean`                                                                     | `false`        | Disables the whole tablist.                                 |
+| `ariaLabel`     | `string`                                                                      | `''`           | Accessible label for the tablist.                           |
+
+## API — `<dm-tab>`
+
+| Input      | Type      | Default | Description                                        |
+| ---------- | --------- | ------- | -------------------------------------------------- |
+| `value`    | `string`  | —       | Required. Matches the panel with the same `value`. |
+| `disabled` | `boolean` | `false` | Disables the tab; keyboard navigation skips it.    |
+
+## API — `<dm-tab-panel>`
+
+| Input   | Type     | Default | Description                                      |
+| ------- | -------- | ------- | ------------------------------------------------ |
+| `value` | `string` | —       | Required. Matches the tab with the same `value`. |
+
+## Global defaults
+
+```ts
+providers: [provideTabsDefaults({ variant: 'underlined', size: 'lg' })];
+```
+
+Or provide `TABS_DEFAULTS` directly.
+
+## Theming
+
+The tablist emits CSS variables that the tab consumes through DOM inheritance:
+
+- `--dm-tab-h`, `--dm-tab-px`, `--dm-tab-fs` — size scale.
+- `--dm-tab-r`, `--dm-tab-radius` — container radius / effective tab radius.
+- `--dm-tab-active`, `--dm-tab-fg`, `--dm-tab-subtle`, `--dm-tab-line` — color mapping consumed by the variant-specific selected states.
+
+Overriding any of these at a scope re-skins the tabs without touching the SCSS.
+
+## Accessibility
+
+- Tablist exposes `role="tablist"` with `aria-orientation` derived from `placement`.
+- Tabs expose `role="tab"`, `aria-selected`, `aria-controls`, roving `tabindex`.
+- Panels expose `role="tabpanel"`, `aria-labelledby`, and receive `hidden` when inactive.
+- Keyboard: `ArrowLeft` / `ArrowRight` (horizontal) or `ArrowUp` / `ArrowDown` (vertical) move focus and activation, `Home` / `End` jump to the first / last enabled tab, `Space` / `Enter` activate the focused tab.
+- Focus ring uses the global `--dm-ring` token; press shrinks with the HeroUI-style `--dm-ease-snappy`.
+- Motion is disabled under `prefers-reduced-motion` via the global duration tokens.

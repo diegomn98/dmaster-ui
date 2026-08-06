@@ -1,6 +1,6 @@
 # Spinner (`dm-spinner`)
 
-Indeterminate loading indicator. Inherits `currentColor`; `dm-loading-button` uses it internally.
+Indeterminate loading indicator. Inherits `currentColor`; `dm-button` uses it internally.
 
 ```html
 <dm-spinner />

@@ -1,4 +1,5 @@
 export * from './dialog.service';
+export * from './dialog.tokens';
 export * from './dialog.types';
 
 // Re-export para que el consumidor no dependa directamente del CDK:

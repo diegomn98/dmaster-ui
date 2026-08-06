@@ -1,0 +1,170 @@
+@use 'mixins';
+
+:host {
+  display: block;
+  color: var(--dm-fg);
+}
+
+// Separator between non-splitted items
+:host-context(dm-accordion:not([data-variant='splitted'])):not(:first-of-type) {
+  border-top: 1px solid var(--dm-border);
+}
+
+// Splitted: each item is its own elevated card
+:host-context(dm-accordion[data-variant='splitted']) {
+  background: var(--dm-bg-elevated);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-xl);
+  overflow: hidden;
+  transition-property: box-shadow, border-color;
+  transition-duration: var(--dm-duration-base);
+  transition-timing-function: var(--dm-ease-snappy);
+}
+
+:host-context(dm-accordion[data-variant='splitted'])[data-expanded='true'] {
+  border-color: color-mix(in srgb, var(--dm-primary) 35%, var(--dm-border));
+  box-shadow: var(--dm-shadow-md);
+}
+
+// ── Trigger ──────────────────────────────────────────────────────────────────
+
+.dm-accordion-item__trigger {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-3);
+  width: 100%;
+  min-height: 3.5rem;
+  padding: var(--dm-space-4) var(--dm-space-5);
+  text-align: left;
+  cursor: pointer;
+  border-radius: inherit;
+
+  @include mixins.transition(background-color);
+
+  &:hover:not(:disabled) {
+    background: var(--dm-bg-subtle);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+
+    outline-offset: -2px;
+    border-radius: var(--dm-radius-md);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+// ── Label group ──────────────────────────────────────────────────────────────
+
+.dm-accordion-item__label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.dm-accordion-item__title {
+  font-size: var(--dm-text-base);
+  font-weight: var(--dm-font-semibold);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg);
+}
+
+.dm-accordion-item__subtitle {
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-regular);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg-muted);
+}
+
+// ── Leading icon slot ─────────────────────────────────────────────────────────
+
+.dm-accordion-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--dm-fg-muted);
+
+  @include mixins.transition(color);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.dm-accordion-item__trigger:hover:not(:disabled) .dm-accordion-item__icon {
+  color: var(--dm-fg);
+}
+
+.dm-accordion-item__trigger[aria-expanded='true'] .dm-accordion-item__icon {
+  color: var(--dm-primary);
+}
+
+// ── Chevron indicator — class-driven (avoids :host() cascade issues) ──────────
+
+.dm-accordion-item__indicator {
+  flex: 0 0 auto;
+  color: var(--dm-fg-muted);
+  transition:
+    transform var(--dm-duration-base) var(--dm-ease-snappy),
+    color var(--dm-duration-base) var(--dm-ease-out);
+
+  &--open {
+    color: var(--dm-fg);
+  }
+}
+
+.dm-accordion-item__trigger:hover:not(:disabled) .dm-accordion-item__indicator {
+  color: var(--dm-fg);
+}
+
+// ── Panel — grid-rows collapse (class-driven, avoids :host() cascade issues) ──
+// Padding lives on __body (not __inner) so 0fr truly collapses to 0px
+
+.dm-accordion-item__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--dm-duration-slow) var(--dm-ease-snappy);
+
+  &--open {
+    grid-template-rows: 1fr;
+  }
+}
+
+.dm-accordion-item__inner {
+  min-height: 0;
+}
+
+.dm-accordion-item__body {
+  padding: var(--dm-space-1) var(--dm-space-5) var(--dm-space-6);
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-relaxed);
+  border-top: 1px solid var(--dm-border);
+}
+
+// ── Reduced motion ────────────────────────────────────────────────────────────
+
+@include mixins.reduced-motion {
+  :host-context(dm-accordion[data-variant='splitted']),
+  .dm-accordion-item__trigger,
+  .dm-accordion-item__indicator,
+  .dm-accordion-item__icon,
+  .dm-accordion-item__panel {
+    transition: none;
+  }
+}

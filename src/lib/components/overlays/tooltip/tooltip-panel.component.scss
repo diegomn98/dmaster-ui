@@ -12,15 +12,9 @@
   line-height: var(--dm-leading-snug);
   text-wrap: balance;
 
-  // Anillo exterior de 1px teñido con el fg del tooltip (claro sobre la
-  // píldora oscura en tema light, oscuro sobre la clara en dark), que la
-  // separa del fondo en ambos temas; después, sombra de dos capas
-  // (contacto + ambiente) y un brillo interior en el borde superior.
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--dm-tooltip-fg, var(--dm-bg)) 12%, transparent),
-    0 2px 4px rgb(0 0 0 / 14%),
-    0 8px 20px rgb(0 0 0 / 16%),
-    inset 0 1px 0 rgb(255 255 255 / 8%);
+  // HeroUI: una píldora sólida y redondeada elevada por una única sombra suave
+  // y difusa. Sin anillo exterior, sin brillo interior — superficie limpia.
+  box-shadow: var(--dm-shadow-md);
   animation: dm-tooltip-in var(--dm-duration-fast) var(--dm-ease-out);
 }
 

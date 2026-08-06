@@ -3,11 +3,15 @@ import {
   Component,
   computed,
   forwardRef,
+  inject,
   input,
   model,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { CHECKBOX_DEFAULTS } from './checkbox.tokens';
+import { DmCheckboxSize } from './checkbox.types';
 
 /**
  * Checkbox sobre un `<input type="checkbox">` nativo (semántica de
@@ -31,8 +35,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
+  host: {
+    '[attr.data-size]': 'size()',
+  },
 })
 export class DmCheckboxComponent implements ControlValueAccessor {
+  private readonly defaults = inject(CHECKBOX_DEFAULTS);
+
   /** Checked state. Two-way: `[(checked)]`. */
   readonly checked = model<boolean>(false);
 
@@ -41,6 +50,9 @@ export class DmCheckboxComponent implements ControlValueAccessor {
 
   /** Disables the control (combined with the forms `disabled` state). */
   readonly disabled = input<boolean>(false);
+
+  /** Size scale. */
+  readonly size = input<DmCheckboxSize>(this.defaults.size);
 
   /** Id for the native input, so external `<label for>` works. */
   readonly inputId = input<string>('');

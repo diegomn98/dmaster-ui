@@ -5,7 +5,7 @@ Loading placeholder that mirrors the shape of the content it replaces. No Angula
 ## Usage
 
 ```ts
-import { DmSkeletonComponent } from 'ngx-dmaster-ui';
+import { DmSkeletonComponent } from '@dmaster/ui';
 ```
 
 ```html

@@ -18,8 +18,8 @@ Content component:
 
 ```ts
 export class SettingsDialogComponent {
-  protected readonly data = inject(DIALOG_DATA); // re-exported by ngx-dmaster-ui
-  private readonly ref = inject(DialogRef); // re-exported by ngx-dmaster-ui
+  protected readonly data = inject(DIALOG_DATA); // re-exported by @dmaster/ui
+  private readonly ref = inject(DialogRef); // re-exported by @dmaster/ui
   close(): void {
     this.ref.close('saved');
   }

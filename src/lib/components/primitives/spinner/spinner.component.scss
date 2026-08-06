@@ -8,26 +8,25 @@
 svg {
   width: 100%;
   height: 100%;
-  animation: dm-spinner-rotate 0.8s linear infinite;
+
+  // El conjunto gira a ritmo constante...
+  animation: dm-spinner-rotate 2s linear infinite;
 }
 
-// Track más ligero: sugiere la órbita sin competir con el arco.
+// Órbita apenas sugerida para no competir con el arco.
 .dm-spinner__track {
   stroke: currentcolor;
-  opacity: 0.15;
+  opacity: 0.16;
 }
 
 .dm-spinner__arc {
   stroke: currentcolor;
   stroke-linecap: round;
 
-  // Arco de ~240° sobre una circunferencia de 2π·10 ≈ 62.8: el hueco de 120°
-  // marca el ritmo del giro con más claridad que el arco casi cerrado.
-  stroke-dasharray: 42 20.8;
-
-  // Halo del propio color a baja opacidad: presencia sobre cualquier
-  // superficie (botones, empty states) sin cambiar de tono ni de tamaño.
-  filter: drop-shadow(0 0 3px color-mix(in srgb, currentcolor 35%, transparent));
+  // ...mientras el arco crece y se encoge: la "cola de cometa" de los mejores
+  // spinners. Períodos distintos (2s giro / 1.5s respiración) evitan que el
+  // patrón se repita idéntico, así se percibe vivo. Sin filtros: crisp.
+  animation: dm-spinner-dash 1.5s var(--dm-ease-in-out) infinite;
 }
 
 @keyframes dm-spinner-rotate {
@@ -36,10 +35,35 @@ svg {
   }
 }
 
-// Reduced motion: arco estático, el estado lo comunica el contexto (aria-busy,
-// role="status"…), no el giro.
+// Circunferencia con r=10 ≈ 62.8; el gap (100) supera la vuelta para que solo
+// se vea un arco a la vez. dasharray/offset lo hacen ir de ~5° a ~255° y
+// desplazarse casi una vuelta completa.
+@keyframes dm-spinner-dash {
+  0% {
+    stroke-dasharray: 1 100;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 45 100;
+    stroke-dashoffset: -17.5;
+  }
+
+  100% {
+    stroke-dasharray: 45 100;
+    stroke-dashoffset: -62;
+  }
+}
+
+// Reduced motion: sin giro ni respiración, pero un arco estático de ~255° que
+// sigue leyéndose como spinner (el estado real lo comunica aria-busy/role).
 @include mixins.reduced-motion {
   svg {
     animation: none;
+  }
+
+  .dm-spinner__arc {
+    animation: none;
+    stroke-dasharray: 45 100;
   }
 }

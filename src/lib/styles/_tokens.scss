@@ -1,5 +1,5 @@
 // ============================================================================
-// ngx-dmaster-ui · Design tokens (theme-independent)
+// @dmaster/ui · Design tokens (theme-independent)
 // Emits `:root` custom properties: typography, spacing, radii, motion,
 // z-index, breakpoints and density scales. Colors live in _themes.scss.
 // ============================================================================
@@ -53,10 +53,11 @@
   // --------------------------------------------------------------------------
   // Radii
   // --------------------------------------------------------------------------
-  --dm-radius-sm: 0.375rem; // 6px
-  --dm-radius-md: 0.5rem; // 8px
-  --dm-radius-lg: 0.625rem; // 10px
-  --dm-radius-xl: 0.75rem; // 12px
+  // HeroUI-style rounded scale: generous radii, controls feel pill-adjacent.
+  --dm-radius-sm: 0.5rem; // 8px
+  --dm-radius-md: 0.75rem; // 12px
+  --dm-radius-lg: 0.875rem; // 14px
+  --dm-radius-xl: 1.125rem; // 18px
   --dm-radius-full: 9999px;
 
   // --------------------------------------------------------------------------

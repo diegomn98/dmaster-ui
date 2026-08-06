@@ -1,18 +1,20 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmBadgeAppearance, DmBadgeSize, DmBadgeVariant } from './badge.types';
+import { DmBadgeColor, DmBadgeRadius, DmBadgeSize, DmBadgeVariant } from './badge.types';
 
 /** Globally overridable defaults for `dm-badge`. */
 export interface DmBadgeDefaults {
+  color: DmBadgeColor;
   variant: DmBadgeVariant;
-  appearance: DmBadgeAppearance;
   size: DmBadgeSize;
+  radius: DmBadgeRadius;
 }
 
 export const DM_BADGE_FALLBACK_DEFAULTS: DmBadgeDefaults = {
-  variant: 'neutral',
-  appearance: 'subtle',
+  color: 'default',
+  variant: 'flat',
   size: 'md',
+  radius: 'full',
 };
 
 /** Injection token holding the defaults every `dm-badge` starts from. */

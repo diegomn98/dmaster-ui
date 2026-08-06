@@ -1,0 +1,58 @@
+<button
+  type="button"
+  class="dm-accordion-item__trigger"
+  [id]="headerId"
+  [attr.aria-expanded]="expanded()"
+  [attr.aria-controls]="panelId"
+  [disabled]="isDisabled()"
+  (click)="onTriggerClick()"
+  (keydown)="onKeydown($event)"
+>
+  <span class="dm-accordion-item__icon" aria-hidden="true">
+    <ng-content select="[dm-accordion-icon]" />
+  </span>
+
+  <span class="dm-accordion-item__label">
+    <ng-content select="[dm-accordion-title]">
+      <span class="dm-accordion-item__title">{{ title() }}</span>
+    </ng-content>
+    @if (subtitle()) {
+      <span class="dm-accordion-item__subtitle">{{ subtitle() }}</span>
+    }
+  </span>
+
+  <svg
+    class="dm-accordion-item__indicator"
+    [class.dm-accordion-item__indicator--open]="expanded()"
+    [style.transform]="expanded() ? 'rotate(180deg)' : 'none'"
+    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    focusable="false"
+    aria-hidden="true"
+  >
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+</button>
+
+<div
+  class="dm-accordion-item__panel"
+  [class.dm-accordion-item__panel--open]="expanded()"
+  [style.grid-template-rows]="expanded() ? '1fr' : '0fr'"
+  [id]="panelId"
+  role="region"
+  [attr.aria-labelledby]="headerId"
+  [attr.aria-hidden]="!expanded()"
+  [attr.inert]="expanded() ? null : ''"
+>
+  <div class="dm-accordion-item__inner">
+    <div class="dm-accordion-item__body">
+      <ng-content />
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 // ============================================================================
-// ngx-dmaster-ui · Global stylesheet entry
+// @dmaster/ui · Global stylesheet entry
 //
 // Consumers import this ONCE in their global styles:
 //
@@ -7,7 +7,7 @@
 //   @use 'index';
 //
 //   // or from the published package:
-//   @use 'ngx-dmaster-ui/styles/index';
+//   @use '@dmaster/ui/styles/index';
 //
 // Emits: reset + design tokens + light/dark themes.
 // Component styles never import this file — they only use 'mixins'.

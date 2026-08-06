@@ -1,0 +1,177 @@
+@use 'mixins';
+
+// Colors × size map to generic vars so the SCSS below never repeats itself:
+// each color sets --dm-radio / --dm-radio-hover / --dm-radio-soft, and the
+// control/dot rules read them regardless of the active data-color.
+:host {
+  position: relative;
+  display: inline-flex;
+  outline: none;
+
+  // Default color falls back to the neutral scale.
+  --dm-radio: var(--dm-fg);
+  --dm-radio-hover: var(--dm-fg);
+  --dm-radio-soft: var(--dm-default-subtle);
+
+  &[data-color='default'] {
+    --dm-radio: var(--dm-fg);
+    --dm-radio-hover: var(--dm-fg);
+    --dm-radio-soft: var(--dm-default-subtle);
+  }
+
+  &[data-color='primary'] {
+    --dm-radio: var(--dm-primary);
+    --dm-radio-hover: var(--dm-primary-hover);
+    --dm-radio-soft: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-radio: var(--dm-secondary);
+    --dm-radio-hover: var(--dm-secondary-hover);
+    --dm-radio-soft: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-radio: var(--dm-success);
+    --dm-radio-hover: var(--dm-success-hover);
+    --dm-radio-soft: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-radio: var(--dm-warning);
+    --dm-radio-hover: var(--dm-warning-hover);
+    --dm-radio-soft: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-radio: var(--dm-danger);
+    --dm-radio-hover: var(--dm-danger-hover);
+    --dm-radio-soft: var(--dm-danger-subtle);
+  }
+
+  &[data-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:focus-visible .dm-radio__control {
+    @include mixins.focus-ring;
+
+    outline-offset: 3px;
+  }
+}
+
+.dm-radio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  cursor: pointer;
+  user-select: none;
+
+  @include mixins.touch-target;
+
+  :host[data-disabled='true'] & {
+    cursor: not-allowed;
+  }
+}
+
+.dm-radio__control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--dm-border-strong);
+  border-radius: var(--dm-radius-full);
+  background-color: transparent;
+
+  // The ring layer sits at 0 spread so the hover halo grows instead of pops.
+  box-shadow: 0 0 0 0 var(--dm-radio-soft);
+
+  @include mixins.transition(border-color, background-color, box-shadow, transform);
+
+  // Sizes (HeroUI-ish scale: 16 / 20 / 24).
+  :host[data-size='sm'] & {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  :host[data-size='md'] & {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  :host[data-size='lg'] & {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  // Hover halo when reachable.
+  :host:hover:not([data-disabled='true']) & {
+    border-color: color-mix(in srgb, var(--dm-radio) 55%, var(--dm-border-strong));
+    box-shadow: 0 0 0 3px var(--dm-radio-soft);
+  }
+
+  // Checked: solid border of the color, dot below fills in.
+  :host[data-checked='true'] & {
+    border-color: var(--dm-radio);
+  }
+
+  :host[data-checked='true']:hover:not([data-disabled='true']) & {
+    border-color: var(--dm-radio-hover);
+    box-shadow: 0 0 0 3px var(--dm-radio-soft);
+  }
+
+  // Elastic press (HeroUI signature): a tighter scale than the switch thumb.
+  :host:active:not([data-disabled='true']) & {
+    transform: scale(0.94);
+    transition-duration: var(--dm-duration-fast);
+    transition-timing-function: var(--dm-ease-snappy);
+  }
+}
+
+.dm-radio__dot {
+  border-radius: var(--dm-radius-full);
+  background-color: var(--dm-radio);
+  transform: scale(0);
+  transition: transform var(--dm-duration-base) var(--dm-ease-snappy);
+
+  // Inner dot ≈ half the control (HeroUI proportions).
+  :host[data-size='sm'] & {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  :host[data-size='md'] & {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  :host[data-size='lg'] & {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  :host[data-checked='true'] & {
+    transform: scale(1);
+  }
+}
+
+.dm-radio__label {
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg);
+
+  :host[data-size='sm'] & {
+    font-size: var(--dm-text-xs);
+  }
+
+  :host[data-size='lg'] & {
+    font-size: var(--dm-text-base);
+  }
+
+  &:empty {
+    display: none;
+  }
+}

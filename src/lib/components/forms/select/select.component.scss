@@ -1,0 +1,289 @@
+@use 'mixins';
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+// El `data-color` vive en el trigger (no en el host), así que mapeamos las
+// variables genéricas `--dm-sel*` desde el propio botón. Cada color pinta el
+// ring de foco / borde abierto y el highlight del item seleccionado.
+.dm-select__trigger {
+  --dm-sel: var(--dm-primary);
+  --dm-sel-subtle: var(--dm-primary-subtle);
+
+  &[data-color='default'] {
+    --dm-sel: var(--dm-fg);
+    --dm-sel-subtle: var(--dm-default-subtle);
+  }
+
+  &[data-color='primary'] {
+    --dm-sel: var(--dm-primary);
+    --dm-sel-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-sel: var(--dm-secondary);
+    --dm-sel-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-sel: var(--dm-success);
+    --dm-sel-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-sel: var(--dm-warning);
+    --dm-sel-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-sel: var(--dm-danger);
+    --dm-sel-subtle: var(--dm-danger-subtle);
+  }
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-select__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-select__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Trigger ---------------------------------------------------------------
+.dm-select__trigger {
+  --dm-sel-trigger-fg: var(--dm-fg);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-2);
+  width: 100%;
+  padding: 0 var(--dm-control-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-sel-trigger-fg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-normal);
+  cursor: pointer;
+
+  // Ring de foco parkeado a 0 spread → crece al abrir/focar (misma técnica que
+  // .dm-input): un único box-shadow que anima en anchura.
+  box-shadow: 0 0 0 0 var(--dm-sel-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus-visible,
+  &[data-open] {
+    outline: none;
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-sel);
+    box-shadow: 0 0 0 3.5px var(--dm-sel-subtle);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // ---- Sizes -------------------------------------------------------------
+  &[data-size='sm'] {
+    height: 2rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem;
+  }
+
+  &[data-size='lg'] {
+    height: 3rem;
+    font-size: var(--dm-text-base);
+    padding-inline: calc(var(--dm-control-padding-x) + 0.125rem);
+  }
+
+  // ---- Radius ------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+    padding-inline: var(--dm-space-4);
+  }
+
+  // ---- Variants ----------------------------------------------------------
+  &[data-variant='flat'] {
+    // default styles above already implement flat
+  }
+
+  &[data-variant='bordered'] {
+    background-color: transparent;
+    border-color: var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      border-color: var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+    }
+  }
+
+  &[data-variant='faded'] {
+    background-color: var(--dm-bg-muted);
+    border-color: var(--dm-border);
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: var(--dm-bg-elevated);
+    }
+  }
+
+  // Underlined: sin superficie ni borde salvo el trazo inferior — muy común
+  // en formularios densos estilo Material/HeroUI underlined.
+  &[data-variant='underlined'] {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding-inline: 0;
+    box-shadow: inset 0 -1px 0 var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+      box-shadow: inset 0 -2px 0 var(--dm-sel);
+    }
+  }
+
+  // ---- Invalid -----------------------------------------------------------
+  &[data-invalid] {
+    border-color: var(--dm-danger);
+    box-shadow: 0 0 0 0 var(--dm-danger-subtle);
+
+    &:focus-visible,
+    &[data-open] {
+      box-shadow: 0 0 0 3.5px var(--dm-danger-subtle);
+    }
+  }
+
+  // Rotate the chevron while the panel is open (visual affordance).
+  &[data-open] .dm-select__chevron {
+    transform: rotate(180deg);
+  }
+}
+
+.dm-select__value {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &--placeholder {
+    color: var(--dm-fg-subtle);
+  }
+}
+
+.dm-select__chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--dm-fg-muted);
+  transition: transform var(--dm-duration-base) var(--dm-ease-snappy);
+}
+
+.dm-select__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: var(--dm-radius-full);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+
+  @include mixins.transition(background-color, color);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 10%, transparent);
+    color: var(--dm-fg);
+  }
+
+  svg {
+    width: 0.6875rem;
+    height: 0.6875rem;
+  }
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-select__hint,
+.dm-select__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-select__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-select__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+  animation: dm-select-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-select-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-select__error {
+    animation: none;
+  }
+}

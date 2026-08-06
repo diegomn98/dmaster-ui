@@ -1,0 +1,612 @@
+@use 'mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// ---- Card wrapper ----------------------------------------------------------
+// Toolbar + scrollable table + footer live inside one rounded, bordered card.
+
+.dm-table {
+  // Cell padding — shared by <th>, <td> and the sort button so density stays
+  // consistent even when the button fills the header cell.
+  --dm-cell-py: var(--dm-space-3);
+  --dm-cell-px: var(--dm-space-4);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--dm-bg);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-lg);
+}
+
+// ---- Toolbar ---------------------------------------------------------------
+
+.dm-table__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dm-space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dm-space-3) var(--dm-space-4);
+  border-bottom: 1px solid var(--dm-border);
+}
+
+.dm-table__toolbar-start {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dm-space-3);
+  align-items: center;
+}
+
+.dm-table__toolbar-end {
+  display: flex;
+  gap: var(--dm-space-2);
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+// ---- Search ----------------------------------------------------------------
+
+.dm-table__search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  width: min(20rem, 100%);
+  height: 2.25rem;
+  padding-inline: var(--dm-space-3);
+  color: var(--dm-fg-muted);
+  background: var(--dm-bg-subtle);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-md);
+
+  @include mixins.transition(border-color, box-shadow, background-color);
+
+  &:focus-within {
+    color: var(--dm-fg);
+    background: var(--dm-bg);
+    border-color: var(--dm-primary);
+    box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+  }
+}
+
+.dm-table__search-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.dm-table__search-input {
+  flex: 1;
+  min-width: 0;
+  color: var(--dm-fg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  background: transparent;
+  border: 0;
+  outline: none;
+
+  &::placeholder {
+    color: var(--dm-fg-subtle);
+  }
+
+  // Hide the native search cancel — we render our own clear button.
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.dm-table__search-clear {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dm-radius-full);
+
+  @include mixins.transition(color, background-color);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  &:hover {
+    color: var(--dm-fg);
+    background: var(--dm-bg-muted);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Selection summary chip ------------------------------------------------
+
+.dm-table__selection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  height: 2.25rem;
+  padding-inline: var(--dm-space-3);
+  font-size: var(--dm-text-sm);
+  color: var(--dm-primary);
+  background: var(--dm-primary-subtle);
+  border-radius: var(--dm-radius-md);
+}
+
+.dm-table__selection-count {
+  font-weight: var(--dm-font-medium);
+}
+
+.dm-table__selection-clear {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  opacity: 0.85;
+
+  @include mixins.transition(opacity);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+
+    border-radius: var(--dm-radius-sm);
+  }
+}
+
+// ---- Scroll container ------------------------------------------------------
+
+.dm-table__scroll {
+  overflow-x: auto;
+
+  &--sticky {
+    max-height: inherit;
+    overflow-y: auto;
+  }
+}
+
+// ---- Table -----------------------------------------------------------------
+
+.dm-table__table {
+  width: 100%;
+  font-family: var(--dm-font-sans);
+  font-feature-settings: var(--dm-numeric);
+  color: var(--dm-fg);
+  text-align: start;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.dm-table__caption {
+  padding: var(--dm-space-3) var(--dm-space-4);
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-fg-muted);
+  text-align: start;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  caption-side: top;
+  border-bottom: 1px solid var(--dm-border);
+}
+
+// ---- Header ----------------------------------------------------------------
+
+.dm-table__head {
+  background: var(--dm-bg-subtle);
+}
+
+.dm-table__th {
+  position: relative;
+  padding: var(--dm-cell-py) var(--dm-cell-px);
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-semibold);
+  color: var(--dm-fg-muted);
+  text-align: start;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: var(--dm-bg-subtle);
+  border-bottom: 1px solid var(--dm-border);
+
+  @include mixins.transition(background-color, color);
+
+  &[data-align='center'] {
+    text-align: center;
+  }
+
+  &[data-align='end'] {
+    text-align: end;
+  }
+
+  // Sortable header: the button fills the cell so the whole header is a target;
+  // a hover wash hints at interactivity.
+  &[data-sortable] {
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--dm-bg-muted);
+      color: var(--dm-fg);
+    }
+  }
+
+  // Active sort column: darker label + a colored underline accent.
+  &[data-sorted] {
+    color: var(--dm-fg);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--dm-primary);
+    }
+  }
+}
+
+.dm-table__th--select,
+.dm-table__td--select {
+  width: 1%;
+  padding-inline: var(--dm-space-4);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.dm-table__label {
+  display: inline-block;
+}
+
+// ---- Body ------------------------------------------------------------------
+
+.dm-table__td {
+  padding: var(--dm-cell-py) var(--dm-cell-px);
+  font-size: var(--dm-text-sm);
+  color: var(--dm-fg);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--dm-border);
+
+  @include mixins.transition(background-color);
+
+  &[data-align='center'] {
+    text-align: center;
+  }
+
+  &[data-align='end'] {
+    text-align: end;
+  }
+
+  // Faint tint down the active sort column (below hover/selected specificity).
+  &[data-sorted] {
+    background: color-mix(in srgb, var(--dm-primary) 4%, transparent);
+  }
+}
+
+.dm-table__tr {
+  &:last-child .dm-table__td {
+    border-bottom: 0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dm-ring);
+    outline-offset: -2px;
+  }
+}
+
+// ---- Hover -----------------------------------------------------------------
+
+.dm-table[data-hover] .dm-table__body .dm-table__tr:not(.dm-table__tr--skeleton) {
+  cursor: pointer;
+}
+
+.dm-table[data-hover]
+  .dm-table__body
+  .dm-table__tr:not(.dm-table__tr--skeleton):hover
+  .dm-table__td {
+  background: var(--dm-bg-subtle);
+}
+
+// ---- Variants --------------------------------------------------------------
+
+.dm-table[data-variant='striped'] .dm-table__body .dm-table__tr:nth-child(even) .dm-table__td {
+  background: var(--dm-bg-subtle);
+}
+
+.dm-table[data-variant='striped'][data-hover] .dm-table__body .dm-table__tr:hover .dm-table__td {
+  background: var(--dm-bg-muted);
+}
+
+.dm-table[data-variant='bordered'] {
+  .dm-table__th,
+  .dm-table__td {
+    border-right: 1px solid var(--dm-border);
+  }
+
+  .dm-table__th:last-child,
+  .dm-table__td:last-child {
+    border-right: 0;
+  }
+}
+
+// ---- Selected row (wins over hover/striped) --------------------------------
+
+.dm-table__body .dm-table__tr[data-selected] .dm-table__td {
+  background: var(--dm-primary-subtle);
+}
+
+.dm-table[data-hover] .dm-table__body .dm-table__tr[data-selected]:hover .dm-table__td {
+  background: color-mix(in srgb, var(--dm-primary-subtle) 70%, var(--dm-primary) 12%);
+}
+
+// ---- Density ---------------------------------------------------------------
+
+.dm-table[data-density='compact'] {
+  --dm-cell-py: var(--dm-space-2);
+  --dm-cell-px: var(--dm-space-3);
+}
+
+.dm-table[data-density='spacious'] {
+  --dm-cell-py: var(--dm-space-4);
+  --dm-cell-px: var(--dm-space-5);
+}
+
+// ---- Sticky header ---------------------------------------------------------
+
+.dm-table__scroll--sticky .dm-table__head .dm-table__th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+// ---- Sort control ----------------------------------------------------------
+
+.dm-table__sort-btn {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--dm-cell-py) var(--dm-cell-px);
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+
+  .dm-table__th[data-align='center'] & {
+    justify-content: center;
+  }
+
+  .dm-table__th[data-align='end'] & {
+    justify-content: flex-end;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dm-ring);
+    outline-offset: -2px;
+  }
+}
+
+// The arrows stay reserved (no layout shift) but only appear on hover or when
+// the column is the active sort — a quieter, more premium affordance.
+.dm-table__sort-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  opacity: 0;
+
+  @include mixins.transition(opacity);
+}
+
+.dm-table__th[data-sortable]:hover .dm-table__sort-icon,
+.dm-table__th[data-sorted] .dm-table__sort-icon {
+  opacity: 1;
+}
+
+.dm-table__sort-arrow {
+  fill: currentcolor;
+  opacity: 0.35;
+
+  @include mixins.transition(opacity, color);
+}
+
+.dm-table__sort-btn[data-sort='asc'] .dm-table__sort-arrow--up,
+.dm-table__sort-btn[data-sort='desc'] .dm-table__sort-arrow--down {
+  color: var(--dm-primary);
+  opacity: 1;
+}
+
+// ---- Empty state -----------------------------------------------------------
+
+.dm-table__empty-cell {
+  padding: 0;
+  border-bottom: 0;
+}
+
+.dm-table__empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dm-space-3);
+  align-items: center;
+  justify-content: center;
+  padding: var(--dm-space-12) var(--dm-space-6);
+  color: var(--dm-fg-subtle);
+  text-align: center;
+}
+
+.dm-table__empty-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.6;
+}
+
+.dm-table__empty-text {
+  font-size: var(--dm-text-sm);
+  color: var(--dm-fg-muted);
+}
+
+// ---- Footer / pagination ---------------------------------------------------
+
+.dm-table__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dm-space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dm-space-3) var(--dm-space-4);
+  border-top: 1px solid var(--dm-border);
+}
+
+.dm-table__footer-info {
+  font-size: var(--dm-text-sm);
+  color: var(--dm-fg-muted);
+}
+
+.dm-table__footer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dm-space-4);
+  align-items: center;
+}
+
+.dm-table__page-size {
+  display: inline-flex;
+  gap: var(--dm-space-2);
+  align-items: center;
+  font-size: var(--dm-text-sm);
+  color: var(--dm-fg-muted);
+}
+
+// Custom-styled native select: hide the native chevron, draw our own.
+.dm-table__page-size-field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dm-table__page-size-select {
+  height: 2rem;
+  padding: 0 1.75rem 0 var(--dm-space-2);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  color: var(--dm-fg);
+  appearance: none;
+  background: var(--dm-bg);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-md);
+  cursor: pointer;
+
+  @include mixins.transition(border-color, box-shadow);
+
+  &:hover {
+    border-color: var(--dm-border-strong, var(--dm-fg-subtle));
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--dm-primary);
+    box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+  }
+}
+
+.dm-table__page-size-chevron {
+  position: absolute;
+  inset-inline-end: 0.5rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--dm-fg-muted);
+  pointer-events: none;
+}
+
+// Numbered pager — prev / page numbers (active filled) / next.
+.dm-table__pager {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.dm-table__pager-arrow,
+.dm-table__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+
+  @include mixins.transition(color, background-color, border-color, box-shadow);
+
+  &:hover:not(:disabled, .dm-table__page--active) {
+    color: var(--dm-fg);
+    background: var(--dm-bg-subtle);
+    border-color: var(--dm-border);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+.dm-table__pager-arrow {
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:disabled {
+    color: var(--dm-fg-subtle);
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+}
+
+.dm-table__page {
+  padding-inline: 0.375rem;
+  font-weight: var(--dm-font-medium);
+
+  &--active {
+    color: var(--dm-primary-fg);
+    background: var(--dm-primary);
+    border-color: var(--dm-primary);
+    box-shadow: 0 2px 6px -2px color-mix(in srgb, var(--dm-primary) 55%, transparent);
+    cursor: default;
+  }
+}
+
+.dm-table__page-gap {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 2rem;
+  padding-bottom: 0.35rem;
+  color: var(--dm-fg-subtle);
+  user-select: none;
+}

@@ -1,0 +1,282 @@
+@use 'mixins';
+
+:host {
+  display: inline-flex;
+}
+
+// Dimensiones alineadas con HeroUI: alturas y paddings fijos por tamaño, con
+// min-width para que un botón corto no se colapse en píldora minúscula.
+.dm-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  border: 2px solid transparent;
+  border-radius: var(--dm-radius-md);
+  font-family: var(--dm-font-sans);
+  font-weight: var(--dm-font-medium);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+
+  // El hover uniforme (opacity 0.9) es la firma de HeroUI: la misma sensación
+  // en solid, flat y bordered, sin gestionar hovers por variante uno a uno.
+  @include mixins.transition(opacity, background-color, color, border-color, box-shadow, transform);
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--dm-btn-line) 55%, transparent);
+    outline-offset: 2px;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  // Press elástico HeroUI: scale corto y rápido.
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+    transition-duration: var(--dm-duration-fast);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:disabled:not([data-state='loading']) {
+    opacity: 0.5;
+  }
+
+  &[data-state='loading'] {
+    cursor: progress;
+  }
+
+  // ---- Sizes (HeroUI: h-8 / h-10 / h-12) -----------------------------------
+  &[data-size='sm'] {
+    height: 2rem; // 32px
+    min-width: 4rem; // 64px
+    padding-inline: 0.75rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem; // 40px
+    min-width: 5rem; // 80px
+    padding-inline: 1rem;
+    font-size: var(--dm-text-sm);
+  }
+
+  &[data-size='lg'] {
+    height: 3rem; // 48px
+    min-width: 6rem; // 96px
+    padding-inline: 1.5rem;
+    font-size: var(--dm-text-base);
+    letter-spacing: -0.011em;
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+  }
+
+  // ---- Colors → generic vars -----------------------------------------------
+  &[data-color='default'] {
+    --dm-btn: var(--dm-default);
+    --dm-btn-hover: color-mix(in srgb, var(--dm-default) 86%, var(--dm-fg));
+    --dm-btn-fg: var(--dm-default-fg);
+    --dm-btn-soft: var(--dm-default-subtle);
+    --dm-btn-line: var(--dm-border-strong);
+    --dm-btn-accent: var(--dm-fg);
+  }
+
+  &[data-color='primary'] {
+    --dm-btn: var(--dm-primary);
+    --dm-btn-hover: var(--dm-primary-hover);
+    --dm-btn-fg: var(--dm-primary-fg);
+    --dm-btn-soft: var(--dm-primary-subtle);
+    --dm-btn-line: var(--dm-primary);
+    --dm-btn-accent: var(--dm-primary);
+  }
+
+  &[data-color='secondary'] {
+    --dm-btn: var(--dm-secondary);
+    --dm-btn-hover: var(--dm-secondary-hover);
+    --dm-btn-fg: var(--dm-secondary-fg);
+    --dm-btn-soft: var(--dm-secondary-subtle);
+    --dm-btn-line: var(--dm-secondary);
+    --dm-btn-accent: var(--dm-secondary);
+  }
+
+  &[data-color='success'] {
+    --dm-btn: var(--dm-success);
+    --dm-btn-hover: var(--dm-success-hover);
+    --dm-btn-fg: var(--dm-success-fg);
+    --dm-btn-soft: var(--dm-success-subtle);
+    --dm-btn-line: var(--dm-success);
+    --dm-btn-accent: var(--dm-success);
+  }
+
+  &[data-color='warning'] {
+    --dm-btn: var(--dm-warning);
+    --dm-btn-hover: var(--dm-warning-hover);
+    --dm-btn-fg: var(--dm-warning-fg);
+    --dm-btn-soft: var(--dm-warning-subtle);
+    --dm-btn-line: var(--dm-warning);
+    --dm-btn-accent: var(--dm-warning);
+  }
+
+  &[data-color='danger'] {
+    --dm-btn: var(--dm-danger);
+    --dm-btn-hover: var(--dm-danger-hover);
+    --dm-btn-fg: var(--dm-danger-fg);
+    --dm-btn-soft: var(--dm-danger-subtle);
+    --dm-btn-line: var(--dm-danger);
+    --dm-btn-accent: var(--dm-danger);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  &[data-variant='solid'] {
+    background: var(--dm-btn);
+    color: var(--dm-btn-fg);
+  }
+
+  &[data-variant='flat'] {
+    background: var(--dm-btn-soft);
+    color: var(--dm-btn-accent);
+  }
+
+  // HeroUI faded = flat con borde 1px del tono.
+  &[data-variant='faded'] {
+    background: var(--dm-btn-soft);
+    border-color: var(--dm-border-strong);
+    color: var(--dm-btn-accent);
+  }
+
+  &[data-variant='bordered'] {
+    background: transparent;
+    border-color: var(--dm-btn-line);
+    color: var(--dm-btn-accent);
+  }
+
+  &[data-variant='light'] {
+    background: transparent;
+    color: var(--dm-btn-accent);
+
+    &:hover:not(:disabled) {
+      // La ligera opacidad se ve rara sobre transparente: sustituye por wash.
+      opacity: 1;
+      background: var(--dm-btn-soft);
+    }
+  }
+
+  // Ghost: bordered en reposo, se rellena en hover.
+  &[data-variant='ghost'] {
+    background: transparent;
+    border-color: var(--dm-btn-line);
+    color: var(--dm-btn-accent);
+
+    &:hover:not(:disabled) {
+      opacity: 1;
+      background: var(--dm-btn);
+      border-color: var(--dm-btn);
+      color: var(--dm-btn-fg);
+    }
+  }
+
+  // Shadow: sólido con glow del propio color proyectado debajo (seña HeroUI).
+  &[data-variant='shadow'] {
+    background: var(--dm-btn);
+    color: var(--dm-btn-fg);
+    box-shadow: 0 6px 18px -4px color-mix(in srgb, var(--dm-btn) 55%, transparent);
+  }
+
+  // ---- States: the label keeps its space, the indicator overlays it --------
+  &:not([data-state='idle']) .dm-button__label {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.dm-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  transition:
+    opacity var(--dm-duration-fast) var(--dm-ease-out),
+    transform var(--dm-duration-base) var(--dm-ease-snappy);
+}
+
+.dm-button__indicator {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  animation: dm-button-in var(--dm-duration-fast) var(--dm-ease-out);
+
+  [data-state='success'] &,
+  [data-state='error'] & {
+    animation-name: dm-button-pop;
+    animation-timing-function: var(--dm-ease-snappy);
+  }
+
+  svg {
+    width: 1.125em;
+    height: 1.125em;
+  }
+}
+
+.dm-button__live {
+  @include mixins.visually-hidden;
+}
+
+@keyframes dm-button-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dm-button-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+
+  60% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Touch: no dejar que el tamaño sm baje del target mínimo en punteros coarse.
+@media (pointer: coarse) {
+  .dm-button[data-size='sm'] {
+    min-height: 2.75rem;
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-button__indicator {
+    animation: none;
+  }
+}

@@ -1,0 +1,22 @@
+<div class="dm-tabs" [attr.data-placement]="placement()">
+  <div
+    #list
+    class="dm-tabs__list"
+    role="tablist"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-orientation]="placement() === 'start' ? 'vertical' : 'horizontal'"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    [attr.data-variant]="variant()"
+    [attr.data-color]="color()"
+    [attr.data-size]="size()"
+    [attr.data-radius]="radius()"
+    [attr.data-full-width]="fullWidth() ? '' : null"
+    [attr.data-divider]="divider() ? '' : null"
+  >
+    <span class="dm-tabs__indicator" aria-hidden="true"></span>
+    <ng-content select="dm-tab" />
+  </div>
+  <div class="dm-tabs__panels">
+    <ng-content select="dm-tab-panel" />
+  </div>
+</div>

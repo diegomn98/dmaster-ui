@@ -1,0 +1,21 @@
+@use 'mixins';
+
+:host {
+  display: block;
+}
+
+.dm-radio-group {
+  display: flex;
+  gap: var(--dm-space-3);
+
+  &[data-orientation='vertical'] {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &[data-orientation='horizontal'] {
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--dm-space-4);
+  }
+}

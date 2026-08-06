@@ -1,0 +1,6 @@
+<div class="dm-radio-group" [attr.data-orientation]="orientation()">
+  <ng-content />
+</div>
+
+<!-- Serializes the current value inside a plain <form>. Invisible to a11y. -->
+<input type="hidden" [name]="name()" [value]="value() ?? ''" aria-hidden="true" tabindex="-1" />

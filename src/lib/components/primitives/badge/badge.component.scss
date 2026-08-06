@@ -3,7 +3,7 @@
   align-items: center;
   gap: 0.375em;
   border: 1px solid transparent;
-  border-radius: var(--dm-radius-sm);
+  border-radius: var(--dm-radius-full);
   font-weight: var(--dm-font-medium);
   line-height: 1.2;
   letter-spacing: 0.01em;
@@ -11,154 +11,127 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Ring sutil del mismo tono en las subtle; sheen + sombra de contacto en las
-// solid; velo casi imperceptible del propio tono en las outline.
-:host([data-appearance='subtle']) {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentcolor 14%, transparent);
-}
-
-:host([data-appearance='solid']) {
-  box-shadow:
-    var(--dm-sheen),
-    0 1px 1px rgb(0 0 0 / 6%);
-}
-
-:host([data-appearance='outline']) {
-  background: color-mix(in srgb, currentcolor 5%, transparent);
-}
-
+// ---- Sizes -----------------------------------------------------------------
 :host([data-size='md']) {
   padding: 0.1875rem 0.5625rem;
   font-size: var(--dm-text-xs);
 }
 
-// Cuanto más pequeño el cuerpo, más tracking necesita para respirar.
 :host([data-size='sm']) {
   padding: 0.0625rem 0.4375rem;
   font-size: 0.6875rem;
   letter-spacing: 0.02em;
 }
 
-:host([data-pill]) {
+// ---- Radius ----------------------------------------------------------------
+:host([data-radius='sm']) {
+  border-radius: var(--dm-radius-sm);
+}
+
+:host([data-radius='md']) {
+  border-radius: var(--dm-radius-md);
+}
+
+:host([data-radius='lg']) {
+  border-radius: var(--dm-radius-lg);
+}
+
+:host([data-radius='full']) {
   border-radius: var(--dm-radius-full);
 }
 
-// Las pills piden algo más de aire horizontal para compensar la curva.
-:host([data-pill][data-size='md']) {
-  padding-inline: 0.625rem;
+// ---- Colors → generic vars -------------------------------------------------
+:host([data-color='default']) {
+  --dm-badge: var(--dm-default);
+  --dm-badge-fg: var(--dm-default-fg);
+  --dm-badge-soft: var(--dm-default-subtle);
+  --dm-badge-line: var(--dm-border-strong);
+  --dm-badge-accent: var(--dm-fg-muted);
+  --dm-badge-dot: var(--dm-fg-subtle);
 }
 
-:host([data-pill][data-size='sm']) {
-  padding-inline: 0.5rem;
+:host([data-color='primary']) {
+  --dm-badge: var(--dm-primary);
+  --dm-badge-fg: var(--dm-primary-fg);
+  --dm-badge-soft: var(--dm-primary-subtle);
+  --dm-badge-line: var(--dm-primary);
+  --dm-badge-accent: var(--dm-primary);
+  --dm-badge-dot: var(--dm-primary);
 }
 
+:host([data-color='secondary']) {
+  --dm-badge: var(--dm-secondary);
+  --dm-badge-fg: var(--dm-secondary-fg);
+  --dm-badge-soft: var(--dm-secondary-subtle);
+  --dm-badge-line: var(--dm-secondary);
+  --dm-badge-accent: var(--dm-secondary);
+  --dm-badge-dot: var(--dm-secondary);
+}
+
+:host([data-color='success']) {
+  --dm-badge: var(--dm-success);
+  --dm-badge-fg: var(--dm-success-fg);
+  --dm-badge-soft: var(--dm-success-subtle);
+  --dm-badge-line: var(--dm-success);
+  --dm-badge-accent: var(--dm-success);
+  --dm-badge-dot: var(--dm-success);
+}
+
+:host([data-color='warning']) {
+  --dm-badge: var(--dm-warning);
+  --dm-badge-fg: var(--dm-warning-fg);
+  --dm-badge-soft: var(--dm-warning-subtle);
+  --dm-badge-line: var(--dm-warning);
+  --dm-badge-accent: var(--dm-warning);
+  --dm-badge-dot: var(--dm-warning);
+}
+
+:host([data-color='danger']) {
+  --dm-badge: var(--dm-danger);
+  --dm-badge-fg: var(--dm-danger-fg);
+  --dm-badge-soft: var(--dm-danger-subtle);
+  --dm-badge-line: var(--dm-danger);
+  --dm-badge-accent: var(--dm-danger);
+  --dm-badge-dot: var(--dm-danger);
+}
+
+// ---- Variants --------------------------------------------------------------
+:host([data-variant='solid']) {
+  background: var(--dm-badge);
+  color: var(--dm-badge-fg);
+}
+
+:host([data-variant='flat']) {
+  background: var(--dm-badge-soft);
+  color: var(--dm-badge-accent);
+}
+
+:host([data-variant='bordered']) {
+  border-color: color-mix(in srgb, var(--dm-badge-line) 45%, transparent);
+  color: var(--dm-badge-accent);
+}
+
+:host([data-variant='light']) {
+  color: var(--dm-badge-accent);
+}
+
+// Dot: neutral bordered surface with a colored leading dot.
+:host([data-variant='dot']) {
+  border-color: var(--dm-border-strong);
+  color: var(--dm-fg);
+}
+
+:host([data-variant='shadow']) {
+  background: var(--dm-badge);
+  color: var(--dm-badge-fg);
+  box-shadow: 0 3px 10px -3px color-mix(in srgb, var(--dm-badge) 55%, transparent);
+}
+
+// ---- Leading dot -----------------------------------------------------------
 .dm-badge__dot {
   flex-shrink: 0;
-  width: 0.375em;
-  height: 0.375em;
+  width: 0.5em;
+  height: 0.5em;
   border-radius: var(--dm-radius-full);
-  background: currentcolor;
-
-  // Glow del mismo tono: el punto se lee como una señal de estado "viva".
-  box-shadow: 0 0 6px color-mix(in srgb, currentcolor 65%, transparent);
-}
-
-// ---- neutral ---------------------------------------------------------------
-:host([data-variant='neutral'][data-appearance='subtle']) {
-  background: var(--dm-bg-muted);
-  color: var(--dm-fg-muted);
-}
-
-:host([data-variant='neutral'][data-appearance='solid']) {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-fg) 88%, white 12%),
-    var(--dm-fg)
-  );
-  color: var(--dm-bg);
-}
-
-:host([data-variant='neutral'][data-appearance='outline']) {
-  border-color: var(--dm-border-strong);
-  color: var(--dm-fg-muted);
-}
-
-// ---- primary ---------------------------------------------------------------
-:host([data-variant='primary'][data-appearance='subtle']) {
-  background: var(--dm-primary-subtle);
-  color: var(--dm-primary);
-}
-
-:host([data-variant='primary'][data-appearance='solid']) {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-primary) 86%, white 14%),
-    var(--dm-primary)
-  );
-  color: var(--dm-primary-fg);
-}
-
-:host([data-variant='primary'][data-appearance='outline']) {
-  border-color: color-mix(in srgb, var(--dm-primary) 40%, transparent);
-  color: var(--dm-primary);
-}
-
-// ---- success ---------------------------------------------------------------
-:host([data-variant='success'][data-appearance='subtle']) {
-  background: var(--dm-success-subtle);
-  color: var(--dm-success);
-}
-
-:host([data-variant='success'][data-appearance='solid']) {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-success) 86%, white 14%),
-    var(--dm-success)
-  );
-  color: var(--dm-primary-fg);
-}
-
-:host([data-variant='success'][data-appearance='outline']) {
-  border-color: color-mix(in srgb, var(--dm-success) 40%, transparent);
-  color: var(--dm-success);
-}
-
-// ---- warning ---------------------------------------------------------------
-:host([data-variant='warning'][data-appearance='subtle']) {
-  background: var(--dm-warning-subtle);
-  color: var(--dm-warning);
-}
-
-:host([data-variant='warning'][data-appearance='solid']) {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-warning) 86%, white 14%),
-    var(--dm-warning)
-  );
-  color: var(--dm-primary-fg);
-}
-
-:host([data-variant='warning'][data-appearance='outline']) {
-  border-color: color-mix(in srgb, var(--dm-warning) 40%, transparent);
-  color: var(--dm-warning);
-}
-
-// ---- danger ----------------------------------------------------------------
-:host([data-variant='danger'][data-appearance='subtle']) {
-  background: var(--dm-danger-subtle);
-  color: var(--dm-danger);
-}
-
-:host([data-variant='danger'][data-appearance='solid']) {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-danger) 86%, white 14%),
-    var(--dm-danger)
-  );
-  color: var(--dm-primary-fg);
-}
-
-:host([data-variant='danger'][data-appearance='outline']) {
-  border-color: color-mix(in srgb, var(--dm-danger) 40%, transparent);
-  color: var(--dm-danger);
+  background: var(--dm-badge-dot);
 }

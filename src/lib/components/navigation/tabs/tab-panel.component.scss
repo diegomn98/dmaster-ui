@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  min-width: 0;
+  outline: none;
+
+  // Gentle fade + rise as the active panel appears.
+  &[data-selected='true'] {
+    animation: dm-tab-panel-in var(--dm-duration-base) var(--dm-ease-out);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dm-ring);
+    outline-offset: 2px;
+    border-radius: var(--dm-radius-sm);
+  }
+}
+
+@keyframes dm-tab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host[data-selected='true'] {
+    animation: none;
+  }
+}
+
+// The `hidden` attribute already implies display:none, but component hosts
+// that force `display: block` above would override it in some engines.
+:host[hidden] {
+  display: none;
+}

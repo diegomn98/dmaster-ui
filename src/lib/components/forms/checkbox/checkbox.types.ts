@@ -1,5 +1,5 @@
-/**
- * (Reservado para tipos futuros del checkbox; el componente actual no
- * necesita variantes — mantiene la nomenclatura fija de la carpeta.)
- */
+/** Size scale of the checkbox box and label. */
+export type DmCheckboxSize = 'sm' | 'md';
+
+/** Internal checked state used for indeterminate support. */
 export type DmCheckboxState = 'unchecked' | 'checked' | 'indeterminate';

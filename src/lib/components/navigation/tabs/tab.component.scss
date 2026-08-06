@@ -1,0 +1,107 @@
+@use 'mixins';
+
+// The tab consumes the CSS variables set on its parent .dm-tabs__list. Colors,
+// sizes and radii inherit through the DOM — no need to duplicate parent inputs
+// on the tab itself. Variant-specific selected states live in :host-context
+// blocks so the tab reads the parent's data-variant without an @Input.
+
+:host {
+  position: relative; // sit above the sliding indicator (z-index 0)
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  box-sizing: border-box;
+  height: var(--dm-tab-h, 2.5rem);
+  padding-inline: var(--dm-tab-px, 1rem);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-tab-fs, var(--dm-text-sm));
+  font-weight: var(--dm-font-medium);
+  letter-spacing: -0.005em;
+  line-height: 1;
+  color: var(--dm-fg-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--dm-tab-radius, var(--dm-radius-md));
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  outline: none;
+
+  @include mixins.transition(background-color, color, box-shadow, border-color, opacity, transform);
+
+  &:hover:not([data-disabled]) {
+    color: var(--dm-fg);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  // HeroUI press: short elastic squeeze.
+  &:active:not([data-disabled]) {
+    transform: scale(0.97);
+    transition-duration: var(--dm-duration-fast);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ---- Variant-specific selected states -------------------------------------
+// The active pill / underline is drawn by the parent's sliding indicator; the
+// tab itself only changes text color when selected. :host-context reads the
+// parent's data-variant so the tab does not need to duplicate the input.
+
+:host-context([role='tablist'][data-variant='solid']) {
+  &[data-selected='true'] {
+    color: var(--dm-fg);
+  }
+}
+
+:host-context([role='tablist'][data-variant='bordered']) {
+  &[data-selected='true'] {
+    color: var(--dm-tab-fg, var(--dm-bg));
+  }
+}
+
+:host-context([role='tablist'][data-variant='light']) {
+  &[data-selected='true'] {
+    color: var(--dm-tab-line, var(--dm-fg));
+  }
+}
+
+:host-context([role='tablist'][data-variant='underlined']) {
+  border-radius: 0;
+
+  &[data-selected='true'] {
+    color: var(--dm-tab-line, var(--dm-fg));
+  }
+}
+
+// Vertical underlined: tabs align to the start of the column.
+:host-context([role='tablist'][aria-orientation='vertical'][data-variant='underlined']) {
+  justify-content: flex-start;
+}
+
+:host-context([role='tablist'][data-variant='segment']) {
+  &[data-selected='true'] {
+    color: var(--dm-fg);
+  }
+}
+
+// Full width (horizontal only): each tab grows to share the row equally.
+:host-context([role='tablist'][aria-orientation='horizontal'][data-full-width]) {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+// Touch: never let the sm size fall under the 44px minimum on coarse pointers.
+@media (pointer: coarse) {
+  :host {
+    min-height: 2.75rem;
+  }
+}

@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { BADGE_DEFAULTS } from './badge.tokens';
-import { DmBadgeAppearance, DmBadgeSize, DmBadgeVariant } from './badge.types';
+import { DmBadgeColor, DmBadgeRadius, DmBadgeSize, DmBadgeVariant } from './badge.types';
 
 /**
- * Status label. Pure theming on top of the semantic status tokens.
+ * Chip / status label with a HeroUI-style color × variant API.
  *
  * ```html
  * <dm-badge>Draft</dm-badge>
- * <dm-badge variant="success" [dot]="true">Active</dm-badge>
- * <dm-badge variant="danger" appearance="solid">Blocked</dm-badge>
- * <dm-badge variant="primary" appearance="outline" [pill]="true">v0.1.0</dm-badge>
+ * <dm-badge color="success" variant="dot">Active</dm-badge>
+ * <dm-badge color="danger" variant="solid">Blocked</dm-badge>
+ * <dm-badge color="primary" variant="bordered">v0.1.0</dm-badge>
  * ```
  */
 @Component({
@@ -19,27 +19,26 @@ import { DmBadgeAppearance, DmBadgeSize, DmBadgeVariant } from './badge.types';
   styleUrl: './badge.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    '[attr.data-color]': 'color()',
     '[attr.data-variant]': 'variant()',
-    '[attr.data-appearance]': 'appearance()',
     '[attr.data-size]': 'size()',
-    '[attr.data-pill]': "pill() ? '' : null",
+    '[attr.data-radius]': 'radius()',
   },
 })
 export class DmBadgeComponent {
   private readonly defaults = inject(BADGE_DEFAULTS);
 
   /** Semantic color. */
-  readonly variant = input<DmBadgeVariant>(this.defaults.variant);
+  readonly color = input<DmBadgeColor>(this.defaults.color);
 
-  /** Visual treatment. */
-  readonly appearance = input<DmBadgeAppearance>(this.defaults.appearance);
+  /** Visual variant. `dot` shows a leading status dot. */
+  readonly variant = input<DmBadgeVariant>(this.defaults.variant);
 
   /** Size scale. */
   readonly size = input<DmBadgeSize>(this.defaults.size);
 
-  /** Fully rounded corners. */
-  readonly pill = input<boolean>(false);
+  /** Corner rounding. `full` is pill-shaped. */
+  readonly radius = input<DmBadgeRadius>(this.defaults.radius);
 
-  /** Leading status dot, so color is not the only state carrier. */
-  readonly dot = input<boolean>(false);
+  protected readonly showDot = computed(() => this.variant() === 'dot');
 }

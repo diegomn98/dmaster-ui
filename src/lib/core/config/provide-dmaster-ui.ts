@@ -10,7 +10,7 @@ import { ThemeService } from '../services/theme.service';
 import { DMASTER_UI_CONFIG, DMASTER_UI_DEFAULT_CONFIG, DmasterUIConfig } from './dmaster-ui.config';
 
 /**
- * Registers the global ngx-dmaster-ui configuration and eagerly initializes
+ * Registers the global @dmaster/ui configuration and eagerly initializes
  * the theme and density services so `<html>` is stamped from app startup.
  *
  * ```ts

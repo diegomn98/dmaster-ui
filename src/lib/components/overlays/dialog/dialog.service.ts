@@ -2,6 +2,7 @@ import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, inject } from '@angular/core';
 
+import { DIALOG_DEFAULTS } from './dialog.tokens';
 import { DmDialogConfig } from './dialog.types';
 
 /**
@@ -26,6 +27,7 @@ import { DmDialogConfig } from './dialog.types';
 @Injectable({ providedIn: 'root' })
 export class DmDialogService {
   private readonly dialog = inject(Dialog);
+  private readonly defaults = inject(DIALOG_DEFAULTS);
 
   open<R = unknown, D = unknown, C = unknown>(
     component: ComponentType<C>,
@@ -33,10 +35,10 @@ export class DmDialogService {
   ): DialogRef<R, C> {
     return this.dialog.open<R, D, C>(component, {
       data: config.data,
-      disableClose: config.disableClose ?? false,
+      disableClose: config.disableClose ?? this.defaults.disableClose,
       ariaLabel: config.ariaLabel,
       ariaModal: true,
-      panelClass: ['dm-dialog-panel', `dm-dialog-panel--${config.size ?? 'md'}`],
+      panelClass: ['dm-dialog-panel', `dm-dialog-panel--${config.size ?? this.defaults.size}`],
       backdropClass: 'dm-dialog-backdrop',
     });
   }

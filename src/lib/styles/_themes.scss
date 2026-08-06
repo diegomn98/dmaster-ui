@@ -1,5 +1,5 @@
 // ============================================================================
-// ngx-dmaster-ui · Color themes
+// @dmaster/ui · Color themes
 // Light is the default on :root; dark overrides under [data-dm-theme='dark'].
 // ThemeService resolves 'auto' against prefers-color-scheme and always stamps
 // the resolved value on <html>, so CSS only needs the two explicit variants.
@@ -24,22 +24,39 @@
   --dm-border: rgb(24 24 27 / 8%);
   --dm-border-strong: rgb(24 24 27 / 14%);
 
-  // Brand
-  --dm-primary: #4f46e5;
-  --dm-primary-hover: #4338ca;
-  --dm-primary-fg: #fff;
-  --dm-primary-subtle: rgb(79 70 229 / 10%);
+  // Color system (HeroUI-style): each color exposes a base, a foreground for
+  // solid fills, and a soft tint. `default` is the neutral color.
+  --dm-default: #e4e4e7;
+  --dm-default-fg: #18181b;
+  --dm-default-subtle: rgb(24 24 27 / 6%);
 
-  // Status
-  --dm-success: #16a34a;
-  --dm-success-subtle: rgb(22 163 74 / 12%);
-  --dm-warning: #d97706;
-  --dm-warning-subtle: rgb(217 119 6 / 12%);
-  --dm-danger: #dc2626;
-  --dm-danger-subtle: rgb(220 38 38 / 12%);
+  // HeroUI blue as the UI primary. The brand gradient (--dm-gradient-brand)
+  // stays indigo→violet: identity for the logo/hero, blue for interactive UI.
+  --dm-primary: #006fee;
+  --dm-primary-hover: #005bc4;
+  --dm-primary-fg: #fff;
+  --dm-primary-subtle: rgb(0 111 238 / 12%);
+  --dm-secondary: #7c3aed;
+  --dm-secondary-hover: #6d28d9;
+  --dm-secondary-fg: #fff;
+  --dm-secondary-subtle: rgb(124 58 237 / 12%);
+
+  // Status (vivid, HeroUI-leaning). Green/amber take dark foregrounds.
+  --dm-success: #17c964;
+  --dm-success-hover: #12a150;
+  --dm-success-fg: #03190d;
+  --dm-success-subtle: rgb(23 201 100 / 14%);
+  --dm-warning: #f5a524;
+  --dm-warning-hover: #d98e13;
+  --dm-warning-fg: #3a2803;
+  --dm-warning-subtle: rgb(245 165 36 / 15%);
+  --dm-danger: #f31260;
+  --dm-danger-hover: #d10e51;
+  --dm-danger-fg: #fff;
+  --dm-danger-subtle: rgb(243 18 96 / 12%);
 
   // Focus ring
-  --dm-ring: rgb(79 70 229 / 60%);
+  --dm-ring: rgb(0 111 238 / 55%);
 
   // Brand
   --dm-gradient-brand: linear-gradient(135deg, #6366f1, #8b5cf6 55%, #a855f7);
@@ -77,22 +94,35 @@
   --dm-border: rgb(250 250 250 / 8%);
   --dm-border-strong: rgb(250 250 250 / 14%);
 
-  // Brand (slightly lifted for dark surfaces)
-  --dm-primary: #6366f1;
-  --dm-primary-hover: #818cf8;
+  // Color system (lifted for dark surfaces)
+  --dm-default: #3f3f46;
+  --dm-default-fg: #fafafa;
+  --dm-default-subtle: rgb(250 250 250 / 10%);
+  --dm-primary: #338ef7;
+  --dm-primary-hover: #66aaf9;
   --dm-primary-fg: #fff;
-  --dm-primary-subtle: rgb(99 102 241 / 16%);
+  --dm-primary-subtle: rgb(51 142 247 / 22%);
+  --dm-secondary: #9f75ff;
+  --dm-secondary-hover: #b794ff;
+  --dm-secondary-fg: #fff;
+  --dm-secondary-subtle: rgb(159 117 255 / 20%);
 
   // Status
-  --dm-success: #22c55e;
-  --dm-success-subtle: rgb(34 197 94 / 16%);
-  --dm-warning: #f59e0b;
-  --dm-warning-subtle: rgb(245 158 11 / 16%);
-  --dm-danger: #ef4444;
-  --dm-danger-subtle: rgb(239 68 68 / 16%);
+  --dm-success: #17c964;
+  --dm-success-hover: #45d483;
+  --dm-success-fg: #03190d;
+  --dm-success-subtle: rgb(23 201 100 / 20%);
+  --dm-warning: #f5a524;
+  --dm-warning-hover: #f7b955;
+  --dm-warning-fg: #3a2803;
+  --dm-warning-subtle: rgb(245 165 36 / 20%);
+  --dm-danger: #ff4d6d;
+  --dm-danger-hover: #ff6b85;
+  --dm-danger-fg: #fff;
+  --dm-danger-subtle: rgb(255 77 109 / 20%);
 
   // Focus ring
-  --dm-ring: rgb(129 140 248 / 60%);
+  --dm-ring: rgb(102 170 249 / 60%);
 
   // Component tokens
   --dm-skeleton-highlight: rgb(255 255 255 / 7%);

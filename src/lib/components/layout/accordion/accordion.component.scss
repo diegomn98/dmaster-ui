@@ -1,0 +1,48 @@
+@use 'mixins';
+
+// Accordion container. Each variant only sets what belongs to the container
+// itself (border/shadow/card wrapping, layout between children). Item-level
+// styling in response to the container's variant lives in
+// `accordion-item.component.scss` via `:host-context()`.
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// ---- Variants --------------------------------------------------------------
+// HeroUI: rellenos planos, radios generosos, sombras difusas suaves.
+
+// `light` (default): sin decoración global; los separators se pintan desde el
+// child con `:host-context([data-variant='light'])`.
+
+// `bordered`: contenedor único con borde y radio.
+:host([data-variant='bordered']) {
+  border: 1px solid var(--dm-border-strong);
+  border-radius: var(--dm-radius-lg);
+  overflow: hidden;
+  background: var(--dm-bg-elevated);
+}
+
+// `shadow`: como bordered pero elevado con sombra difusa en vez de borde.
+:host([data-variant='shadow']) {
+  border-radius: var(--dm-radius-lg);
+  overflow: hidden;
+  background: var(--dm-bg-elevated);
+  box-shadow: var(--dm-shadow-md);
+}
+
+// `splitted`: cada item vive como su propia card; el gap va aquí. Un poco más
+// de aire entre cards refuerza la sensación de piezas independientes.
+:host([data-variant='splitted']) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dm-space-3);
+}
+
+// ---- Disabled --------------------------------------------------------------
+
+:host([data-disabled]) {
+  opacity: 0.55;
+  pointer-events: none;
+}

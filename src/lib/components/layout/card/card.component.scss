@@ -2,27 +2,21 @@
 
 :host {
   display: block;
-  border-radius: var(--dm-radius-lg);
+
+  // HeroUI: superficie claramente redondeada.
+  border-radius: var(--dm-radius-xl);
 
   // El contenido de la card puede usar container queries contra ELLA.
   container-type: inline-size;
 }
 
 // ---- Appearances -----------------------------------------------------------
+// HeroUI: superficies PLANAS. Sin gradientes de relleno ni sheen; la jerarquía
+// la dan el color de superficie, el borde y una sombra difusa (nunca hairline).
 
 :host([data-appearance='elevated']) {
-  // Luz cenital calibrada: el tope de la superficie recibe un poco más de luz
-  // (gradiente corto + hairline interior de 1px). En light es casi
-  // imperceptible; en dark produce el relieve de Linear/Vercel.
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dm-bg-elevated) 97%, white 3%),
-    var(--dm-bg-elevated) 40%
-  );
-  border: 1px solid var(--dm-border);
-  box-shadow:
-    var(--dm-shadow-sm),
-    inset 0 1px 0 rgb(255 255 255 / 6%);
+  background: var(--dm-bg-elevated);
+  box-shadow: var(--dm-shadow-md);
 }
 
 :host([data-appearance='outlined']) {
@@ -31,12 +25,7 @@
 }
 
 :host([data-appearance='flat']) {
-  background: var(--dm-bg-subtle);
-  border: 1px solid transparent;
-
-  // Sin sombra ni borde real: un hairline interior sutilísimo separa la
-  // superficie del fondo sin llegar a leerse como "borde".
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 4%, transparent);
+  background: var(--dm-bg-muted);
 }
 
 // ---- Padding ---------------------------------------------------------------
@@ -64,30 +53,22 @@
 
   @include mixins.transition(box-shadow, transform, border-color);
 
-  // Glow de marca: el borde vira hacia primary y una sombra larga teñida de
-  // índigo se asoma bajo la card. El hairline cenital se conserva para no
-  // "aplanar" la elevated al entrar en hover.
+  // Limpio y plano: el hover eleva la sombra difusa y despega la card; sin glow
+  // índigo. El press la hunde con un scale muy corto.
   &:hover {
-    border-color: color-mix(in srgb, var(--dm-primary) 30%, var(--dm-border-strong));
-    box-shadow:
-      var(--dm-shadow-md),
-      0 0 0 1px color-mix(in srgb, var(--dm-primary) 10%, transparent),
-      0 8px 24px -12px color-mix(in srgb, var(--dm-primary) 30%, transparent),
-      inset 0 1px 0 rgb(255 255 255 / 6%);
+    box-shadow: var(--dm-shadow-lg);
     transform: translateY(-2px);
   }
 
-  // El press devuelve la card hacia la superficie, con respuesta más rápida.
   &:active {
-    transform: translateY(-1px);
+    transform: scale(0.99);
     transition-duration: var(--dm-duration-fast);
   }
 }
 
-// Outlined ya afirma su borde: si es interactiva, el hover es discreto y
-// neutral (borde que se intensifica + elevación corta) en lugar del glow.
+// Outlined ya afirma su borde: al ser interactiva el hover intensifica ese
+// borde y añade una elevación corta, en lugar de solo la sombra.
 :host([data-appearance='outlined'][data-interactive]):hover {
   border-color: color-mix(in srgb, var(--dm-fg) 22%, transparent);
   box-shadow: var(--dm-shadow-md);
-  transform: translateY(-1px);
 }
