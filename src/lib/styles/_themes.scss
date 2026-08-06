@@ -88,7 +88,10 @@
   // Text
   --dm-fg: #fafafa;
   --dm-fg-muted: #a1a1aa;
-  --dm-fg-subtle: #63636b;
+
+  // #63636b daba ratio 3.2 sobre --dm-bg (#09090b) — por debajo de AA. Subido a
+  // #7c7c85 (~4.6:1) para que las etiquetas tenues sigan legibles en oscuro.
+  --dm-fg-subtle: #7c7c85;
 
   // Borders
   --dm-border: rgb(250 250 250 / 8%);

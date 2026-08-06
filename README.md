@@ -6,6 +6,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@dmaster/ui?color=338EF7&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
 [![license](https://img.shields.io/npm/l/@dmaster/ui?color=7EE7FC&style=flat-square)](https://github.com/diegomn98/dmaster-ui/blob/main/LICENSE)
 [![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev)
+[![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
 ---
 
@@ -76,40 +77,40 @@ export class MyComponent {}
 
 ### Primitives
 
-| Component | Selector | Highlights |
-|---|---|---|
-| Button | `dm-button` | 7 variants · 6 colors · loading / success / error states · live region |
-| Badge / Chip | `dm-badge` | 7 variants · 6 colors · dot, shadow, bordered |
-| Avatar | `dm-avatar` | image + fallback initials · 5 sizes |
-| Spinner | `dm-spinner` | animated indicator · 3 sizes |
-| Skeleton | `dm-skeleton` | shimmer placeholder · wave animation |
+| Component    | Selector      | Highlights                                                             |
+| ------------ | ------------- | ---------------------------------------------------------------------- |
+| Button       | `dm-button`   | 7 variants · 6 colors · loading / success / error states · live region |
+| Badge / Chip | `dm-badge`    | 7 variants · 6 colors · dot, shadow, bordered                          |
+| Avatar       | `dm-avatar`   | image + fallback initials · 5 sizes                                    |
+| Spinner      | `dm-spinner`  | animated indicator · 3 sizes                                           |
+| Skeleton     | `dm-skeleton` | shimmer placeholder · wave animation                                   |
 
 ### Forms
 
-| Component | Selector | Highlights |
-|---|---|---|
-| Switch | `dm-switch` | ControlValueAccessor · 3 sizes |
-| Checkbox | `dm-checkbox` | ControlValueAccessor · indeterminate state |
-| Form Field | `dm-form-field` + `dmInput` | label · hint · error · native input wrapper |
-| Select | `dm-select` | CDK overlay · keyboard nav · typeahead · CVA |
-| Paginated Select | `dm-paginated-select` | async load · infinite pagination · CDK overlay |
-| Radio Group | `dm-radio-group` | ControlValueAccessor · horizontal / vertical |
+| Component        | Selector                    | Highlights                                     |
+| ---------------- | --------------------------- | ---------------------------------------------- |
+| Switch           | `dm-switch`                 | ControlValueAccessor · 3 sizes                 |
+| Checkbox         | `dm-checkbox`               | ControlValueAccessor · indeterminate state     |
+| Form Field       | `dm-form-field` + `dmInput` | label · hint · error · native input wrapper    |
+| Select           | `dm-select`                 | CDK overlay · keyboard nav · typeahead · CVA   |
+| Paginated Select | `dm-paginated-select`       | async load · infinite pagination · CDK overlay |
+| Radio Group      | `dm-radio-group`            | ControlValueAccessor · horizontal / vertical   |
 
 ### Layout & Navigation
 
-| Component | Selector | Highlights |
-|---|---|---|
-| Card | `dm-card` | container queries · shadow variants |
-| Accordion | `dm-accordion` | animated · multiple / single open · keyboard nav |
-| Tabs | `dm-tabs` | 5 variants · sliding indicator · segment control · full-width |
+| Component | Selector       | Highlights                                                    |
+| --------- | -------------- | ------------------------------------------------------------- |
+| Card      | `dm-card`      | container queries · shadow variants                           |
+| Accordion | `dm-accordion` | animated · multiple / single open · keyboard nav              |
+| Tabs      | `dm-tabs`      | 5 variants · sliding indicator · segment control · full-width |
 
 ### Overlays (require CDK)
 
-| Component | Selector / Service | Highlights |
-|---|---|---|
-| Tooltip | `dmTooltip` directive | 12 placements · open / close delay |
-| Dialog | `DmDialogService` | typed data · typed return · backdrop click to close |
-| Toast | `DmToastService` | queued notifications · signals state · dismiss label |
+| Component | Selector / Service    | Highlights                                           |
+| --------- | --------------------- | ---------------------------------------------------- |
+| Tooltip   | `dmTooltip` directive | 12 placements · open / close delay                   |
+| Dialog    | `DmDialogService`     | typed data · typed return · backdrop click to close  |
+| Toast     | `DmToastService`      | queued notifications · signals state · dismiss label |
 
 ---
 
@@ -119,7 +120,7 @@ Tokens live on `<html>` attributes — no class toggling, no JavaScript:
 
 ```ts
 // Auto (follows prefers-color-scheme)
-provideDmasterUI({ theme: 'auto' })
+provideDmasterUI({ theme: 'auto' });
 
 // Force dark
 document.documentElement.setAttribute('data-dm-theme', 'dark');
@@ -129,9 +130,9 @@ Override any token globally:
 
 ```scss
 :root {
-  --dm-primary: #7c3aed;          // swap the primary color
-  --dm-radius-full: 0.5rem;       // rectangular buttons instead of pill
-  --dm-duration-base: 100ms;      // faster animations
+  --dm-primary: #7c3aed; // swap the primary color
+  --dm-radius-full: 0.5rem; // rectangular buttons instead of pill
+  --dm-duration-base: 100ms; // faster animations
 }
 ```
 
@@ -150,11 +151,11 @@ Override any token globally:
 
 ## Compared to
 
-| Library | How @dmaster/ui differs |
-|---|---|
+| Library          | How @dmaster/ui differs                                                                            |
+| ---------------- | -------------------------------------------------------------------------------------------------- |
 | Angular Material | Signals-based API (`input()`/`model()`), no NgModules, HeroUI aesthetic instead of Material Design |
-| PrimeNG | Lighter surface area, CSS-variables-only theming, no runtime theme engine |
-| ng-zorro | Zero Ant Design dependency, no icon font required, standalone-first |
+| PrimeNG          | Lighter surface area, CSS-variables-only theming, no runtime theme engine                          |
+| ng-zorro         | Zero Ant Design dependency, no icon font required, standalone-first                                |
 
 ---
 

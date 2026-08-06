@@ -85,15 +85,19 @@
   &[data-radius='none'] {
     --dm-tab-r: 0;
   }
+
   &[data-radius='sm'] {
     --dm-tab-r: var(--dm-radius-sm);
   }
+
   &[data-radius='md'] {
     --dm-tab-r: var(--dm-radius-md);
   }
+
   &[data-radius='lg'] {
     --dm-tab-r: var(--dm-radius-lg);
   }
+
   &[data-radius='full'] {
     --dm-tab-r: var(--dm-radius-full);
   }
