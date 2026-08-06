@@ -1,20 +1,25 @@
 # @dmaster/ui
 
-Modern, premium Angular UI component library. Standalone components built with signals, fully themeable via CSS custom properties, and inspired by the HeroUI design language.
+**Premium Angular UI components.** Standalone, signals-based, zoneless-ready, and fully themeable via CSS custom properties — with a clean HeroUI-inspired design language.
 
-[![npm](https://img.shields.io/npm/v/@dmaster/ui?color=006FEE&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
-[![license](https://img.shields.io/npm/l/@dmaster/ui?style=flat-square)](https://github.com/diegomn98/dmaster-ui/blob/main/LICENSE)
-[![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=flat-square&logo=angular)](https://angular.dev)
+[![npm version](https://img.shields.io/npm/v/@dmaster/ui?color=006FEE&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
+[![npm downloads](https://img.shields.io/npm/dm/@dmaster/ui?color=338EF7&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
+[![license](https://img.shields.io/npm/l/@dmaster/ui?color=7EE7FC&style=flat-square)](https://github.com/diegomn98/dmaster-ui/blob/main/LICENSE)
+[![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev)
 
-## Features
+---
 
-- **Standalone** — no NgModule required, just import what you need
-- **Signals-based** — `input()`, `output()`, `model()`, `computed()` throughout; zero decorators
-- **Zoneless-ready** — works with `provideZonelessChangeDetection()`
-- **Themeable** — light / dark / custom via CSS custom properties (`--dm-*`)
-- **HeroUI design language** — flat colors, pill radii, elastic press, color × variant system
-- **Accessible** — ARIA attributes on host, `:focus-visible` focus rings, touch targets ≥ 44px
-- **Angular CDK** — overlays (tooltip, dialog, toast) built on `@angular/cdk`
+## Why @dmaster/ui?
+
+- **Modern Angular API** — `input()` / `output()` / `model()` signals, standalone components, no NgModules, no decorators
+- **Zoneless-ready** — designed for `provideZonelessChangeDetection()` from day one
+- **HeroUI design language** — flat colors, pill radii (`border-radius: 9999px` by default), elastic press scale, color × variant token system
+- **Deeply themeable** — light / dark / auto via `data-dm-theme`; every visual decision is a `--dm-*` CSS custom property you can override
+- **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
+- **CDK-powered overlays** — tooltip, dialog and toast built on `@angular/cdk`, no third-party overlay dependencies
+- **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
+
+---
 
 ## Installation
 
@@ -22,46 +27,35 @@ Modern, premium Angular UI component library. Standalone components built with s
 npm install @dmaster/ui
 ```
 
-### Peer dependencies
+> **Peer dependencies:** `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/cdk` (^20)
 
-```bash
-npm install @angular/cdk
-```
+---
 
-## Setup
+## Quick start
 
-### 1. Import the global styles
-
-In your `styles.scss` (or `angular.json` styles array):
+**1. Add the global styles** in `styles.scss`:
 
 ```scss
 @use '@dmaster/ui/styles/index';
 ```
 
-For overlay components (tooltip, dialog, toast), also add the CDK prebuilt styles in `angular.json`:
+**2. Add CDK overlay styles** in `angular.json` (required for tooltip, dialog, toast):
 
 ```json
-"styles": [
-  "node_modules/@angular/cdk/overlay-prebuilt.css",
-  "src/styles.scss"
-]
+"styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", "src/styles.scss"]
 ```
 
-### 2. Configure the provider (optional)
+**3. Register the provider** (optional — sets default theme and density):
 
 ```ts
 import { provideDmasterUI } from '@dmaster/ui';
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideDmasterUI({ theme: 'auto', density: 'comfortable' }),
-  ],
+  providers: [provideDmasterUI({ theme: 'auto', density: 'comfortable' })],
 });
 ```
 
-## Usage
-
-Import only the components you need — all are standalone:
+**4. Import and use any component:**
 
 ```ts
 import { DmButtonComponent, DmBadgeComponent } from '@dmaster/ui';
@@ -76,73 +70,99 @@ import { DmButtonComponent, DmBadgeComponent } from '@dmaster/ui';
 export class MyComponent {}
 ```
 
+---
+
 ## Components
 
 ### Primitives
-| Component | Selector | Description |
+
+| Component | Selector | Highlights |
 |---|---|---|
-| Button | `dm-button` | color × variant (solid, flat, faded, bordered, light, ghost, shadow) |
-| Badge / Chip | `dm-badge` | color × variant with dot, solid, flat, bordered, light, shadow |
-| Avatar | `dm-avatar` | image with fallback initials |
-| Spinner | `dm-spinner` | animated loading indicator |
-| Skeleton | `dm-skeleton` | content placeholder with shimmer |
+| Button | `dm-button` | 7 variants · 6 colors · loading / success / error states · live region |
+| Badge / Chip | `dm-badge` | 7 variants · 6 colors · dot, shadow, bordered |
+| Avatar | `dm-avatar` | image + fallback initials · 5 sizes |
+| Spinner | `dm-spinner` | animated indicator · 3 sizes |
+| Skeleton | `dm-skeleton` | shimmer placeholder · wave animation |
 
 ### Forms
-| Component | Selector | Description |
-|---|---|---|
-| Switch | `dm-switch` | toggle, ControlValueAccessor |
-| Checkbox | `dm-checkbox` | checkbox, ControlValueAccessor |
-| Form Field | `dm-form-field` + `dmInput` | label + hint + error wrapper for native inputs |
-| Select | `dm-select` | combobox with CDK overlay, keyboard nav, typeahead, CVA |
-| Paginated Select | `dm-paginated-select` | async-loadable select with pagination |
-| Radio Group | `dm-radio-group` + `dm-radio` | radio group, ControlValueAccessor |
 
-### Layout
-| Component | Selector | Description |
+| Component | Selector | Highlights |
 |---|---|---|
-| Card | `dm-card` | container with container queries |
-| Accordion | `dm-accordion` + `dm-accordion-item` | animated collapsible sections |
+| Switch | `dm-switch` | ControlValueAccessor · 3 sizes |
+| Checkbox | `dm-checkbox` | ControlValueAccessor · indeterminate state |
+| Form Field | `dm-form-field` + `dmInput` | label · hint · error · native input wrapper |
+| Select | `dm-select` | CDK overlay · keyboard nav · typeahead · CVA |
+| Paginated Select | `dm-paginated-select` | async load · infinite pagination · CDK overlay |
+| Radio Group | `dm-radio-group` | ControlValueAccessor · horizontal / vertical |
 
-### Navigation
-| Component | Selector | Description |
+### Layout & Navigation
+
+| Component | Selector | Highlights |
 |---|---|---|
-| Tabs | `dm-tabs` + `dm-tab` + `dm-tab-panel` | 5 variants (solid, bordered, light, underlined, segment), sliding indicator |
+| Card | `dm-card` | container queries · shadow variants |
+| Accordion | `dm-accordion` | animated · multiple / single open · keyboard nav |
+| Tabs | `dm-tabs` | 5 variants · sliding indicator · segment control · full-width |
 
 ### Overlays (require CDK)
-| Component | Selector / Service | Description |
+
+| Component | Selector / Service | Highlights |
 |---|---|---|
-| Tooltip | `dmTooltip` directive | CDK-powered tooltip with configurable placement |
-| Dialog | `DmDialogService` | CDK dialog with typed data and return value |
-| Toast | `DmToastService` | queued toast notifications with signal-based state |
+| Tooltip | `dmTooltip` directive | 12 placements · open / close delay |
+| Dialog | `DmDialogService` | typed data · typed return · backdrop click to close |
+| Toast | `DmToastService` | queued notifications · signals state · dismiss label |
+
+---
 
 ## Theming
 
-Set the theme via the `data-dm-theme` attribute on `<html>`:
+Tokens live on `<html>` attributes — no class toggling, no JavaScript:
 
 ```ts
 // Auto (follows prefers-color-scheme)
 provideDmasterUI({ theme: 'auto' })
 
-// Manual
+// Force dark
 document.documentElement.setAttribute('data-dm-theme', 'dark');
 ```
 
-Override any token in your own stylesheet:
+Override any token globally:
 
 ```scss
 :root {
-  --dm-primary: #7c3aed;
-  --dm-radius-full: 0.5rem; // make buttons rectangular instead of pill
+  --dm-primary: #7c3aed;          // swap the primary color
+  --dm-radius-full: 0.5rem;       // rectangular buttons instead of pill
+  --dm-duration-base: 100ms;      // faster animations
 }
 ```
 
-## Density
+---
 
-Three density levels via `data-dm-density`:
+## Who is this for?
 
-```ts
-provideDmasterUI({ density: 'compact' }) // compact | comfortable | spacious
-```
+@dmaster/ui is a good fit for:
+
+- **SaaS dashboards** — tables, forms, overlays, and toasts out of the box
+- **Admin panels** — dense layouts with consistent design tokens and three density modes
+- **Component-library starters** — use as a base or reference architecture for signals-based Angular components
+- **Teams migrating to zoneless Angular** — built for `provideZonelessChangeDetection()` from day one
+
+---
+
+## Compared to
+
+| Library | How @dmaster/ui differs |
+|---|---|
+| Angular Material | Signals-based API (`input()`/`model()`), no NgModules, HeroUI aesthetic instead of Material Design |
+| PrimeNG | Lighter surface area, CSS-variables-only theming, no runtime theme engine |
+| ng-zorro | Zero Ant Design dependency, no icon font required, standalone-first |
+
+---
+
+## Contributing
+
+Issues and PRs are welcome on [GitHub](https://github.com/diegomn98/dmaster-ui).
+
+---
 
 ## License
 
