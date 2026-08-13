@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-13
+
 ### Added
 
 - `rxjs` declared as an explicit peer dependency (it appears in the public typings via `dm-paginated-select`).
@@ -34,5 +36,6 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - HeroUI-inspired design language: flat fills, pill radii, elastic press, color × variant tokens.
 
-[Unreleased]: https://github.com/diegomn98/dmaster-ui/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/diegomn98/dmaster-ui/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/diegomn98/dmaster-ui/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/diegomn98/dmaster-ui/releases/tag/v0.1.2
