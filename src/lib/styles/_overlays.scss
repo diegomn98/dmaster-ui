@@ -8,6 +8,29 @@
 // ============================================================================
 @use 'mixins';
 
+// El contenedor de overlays del CDK trae z-index 1000 de fábrica: cualquier
+// chrome de página que use los tokens --dm-z-* superiores (headers sticky a
+// 1020, drawers a 1030) se pinta ENCIMA de los paneles desplegados y de los
+// backdrops transparentes — rompiendo la exclusividad de overlays (dos
+// abiertos a la vez) y dejando dropdowns ocultos tras la barra al hacer
+// scroll. Se eleva por encima de todo el chrome de página; los toasts y
+// diálogos también viven aquí dentro, así que conservan su orden relativo.
+.cdk-overlay-container {
+  z-index: var(--dm-z-popover);
+}
+
+// CDK's transparent backdrop uses visibility:hidden→visible via the
+// cdk-overlay-backdrop-showing class. The CDK also injects its own styles
+// at runtime AFTER bundled CSS, so normal overrides lose by source order.
+// !important is required to win. Without this, clicks pass through the
+// backdrop and two overlays can open simultaneously.
+.cdk-overlay-transparent-backdrop {
+  // stylelint-disable-next-line declaration-no-important
+  visibility: visible !important;
+  // stylelint-disable-next-line declaration-no-important
+  opacity: 0 !important;
+}
+
 .dm-dialog-backdrop {
   // HeroUI: a clean, flat dark scrim with a light blur — no vignette gradient.
   background: rgb(0 0 0 / 50%);
