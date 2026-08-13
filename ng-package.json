@@ -6,7 +6,9 @@
       "glob": "**/*.scss",
       "input": "src/lib/styles",
       "output": "styles"
-    }
+    },
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "lib": {
     "entryFile": "src/public-api.ts",

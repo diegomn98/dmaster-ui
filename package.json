@@ -34,10 +34,35 @@
     "@angular/common": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/forms": "^20.0.0",
-    "@angular/cdk": "^20.0.0"
+    "@angular/cdk": "^20.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": "dependencies"
+  },
+  "exports": {
+    "./styles": {
+      "sass": "./styles/index.scss",
+      "style": "./styles/dmaster-ui.css",
+      "default": "./styles/dmaster-ui.css"
+    },
+    "./styles/index": {
+      "sass": "./styles/index.scss",
+      "default": "./styles/index.scss"
+    },
+    "./styles/dmaster-ui.css": {
+      "style": "./styles/dmaster-ui.css",
+      "default": "./styles/dmaster-ui.css"
+    },
+    "./styles/*": {
+      "sass": "./styles/*",
+      "style": "./styles/*",
+      "default": "./styles/*"
+    }
   },
   "sideEffects": false
 }

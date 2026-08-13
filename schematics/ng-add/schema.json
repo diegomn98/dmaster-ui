@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "DmasterUiNgAddSchema",
+  "title": "ng add @dmaster/ui",
+  "description": "Adds @dmaster/ui to an Angular application.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Name of the workspace project to set up. Defaults to the CLI's current project, falling back to the first application in angular.json.",
+      "$default": {
+        "$source": "projectName"
+      }
+    }
+  }
+}

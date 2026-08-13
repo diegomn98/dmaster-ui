@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "strict": true,
+    "declaration": false,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "types": [],
+    "rootDir": "schematics",
+    "outDir": "../../dist/dmaster-ui/schematics"
+  },
+  "include": ["schematics/**/*.ts"]
+}

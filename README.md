@@ -25,10 +25,16 @@
 ## Installation
 
 ```bash
-npm install @dmaster/ui
+ng add @dmaster/ui
 ```
 
-> **Peer dependencies:** `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/cdk` (^20)
+`ng add` installs `@angular/cdk`, registers the CDK overlay styles and wires the global stylesheet for you. Prefer manual setup?
+
+```bash
+npm install @dmaster/ui @angular/cdk
+```
+
+> **Peer dependencies:** `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/cdk` (^20) and `rxjs`
 
 ---
 
@@ -38,6 +44,12 @@ npm install @dmaster/ui
 
 ```scss
 @use '@dmaster/ui/styles/index';
+```
+
+No Sass in your build? Use the precompiled CSS instead — add it to the `styles` array in `angular.json`:
+
+```json
+"styles": ["node_modules/@dmaster/ui/styles/dmaster-ui.css", "src/styles.css"]
 ```
 
 **2. Add CDK overlay styles** in `angular.json` (required for tooltip, dialog, toast):
@@ -135,6 +147,12 @@ Override any token globally:
   --dm-duration-base: 100ms; // faster animations
 }
 ```
+
+---
+
+## SSR / prerendering
+
+The library is server-safe: no component or service touches `window`, `localStorage` or browser-only APIs at construction time — `matchMedia` is feature-detected through Angular's `DOCUMENT`, and overlays only open on user interaction. The [docs site](https://dmasterui.com) itself is fully statically prerendered with `@angular/ssr` as a permanent smoke test.
 
 ---
 
