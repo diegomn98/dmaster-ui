@@ -356,3 +356,162 @@
     transform: scale(1) translateY(0);
   }
 }
+
+// ============================================================================
+// Drawer (dm-drawer) — side sheet served by DmDrawerService over cdk/dialog.
+// The service pins the CDK pane flush to a viewport edge with a global position
+// strategy and stamps the placement/size classes; the panel box dimensions and
+// the slide-in animation live here. Backdrop reuses the dialog scrim look.
+// ============================================================================
+.dm-drawer-backdrop {
+  // HeroUI: the same clean, flat dark scrim with a light blur as the dialog.
+  background: rgb(0 0 0 / 50%);
+  backdrop-filter: blur(4px);
+  animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
+}
+
+.dm-drawer-panel {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--dm-space-5);
+
+  // HeroUI flat surface: page-level bg lifted by a single wide, soft, diffuse
+  // shadow — no border, no inner sheen. Rounded only on the inner edge; the
+  // edge flush to the viewport stays square.
+  background: var(--dm-bg);
+  color: var(--dm-fg);
+  box-shadow: var(--dm-shadow-lg);
+
+  @include mixins.respond-to(sm) {
+    padding: var(--dm-space-6);
+  }
+
+  // Left / right: full viewport height, width driven by the size class,
+  // capped so `full` never overflows narrow viewports.
+  &--left,
+  &--right {
+    height: 100dvh;
+    max-width: 100vw;
+  }
+
+  &--right {
+    border-top-left-radius: var(--dm-radius-lg);
+    border-bottom-left-radius: var(--dm-radius-lg);
+    animation: dm-drawer-in-right var(--dm-duration-slow) var(--dm-ease-out);
+  }
+
+  &--left {
+    border-top-right-radius: var(--dm-radius-lg);
+    border-bottom-right-radius: var(--dm-radius-lg);
+    animation: dm-drawer-in-left var(--dm-duration-slow) var(--dm-ease-out);
+  }
+
+  // Top / bottom: full viewport width, height driven by the size class.
+  &--top,
+  &--bottom {
+    width: 100vw;
+    max-height: 100dvh;
+  }
+
+  &--top {
+    border-bottom-left-radius: var(--dm-radius-lg);
+    border-bottom-right-radius: var(--dm-radius-lg);
+    animation: dm-drawer-in-top var(--dm-duration-slow) var(--dm-ease-out);
+  }
+
+  &--bottom {
+    border-top-left-radius: var(--dm-radius-lg);
+    border-top-right-radius: var(--dm-radius-lg);
+    animation: dm-drawer-in-bottom var(--dm-duration-slow) var(--dm-ease-out);
+  }
+
+  // Sizes — width for left/right, height for top/bottom.
+  &--left#{&}--sm,
+  &--right#{&}--sm {
+    width: 20rem;
+  }
+
+  &--left#{&}--md,
+  &--right#{&}--md {
+    width: 28rem;
+  }
+
+  &--left#{&}--lg,
+  &--right#{&}--lg {
+    width: 36rem;
+  }
+
+  &--left#{&}--full,
+  &--right#{&}--full {
+    width: 100vw;
+  }
+
+  &--top#{&}--sm,
+  &--bottom#{&}--sm {
+    height: 30dvh;
+  }
+
+  &--top#{&}--md,
+  &--bottom#{&}--md {
+    height: 50dvh;
+  }
+
+  &--top#{&}--lg,
+  &--bottom#{&}--lg {
+    height: 70dvh;
+  }
+
+  &--top#{&}--full,
+  &--bottom#{&}--full {
+    height: 100dvh;
+  }
+
+  // Reduced motion: drop the directional slide for a plain fade.
+  @include mixins.reduced-motion {
+    &--left,
+    &--right,
+    &--top,
+    &--bottom {
+      animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
+    }
+  }
+}
+
+@keyframes dm-drawer-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes dm-drawer-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes dm-drawer-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes dm-drawer-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+// ============================================================================
+// Command palette (dm-command) — centered modal served in a CDK overlay with a
+// GlobalPositionStrategy. The panel box + animation are ENCAPSULATED in the
+// component (it is a TemplatePortal, so it keeps the component's scope); only
+// the backdrop lives here, because the CDK creates that element outside any
+// component's view. Reuses the dialog scrim look (flat dark + light blur).
+// ============================================================================
+.dm-command-backdrop {
+  background: rgb(0 0 0 / 50%);
+  backdrop-filter: blur(4px);
+  animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
+}

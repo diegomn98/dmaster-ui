@@ -1,0 +1,83 @@
+<nav
+  class="dm-pagination"
+  [attr.aria-label]="ariaLabel()"
+  [attr.data-size]="size()"
+  [attr.data-color]="color()"
+  [attr.data-disabled]="disabled() ? '' : null"
+>
+  <ul class="dm-pagination__list">
+    @if (showControls()) {
+      <li class="dm-pagination__item">
+        <button
+          type="button"
+          class="dm-pagination__control dm-pagination__control--prev"
+          [attr.aria-label]="prevLabel()"
+          [disabled]="disabled() || isFirst()"
+          (click)="goPrev()"
+        >
+          <svg
+            class="dm-pagination__chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+      </li>
+    }
+
+    @for (item of items(); track item.kind === 'page' ? 'p' + item.page : item.id) {
+      @if (item.kind === 'page') {
+        <li class="dm-pagination__item" [attr.data-compact-hidden]="item.compactHidden ? '' : null">
+          <button
+            type="button"
+            class="dm-pagination__page"
+            [class.dm-pagination__page--active]="item.page === currentPage()"
+            [attr.aria-current]="item.page === currentPage() ? 'page' : null"
+            [attr.aria-label]="pageAriaLabel()(item.page)"
+            [disabled]="disabled()"
+            (click)="select(item.page)"
+          >
+            {{ item.page }}
+          </button>
+        </li>
+      } @else {
+        <li class="dm-pagination__item dm-pagination__item--ellipsis">
+          <span class="dm-pagination__ellipsis" aria-hidden="true">…</span>
+        </li>
+      }
+    }
+
+    @if (showControls()) {
+      <li class="dm-pagination__item">
+        <button
+          type="button"
+          class="dm-pagination__control dm-pagination__control--next"
+          [attr.aria-label]="nextLabel()"
+          [disabled]="disabled() || isLast()"
+          (click)="goNext()"
+        >
+          <svg
+            class="dm-pagination__chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </li>
+    }
+  </ul>
+</nav>

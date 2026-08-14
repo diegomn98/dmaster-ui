@@ -1,0 +1,6 @@
+@for (key of keyList(); track $index) {
+  <kbd class="dm-kbd__key dm-kbd__key--symbol" [attr.aria-label]="key.label">
+    <span aria-hidden="true">{{ key.symbol }}</span>
+  </kbd>
+}
+<kbd class="dm-kbd__key dm-kbd__key--content"><ng-content /></kbd>

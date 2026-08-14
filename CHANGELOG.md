@@ -5,7 +5,22 @@ All notable changes to `@dmaster/ui` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2026-08-14
+
+### Added
+
+- **11 new components**, all standalone, signals-based, `OnPush`, accessible and themeable via CSS variables:
+  - Primitives: `dm-kbd` (keyboard-key display; named keys resolve to their symbol, content projection for letters, `sm`/`md` sizes).
+  - Layout: `dm-divider` (horizontal/vertical, optional projected label).
+  - Feedback (new category): `dm-progress` (determinate/indeterminate, striped, value label) and `dm-alert` (color × variant, semantic icon, dismissible, action slot).
+  - Forms: `dm-slider` (`ControlValueAccessor`, pointer drag + full keyboard, value bubble, marks).
+  - Navigation: `dm-breadcrumbs` (+ `dm-breadcrumb-item`, router-agnostic, collapsing) and `dm-pagination` (windowed pager, two-way `page`, localizable labels).
+  - Overlays (CDK): `dm-menu` (WAI-ARIA menu pattern, `FocusKeyManager`, type-ahead, sections/dividers/shortcuts), `dm-popover` (rich click-triggered panel with an arrow that follows the flip), `DmDrawerService` (edge-anchored panel over `cdk/dialog`, four placements) and `dm-command` (⌘K command palette: combobox + listbox, grouped/filterable actions, global hotkey, focus trap, restores focus on close).
+- Published `engines` range (Node `^20.19.0 || ^22.12.0 || >=24.0.0`).
+
+### Changed
+
+- Releases are now published with signed npm **provenance** (Sigstore attestation via GitHub Actions OIDC). `repository` points to the monorepo (`dmaster-ui-workspace`) with a `directory` field so the provenance validates.
 
 ## [0.2.0] - 2026-08-13
 
@@ -36,6 +51,6 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - HeroUI-inspired design language: flat fills, pill radii, elastic press, color × variant tokens.
 
-[Unreleased]: https://github.com/diegomn98/dmaster-ui/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/diegomn98/dmaster-ui/compare/v0.1.2...v0.2.0
-[0.1.2]: https://github.com/diegomn98/dmaster-ui/releases/tag/v0.1.2
+[0.3.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/diegomn98/dmaster-ui-workspace/releases/tag/v0.1.2

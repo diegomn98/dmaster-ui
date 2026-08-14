@@ -1,0 +1,135 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance):
+//   --dm-progress-track  track surface, inherits --dm-bg-muted
+//   --dm-progress-color  fill color, mapped from [data-color] below
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dm-space-2);
+  width: 100%;
+}
+
+// ---- Colors → generic var (badge pattern) ----------------------------------
+// `default` maps to the subtle foreground instead of --dm-default: the neutral
+// surface color would disappear against the muted track.
+:host([data-color='default']) {
+  --dm-progress-color: var(--dm-fg-subtle);
+}
+
+:host([data-color='primary']) {
+  --dm-progress-color: var(--dm-primary);
+}
+
+:host([data-color='secondary']) {
+  --dm-progress-color: var(--dm-secondary);
+}
+
+:host([data-color='success']) {
+  --dm-progress-color: var(--dm-success);
+}
+
+:host([data-color='warning']) {
+  --dm-progress-color: var(--dm-warning);
+}
+
+:host([data-color='danger']) {
+  --dm-progress-color: var(--dm-danger);
+}
+
+// ---- Label row -------------------------------------------------------------
+.dm-progress__labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--dm-space-3);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-progress__label {
+  @include mixins.truncate;
+
+  color: var(--dm-fg);
+  font-weight: var(--dm-font-medium);
+}
+
+.dm-progress__value {
+  margin-inline-start: auto;
+  color: var(--dm-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// ---- Track & fill ----------------------------------------------------------
+.dm-progress__track {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 0.5rem;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-progress-track, var(--dm-bg-muted));
+}
+
+:host([data-size='sm']) .dm-progress__track {
+  height: 0.25rem;
+}
+
+:host([data-size='lg']) .dm-progress__track {
+  height: 0.75rem;
+}
+
+// HeroUI: flat solid fill, fully rounded. duration-slow keeps value changes
+// feeling fluid instead of teleporting (zeroed under reduced motion).
+.dm-progress__fill {
+  height: 100%;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-progress-color);
+  transition: width var(--dm-duration-slow) var(--dm-ease-out);
+}
+
+// ---- Striped ---------------------------------------------------------------
+// The semi-transparent bands are the fill color mixed with transparent, so the
+// track shows through slightly — no hardcoded colors, works with any theme.
+:host([data-striped]) .dm-progress__fill {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--dm-progress-color) 0,
+    var(--dm-progress-color) 0.5rem,
+    color-mix(in srgb, var(--dm-progress-color) 72%, transparent) 0.5rem,
+    color-mix(in srgb, var(--dm-progress-color) 72%, transparent) 1rem
+  );
+}
+
+// ---- Indeterminate ---------------------------------------------------------
+// A ~40% bar sweeps the track. translateX is relative to the bar itself:
+// -100% hides it on the left, 250% (100 / 40) pushes it fully past the right.
+:host([data-indeterminate]) .dm-progress__fill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 40%;
+  transition: none;
+  animation: dm-progress-sweep 1.4s var(--dm-ease-in-out) infinite;
+}
+
+@keyframes dm-progress-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+// Reduced motion: no sweep at all (consistent with dm-skeleton). The fill
+// becomes a static, softened full-width bar — an active tinted track that
+// cannot be mistaken for a finished one; state lives in the ARIA attributes.
+@include mixins.reduced-motion {
+  :host([data-indeterminate]) .dm-progress__fill {
+    width: 100%;
+    opacity: 0.55;
+    animation: none;
+  }
+}

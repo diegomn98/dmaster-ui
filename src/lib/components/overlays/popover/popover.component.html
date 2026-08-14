@@ -1,0 +1,29 @@
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="triggerRef()!"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="positions()"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayPush]="true"
+  (attach)="onAttached()"
+  (detach)="close()"
+  (positionChange)="onPositionChange($event)"
+  (overlayOutsideClick)="onOutsideClick($event)"
+  (overlayKeydown)="onOverlayKeydown($event)"
+>
+  <div
+    class="dm-popover__panel"
+    role="dialog"
+    aria-modal="false"
+    tabindex="-1"
+    [id]="panelId"
+    [attr.data-placement]="resolvedSide()"
+    [attr.aria-label]="ariaLabel() || null"
+    [cdkTrapFocus]="trapFocus()"
+  >
+    <ng-content />
+    @if (showArrow()) {
+      <span class="dm-popover__arrow" aria-hidden="true"></span>
+    }
+  </div>
+</ng-template>

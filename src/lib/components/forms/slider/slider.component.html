@@ -1,0 +1,50 @@
+<div
+  class="dm-slider__zone"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+>
+  <div class="dm-slider__track" #track>
+    <div class="dm-slider__fill" [style.width.%]="percent()"></div>
+    @for (mark of resolvedMarks(); track mark.value) {
+      <span
+        class="dm-slider__mark"
+        [class.dm-slider__mark--active]="mark.active"
+        [style.left.%]="mark.percent"
+        aria-hidden="true"
+      ></span>
+    }
+  </div>
+
+  <div
+    class="dm-slider__thumb"
+    #thumb
+    role="slider"
+    aria-orientation="horizontal"
+    [attr.tabindex]="isDisabled() ? -1 : 0"
+    [attr.aria-valuemin]="min()"
+    [attr.aria-valuemax]="max()"
+    [attr.aria-valuenow]="value()"
+    [attr.aria-valuetext]="formatted()"
+    [attr.aria-disabled]="isDisabled() ? 'true' : null"
+    [attr.aria-label]="ariaLabel() || null"
+    [style.left.%]="percent()"
+    (keydown)="onKeydown($event)"
+    (blur)="onBlur()"
+  >
+    @if (showValueLabel()) {
+      <span class="dm-slider__bubble" aria-hidden="true">{{ formatted() }}</span>
+    }
+  </div>
+</div>
+
+@if (hasMarkLabels()) {
+  <div class="dm-slider__mark-labels" aria-hidden="true">
+    @for (mark of resolvedMarks(); track mark.value) {
+      @if (mark.label) {
+        <span class="dm-slider__mark-label" [style.left.%]="mark.percent">{{ mark.label }}</span>
+      }
+    }
+  </div>
+}

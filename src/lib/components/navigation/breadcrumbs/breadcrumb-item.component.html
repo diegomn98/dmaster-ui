@@ -1,0 +1,72 @@
+@if (!hidden()) {
+  <li class="dm-breadcrumb-item">
+    @if (isLink()) {
+      <a class="dm-breadcrumb-item__link" [attr.href]="href()">
+        <ng-container [ngTemplateOutlet]="label" />
+      </a>
+    } @else {
+      <span
+        class="dm-breadcrumb-item__page"
+        [attr.aria-current]="current() ? 'page' : null"
+        [attr.aria-disabled]="disabled() ? 'true' : null"
+      >
+        <ng-container [ngTemplateOutlet]="label" />
+      </span>
+    }
+
+    @if (!lastVisible()) {
+      <span class="dm-breadcrumb-item__separator" aria-hidden="true">
+        @if (parent.hasCustomSeparator()) {
+          {{ parent.separator() }}
+        } @else {
+          <svg
+            class="dm-breadcrumb-item__chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m9 6 6 6-6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+    }
+  </li>
+
+  @if (showEllipsis()) {
+    <li class="dm-breadcrumb-item dm-breadcrumb-item--ellipsis">
+      <span class="dm-breadcrumb-item__ellipsis" aria-hidden="true">…</span>
+      <span class="dm-breadcrumb-item__separator" aria-hidden="true">
+        @if (parent.hasCustomSeparator()) {
+          {{ parent.separator() }}
+        } @else {
+          <svg
+            class="dm-breadcrumb-item__chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m9 6 6 6-6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+    </li>
+  }
+}
+
+<!-- Single projection slot, shared by the anchor and the plain-text branches so
+     the crumb's content is never split across two <ng-content> outlets. -->
+<ng-template #label>
+  <span class="dm-breadcrumb-item__label"><ng-content /></span>
+</ng-template>

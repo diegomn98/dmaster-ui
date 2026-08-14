@@ -1,0 +1,18 @@
+:host {
+  display: block;
+
+  // Breathing room between stacked sections.
+  & + & {
+    margin-top: var(--dm-space-1);
+  }
+}
+
+.dm-menu-section__heading {
+  padding: var(--dm-space-2) var(--dm-space-3) var(--dm-space-1);
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-semibold);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dm-fg-subtle);
+}

@@ -1,0 +1,125 @@
+<ng-template #panelTpl>
+  <div
+    class="dm-command__panel"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="ariaLabel()"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="false"
+  >
+    <div class="dm-command__header">
+      <svg
+        class="dm-command__search-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+
+      <input
+        class="dm-command__input"
+        type="text"
+        role="combobox"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-expanded="true"
+        aria-autocomplete="list"
+        [id]="inputId"
+        [attr.aria-controls]="listId"
+        [attr.aria-activedescendant]="activeOptionId()"
+        [attr.aria-label]="ariaLabel()"
+        [value]="query()"
+        [placeholder]="placeholder()"
+        (input)="onInput($event)"
+        (keydown)="onKeydown($event)"
+      />
+
+      <button type="button" class="dm-command__esc" (click)="close()" [attr.aria-label]="closeHint">
+        <dm-kbd size="sm">ESC</dm-kbd>
+      </button>
+    </div>
+
+    <div class="dm-command__body">
+      <div class="dm-command__list" role="listbox" [id]="listId" [attr.aria-label]="ariaLabel()">
+        @for (group of groups(); track group.key) {
+          @if (group.heading) {
+            <div
+              class="dm-command__group"
+              role="group"
+              [attr.aria-labelledby]="groupHeadingId(group.key)"
+            >
+              <div class="dm-command__group-heading" [id]="groupHeadingId(group.key)">
+                {{ group.heading }}
+              </div>
+              @for (entry of group.entries; track entry.item.id) {
+                <ng-container
+                  [ngTemplateOutlet]="optionTpl"
+                  [ngTemplateOutletContext]="{ $implicit: entry.item, index: entry.index }"
+                />
+              }
+            </div>
+          } @else {
+            @for (entry of group.entries; track entry.item.id) {
+              <ng-container
+                [ngTemplateOutlet]="optionTpl"
+                [ngTemplateOutletContext]="{ $implicit: entry.item, index: entry.index }"
+              />
+            }
+          }
+        }
+      </div>
+
+      @if (isEmpty()) {
+        <div class="dm-command__empty" role="status">{{ emptyLabel() }}</div>
+      }
+    </div>
+
+    <div class="dm-command__footer">
+      <span class="dm-command__hint">
+        <span class="dm-command__hint-keys">
+          <dm-kbd size="sm" keys="up" />
+          <dm-kbd size="sm" keys="down" />
+        </span>
+        <span class="dm-command__hint-label">{{ navigateHint }}</span>
+      </span>
+      <span class="dm-command__hint">
+        <dm-kbd size="sm" keys="enter" />
+        <span class="dm-command__hint-label">{{ selectHint }}</span>
+      </span>
+      <span class="dm-command__hint dm-command__hint--end">
+        <dm-kbd size="sm">ESC</dm-kbd>
+        <span class="dm-command__hint-label">{{ closeHint }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #optionTpl let-item let-index="index">
+  <div
+    class="dm-command__option"
+    role="option"
+    tabindex="-1"
+    [id]="optionId(index)"
+    [attr.data-active]="index === activeIndex() ? '' : null"
+    [attr.data-disabled]="item.disabled ? '' : null"
+    [attr.aria-selected]="index === activeIndex()"
+    [attr.aria-disabled]="item.disabled ? 'true' : null"
+    (click)="onOptionClick(index, $event)"
+    (keydown)="onKeydown($event)"
+    (mouseenter)="onOptionHover(index)"
+  >
+    <span class="dm-command__option-label">{{ item.label }}</span>
+    @if (item.shortcut) {
+      <span class="dm-command__option-shortcut">
+        <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
+      </span>
+    }
+  </div>
+</ng-template>

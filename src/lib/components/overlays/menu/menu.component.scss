@@ -1,0 +1,61 @@
+@use 'mixins';
+
+// The host is only a declaration anchor: the real panel lives in the overlay.
+// Hiding it keeps the projected items out of the page flow until the menu opens.
+:host {
+  display: none;
+}
+
+.dm-menu__panel {
+  // Transform-origin follows the resolved side/alignment so the pop-in grows
+  // from the corner nearest the trigger (updated on every flip by the trigger).
+  --dm-menu-oy: top;
+  --dm-menu-ox: left;
+
+  box-sizing: border-box;
+  min-width: var(--dm-menu-min-width, 12rem);
+  max-width: var(--dm-menu-max-width, 20rem);
+  max-height: var(--dm-menu-max-height, min(24rem, calc(100dvh - 2rem)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--dm-menu-padding, var(--dm-space-1));
+  border: 1px solid var(--dm-menu-border, var(--dm-border));
+  border-radius: var(--dm-menu-radius, var(--dm-radius-lg));
+  background: var(--dm-menu-bg, var(--dm-bg-elevated));
+  color: var(--dm-fg);
+  box-shadow: var(--dm-menu-shadow, var(--dm-shadow-lg));
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  outline: none;
+  transform-origin: var(--dm-menu-oy) var(--dm-menu-ox);
+  animation: dm-menu-in var(--dm-duration-fast) var(--dm-ease-out);
+
+  &[data-position='top'] {
+    --dm-menu-oy: bottom;
+  }
+
+  &[data-position='bottom'] {
+    --dm-menu-oy: top;
+  }
+
+  &[data-align='start'] {
+    --dm-menu-ox: left;
+  }
+
+  &[data-align='end'] {
+    --dm-menu-ox: right;
+  }
+}
+
+@keyframes dm-menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-menu__panel {
+    animation: none;
+  }
+}

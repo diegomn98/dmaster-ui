@@ -1,0 +1,218 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance, all with fallback):
+//   --dm-alert-radius    corner rounding, inherits --dm-radius-lg
+//   --dm-alert-padding   outer padding
+//   --dm-alert-gap       gap between icon / content / action / close
+
+:host {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dm-alert-gap, var(--dm-space-3));
+  padding: var(--dm-alert-padding, var(--dm-space-3) var(--dm-space-4));
+  border: 1px solid transparent;
+  border-radius: var(--dm-alert-radius, var(--dm-radius-lg));
+  font-family: var(--dm-font-sans);
+  animation: dm-alert-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+// Self-dismissed: the host collapses entirely (also leaves the a11y tree).
+:host(.dm-alert--hidden) {
+  display: none;
+}
+
+// ---- Colors → generic vars -------------------------------------------------
+// El acento (texto sobre relleno subtle) mezcla el color con --dm-fg: se
+// oscurece en tema claro y se aclara en oscuro con la misma declaración.
+:host([data-color='default']) {
+  --dm-alert: var(--dm-default);
+  --dm-alert-fg: var(--dm-default-fg);
+  --dm-alert-soft: var(--dm-default-subtle);
+  --dm-alert-line: var(--dm-border-strong);
+  --dm-alert-accent: var(--dm-fg);
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-fg) 8%, transparent);
+}
+
+:host([data-color='primary']) {
+  --dm-alert: var(--dm-primary);
+  --dm-alert-fg: var(--dm-primary-fg);
+  --dm-alert-soft: var(--dm-primary-subtle);
+  --dm-alert-line: var(--dm-primary);
+  --dm-alert-accent: color-mix(in srgb, var(--dm-primary) 60%, var(--dm-fg));
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-primary) 18%, transparent);
+}
+
+:host([data-color='secondary']) {
+  --dm-alert: var(--dm-secondary);
+  --dm-alert-fg: var(--dm-secondary-fg);
+  --dm-alert-soft: var(--dm-secondary-subtle);
+  --dm-alert-line: var(--dm-secondary);
+  --dm-alert-accent: color-mix(in srgb, var(--dm-secondary) 60%, var(--dm-fg));
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-secondary) 18%, transparent);
+}
+
+:host([data-color='success']) {
+  --dm-alert: var(--dm-success);
+  --dm-alert-fg: var(--dm-success-fg);
+  --dm-alert-soft: var(--dm-success-subtle);
+  --dm-alert-line: var(--dm-success);
+  --dm-alert-accent: color-mix(in srgb, var(--dm-success) 60%, var(--dm-fg));
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-success) 18%, transparent);
+}
+
+:host([data-color='warning']) {
+  --dm-alert: var(--dm-warning);
+  --dm-alert-fg: var(--dm-warning-fg);
+  --dm-alert-soft: var(--dm-warning-subtle);
+  --dm-alert-line: var(--dm-warning);
+  --dm-alert-accent: color-mix(in srgb, var(--dm-warning) 60%, var(--dm-fg));
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-warning) 18%, transparent);
+}
+
+:host([data-color='danger']) {
+  --dm-alert: var(--dm-danger);
+  --dm-alert-fg: var(--dm-danger-fg);
+  --dm-alert-soft: var(--dm-danger-subtle);
+  --dm-alert-line: var(--dm-danger);
+  --dm-alert-accent: color-mix(in srgb, var(--dm-danger) 60%, var(--dm-fg));
+  --dm-alert-icon-bg: color-mix(in srgb, var(--dm-danger) 18%, transparent);
+}
+
+// ---- Variants --------------------------------------------------------------
+:host([data-variant='solid']) {
+  background: var(--dm-alert);
+  color: var(--dm-alert-fg);
+}
+
+:host([data-variant='flat']) {
+  background: var(--dm-alert-soft);
+  color: var(--dm-alert-accent);
+}
+
+// HeroUI faded = relleno subtle + borde del propio color.
+:host([data-variant='faded']) {
+  background: var(--dm-alert-soft);
+  border-color: color-mix(in srgb, var(--dm-alert-line) 45%, transparent);
+  color: var(--dm-alert-accent);
+}
+
+:host([data-variant='bordered']) {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--dm-alert-line) 45%, transparent);
+  color: var(--dm-alert-accent);
+}
+
+// ---- Icon ------------------------------------------------------------------
+// Caja fija de 2rem en todas las variantes (el layout no salta al cambiar);
+// solo flat/faded pintan el círculo sutil detrás del glifo, como HeroUI.
+.dm-alert__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--dm-radius-full);
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+:host([data-variant='flat']) .dm-alert__icon,
+:host([data-variant='faded']) .dm-alert__icon {
+  background: var(--dm-alert-icon-bg);
+}
+
+// ---- Content ---------------------------------------------------------------
+// min-height + align-content centran una sola línea contra el icono de 2rem;
+// con más contenido el bloque crece hacia abajo con normalidad.
+.dm-alert__content {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: var(--dm-space-1);
+  min-height: 2rem;
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-snug);
+  overflow-wrap: break-word;
+}
+
+.dm-alert__title {
+  margin: 0;
+  font-weight: var(--dm-font-semibold);
+}
+
+.dm-alert__description {
+  margin: 0;
+  color: color-mix(in srgb, currentcolor 85%, transparent);
+}
+
+// ---- Action slot -----------------------------------------------------------
+.dm-alert__action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+
+  // Sin contenido proyectado el hueco desaparece (ng-content no deja nodos).
+  &:empty {
+    display: none;
+  }
+}
+
+// ---- Dismiss ---------------------------------------------------------------
+.dm-alert__close {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+
+  // 0.25rem centra el botón de 1.5rem contra la primera fila de 2rem.
+  margin: 0.25rem -0.25rem 0 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  color: currentcolor;
+  opacity: 0.7;
+  cursor: pointer;
+
+  @include mixins.transition(opacity, background-color);
+  @include mixins.touch-target;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  &:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentcolor 12%, transparent);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Motion ----------------------------------------------------------------
+@keyframes dm-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--dm-space-1))) scale(0.98);
+  }
+}
+
+@include mixins.reduced-motion {
+  :host {
+    animation: none;
+  }
+}

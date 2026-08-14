@@ -1,0 +1,12 @@
+<ng-template #panelTpl>
+  <div
+    class="dm-menu__panel"
+    role="menu"
+    tabindex="-1"
+    [id]="panelId"
+    [attr.aria-label]="ariaLabel() || null"
+    (keydown)="onPanelKeydown($event)"
+  >
+    <ng-content />
+  </div>
+</ng-template>

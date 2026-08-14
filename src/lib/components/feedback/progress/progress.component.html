@@ -1,0 +1,13 @@
+@if (hasLabelRow()) {
+  <div class="dm-progress__labels">
+    @if (label()) {
+      <span class="dm-progress__label">{{ label() }}</span>
+    }
+    @if (showValueLabel() && !indeterminate()) {
+      <span class="dm-progress__value">{{ displayValue() }}</span>
+    }
+  </div>
+}
+<div class="dm-progress__track">
+  <div class="dm-progress__fill" [style.width.%]="indeterminate() ? null : percent()"></div>
+</div>

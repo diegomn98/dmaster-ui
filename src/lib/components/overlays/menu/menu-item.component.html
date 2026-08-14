@@ -1,0 +1,20 @@
+<button
+  #button
+  type="button"
+  class="dm-menu-item__btn"
+  role="menuitem"
+  tabindex="-1"
+  [attr.data-color]="color()"
+  [attr.data-active]="active() ? '' : null"
+  [attr.data-disabled]="disabled() ? '' : null"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
+  (click)="onClick()"
+  (mouseenter)="onMouseEnter()"
+>
+  <span class="dm-menu-item__start"><ng-content select="[dmMenuItemStart]" /></span>
+  <span #label class="dm-menu-item__label"><ng-content /></span>
+  @if (shortcut()) {
+    <kbd class="dm-menu-item__shortcut">{{ shortcut() }}</kbd>
+  }
+  <span class="dm-menu-item__end"><ng-content select="[dmMenuItemEnd]" /></span>
+</button>

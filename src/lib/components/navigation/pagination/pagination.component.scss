@@ -1,0 +1,187 @@
+@use 'mixins';
+
+:host {
+  display: inline-flex;
+  max-width: 100%;
+}
+
+// ---- Block -----------------------------------------------------------------
+// Component tokens (`--dm-pagination-*`) resolve with local fallbacks so the
+// component works without any global definition; override them at any scope.
+// `data-color` maps the semantic palette onto two generic vars consumed by the
+// active page, so variants never explode into color × state selectors.
+
+.dm-pagination {
+  --dm-pg-gap: var(--dm-pagination-gap, var(--dm-space-1));
+  --dm-pg-radius: var(--dm-pagination-radius, var(--dm-radius-lg));
+  --dm-pg-fg: var(--dm-pagination-fg, var(--dm-fg-muted));
+  --dm-pg-hover-bg: var(--dm-pagination-hover-bg, var(--dm-bg-muted));
+
+  display: block;
+  max-width: 100%;
+  font-family: var(--dm-font-sans);
+
+  // ---- Sizes (HeroUI scale: 32/40/48px items) -------------------------------
+  &[data-size='sm'] {
+    --dm-pg-item: 2rem;
+    --dm-pg-fs: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    --dm-pg-item: 2.5rem;
+    --dm-pg-fs: var(--dm-text-sm);
+  }
+
+  &[data-size='lg'] {
+    --dm-pg-item: 3rem;
+    --dm-pg-fs: var(--dm-text-base);
+  }
+
+  // ---- Colors → generic vars ------------------------------------------------
+  &[data-color='default'] {
+    --dm-pg-active: var(--dm-default);
+    --dm-pg-active-fg: var(--dm-default-fg);
+  }
+
+  &[data-color='primary'] {
+    --dm-pg-active: var(--dm-primary);
+    --dm-pg-active-fg: var(--dm-primary-fg);
+  }
+
+  &[data-color='secondary'] {
+    --dm-pg-active: var(--dm-secondary);
+    --dm-pg-active-fg: var(--dm-secondary-fg);
+  }
+
+  &[data-color='success'] {
+    --dm-pg-active: var(--dm-success);
+    --dm-pg-active-fg: var(--dm-success-fg);
+  }
+
+  &[data-color='warning'] {
+    --dm-pg-active: var(--dm-warning);
+    --dm-pg-active-fg: var(--dm-warning-fg);
+  }
+
+  &[data-color='danger'] {
+    --dm-pg-active: var(--dm-danger);
+    --dm-pg-active-fg: var(--dm-danger-fg);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+}
+
+.dm-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dm-pg-gap);
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// ---- Items -----------------------------------------------------------------
+// Rounded-square items (radius lg), quiet at rest, hover wash, elastic HeroUI
+// press. The prev/next controls share the exact same footprint.
+
+.dm-pagination__control,
+.dm-pagination__page {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--dm-pg-item);
+  height: var(--dm-pg-item);
+  padding: 0;
+  color: var(--dm-pg-fg);
+  font-family: inherit;
+  font-size: var(--dm-pg-fs);
+  font-weight: var(--dm-font-medium);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dm-pg-radius);
+
+  @include mixins.transition(color, background-color, box-shadow, transform);
+  @include mixins.touch-target;
+
+  &:hover:not(:disabled) {
+    color: var(--dm-fg);
+    background: var(--dm-pg-hover-bg);
+  }
+
+  // Press elástico HeroUI: scale corto y rápido.
+  &:active:not(:disabled) {
+    transform: scale(0.93);
+    transition-duration: var(--dm-duration-fast);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.dm-pagination__page {
+  padding-inline: 0.375rem;
+
+  // Active page: solid semantic fill + soft glow of its own color.
+  &--active {
+    color: var(--dm-pg-active-fg);
+    background: var(--dm-pg-active);
+    box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--dm-pg-active) 60%, transparent);
+    cursor: default;
+
+    &:hover:not(:disabled) {
+      color: var(--dm-pg-active-fg);
+      background: var(--dm-pg-active);
+    }
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}
+
+.dm-pagination__control {
+  &:disabled {
+    color: var(--dm-fg-subtle);
+    opacity: 0.45;
+  }
+}
+
+.dm-pagination__chevron {
+  width: calc(var(--dm-pg-item) * 0.5);
+  height: calc(var(--dm-pg-item) * 0.5);
+}
+
+.dm-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--dm-pg-item) * 0.75);
+  height: var(--dm-pg-item);
+  color: var(--dm-fg-subtle);
+  font-size: var(--dm-pg-fs);
+  user-select: none;
+}
+
+// ---- Compact (mobile-first) ------------------------------------------------
+// Base = narrow: off-window pages collapse (first/last, ellipses and the
+// current page stay), so the pager never overflows a phone-width container.
+// From `sm` upwards the full window is shown.
+
+.dm-pagination__item[data-compact-hidden] {
+  display: none;
+
+  @include mixins.respond-to(sm) {
+    display: block;
+  }
+}

@@ -1,0 +1,204 @@
+@use 'mixins';
+
+// The host is only a declaration anchor: the real panel is portalised into the
+// CDK overlay. Hiding it keeps the templates out of the page flow until open.
+:host {
+  display: none;
+}
+
+// The panel is a TemplatePortal instantiated in this component's view, so it
+// carries the component's encapsulation attributes — these encapsulated styles
+// reach it even though the DOM lives in the body-level overlay container.
+.dm-command__panel {
+  display: flex;
+  flex-direction: column;
+  width: var(--dm-command-width, min(40rem, 92vw));
+  max-width: calc(100vw - 2rem);
+  max-height: var(--dm-command-max-height, min(70dvh, calc(100dvh - 4rem)));
+  overflow: hidden;
+  border: 1px solid var(--dm-command-border, var(--dm-border));
+  border-radius: var(--dm-command-radius, var(--dm-radius-xl));
+  background: var(--dm-command-bg, var(--dm-bg-elevated));
+  color: var(--dm-fg);
+  box-shadow: var(--dm-command-shadow, var(--dm-shadow-lg));
+  font-family: var(--dm-font-sans);
+  outline: none;
+  animation: dm-command-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+// ---- Header (search row) ---------------------------------------------------
+.dm-command__header {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-3);
+  padding: var(--dm-space-3) var(--dm-space-4);
+  border-bottom: 1px solid var(--dm-border);
+}
+
+.dm-command__search-icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dm-fg-muted);
+}
+
+.dm-command__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dm-fg);
+  font: inherit;
+  font-size: var(--dm-text-base);
+  line-height: var(--dm-leading-normal);
+  outline: none;
+
+  &::placeholder {
+    color: var(--dm-fg-subtle);
+  }
+}
+
+// ESC pill doubles as the close button (HeroUI pattern).
+.dm-command__esc {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  @include mixins.transition(opacity);
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Body / list -----------------------------------------------------------
+.dm-command__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--dm-space-2);
+}
+
+.dm-command__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dm-command__group {
+  display: flex;
+  flex-direction: column;
+
+  & + & {
+    margin-top: var(--dm-space-1);
+  }
+}
+
+.dm-command__group-heading {
+  padding: var(--dm-space-2) var(--dm-space-3) var(--dm-space-1);
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dm-fg-subtle);
+}
+
+.dm-command__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-3);
+  padding: 0.625rem var(--dm-space-3);
+  border-radius: var(--dm-radius-md);
+  color: var(--dm-fg);
+  cursor: pointer;
+  user-select: none;
+
+  @include mixins.transition(background-color, color);
+
+  // The keyboard owns the active row; hover just re-points it via the handler.
+  // HeroUI uses a quiet neutral tint (via the active tokens) — no brand color.
+  &[data-active] {
+    background: var(--dm-command-active-bg, var(--dm-default-subtle));
+    color: var(--dm-command-active-fg, var(--dm-fg));
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.dm-command__option-label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--dm-text-sm);
+
+  @include mixins.truncate;
+}
+
+.dm-command__option-shortcut {
+  flex-shrink: 0;
+}
+
+.dm-command__empty {
+  padding: var(--dm-space-6) var(--dm-space-3);
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-sm);
+  text-align: center;
+}
+
+// ---- Footer (keyboard hints) -----------------------------------------------
+// A quiet legend bar, set apart from the list by a subtle fill.
+.dm-command__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dm-space-2) var(--dm-space-5);
+  padding: var(--dm-space-3) var(--dm-space-4);
+  border-top: 1px solid var(--dm-border);
+  background: var(--dm-bg-subtle);
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-xs);
+}
+
+.dm-command__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+
+  // Push the close hint to the trailing edge for a balanced legend.
+  &--end {
+    margin-inline-start: auto;
+  }
+}
+
+// Adjacent arrow keys read as one control.
+.dm-command__hint-keys {
+  display: inline-flex;
+  gap: 0.125rem;
+}
+
+.dm-command__hint-label {
+  color: var(--dm-fg-muted);
+}
+
+@keyframes dm-command-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(-0.25rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-command__panel {
+    animation: none;
+  }
+}

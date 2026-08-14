@@ -68,6 +68,33 @@
   --dm-skeleton-duration: 1.6s;
   --dm-tooltip-bg: var(--dm-fg);
   --dm-tooltip-fg: var(--dm-bg);
+  --dm-slider-track-bg: var(--dm-bg-muted);
+  --dm-slider-thumb-bg: var(--dm-bg);
+  --dm-slider-bubble-bg: var(--dm-fg);
+  --dm-slider-bubble-fg: var(--dm-bg);
+  --dm-popover-bg: var(--dm-bg);
+  --dm-popover-border: var(--dm-border);
+  --dm-popover-max-width: 20rem;
+  --dm-popover-padding: 1rem;
+  --dm-popover-arrow-size: 0.625rem;
+  --dm-menu-bg: var(--dm-bg-elevated);
+  --dm-menu-border: var(--dm-border);
+  --dm-menu-shadow: var(--dm-shadow-lg);
+  --dm-menu-item-active-bg: var(--dm-default-subtle);
+  --dm-menu-divider-color: var(--dm-border);
+  --dm-kbd-bg: var(--dm-bg-muted);
+  --dm-kbd-fg: var(--dm-fg-muted);
+  --dm-kbd-border: var(--dm-border);
+  --dm-command-bg: var(--dm-bg-elevated);
+  --dm-command-border: var(--dm-border);
+  --dm-command-radius: var(--dm-radius-xl);
+  --dm-command-shadow: var(--dm-shadow-lg);
+  --dm-command-width: min(40rem, 92vw);
+  --dm-command-max-height: min(70dvh, calc(100dvh - 4rem));
+
+  // HeroUI highlights the active row with a neutral tint, not the brand color.
+  --dm-command-active-bg: var(--dm-default-subtle);
+  --dm-command-active-fg: var(--dm-fg);
 
   // Soft multi-layer shadows (never the flat Material ones)
   --dm-shadow-sm: 0 1px 2px rgb(0 0 0 / 5%), 0 1px 1px rgb(0 0 0 / 3%);

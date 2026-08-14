@@ -1,0 +1,60 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance):
+//   --dm-divider-color      line color, inherits --dm-border
+//   --dm-divider-thickness  line thickness (default 1px)
+
+:host {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+// Two halves that collapse into one continuous rule when no label is
+// projected: the label carries the surrounding gap as margins, so hiding it
+// removes the gap and both halves meet seamlessly.
+.dm-divider__line {
+  flex: 1 1 0%;
+  height: var(--dm-divider-thickness, 1px);
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-divider-color, var(--dm-border));
+}
+
+.dm-divider__label {
+  margin-inline: var(--dm-space-3);
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-snug);
+  white-space: nowrap;
+
+  // Angular drops whitespace-only projected nodes, so an unlabeled divider
+  // leaves this span truly empty and the CSS can collapse it.
+  &:empty {
+    display: none;
+  }
+}
+
+// ---- Label placement -------------------------------------------------------
+// The near-side half shrinks to a short stub. Without a label both halves
+// still meet seamlessly, so placement only shows when content is projected.
+:host([data-label-placement='start']) .dm-divider__line--start,
+:host([data-label-placement='end']) .dm-divider__line--end {
+  flex: 0 0 var(--dm-space-6);
+}
+
+// ---- Vertical --------------------------------------------------------------
+:host([data-orientation='vertical']) {
+  flex-direction: column;
+  align-self: stretch;
+  width: auto;
+
+  .dm-divider__line {
+    width: var(--dm-divider-thickness, 1px);
+    height: auto;
+  }
+
+  .dm-divider__label {
+    margin-block: var(--dm-space-2);
+    margin-inline: 0;
+  }
+}

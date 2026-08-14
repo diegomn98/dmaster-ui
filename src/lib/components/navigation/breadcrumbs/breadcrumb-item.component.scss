@@ -1,0 +1,109 @@
+@use 'mixins';
+
+:host {
+  display: contents;
+}
+
+.dm-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.dm-breadcrumb-item__link,
+.dm-breadcrumb-item__page {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-1);
+  min-width: 0;
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--dm-radius-sm);
+  line-height: 1.2;
+  color: var(--dm-breadcrumbs-fg, var(--dm-fg-muted));
+  text-decoration: none;
+}
+
+.dm-breadcrumb-item__link {
+  cursor: pointer;
+  outline: none;
+
+  @include mixins.transition(color, transform);
+
+  &:hover {
+    color: var(--dm-breadcrumbs-fg-active, var(--dm-fg));
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  // HeroUI press: short elastic squeeze.
+  &:active {
+    transform: scale(0.97);
+    transition-duration: var(--dm-duration-fast);
+  }
+}
+
+.dm-breadcrumb-item__page {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-breadcrumbs-fg-active, var(--dm-fg));
+}
+
+.dm-breadcrumb-item__page[aria-disabled='true'] {
+  color: var(--dm-fg-subtle);
+  cursor: not-allowed;
+}
+
+.dm-breadcrumb-item__label {
+  display: inline-block;
+  min-width: 0;
+}
+
+// Mobile-first: cap intermediate (link) crumbs so a long trail never overflows.
+// The width cap is lifted from the `sm` breakpoint up.
+.dm-breadcrumb-item__link .dm-breadcrumb-item__label {
+  max-width: 9rem;
+
+  @include mixins.truncate;
+
+  @include mixins.respond-to(sm) {
+    max-width: none;
+    overflow: visible;
+  }
+}
+
+.dm-breadcrumb-item__separator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: var(--dm-breadcrumbs-gap, 0.5rem);
+  color: var(--dm-breadcrumbs-sep, var(--dm-fg-subtle));
+  user-select: none;
+}
+
+.dm-breadcrumb-item__chevron {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.dm-breadcrumb-item__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--dm-space-1);
+  letter-spacing: 0.1em;
+  color: var(--dm-breadcrumbs-fg, var(--dm-fg-muted));
+  user-select: none;
+}
+
+@include mixins.reduced-motion {
+  .dm-breadcrumb-item__link {
+    transition: none;
+  }
+
+  .dm-breadcrumb-item__link:active {
+    transform: none;
+  }
+}
