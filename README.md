@@ -23,6 +23,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.6 kB gzip, a card ~1.3 kB, the entire 34-component library ~66 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -196,6 +197,24 @@ Override any token globally:
 ## SSR / prerendering
 
 The library is server-safe: no component or service touches `window`, `localStorage` or browser-only APIs at construction time — `matchMedia` is feature-detected through Angular's `DOCUMENT`, and overlays only open on user interaction. The [docs site](https://dmasterui.com) itself is fully statically prerendered with `@angular/ssr` as a permanent smoke test.
+
+---
+
+## Bundle size
+
+Fully tree-shakeable — your app only pays for the components it imports. Measured with the same pipeline the Angular CLI applies to published libraries (linker + minify + gzip, `@angular/*` and `rxjs` external):
+
+| Import                    | Gzip     |
+| ------------------------- | -------- |
+| `DmCardComponent`         | ~1.3 kB  |
+| `DmBadgeComponent`        | ~1.8 kB  |
+| `DmButtonComponent`       | ~3.6 kB  |
+| `DmSelectComponent`       | ~5.4 kB  |
+| `DmTableComponent`        | ~10.4 kB |
+| **Entire library** (34)   | ~66 kB   |
+| Global CSS (tokens+reset) | ~4 kB    |
+
+Reproduce the full per-component table from the repo with `npm run size`.
 
 ---
 

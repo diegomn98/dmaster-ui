@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Bundle-size audit** — the README now documents the real tree-shaken cost
+  per component (a button is ~3.6 kB gzip; the entire 34-component library
+  ~66 kB), measured with the same linker + minify pipeline the Angular CLI
+  applies to published libraries. Reproducible from the repo with
+  `npm run size`.
+
 ## [0.4.2] - 2026-08-18
 
 ### Changed
