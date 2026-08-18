@@ -41,9 +41,11 @@
   --dm-sel-subtle: var(--dm-primary-subtle);
   --dm-sel-trigger-fg: var(--dm-fg);
 
+  // `default` focuses with primary, matching .dm-input — the whole field
+  // family (input, select, search) must share one focus language.
   &[data-color='default'] {
-    --dm-sel: var(--dm-fg);
-    --dm-sel-subtle: var(--dm-default-subtle);
+    --dm-sel: var(--dm-primary);
+    --dm-sel-subtle: var(--dm-primary-subtle);
   }
 
   &[data-color='primary'] {

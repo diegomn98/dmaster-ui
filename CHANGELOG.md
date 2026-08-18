@@ -5,6 +5,55 @@ All notable changes to `@dmaster/ui` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`dm-color-picker`** — a full color picker in the forms family
+  (`ControlValueAccessor`, hex string value): a draggable saturation/brightness
+  area, hue slider, optional alpha slider, editable hex input and quick swatches,
+  in a field-family trigger that opens a CDK overlay. Pure `color-utils`
+  (hex ⇄ rgb ⇄ hsv) underneath; `role="slider"` areas with `aria-valuetext`.
+- **`dm-error`** — a standalone validation line (mat-error / HeroUI
+  FieldError): danger color, `role="alert"`, fully projected content. It
+  carries **no icon of its own** — project one (e.g. `<dm-icon>`) when you
+  want one. `dm-form-field` accepts a projected `<dm-error>` and wires
+  `aria-invalid` / `aria-describedby` automatically.
+
+### Changed
+
+- **`dm-date-picker`** locale is now provided app-wide and reactively via the
+  new **`DM_DATE_LOCALE`** token (`provideDateLocale`), which accepts a plain
+  string or a `Signal<string>` — the reactive analogue of `MAT_DATE_LOCALE`, so
+  every picker re-renders live on a language switch. `provideDatePickerDefaults`
+  also covers `displayFormat` and `weekdayFormat` now.
+
+- **`dm-date-picker`** — a single-date calendar field in the forms family
+  (HeroUI-style color × variant, `ControlValueAccessor`). Native `Date` model
+  normalized to local midnight; **no date library** — pure, timezone-safe
+  calendar math plus `Intl.DateTimeFormat` for every month/weekday name and the
+  trigger text, so the whole calendar follows the `locale` input and prerenders.
+  Layered day → month → year navigation, full WAI-ARIA keyboard support
+  (roving-tabindex grid, PageUp/Down for month, Shift for year), `min`/`max` and
+  an `isDateDisabled` predicate, and a "Today" quick-jump. `firstDayOfWeek`
+  defaults to `'auto'`: the week convention is derived from the locale's CLDR
+  week data (Monday in Spain/France, Sunday in the US, Saturday in much of
+  MENA), and day digits also render through `Intl` (native numerals for
+  `ar`/`fa`).
+
+- **Icon system.** `dm-icon` draws an icon three ways: a **Material Symbols font
+  ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons,
+  like `mat-icon`), a **registered SVG** by `name`, or a **projected `<svg>`**.
+  Font mode exposes the variable-font axes via `fill` (outlined ⇄ filled),
+  `weight` and `family` (`outlined`/`rounded`/`sharp`). A `color` input takes a
+  semantic token (`primary`, `success`, …) or any CSS color; otherwise it inherits
+  `currentColor`. Sizes via `size`, `spin` for loaders, decorative by default
+  (`label` promotes it to `role="img"`). SVG icons are registered app-wide with
+  `provideDmasterIcons(...)` (merges multiple sets) and resolved by `DmIconRegistry`.
+- **`@dmaster/ui/icons`** — a new entry point shipping `DM_ICONS`, a curated set
+  of ~53 original outline icons (24×24, 2px stroke), plus individual tree-shakeable
+  exports and `DM_ICON_NAMES`.
+
 ## [0.3.0] - 2026-08-14
 
 ### Added

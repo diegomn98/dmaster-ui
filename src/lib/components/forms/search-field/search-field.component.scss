@@ -1,0 +1,351 @@
+@use 'mixins';
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-search-field__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-search-field__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Control (the field surface) -------------------------------------------
+// `data-color` lives here, so we map the generic `--dm-sf*` variables (focus
+// ring + caret) from the wrapper. Same technique as dm-select.
+.dm-search-field__control {
+  --dm-sf: var(--dm-primary);
+  --dm-sf-subtle: var(--dm-primary-subtle);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  width: 100%;
+
+  // As a grid item of :host, this container's "automatic minimum size" would
+  // otherwise inherit the native <input>'s intrinsic width (browsers size it
+  // like size="20") even though the input itself shrinks freely — overflowing
+  // the host in any constrained layout. Same fix as the input's min-width: 0.
+  min-width: 0;
+  padding: 0 var(--dm-control-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+
+  // Focus ring parked at 0 spread → grows out of the field on focus (same as
+  // .dm-input): a single box-shadow that animates in width.
+  box-shadow: 0 0 0 0 var(--dm-sf-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  // `default` focuses with primary, matching .dm-input — the whole field
+  // family (input, select, search) must share one focus language.
+  &[data-color='default'] {
+    --dm-sf: var(--dm-primary);
+    --dm-sf-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='primary'] {
+    --dm-sf: var(--dm-primary);
+    --dm-sf-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-sf: var(--dm-secondary);
+    --dm-sf-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-sf: var(--dm-success);
+    --dm-sf-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-sf: var(--dm-warning);
+    --dm-sf-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-sf: var(--dm-danger);
+    --dm-sf-subtle: var(--dm-danger-subtle);
+  }
+
+  &:hover:not([data-disabled], :focus-within) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus-within {
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-sf);
+    box-shadow: 0 0 0 3.5px var(--dm-sf-subtle);
+  }
+
+  &[data-disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // ---- Sizes ---------------------------------------------------------------
+  &[data-size='sm'] {
+    height: 2rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem;
+    font-size: var(--dm-text-sm);
+  }
+
+  &[data-size='lg'] {
+    height: 3rem;
+    font-size: var(--dm-text-base);
+    padding-inline: calc(var(--dm-control-padding-x) + 0.125rem);
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+    padding-inline: var(--dm-space-4);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  // flat: default styles above.
+  &[data-variant='bordered'] {
+    background-color: transparent;
+    border-color: var(--dm-border-strong);
+
+    &:hover:not([data-disabled], :focus-within) {
+      background-color: transparent;
+      border-color: var(--dm-fg-subtle);
+    }
+
+    &:focus-within {
+      background-color: transparent;
+    }
+  }
+
+  &[data-variant='faded'] {
+    background-color: var(--dm-bg-muted);
+    border-color: var(--dm-border);
+
+    &:focus-within {
+      background-color: var(--dm-bg-elevated);
+    }
+  }
+
+  &[data-variant='underlined'] {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding-inline: 0;
+    box-shadow: inset 0 -1px 0 var(--dm-border-strong);
+
+    &:hover:not([data-disabled], :focus-within) {
+      background-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
+    }
+
+    &:focus-within {
+      background-color: transparent;
+      box-shadow: inset 0 -2px 0 var(--dm-sf);
+    }
+  }
+
+  // ---- Invalid -------------------------------------------------------------
+  &[data-invalid] {
+    --dm-sf: var(--dm-danger);
+    --dm-sf-subtle: var(--dm-danger-subtle);
+
+    border-color: var(--dm-danger);
+
+    &[data-variant='underlined'] {
+      border-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-danger);
+    }
+  }
+}
+
+// ---- Icon (leading magnifier) ----------------------------------------------
+.dm-search-field__icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dm-fg-subtle);
+  transition: color var(--dm-duration-base) var(--dm-ease-out);
+
+  .dm-search-field__control:focus-within & {
+    color: var(--dm-fg-muted);
+  }
+
+  [data-size='sm'] & {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  [data-size='lg'] & {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// ---- Input (bare — the wrapper carries the surface) ------------------------
+.dm-search-field__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dm-fg);
+  caret-color: var(--dm-sf);
+  font-family: var(--dm-font-sans);
+  font-size: inherit;
+  line-height: var(--dm-leading-normal);
+  appearance: none;
+
+  &::placeholder {
+    color: var(--dm-fg-subtle);
+    opacity: 1;
+    transition: color var(--dm-duration-base) var(--dm-ease-out);
+  }
+
+  &:focus {
+    outline: none;
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--dm-fg-subtle) 60%, transparent);
+    }
+  }
+
+  &:disabled {
+    color: var(--dm-fg-muted);
+    cursor: not-allowed;
+  }
+
+  // Hide the native search decorations — we render our own clear button.
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    appearance: none;
+    display: none;
+  }
+}
+
+// ---- Clear button ----------------------------------------------------------
+// A soft, always-visible chip (HeroUI-style): a faint circle that darkens on
+// hover and springs on press, so it reads as a real button, not a bare glyph.
+.dm-search-field__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background-color: color-mix(in srgb, var(--dm-fg) 8%, transparent);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-out),
+    color var(--dm-duration-fast) var(--dm-ease-out),
+    transform var(--dm-duration-fast) var(--dm-ease-snappy);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 16%, transparent);
+    color: var(--dm-fg);
+  }
+
+  &:active {
+    transform: scale(0.88);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  [data-size='sm'] & {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  [data-size='lg'] & {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  svg {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-search-field__clear:active {
+    transform: none;
+  }
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-search-field__hint,
+.dm-search-field__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-search-field__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-search-field__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+  animation: dm-search-field-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-search-field-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-search-field__error {
+    animation: none;
+  }
+}

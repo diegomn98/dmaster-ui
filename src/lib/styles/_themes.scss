@@ -31,7 +31,8 @@
   --dm-default-subtle: rgb(24 24 27 / 6%);
 
   // HeroUI blue as the UI primary. The brand gradient (--dm-gradient-brand)
-  // stays indigo→violet: identity for the logo/hero, blue for interactive UI.
+  // derives from it, so the logo/hero/favicon always match the active theme
+  // (light/dark + live palette) instead of a fixed, disconnected hue.
   --dm-primary: #006fee;
   --dm-primary-hover: #005bc4;
   --dm-primary-fg: #fff;
@@ -58,8 +59,8 @@
   // Focus ring
   --dm-ring: rgb(0 111 238 / 55%);
 
-  // Brand
-  --dm-gradient-brand: linear-gradient(135deg, #6366f1, #8b5cf6 55%, #a855f7);
+  // Brand — tracks the theme's primary color (light/dark + live palette).
+  --dm-gradient-brand: linear-gradient(135deg, var(--dm-primary-hover), var(--dm-primary));
   --dm-sheen: inset 0 1px 0 rgb(255 255 255 / 16%);
 
   // Component tokens (inherit from the semantic tokens above)
@@ -95,6 +96,11 @@
   // HeroUI highlights the active row with a neutral tint, not the brand color.
   --dm-command-active-bg: var(--dm-default-subtle);
   --dm-command-active-fg: var(--dm-fg);
+
+  // Date picker — panel surface. The selected-day fill follows the picker's
+  // semantic color (`--dm-dp`, mapped from `data-color` on the panel), so it
+  // is themed via the semantic palette, not a dedicated token.
+  --dm-datepicker-panel-bg: var(--dm-bg-elevated);
 
   // Soft multi-layer shadows (never the flat Material ones)
   --dm-shadow-sm: 0 1px 2px rgb(0 0 0 / 5%), 0 1px 1px rgb(0 0 0 / 3%);

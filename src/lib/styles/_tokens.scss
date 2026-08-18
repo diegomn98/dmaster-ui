@@ -89,11 +89,12 @@
   }
 
   // --------------------------------------------------------------------------
-  // Density · comfortable (default)
+  // Density · comfortable (default). The base scale is HeroUI's 32/40/48 so
+  // native `dmInput` fields line up exactly with dm-select / dm-search-field.
   // --------------------------------------------------------------------------
   --dm-control-height-sm: 2rem;
-  --dm-control-height: 2.25rem;
-  --dm-control-height-lg: 2.75rem;
+  --dm-control-height: 2.5rem;
+  --dm-control-height-lg: 3rem;
   --dm-control-padding-x: 0.75rem;
   --dm-content-gap: 1rem;
 }
@@ -102,16 +103,16 @@
 // `provideDmasterUI` / DensityService stamp on <html>.
 [data-dm-density='compact'] {
   --dm-control-height-sm: 1.75rem;
-  --dm-control-height: 2rem;
-  --dm-control-height-lg: 2.5rem;
+  --dm-control-height: 2.25rem;
+  --dm-control-height-lg: 2.75rem;
   --dm-control-padding-x: 0.625rem;
   --dm-content-gap: 0.75rem;
 }
 
 [data-dm-density='spacious'] {
   --dm-control-height-sm: 2.25rem;
-  --dm-control-height: 2.5rem;
-  --dm-control-height-lg: 3rem;
+  --dm-control-height: 2.75rem;
+  --dm-control-height-lg: 3.25rem;
   --dm-control-padding-x: 1rem;
   --dm-content-gap: 1.25rem;
 }

@@ -1,0 +1,224 @@
+@if (label()) {
+  <label class="dm-color-picker__label" [id]="labelId" [attr.for]="triggerId">
+    {{ label() }}
+    @if (required()) {
+      <span class="dm-color-picker__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<button
+  #triggerEl
+  type="button"
+  class="dm-color-picker__trigger"
+  [id]="triggerId"
+  [attr.data-color]="color()"
+  [attr.data-variant]="variant()"
+  [attr.data-size]="size()"
+  [attr.data-radius]="radius()"
+  [attr.data-open]="open() ? '' : null"
+  [attr.data-invalid]="error() ? '' : null"
+  [attr.aria-haspopup]="'dialog'"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? dialogId : null"
+  [attr.aria-labelledby]="label() ? labelId : null"
+  [attr.aria-label]="!label() && ariaLabel() ? ariaLabel() : null"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-invalid]="error() ? 'true' : null"
+  [attr.aria-required]="required() ? 'true' : null"
+  [disabled]="isDisabled()"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)"
+  (blur)="onTriggerBlur()"
+>
+  <span
+    class="dm-color-picker__chip"
+    [class.dm-color-picker__chip--empty]="!hasValue()"
+    [attr.data-alpha]="showAlpha() ? '' : null"
+    aria-hidden="true"
+  >
+    @if (hasValue()) {
+      <span class="dm-color-picker__chip-fill" [style.background]="currentCss()"></span>
+    }
+  </span>
+  <span class="dm-color-picker__value" [class.dm-color-picker__value--placeholder]="!hasValue()">
+    {{ displayText() }}
+  </span>
+  @if (showClearButton()) {
+    <span
+      class="dm-color-picker__clear"
+      aria-hidden="true"
+      [attr.title]="clearAriaLabel()"
+      (click)="onClearClick($event)"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </span>
+  }
+  <svg
+    class="dm-color-picker__chevron"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="triggerEl"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="overlayPositions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="close(false)"
+  (detach)="close(false)"
+>
+  <div
+    #panelEl
+    class="dm-color-picker__panel"
+    role="dialog"
+    tabindex="-1"
+    [id]="dialogId"
+    [attr.aria-modal]="false"
+    [attr.data-color]="color()"
+    [attr.aria-label]="label() || ariaLabel() || 'Color picker'"
+    (keydown)="onPanelKeydown($event)"
+  >
+    <!-- Saturation / value plane -->
+    <div
+      #svArea
+      class="dm-color-picker__sv"
+      role="slider"
+      tabindex="0"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="svThumbLeft()"
+      [attr.aria-valuetext]="svValueText()"
+      [attr.aria-label]="'Saturation and brightness'"
+      [style.--dm-cp-hue]="hsva().h"
+      (pointerdown)="onSvPointerDown($event)"
+      (pointermove)="onSvPointerMove($event)"
+      (pointerup)="onSvPointerUp($event)"
+      (pointercancel)="onSvPointerUp($event)"
+      (keydown)="onSvKeydown($event)"
+    >
+      <span
+        class="dm-color-picker__sv-thumb"
+        [style.left.%]="svThumbLeft()"
+        [style.top.%]="svThumbTop()"
+      ></span>
+    </div>
+
+    <!-- Rails -->
+    <div class="dm-color-picker__rails">
+      <span
+        class="dm-color-picker__preview"
+        [attr.data-alpha]="showAlpha() ? '' : null"
+        aria-hidden="true"
+      >
+        <span class="dm-color-picker__preview-fill" [style.background]="currentCss()"></span>
+      </span>
+
+      <div class="dm-color-picker__sliders">
+        <div
+          #hueTrack
+          class="dm-color-picker__slider dm-color-picker__slider--hue"
+          role="slider"
+          tabindex="0"
+          aria-valuemin="0"
+          aria-valuemax="360"
+          [attr.aria-valuenow]="hsva().h"
+          [attr.aria-valuetext]="hueValueText()"
+          [attr.aria-label]="'Hue'"
+          (pointerdown)="onHuePointerDown($event)"
+          (pointermove)="onHuePointerMove($event)"
+          (pointerup)="onHuePointerUp($event)"
+          (pointercancel)="onHuePointerUp($event)"
+          (keydown)="onHueKeydown($event)"
+        >
+          <span class="dm-color-picker__slider-thumb" [style.left.%]="hueThumbLeft()"></span>
+        </div>
+
+        @if (showAlpha()) {
+          <div
+            #alphaTrack
+            class="dm-color-picker__slider dm-color-picker__slider--alpha"
+            role="slider"
+            tabindex="0"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [attr.aria-valuenow]="alphaThumbLeft()"
+            [attr.aria-valuetext]="alphaValueText()"
+            [attr.aria-label]="'Alpha'"
+            [style.--dm-cp-color]="solidCss()"
+            (pointerdown)="onAlphaPointerDown($event)"
+            (pointermove)="onAlphaPointerMove($event)"
+            (pointerup)="onAlphaPointerUp($event)"
+            (pointercancel)="onAlphaPointerUp($event)"
+            (keydown)="onAlphaKeydown($event)"
+          >
+            <span class="dm-color-picker__slider-thumb" [style.left.%]="alphaThumbLeft()"></span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Hex field -->
+    <div class="dm-color-picker__fields">
+      <input
+        class="dm-color-picker__hex-input"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Hex color value"
+        [value]="hexText()"
+        (input)="onHexInput($event)"
+        (keydown)="onHexKeydown($event)"
+        (blur)="onHexBlur()"
+      />
+    </div>
+
+    <!-- Swatches -->
+    @if (swatches().length) {
+      <div class="dm-color-picker__swatches" role="group" aria-label="Preset colors">
+        @for (hex of swatches(); track hex) {
+          <button
+            type="button"
+            class="dm-color-picker__swatch"
+            [attr.data-selected]="isSwatchActive(hex) ? '' : null"
+            [attr.aria-pressed]="isSwatchActive(hex)"
+            [attr.aria-label]="hex"
+            [attr.title]="hex"
+            (click)="selectSwatch(hex)"
+          >
+            <span class="dm-color-picker__swatch-fill" [style.background]="swatchCss(hex)"></span>
+          </button>
+        }
+      </div>
+    }
+
+    <span class="dm-color-picker__sr-only" aria-live="polite">{{ liveMessage() }}</span>
+  </div>
+</ng-template>
+
+@if (error()) {
+  <p class="dm-color-picker__error" [id]="errorId" role="alert">{{ error() }}</p>
+} @else if (description()) {
+  <p class="dm-color-picker__hint" [id]="hintId">{{ description() }}</p>
+}

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   computed,
   contentChild,
   effect,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { dmUid } from '../../../core/utils/uid';
+import { DmErrorComponent } from '../error/error.component';
 import { DmInputDirective } from './input.directive';
 
 /**
@@ -34,11 +36,13 @@ import { DmInputDirective } from './input.directive';
 export class DmFormFieldComponent {
   private readonly uid = dmUid('dm-form-field');
   private readonly inputRef = contentChild(DmInputDirective);
+  /** A projected `<dm-error>`, if the consumer supplies one. */
+  private readonly projectedError = contentChild(DmErrorComponent, { read: ElementRef });
 
   /** Visible label. */
   readonly label = input<string>('');
 
-  /** Help text shown under the control (hidden while `error` is set). */
+  /** Help text shown under the control (hidden while an error is shown). */
   readonly hint = input<string>('');
 
   /** Error text. Non-empty → error state (`aria-invalid`, `role="alert"`). */
@@ -49,6 +53,11 @@ export class DmFormFieldComponent {
 
   protected readonly hintId = `${this.uid}-hint`;
   protected readonly errorId = `${this.uid}-error`;
+  private readonly projectedErrorId = `${this.uid}-errmsg`;
+
+  /** Whether a `<dm-error>` is currently projected. */
+  protected readonly hasProjectedError = computed(() => !!this.projectedError());
+
   protected readonly controlId = computed(() => {
     const el = this.inputRef()?.elementRef.nativeElement;
     return el?.id || `${this.uid}-control`;
@@ -63,9 +72,25 @@ export class DmFormFieldComponent {
       if (!el.id) {
         el.id = this.controlId();
       }
-      el.setAttribute('aria-invalid', this.error() ? 'true' : 'false');
 
-      const describedBy = this.error() ? this.errorId : this.hint() ? this.hintId : null;
+      // Ensure a projected error message has a stable id we can point at.
+      const errEl = this.projectedError()?.nativeElement as HTMLElement | undefined;
+      if (errEl && !errEl.id) {
+        errEl.id = this.projectedErrorId;
+      }
+
+      const invalid = !!this.error() || this.hasProjectedError();
+      el.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+
+      // Describe the control by whichever message is active: the `error` string,
+      // then a projected <dm-error>, then the hint.
+      const describedBy = this.error()
+        ? this.errorId
+        : errEl
+          ? errEl.id
+          : this.hint()
+            ? this.hintId
+            : null;
       if (describedBy) {
         el.setAttribute('aria-describedby', describedBy);
       } else {

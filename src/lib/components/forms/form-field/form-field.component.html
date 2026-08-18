@@ -13,6 +13,9 @@
 
 @if (error()) {
   <p class="dm-form-field__error" [id]="errorId" role="alert">{{ error() }}</p>
-} @else if (hint()) {
+} @else if (hint() && !hasProjectedError()) {
   <p class="dm-form-field__hint" [id]="hintId">{{ hint() }}</p>
 }
+
+<!-- Projected <dm-error> (mat-error-style slot); wired in the effect. -->
+<ng-content select="dm-error" />

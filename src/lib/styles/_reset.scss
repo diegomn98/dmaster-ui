@@ -56,3 +56,10 @@ p {
   margin: 0;
   overflow-wrap: break-word;
 }
+
+// Brand-tinted text selection — a small detail that makes typing in fields
+// (and the whole app) feel considered. Follows the live palette via tokens.
+::selection {
+  background-color: color-mix(in srgb, var(--dm-primary) 22%, transparent);
+  color: inherit;
+}

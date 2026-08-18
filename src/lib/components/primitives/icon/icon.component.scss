@@ -1,0 +1,62 @@
+@use 'mixins';
+
+// Sized by font-size (font ligatures) AND width/height (SVG), so one `size`
+// input drives both modes. In font mode the projected text is rendered by the
+// Material Symbols font; `--dm-icon-fill`/`--dm-icon-weight` drive its axes.
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  color: inherit;
+
+  // Font-mode defaults (harmless when an SVG is rendered instead).
+  font-family: var(--dm-icon-font, 'Material Symbols Outlined');
+  font-weight: normal;
+  font-style: normal;
+  font-variation-settings:
+    'FILL' var(--dm-icon-fill, 0),
+    'wght' var(--dm-icon-weight, 400),
+    'GRAD' 0,
+    'opsz' 24;
+  white-space: nowrap;
+  direction: ltr;
+  text-transform: none;
+  letter-spacing: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+:host([data-family='rounded']) {
+  font-family: var(--dm-icon-font-rounded, 'Material Symbols Rounded');
+}
+
+:host([data-family='sharp']) {
+  font-family: var(--dm-icon-font-sharp, 'Material Symbols Sharp');
+}
+
+// The registered markup lands here; the span fills the host so the icon's own
+// width/height="100%" scales it. currentColor flows through.
+.dm-icon__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// Spin (loaders). Distinct, constant rotation — gated by reduced motion.
+:host([data-spin]) {
+  animation: dm-icon-spin 1s linear infinite;
+}
+
+@keyframes dm-icon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@include mixins.reduced-motion {
+  :host([data-spin]) {
+    animation: none;
+  }
+}

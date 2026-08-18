@@ -1,0 +1,571 @@
+@use 'mixins';
+
+// Alpha-aware checkerboard backdrop, shared by the chip / preview / swatches.
+// Uses neutral semantic tokens so it stays theme-safe in light and dark.
+@mixin checkerboard {
+  background-color: var(--dm-bg-elevated);
+  background-image: conic-gradient(
+    var(--dm-border-strong) 0 25%,
+    transparent 0 50%,
+    var(--dm-border-strong) 0 75%,
+    transparent 0
+  );
+  background-size: 0.5rem 0.5rem;
+}
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-color-picker__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-color-picker__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Trigger (identical field-family contract to dm-select / dm-date-picker)
+// `data-color` maps the generic `--dm-cp*` variables so each color paints the
+// focus ring / open border. `default` focuses with primary, matching .dm-input.
+.dm-color-picker__trigger {
+  --dm-cp: var(--dm-primary);
+  --dm-cp-subtle: var(--dm-primary-subtle);
+
+  &[data-color='default'],
+  &[data-color='primary'] {
+    --dm-cp: var(--dm-primary);
+    --dm-cp-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-cp: var(--dm-secondary);
+    --dm-cp-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-cp: var(--dm-success);
+    --dm-cp-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-cp: var(--dm-warning);
+    --dm-cp-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-cp: var(--dm-danger);
+    --dm-cp-subtle: var(--dm-danger-subtle);
+  }
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  width: 100%;
+  padding: 0 var(--dm-control-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-normal);
+  cursor: pointer;
+  box-shadow: 0 0 0 0 var(--dm-cp-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus-visible,
+  &[data-open] {
+    outline: none;
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-cp);
+    box-shadow: 0 0 0 3.5px var(--dm-cp-subtle);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // ---- Sizes ---------------------------------------------------------------
+  &[data-size='sm'] {
+    height: 2rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem;
+  }
+
+  &[data-size='lg'] {
+    height: 3rem;
+    font-size: var(--dm-text-base);
+    padding-inline: calc(var(--dm-control-padding-x) + 0.125rem);
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+    padding-inline: var(--dm-space-4);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  &[data-variant='bordered'] {
+    background-color: transparent;
+    border-color: var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      border-color: var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+    }
+  }
+
+  &[data-variant='faded'] {
+    background-color: var(--dm-bg-muted);
+    border-color: var(--dm-border);
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: var(--dm-bg-elevated);
+    }
+  }
+
+  &[data-variant='underlined'] {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding-inline: 0;
+    box-shadow: inset 0 -1px 0 var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+      box-shadow: inset 0 -2px 0 var(--dm-cp);
+    }
+  }
+
+  // ---- Invalid -------------------------------------------------------------
+  &[data-invalid] {
+    border-color: var(--dm-danger);
+    box-shadow: 0 0 0 0 var(--dm-danger-subtle);
+
+    &:focus-visible,
+    &[data-open] {
+      box-shadow: 0 0 0 3.5px var(--dm-danger-subtle);
+    }
+  }
+}
+
+// Swatch chip inside the trigger — a rounded square of the current color, on a
+// checkerboard so alpha reads.
+.dm-color-picker__chip {
+  position: relative;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  overflow: hidden;
+  border-radius: var(--dm-radius-sm);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 15%, transparent);
+
+  &[data-alpha] {
+    @include checkerboard;
+  }
+
+  &--empty {
+    background-color: var(--dm-bg-muted);
+    background-image: linear-gradient(
+      135deg,
+      transparent calc(50% - 1px),
+      var(--dm-danger) calc(50% - 1px),
+      var(--dm-danger) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
+  }
+}
+
+.dm-color-picker__chip-fill {
+  position: absolute;
+  inset: 0;
+}
+
+.dm-color-picker__value {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  &--placeholder {
+    color: var(--dm-fg-subtle);
+  }
+}
+
+.dm-color-picker__chevron {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dm-fg-muted);
+}
+
+.dm-color-picker__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: var(--dm-radius-full);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+
+  @include mixins.transition(background-color, color);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 10%, transparent);
+    color: var(--dm-fg);
+  }
+
+  svg {
+    width: 0.6875rem;
+    height: 0.6875rem;
+  }
+}
+
+// ---- Panel -----------------------------------------------------------------
+.dm-color-picker__panel {
+  --dm-cp: var(--dm-primary);
+  --dm-cp-subtle: var(--dm-primary-subtle);
+
+  &[data-color='secondary'] {
+    --dm-cp: var(--dm-secondary);
+    --dm-cp-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-cp: var(--dm-success);
+    --dm-cp-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-cp: var(--dm-warning);
+    --dm-cp-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-cp: var(--dm-danger);
+    --dm-cp-subtle: var(--dm-danger-subtle);
+  }
+
+  box-sizing: border-box;
+  width: 15rem;
+  padding: var(--dm-space-3);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-lg);
+  background-color: var(--dm-bg-elevated);
+  box-shadow: var(--dm-shadow-lg);
+  animation: dm-color-picker-in var(--dm-duration-fast) var(--dm-ease-out);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@keyframes dm-color-picker-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem) scale(0.98);
+  }
+}
+
+// Reset native button chrome for every button in the panel (kills the UA
+// `outset` border/background). Zero specificity via :where(), so component
+// rules below win cleanly.
+:where(.dm-color-picker__panel) button {
+  appearance: none;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// ---- Saturation / value plane ----------------------------------------------
+.dm-color-picker__sv {
+  position: relative;
+  width: 100%;
+  height: 9rem;
+  border-radius: var(--dm-radius-md);
+  cursor: crosshair;
+  touch-action: none;
+  background:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, transparent),
+    hsl(var(--dm-cp-hue, 0) 100% 50%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 10%, transparent);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 10%, transparent),
+      0 0 0 3px var(--dm-cp-subtle);
+  }
+}
+
+.dm-color-picker__sv-thumb {
+  position: absolute;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    0 0 0 1px color-mix(in srgb, #000 45%, transparent),
+    0 1px 3px color-mix(in srgb, #000 40%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+// ---- Rails (preview + hue/alpha sliders) -----------------------------------
+.dm-color-picker__rails {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  margin-top: var(--dm-space-3);
+}
+
+.dm-color-picker__preview {
+  position: relative;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  overflow: hidden;
+  border-radius: var(--dm-radius-full);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 15%, transparent);
+
+  &[data-alpha] {
+    @include checkerboard;
+  }
+}
+
+.dm-color-picker__preview-fill {
+  position: absolute;
+  inset: 0;
+}
+
+.dm-color-picker__sliders {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: var(--dm-space-2);
+}
+
+.dm-color-picker__slider {
+  position: relative;
+  height: 0.875rem;
+  border-radius: var(--dm-radius-full);
+  cursor: pointer;
+  touch-action: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 10%, transparent);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 10%, transparent),
+      0 0 0 3px var(--dm-cp-subtle);
+  }
+}
+
+.dm-color-picker__slider--hue {
+  background: linear-gradient(
+    to right,
+    #f00 0%,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00 100%
+  );
+}
+
+.dm-color-picker__slider--alpha {
+  background-color: var(--dm-bg-elevated);
+  background-image:
+    linear-gradient(to right, transparent, var(--dm-cp-color, #000)),
+    conic-gradient(
+      var(--dm-border-strong) 0 25%,
+      transparent 0 50%,
+      var(--dm-border-strong) 0 75%,
+      transparent 0
+    );
+  background-size:
+    auto,
+    0.5rem 0.5rem;
+}
+
+.dm-color-picker__slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-bg-elevated);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--dm-fg) 25%, transparent),
+    0 1px 3px color-mix(in srgb, #000 30%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+// ---- Hex field -------------------------------------------------------------
+.dm-color-picker__fields {
+  margin-top: var(--dm-space-3);
+}
+
+.dm-color-picker__hex-input {
+  width: 100%;
+  height: 2rem;
+  padding: 0 var(--dm-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+  font-family: var(--dm-font-mono, var(--dm-font-sans));
+  font-size: var(--dm-text-sm);
+  font-variant-numeric: tabular-nums;
+  text-transform: lowercase;
+
+  @include mixins.transition(background-color, border-color, box-shadow);
+
+  &:focus-visible {
+    outline: none;
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-cp);
+    box-shadow: 0 0 0 3px var(--dm-cp-subtle);
+  }
+}
+
+// ---- Swatches --------------------------------------------------------------
+.dm-color-picker__swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(1.5rem, 1fr));
+  gap: var(--dm-space-1);
+  margin-top: var(--dm-space-3);
+}
+
+.dm-color-picker__swatch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--dm-radius-sm);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 15%, transparent);
+
+  @include mixins.transition(transform, box-shadow);
+  @include checkerboard;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--dm-bg-elevated), 0 0 0 4px var(--dm-cp);
+  }
+
+  &[data-selected] {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--dm-fg) 15%, transparent),
+      0 0 0 2px var(--dm-bg-elevated),
+      0 0 0 4px var(--dm-cp);
+  }
+}
+
+.dm-color-picker__swatch-fill {
+  position: absolute;
+  inset: 0;
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-color-picker__hint,
+.dm-color-picker__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-color-picker__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-color-picker__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+}
+
+.dm-color-picker__sr-only {
+  @include mixins.visually-hidden;
+}
+
+@include mixins.reduced-motion {
+  .dm-color-picker__panel {
+    animation: none;
+  }
+
+  .dm-color-picker__swatch:hover,
+  .dm-color-picker__swatch:active {
+    transform: none;
+  }
+}

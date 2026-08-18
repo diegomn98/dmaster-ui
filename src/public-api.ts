@@ -8,6 +8,7 @@ export * from './lib/core';
 // Components · primitives
 export * from './lib/components/primitives/avatar';
 export * from './lib/components/primitives/badge';
+export * from './lib/components/primitives/icon';
 export * from './lib/components/primitives/kbd';
 export * from './lib/components/primitives/skeleton';
 export * from './lib/components/primitives/spinner';
@@ -26,9 +27,13 @@ export * from './lib/components/feedback/progress';
 
 // Components · forms
 export * from './lib/components/forms/checkbox';
+export * from './lib/components/forms/color-picker';
+export * from './lib/components/forms/date-picker';
+export * from './lib/components/forms/error';
 export * from './lib/components/forms/form-field';
 export * from './lib/components/forms/paginated-select';
 export * from './lib/components/forms/radio-group';
+export * from './lib/components/forms/search-field';
 export * from './lib/components/forms/select';
 export * from './lib/components/forms/slider';
 export * from './lib/components/forms/switch';

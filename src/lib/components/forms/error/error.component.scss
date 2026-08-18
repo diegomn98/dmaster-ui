@@ -1,0 +1,34 @@
+@use 'mixins';
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0.125rem 0 0;
+  color: var(--dm-danger);
+  font-family: var(--dm-font-sans);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  animation: dm-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+:host([data-size='sm']) {
+  font-size: var(--dm-text-xs);
+}
+
+:host([data-size='md']) {
+  font-size: var(--dm-text-sm);
+}
+
+@keyframes dm-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  :host {
+    animation: none;
+  }
+}

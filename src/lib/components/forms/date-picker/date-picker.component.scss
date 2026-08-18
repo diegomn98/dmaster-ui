@@ -1,0 +1,578 @@
+@use 'mixins';
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-date-picker__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-date-picker__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Trigger (identical field-family contract to dm-select) ----------------
+// `data-color` lives here; we map the generic `--dm-dp*` variables so each
+// color paints the focus ring / open border. `default` focuses with primary,
+// matching .dm-input — the whole field family shares one focus language.
+.dm-date-picker__trigger {
+  --dm-dp: var(--dm-primary);
+  --dm-dp-subtle: var(--dm-primary-subtle);
+
+  &[data-color='default'],
+  &[data-color='primary'] {
+    --dm-dp: var(--dm-primary);
+    --dm-dp-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-dp: var(--dm-secondary);
+    --dm-dp-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-dp: var(--dm-success);
+    --dm-dp-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-dp: var(--dm-warning);
+    --dm-dp-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-dp: var(--dm-danger);
+    --dm-dp-subtle: var(--dm-danger-subtle);
+  }
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-2);
+  width: 100%;
+  padding: 0 var(--dm-control-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-normal);
+  cursor: pointer;
+  box-shadow: 0 0 0 0 var(--dm-dp-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus-visible,
+  &[data-open] {
+    outline: none;
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-dp);
+    box-shadow: 0 0 0 3.5px var(--dm-dp-subtle);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // ---- Sizes ---------------------------------------------------------------
+  &[data-size='sm'] {
+    height: 2rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem;
+  }
+
+  &[data-size='lg'] {
+    height: 3rem;
+    font-size: var(--dm-text-base);
+    padding-inline: calc(var(--dm-control-padding-x) + 0.125rem);
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+    padding-inline: var(--dm-space-4);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  &[data-variant='bordered'] {
+    background-color: transparent;
+    border-color: var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      border-color: var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+    }
+  }
+
+  &[data-variant='faded'] {
+    background-color: var(--dm-bg-muted);
+    border-color: var(--dm-border);
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: var(--dm-bg-elevated);
+    }
+  }
+
+  &[data-variant='underlined'] {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding-inline: 0;
+    box-shadow: inset 0 -1px 0 var(--dm-border-strong);
+
+    &:hover:not(:disabled) {
+      background-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
+    }
+
+    &:focus-visible,
+    &[data-open] {
+      background-color: transparent;
+      box-shadow: inset 0 -2px 0 var(--dm-dp);
+    }
+  }
+
+  // ---- Invalid -------------------------------------------------------------
+  &[data-invalid] {
+    border-color: var(--dm-danger);
+    box-shadow: 0 0 0 0 var(--dm-danger-subtle);
+
+    &:focus-visible,
+    &[data-open] {
+      box-shadow: 0 0 0 3.5px var(--dm-danger-subtle);
+    }
+  }
+}
+
+.dm-date-picker__value {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &--placeholder {
+    color: var(--dm-fg-subtle);
+  }
+}
+
+.dm-date-picker__icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dm-fg-muted);
+}
+
+.dm-date-picker__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: var(--dm-radius-full);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+
+  @include mixins.transition(background-color, color);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 10%, transparent);
+    color: var(--dm-fg);
+  }
+
+  svg {
+    width: 0.6875rem;
+    height: 0.6875rem;
+  }
+}
+
+// ---- Panel -----------------------------------------------------------------
+// The calendar surface. `data-color` is mirrored here so the selected-day fill
+// and focus ring use the picker's semantic color.
+.dm-date-picker__panel {
+  --dm-dp: var(--dm-primary);
+  --dm-dp-fg: var(--dm-primary-fg);
+  --dm-dp-subtle: var(--dm-primary-subtle);
+
+  &[data-color='secondary'] {
+    --dm-dp: var(--dm-secondary);
+    --dm-dp-fg: var(--dm-secondary-fg);
+    --dm-dp-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-dp: var(--dm-success);
+    --dm-dp-fg: var(--dm-success-fg);
+    --dm-dp-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-dp: var(--dm-warning);
+    --dm-dp-fg: var(--dm-warning-fg);
+    --dm-dp-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-dp: var(--dm-danger);
+    --dm-dp-fg: var(--dm-danger-fg);
+    --dm-dp-subtle: var(--dm-danger-subtle);
+  }
+
+  box-sizing: border-box;
+  width: 17.5rem;
+  padding: var(--dm-space-3);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-lg);
+  background-color: var(--dm-datepicker-panel-bg, var(--dm-bg-elevated));
+  box-shadow: var(--dm-shadow-lg);
+  animation: dm-date-picker-in var(--dm-duration-fast) var(--dm-ease-out);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@keyframes dm-date-picker-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem) scale(0.98);
+  }
+}
+
+// Reset native button chrome for every button in the panel (kills the UA
+// `outset` border/background). Zero specificity via :where(), so every
+// component rule below wins cleanly.
+:where(.dm-date-picker__panel) button {
+  appearance: none;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// ---- Header ----------------------------------------------------------------
+.dm-date-picker__header {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-1);
+  margin-bottom: var(--dm-space-1);
+  padding-inline: 0.125rem;
+}
+
+.dm-date-picker__nav {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--dm-radius-full);
+  color: var(--dm-fg-muted);
+
+  @include mixins.transition(background-color, color, transform);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 7%, transparent);
+    color: var(--dm-fg);
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+.dm-date-picker__heading {
+  flex: 1;
+  height: 2rem;
+  padding: 0 var(--dm-space-2);
+  border-radius: var(--dm-radius-md);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-semibold);
+  letter-spacing: -0.01em;
+  color: var(--dm-fg);
+
+  @include mixins.transition(background-color, color);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--dm-fg) 7%, transparent);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Grid ------------------------------------------------------------------
+.dm-date-picker__grid {
+  display: grid;
+  gap: 0.125rem;
+  animation: dm-date-picker-view-in var(--dm-duration-fast) var(--dm-ease-out);
+}
+
+@keyframes dm-date-picker-view-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.dm-date-picker__weekdays,
+.dm-date-picker__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.125rem;
+}
+
+.dm-date-picker__weekday {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  font-size: 0.6875rem;
+  font-weight: var(--dm-font-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dm-fg-subtle);
+}
+
+.dm-date-picker__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dm-date-picker__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--dm-radius-full);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--dm-fg);
+
+  @include mixins.transition(background-color, color, box-shadow, transform);
+
+  &:hover:not(:disabled, [data-selected]) {
+    background-color: color-mix(in srgb, var(--dm-fg) 9%, transparent);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.9);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--dm-bg-elevated),
+      0 0 0 4px var(--dm-dp);
+  }
+
+  // Days spilling in from the previous/next month — quiet, but still tappable.
+  &[data-outside] {
+    color: var(--dm-fg-subtle);
+    opacity: 0.5;
+  }
+
+  // Today (when not selected): a clean ring in the picker's color.
+  &[data-today]:not([data-selected]) {
+    box-shadow: inset 0 0 0 1.5px var(--dm-dp);
+    color: var(--dm-dp);
+    font-weight: var(--dm-font-semibold);
+  }
+
+  // Selected: a solid disc with a soft coloured lift.
+  &[data-selected] {
+    background-color: var(--dm-dp);
+    color: var(--dm-dp-fg);
+    font-weight: var(--dm-font-semibold);
+    box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--dm-dp) 45%, transparent);
+  }
+
+  &:disabled {
+    color: var(--dm-fg-subtle);
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+// ---- Months / years chips --------------------------------------------------
+.dm-date-picker__grid--months .dm-date-picker__week,
+.dm-date-picker__grid--years .dm-date-picker__week {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--dm-space-1);
+  margin-bottom: var(--dm-space-1);
+}
+
+.dm-date-picker__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2.5rem;
+  border-radius: var(--dm-radius-lg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  font-variant-numeric: tabular-nums;
+  text-transform: capitalize;
+  color: var(--dm-fg);
+
+  @include mixins.transition(background-color, color, box-shadow, transform);
+
+  &:hover:not([data-selected]) {
+    background-color: color-mix(in srgb, var(--dm-fg) 9%, transparent);
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--dm-bg-elevated),
+      0 0 0 4px var(--dm-dp);
+  }
+
+  &[data-selected] {
+    background-color: var(--dm-dp);
+    color: var(--dm-dp-fg);
+    font-weight: var(--dm-font-semibold);
+    box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--dm-dp) 45%, transparent);
+  }
+}
+
+// ---- Footer ----------------------------------------------------------------
+.dm-date-picker__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--dm-space-2);
+  padding-top: var(--dm-space-2);
+  border-top: 1px solid var(--dm-border);
+}
+
+.dm-date-picker__today {
+  height: 2rem;
+  padding: 0 var(--dm-space-4);
+  border-radius: var(--dm-radius-full);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-semibold);
+  color: var(--dm-dp);
+
+  @include mixins.transition(background-color, transform);
+
+  &:hover {
+    background-color: var(--dm-dp-subtle);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-date-picker__hint,
+.dm-date-picker__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-date-picker__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-date-picker__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+}
+
+.dm-date-picker__sr-only {
+  @include mixins.visually-hidden;
+}
+
+@include mixins.reduced-motion {
+  .dm-date-picker__panel,
+  .dm-date-picker__grid {
+    animation: none;
+  }
+
+  .dm-date-picker__day:active,
+  .dm-date-picker__chip:active,
+  .dm-date-picker__nav:active,
+  .dm-date-picker__today:active {
+    transform: none;
+  }
+}

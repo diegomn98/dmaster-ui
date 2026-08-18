@@ -23,10 +23,12 @@
     "ui",
     "standalone",
     "signals",
+    "zoneless",
     "dark-mode",
     "design-system",
     "heroui",
-    "css-variables"
+    "css-variables",
+    "cdk"
   ],
   "publishConfig": {
     "access": "public"
