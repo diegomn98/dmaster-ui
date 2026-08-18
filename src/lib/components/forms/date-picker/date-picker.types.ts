@@ -3,12 +3,7 @@
  * Drives the focus ring and the selected-day fill.
  */
 export type DmDatePickerColor =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'danger';
+  'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Visual variant of the trigger surface (matches `dm-select`). */
 export type DmDatePickerVariant = 'flat' | 'bordered' | 'faded' | 'underlined';

@@ -3,12 +3,7 @@
  * Drives the trigger focus ring and the panel's selected-swatch accent.
  */
 export type DmColorPickerColor =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'danger';
+  'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Visual variant of the trigger surface (matches `dm-select`). */
 export type DmColorPickerVariant = 'flat' | 'bordered' | 'faded' | 'underlined';

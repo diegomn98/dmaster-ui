@@ -32,17 +32,17 @@ stripped) so it round-trips cleanly through reactive forms. Wired as a
 
 ## Inputs (selection)
 
-| Input             | Type                          | Default   | Notes                                             |
-| ----------------- | ----------------------------- | --------- | ------------------------------------------------- |
-| `value`           | `Date \| null` (model)        | `null`    | Two-way selected date.                            |
-| `min` / `max`     | `Date \| null`                | `null`    | Inclusive selectable bounds.                      |
-| `isDateDisabled`  | `(date: Date) => boolean`     | `null`    | Disable arbitrary days.                           |
-| `firstDayOfWeek`  | `0…6 \| 'auto'`               | `'auto'`  | Leftmost column; `'auto'` follows the locale.     |
-| `locale`          | `string`                      | runtime   | BCP-47 locale for all names/formatting.           |
-| `displayFormat`   | `Intl.DateTimeFormatOptions`  | `{y,m,d}` | How the trigger renders the selected date.        |
-| `weekdayFormat`   | `'narrow' \| 'short'`         | `'short'` | Weekday header length.                            |
-| `showTodayButton` | `boolean`                     | `true`    | "Today" quick-jump in the footer.                 |
-| `closeOnSelect`   | `boolean`                     | `true`    | Close the panel right after picking a day.        |
+| Input             | Type                         | Default   | Notes                                         |
+| ----------------- | ---------------------------- | --------- | --------------------------------------------- |
+| `value`           | `Date \| null` (model)       | `null`    | Two-way selected date.                        |
+| `min` / `max`     | `Date \| null`               | `null`    | Inclusive selectable bounds.                  |
+| `isDateDisabled`  | `(date: Date) => boolean`    | `null`    | Disable arbitrary days.                       |
+| `firstDayOfWeek`  | `0…6 \| 'auto'`              | `'auto'`  | Leftmost column; `'auto'` follows the locale. |
+| `locale`          | `string`                     | runtime   | BCP-47 locale for all names/formatting.       |
+| `displayFormat`   | `Intl.DateTimeFormatOptions` | `{y,m,d}` | How the trigger renders the selected date.    |
+| `weekdayFormat`   | `'narrow' \| 'short'`        | `'short'` | Weekday header length.                        |
+| `showTodayButton` | `boolean`                    | `true`    | "Today" quick-jump in the footer.             |
+| `closeOnSelect`   | `boolean`                    | `true`    | Close the panel right after picking a day.    |
 
 ## Inputs (field family)
 

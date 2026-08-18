@@ -95,77 +95,77 @@ export class MyComponent {}
 
 ### Primitives
 
-| Component  | Selector      | Highlights                                                              |
-| ---------- | ------------- | ------------------------------------------------------------------------ |
-| [Skeleton](https://dmasterui.com/components/skeleton)   | `dm-skeleton` | Shimmer placeholder, wave animation                                     |
-| [Spinner](https://dmasterui.com/components/spinner)    | `dm-spinner`  | Animated indicator, 3 sizes                                             |
-| [Badge / Chip](https://dmasterui.com/components/badge) | `dm-badge`    | 7 variants · 6 colors · dot, shadow, bordered                           |
-| [Avatar](https://dmasterui.com/components/avatar)     | `dm-avatar`   | Image + fallback initials, 5 sizes                                      |
-| [Keyboard Key](https://dmasterui.com/components/kbd)   | `dm-kbd`      | Named keys resolve to their symbol (⌘, ⇧…), content projection          |
-| [Icon](https://dmasterui.com/components/icon)       | `dm-icon`     | Font ligature, registered SVG, or projected `<svg>` — 3 modes, 1 primitive |
+| Component                                              | Selector      | Highlights                                                                 |
+| ------------------------------------------------------ | ------------- | -------------------------------------------------------------------------- |
+| [Skeleton](https://dmasterui.com/components/skeleton)  | `dm-skeleton` | Shimmer placeholder, wave animation                                        |
+| [Spinner](https://dmasterui.com/components/spinner)    | `dm-spinner`  | Animated indicator, 3 sizes                                                |
+| [Badge / Chip](https://dmasterui.com/components/badge) | `dm-badge`    | 7 variants · 6 colors · dot, shadow, bordered                              |
+| [Avatar](https://dmasterui.com/components/avatar)      | `dm-avatar`   | Image + fallback initials, 5 sizes                                         |
+| [Keyboard Key](https://dmasterui.com/components/kbd)   | `dm-kbd`      | Named keys resolve to their symbol (⌘, ⇧…), content projection             |
+| [Icon](https://dmasterui.com/components/icon)          | `dm-icon`     | Font ligature, registered SVG, or projected `<svg>` — 3 modes, 1 primitive |
 
 ### Layout
 
-| Component | Selector       | Highlights                                        |
-| --------- | -------------- | -------------------------------------------------- |
-| [Card](https://dmasterui.com/components/card)      | `dm-card`      | Container queries, shadow variants                 |
-| [Accordion](https://dmasterui.com/components/accordion) | `dm-accordion` | Animated, single/multiple open, keyboard nav        |
-| [Divider](https://dmasterui.com/components/divider)   | `dm-divider`   | Horizontal/vertical, optional projected label        |
+| Component                                               | Selector       | Highlights                                    |
+| ------------------------------------------------------- | -------------- | --------------------------------------------- |
+| [Card](https://dmasterui.com/components/card)           | `dm-card`      | Container queries, shadow variants            |
+| [Accordion](https://dmasterui.com/components/accordion) | `dm-accordion` | Animated, single/multiple open, keyboard nav  |
+| [Divider](https://dmasterui.com/components/divider)     | `dm-divider`   | Horizontal/vertical, optional projected label |
 
 ### Feedback
 
-| Component | Selector      | Highlights                                             |
-| --------- | ------------- | -------------------------------------------------------- |
-| [Progress](https://dmasterui.com/components/progress) | `dm-progress` | Determinate/indeterminate, striped, value label           |
-| [Alert](https://dmasterui.com/components/alert)    | `dm-alert`    | Color × variant, semantic icon, dismissible, action slot |
+| Component                                             | Selector      | Highlights                                               |
+| ----------------------------------------------------- | ------------- | -------------------------------------------------------- |
+| [Progress](https://dmasterui.com/components/progress) | `dm-progress` | Determinate/indeterminate, striped, value label          |
+| [Alert](https://dmasterui.com/components/alert)       | `dm-alert`    | Color × variant, semantic icon, dismissible, action slot |
 
 ### Buttons
 
-| Component | Selector    | Highlights                                                              |
-| --------- | ----------- | -------------------------------------------------------------------------- |
-| [Button](https://dmasterui.com/components/button)   | `dm-button` | 7 variants · 6 colors · idle/loading/success/error states · live region |
+| Component                                         | Selector    | Highlights                                                              |
+| ------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
+| [Button](https://dmasterui.com/components/button) | `dm-button` | 7 variants · 6 colors · idle/loading/success/error states · live region |
 
 ### Forms
 
-| Component        | Selector                    | Highlights                                                        |
-| ----------------- | ---------------------------- | -------------------------------------------------------------------- |
-| [Switch](https://dmasterui.com/components/switch)          | `dm-switch`                 | ControlValueAccessor, 3 sizes                                     |
-| [Checkbox](https://dmasterui.com/components/checkbox)        | `dm-checkbox`                | ControlValueAccessor, indeterminate state                         |
-| [Radio Group](https://dmasterui.com/components/radio-group)     | `dm-radio-group` + `dm-radio` | ControlValueAccessor, horizontal/vertical                          |
-| [Select](https://dmasterui.com/components/select)          | `dm-select`                  | CDK overlay, full keyboard nav, typeahead, CVA                     |
-| [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`        | Server-driven async load, infinite pagination                      |
-| [Search Field](https://dmasterui.com/components/search-field)    | `dm-search-field`            | Leading icon, clear button, Escape clears, Enter submits            |
-| [Date Picker](https://dmasterui.com/components/date-picker)     | `dm-date-picker`             | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
-| [Color Picker](https://dmasterui.com/components/color-picker)    | `dm-color-picker`            | Saturation/hue/alpha area, editable hex, swatches                  |
-| [Slider](https://dmasterui.com/components/slider)          | `dm-slider`                  | Pointer drag + full keyboard map, value bubble, marks               |
-| [Form Field](https://dmasterui.com/components/form-field)      | `dm-form-field` + `dmInput`  | Label, hint, error, wraps any native input/textarea/select          |
-| [Error](https://dmasterui.com/components/error-message)          | `dm-error`                    | Validation line, `role="alert"`, no built-in icon (project your own) |
+| Component                                                             | Selector                      | Highlights                                                                                 |
+| --------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
+| [Switch](https://dmasterui.com/components/switch)                     | `dm-switch`                   | ControlValueAccessor, 3 sizes                                                              |
+| [Checkbox](https://dmasterui.com/components/checkbox)                 | `dm-checkbox`                 | ControlValueAccessor, indeterminate state                                                  |
+| [Radio Group](https://dmasterui.com/components/radio-group)           | `dm-radio-group` + `dm-radio` | ControlValueAccessor, horizontal/vertical                                                  |
+| [Select](https://dmasterui.com/components/select)                     | `dm-select`                   | CDK overlay, full keyboard nav, typeahead, CVA                                             |
+| [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`         | Server-driven async load, infinite pagination                                              |
+| [Search Field](https://dmasterui.com/components/search-field)         | `dm-search-field`             | Leading icon, clear button, Escape clears, Enter submits                                   |
+| [Date Picker](https://dmasterui.com/components/date-picker)           | `dm-date-picker`              | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
+| [Color Picker](https://dmasterui.com/components/color-picker)         | `dm-color-picker`             | Saturation/hue/alpha area, editable hex, swatches                                          |
+| [Slider](https://dmasterui.com/components/slider)                     | `dm-slider`                   | Pointer drag + full keyboard map, value bubble, marks                                      |
+| [Form Field](https://dmasterui.com/components/form-field)             | `dm-form-field` + `dmInput`   | Label, hint, error, wraps any native input/textarea/select                                 |
+| [Error](https://dmasterui.com/components/error-message)               | `dm-error`                    | Validation line, `role="alert"`, no built-in icon (project your own)                       |
 
 ### Navigation
 
-| Component   | Selector        | Highlights                                                |
-| ----------- | ---------------- | ------------------------------------------------------------ |
-| [Breadcrumbs](https://dmasterui.com/components/breadcrumbs) | `dm-breadcrumbs` + `dm-breadcrumb-item` | Router-agnostic, collapsible                              |
-| [Tabs](https://dmasterui.com/components/tabs)        | `dm-tabs` + `dm-tab` + `dm-tab-panel` | 5 variants, sliding indicator, full-width, scroll-fade      |
-| [Pagination](https://dmasterui.com/components/pagination)  | `dm-pagination`  | Windowed pager, two-way page binding                        |
+| Component                                                   | Selector                                | Highlights                                             |
+| ----------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------ |
+| [Breadcrumbs](https://dmasterui.com/components/breadcrumbs) | `dm-breadcrumbs` + `dm-breadcrumb-item` | Router-agnostic, collapsible                           |
+| [Tabs](https://dmasterui.com/components/tabs)               | `dm-tabs` + `dm-tab` + `dm-tab-panel`   | 5 variants, sliding indicator, full-width, scroll-fade |
+| [Pagination](https://dmasterui.com/components/pagination)   | `dm-pagination`                         | Windowed pager, two-way page binding                   |
 
 ### Data Display
 
-| Component | Selector   | Highlights                                                     |
-| --------- | ---------- | ------------------------------------------------------------------ |
-| [Table](https://dmasterui.com/components/table)     | `dm-table` | Search → sort → paginate pipeline, row selection                    |
+| Component                                       | Selector   | Highlights                                       |
+| ----------------------------------------------- | ---------- | ------------------------------------------------ |
+| [Table](https://dmasterui.com/components/table) | `dm-table` | Search → sort → paginate pipeline, row selection |
 
 ### Overlays (require CDK)
 
-| Component | Selector / Service        | Highlights                                                    |
-| --------- | -------------------------- | ------------------------------------------------------------------ |
-| [Tooltip](https://dmasterui.com/components/tooltip)   | `dmTooltip` directive       | 12 placements, open/close delay                                    |
-| [Popover](https://dmasterui.com/components/popover)   | `dm-popover`                | Rich floating panel, arrow follows the real flip                    |
-| [Menu](https://dmasterui.com/components/menu)      | `dm-menu`                   | WAI-ARIA menu, `FocusKeyManager`, typeahead                        |
-| [Dialog](https://dmasterui.com/components/dialog)    | `DmDialogService`           | Typed data, typed return, backdrop click to close                   |
-| [Drawer](https://dmasterui.com/components/drawer)    | `DmDrawerService`           | Slide-in panel over `cdk/dialog`                                    |
-| [Toast](https://dmasterui.com/components/toast)     | `DmToastService`            | Queued notifications, signal-driven state                          |
-| [Command](https://dmasterui.com/components/command)   | `dm-command`                | ⌘K command palette, fuzzy filter                                    |
+| Component                                           | Selector / Service    | Highlights                                        |
+| --------------------------------------------------- | --------------------- | ------------------------------------------------- |
+| [Tooltip](https://dmasterui.com/components/tooltip) | `dmTooltip` directive | 12 placements, open/close delay                   |
+| [Popover](https://dmasterui.com/components/popover) | `dm-popover`          | Rich floating panel, arrow follows the real flip  |
+| [Menu](https://dmasterui.com/components/menu)       | `dm-menu`             | WAI-ARIA menu, `FocusKeyManager`, typeahead       |
+| [Dialog](https://dmasterui.com/components/dialog)   | `DmDialogService`     | Typed data, typed return, backdrop click to close |
+| [Drawer](https://dmasterui.com/components/drawer)   | `DmDrawerService`     | Slide-in panel over `cdk/dialog`                  |
+| [Toast](https://dmasterui.com/components/toast)     | `DmToastService`      | Queued notifications, signal-driven state         |
+| [Command](https://dmasterui.com/components/command) | `dm-command`          | ⌘K command palette, fuzzy filter                  |
 
 ---
 
@@ -214,14 +214,14 @@ The library is server-safe: no component or service touches `window`, `localStor
 
 There's no shortage of component libraries in the Angular ecosystem. Here's how @dmaster/ui differs from the ones you're most likely evaluating alongside it — read this as "different tradeoffs," not "objectively better":
 
-|                    | **@dmaster/ui**                                  | Angular Material                          | PrimeNG                                     | Taiga UI                                     | Spartan · ng-primitives                          |
-| ------------------ | ------------------------------------------------- | ------------------------------------------ | -------------------------------------------- | ---------------------------------------------- | -------------------------------------------------- |
-| **API style**      | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based  | NgModule + standalone hybrid                 | Signals, standalone                            | Signals, standalone                                 |
-| **What you get**   | Pre-styled components (HeroUI-inspired)           | Pre-styled components (Material Design)    | Pre-styled components, several theme presets | Pre-styled components, own design system       | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
-| **Theming**        | CSS custom properties only, no runtime engine     | Sass theming API + Material 3 design tokens | Runtime theme switcher + design tokens       | CSS custom properties                          | Tailwind-based, per-component                       |
-| **Component count**| 34                                                  | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area | 130+ (their own count)                         | 55+ primitives (their own count)                    |
-| **Zoneless**       | Built for it from day one                          | Supported                                   | Supported                                     | Supported                                       | Supported                                            |
-| **Install model**  | `ng add`, then import & use                         | `ng add`, then import & use                 | Install & import                              | Install & import                                | CLI **copies component source into your repo**      |
+|                     | **@dmaster/ui**                                                  | Angular Material                                   | PrimeNG                                      | Taiga UI                                 | Spartan · ng-primitives                                                  |
+| ------------------- | ---------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
+| **What you get**    | Pre-styled components (HeroUI-inspired)                          | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
+| **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
+| **Component count** | 34                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
+| **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 
 If you want a batteries-included, opinionated kit you install and start using immediately — that's @dmaster/ui, Angular Material, PrimeNG or Taiga UI, and the choice between them comes down to design language and API generation. If you want unstyled, accessible primitives you fully own the markup and CSS for, Spartan/ng-primitives is the better starting point.
 

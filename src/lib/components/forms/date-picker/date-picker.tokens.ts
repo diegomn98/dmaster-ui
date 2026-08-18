@@ -62,10 +62,13 @@ export const DM_DATE_PICKER_FALLBACK_DEFAULTS: DmDatePickerDefaults = {
 };
 
 /** Injection token holding the defaults every `dm-date-picker` starts from. */
-export const DATE_PICKER_DEFAULTS = new InjectionToken<DmDatePickerDefaults>('DATE_PICKER_DEFAULTS', {
-  providedIn: 'root',
-  factory: () => DM_DATE_PICKER_FALLBACK_DEFAULTS,
-});
+export const DATE_PICKER_DEFAULTS = new InjectionToken<DmDatePickerDefaults>(
+  'DATE_PICKER_DEFAULTS',
+  {
+    providedIn: 'root',
+    factory: () => DM_DATE_PICKER_FALLBACK_DEFAULTS,
+  },
+);
 
 /**
  * Convenience provider to change the date-picker defaults app- or route-wide.

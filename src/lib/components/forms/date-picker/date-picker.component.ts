@@ -284,13 +284,11 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   protected readonly dayCells = computed<DayCell[]>(() => {
     const vd = this.viewDate();
     const fmt = this.dayFormatter();
-    return buildMonthGrid(vd.getFullYear(), vd.getMonth(), this.resolvedFirstDay()).map(
-      (date) => ({
-        date,
-        label: fmt.format(date),
-        inMonth: isSameMonth(date, vd),
-      }),
-    );
+    return buildMonthGrid(vd.getFullYear(), vd.getMonth(), this.resolvedFirstDay()).map((date) => ({
+      date,
+      label: fmt.format(date),
+      inMonth: isSameMonth(date, vd),
+    }));
   });
 
   /** Long month + year label shown in the header while in days view. */
@@ -637,10 +635,14 @@ export class DmDatePickerComponent implements ControlValueAccessor {
         this.moveFocusedDate(6 - ((this.focusedDate().getDay() - this.resolvedFirstDay() + 7) % 7));
         break;
       case 'PageUp':
-        this.shiftFocusedDate(event.shiftKey ? addYears(this.focusedDate(), -1) : addMonths(this.focusedDate(), -1));
+        this.shiftFocusedDate(
+          event.shiftKey ? addYears(this.focusedDate(), -1) : addMonths(this.focusedDate(), -1),
+        );
         break;
       case 'PageDown':
-        this.shiftFocusedDate(event.shiftKey ? addYears(this.focusedDate(), 1) : addMonths(this.focusedDate(), 1));
+        this.shiftFocusedDate(
+          event.shiftKey ? addYears(this.focusedDate(), 1) : addMonths(this.focusedDate(), 1),
+        );
         break;
       case 'Enter':
       case ' ':
@@ -705,7 +707,10 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     const next = this.focusedMonth() + delta;
     if (next < 0 || next > 11) {
       // Cross the year boundary and follow with the header.
-      const target = addMonths(new Date(this.viewDate().getFullYear(), this.focusedMonth(), 1), delta);
+      const target = addMonths(
+        new Date(this.viewDate().getFullYear(), this.focusedMonth(), 1),
+        delta,
+      );
       this.viewDate.set(startOfMonth(target));
       this.focusedMonth.set(target.getMonth());
     } else {

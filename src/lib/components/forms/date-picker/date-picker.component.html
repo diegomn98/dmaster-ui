@@ -93,12 +93,7 @@
   >
     <!-- Header: prev / climbing label / next -->
     <div class="dm-date-picker__header">
-      <button
-        type="button"
-        class="dm-date-picker__nav"
-        aria-label="Previous"
-        (click)="goPrev()"
-      >
+      <button type="button" class="dm-date-picker__nav" aria-label="Previous" (click)="goPrev()">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -151,7 +146,11 @@
           @for (week of weeks(); track $index) {
             <div class="dm-date-picker__week" role="row">
               @for (cell of week; track cell.date.getTime()) {
-                <div class="dm-date-picker__cell" role="gridcell" [attr.aria-selected]="isSelected(cell.date)">
+                <div
+                  class="dm-date-picker__cell"
+                  role="gridcell"
+                  [attr.aria-selected]="isSelected(cell.date)"
+                >
                   <button
                     type="button"
                     class="dm-date-picker__day"
@@ -179,7 +178,11 @@
           @for (row of monthRows(); track $index) {
             <div class="dm-date-picker__week" role="row">
               @for (m of row; track m.index) {
-                <div class="dm-date-picker__cell" role="gridcell" [attr.aria-selected]="isCurrentMonth(m.index)">
+                <div
+                  class="dm-date-picker__cell"
+                  role="gridcell"
+                  [attr.aria-selected]="isCurrentMonth(m.index)"
+                >
                   <button
                     type="button"
                     class="dm-date-picker__chip"
@@ -201,7 +204,11 @@
           @for (row of yearRows(); track $index) {
             <div class="dm-date-picker__week" role="row">
               @for (y of row; track y) {
-                <div class="dm-date-picker__cell" role="gridcell" [attr.aria-selected]="isCurrentYear(y)">
+                <div
+                  class="dm-date-picker__cell"
+                  role="gridcell"
+                  [attr.aria-selected]="isCurrentYear(y)"
+                >
                   <button
                     type="button"
                     class="dm-date-picker__chip"

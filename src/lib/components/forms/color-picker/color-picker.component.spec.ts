@@ -1,9 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {
-  ApplicationRef,
-  Component,
-  provideZonelessChangeDetection,
-} from '@angular/core';
+import { ApplicationRef, Component, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 

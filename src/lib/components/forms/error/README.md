@@ -24,6 +24,7 @@ A validation error line for form fields — the standalone sibling of
   The host is `display: flex` with a small gap, so whatever you project lines
   up naturally; size the icon yourself (`dm-icon`'s `size` input, or plain CSS
   on a projected `<svg>`).
+
 - The host `id` can be referenced from a control's `aria-describedby`.
 
 ## Inside `dm-form-field`
@@ -35,7 +36,7 @@ Drop it in and the field positions it under the control and wires
 <dm-form-field label="Email">
   <input dmInput [formControl]="email" />
   @if (email.touched && email.hasError('required')) {
-    <dm-error>Email is required</dm-error>
+  <dm-error>Email is required</dm-error>
   }
 </dm-form-field>
 ```

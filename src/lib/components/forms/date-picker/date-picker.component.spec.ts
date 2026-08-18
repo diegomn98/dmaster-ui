@@ -1,19 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {
-  ApplicationRef,
-  Component,
-  provideZonelessChangeDetection,
-  signal,
-} from '@angular/core';
+import { ApplicationRef, Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { DmDatePickerComponent } from './date-picker.component';
-import {
-  DM_DATE_LOCALE,
-  provideDateLocale,
-  provideDatePickerDefaults,
-} from './date-picker.tokens';
+import { DM_DATE_LOCALE, provideDateLocale, provideDatePickerDefaults } from './date-picker.tokens';
 
 @Component({
   imports: [DmDatePickerComponent, ReactiveFormsModule],
@@ -150,7 +141,10 @@ describe('DmDatePickerComponent', () => {
     const fixture = create();
     fixture.componentRef.setInput('value', new Date(2026, 7, 15));
     // Disable weekends.
-    fixture.componentRef.setInput('isDateDisabled', (d: Date) => d.getDay() === 0 || d.getDay() === 6);
+    fixture.componentRef.setInput(
+      'isDateDisabled',
+      (d: Date) => d.getDay() === 0 || d.getDay() === 6,
+    );
     fixture.detectChanges();
     trigger(fixture).click();
     fixture.detectChanges();

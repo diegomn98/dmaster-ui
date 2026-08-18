@@ -1,7 +1,11 @@
 import { InjectionToken, Provider } from '@angular/core';
 
 import { DmSize } from '../../../core/types/common.types';
-import { DmColorPickerColor, DmColorPickerRadius, DmColorPickerVariant } from './color-picker.types';
+import {
+  DmColorPickerColor,
+  DmColorPickerRadius,
+  DmColorPickerVariant,
+} from './color-picker.types';
 
 /** Globally overridable defaults for `dm-color-picker`. */
 export interface DmColorPickerDefaults {

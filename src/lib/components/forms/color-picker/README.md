@@ -31,11 +31,11 @@ and renders the placeholder.
 
 ## Inputs (color specific)
 
-| Input       | Type       | Default          | Notes                                                 |
-| ----------- | ---------- | ---------------- | ----------------------------------------------------- |
-| `value`     | `string \| null` (model) | `null` | Two-way hex value.                          |
-| `showAlpha` | `boolean`  | `false`          | Adds the alpha rail; emits `#rrggbbaa`.               |
-| `swatches`  | `string[]` | 10-color palette | Preset chips shown in the panel's swatch grid (hex).  |
+| Input       | Type                     | Default          | Notes                                                |
+| ----------- | ------------------------ | ---------------- | ---------------------------------------------------- |
+| `value`     | `string \| null` (model) | `null`           | Two-way hex value.                                   |
+| `showAlpha` | `boolean`                | `false`          | Adds the alpha rail; emits `#rrggbbaa`.              |
+| `swatches`  | `string[]`               | 10-color palette | Preset chips shown in the panel's swatch grid (hex). |
 
 ## Inputs (field family)
 
