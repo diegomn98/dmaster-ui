@@ -7,26 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-18
+
 ### Added
-
-- **`dm-color-picker`** — a full color picker in the forms family
-  (`ControlValueAccessor`, hex string value): a draggable saturation/brightness
-  area, hue slider, optional alpha slider, editable hex input and quick swatches,
-  in a field-family trigger that opens a CDK overlay. Pure `color-utils`
-  (hex ⇄ rgb ⇄ hsv) underneath; `role="slider"` areas with `aria-valuetext`.
-- **`dm-error`** — a standalone validation line (mat-error / HeroUI
-  FieldError): danger color, `role="alert"`, fully projected content. It
-  carries **no icon of its own** — project one (e.g. `<dm-icon>`) when you
-  want one. `dm-form-field` accepts a projected `<dm-error>` and wires
-  `aria-invalid` / `aria-describedby` automatically.
-
-### Changed
-
-- **`dm-date-picker`** locale is now provided app-wide and reactively via the
-  new **`DM_DATE_LOCALE`** token (`provideDateLocale`), which accepts a plain
-  string or a `Signal<string>` — the reactive analogue of `MAT_DATE_LOCALE`, so
-  every picker re-renders live on a language switch. `provideDatePickerDefaults`
-  also covers `displayFormat` and `weekdayFormat` now.
 
 - **`dm-date-picker`** — a single-date calendar field in the forms family
   (HeroUI-style color × variant, `ControlValueAccessor`). Native `Date` model
@@ -39,8 +22,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   defaults to `'auto'`: the week convention is derived from the locale's CLDR
   week data (Monday in Spain/France, Sunday in the US, Saturday in much of
   MENA), and day digits also render through `Intl` (native numerals for
-  `ar`/`fa`).
-
+  `ar`/`fa`). Locale can also be provided app-wide and reactively via the new
+  **`DM_DATE_LOCALE`** token (`provideDateLocale`), which accepts a plain
+  string or a `Signal<string>` — the reactive analogue of `MAT_DATE_LOCALE`, so
+  every picker re-renders live on a language switch. `provideDatePickerDefaults`
+  also covers `displayFormat` and `weekdayFormat`.
+- **`dm-color-picker`** — a full color picker in the forms family
+  (`ControlValueAccessor`, hex string value): a draggable saturation/brightness
+  area, hue slider, optional alpha slider, editable hex input and quick swatches,
+  in a field-family trigger that opens a CDK overlay. Pure `color-utils`
+  (hex ⇄ rgb ⇄ hsv) underneath; `role="slider"` areas with `aria-valuetext`.
+- **`dm-error`** — a standalone validation line (mat-error / HeroUI
+  FieldError): danger color, `role="alert"`, fully projected content. It
+  carries **no icon of its own** — project one (e.g. `<dm-icon>`) when you
+  want one. `dm-form-field` accepts a projected `<dm-error>` and wires
+  `aria-invalid` / `aria-describedby` automatically.
+- **`dm-search-field`** — a text field specialised for search: leading
+  magnifier, trailing clear button that appears once there is text, and
+  search semantics (Escape clears, Enter emits `(search)`). HeroUI-style
+  `color` × `variant`, full `ControlValueAccessor` support.
 - **Icon system.** `dm-icon` draws an icon three ways: a **Material Symbols font
   ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons,
   like `mat-icon`), a **registered SVG** by `name`, or a **projected `<svg>`**.
@@ -100,6 +100,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - HeroUI-inspired design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.4.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/diegomn98/dmaster-ui-workspace/releases/tag/v0.1.2
