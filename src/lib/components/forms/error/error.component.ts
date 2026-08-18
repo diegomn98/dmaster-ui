@@ -4,8 +4,8 @@ import { ERROR_DEFAULTS } from './error.tokens';
 import { DmErrorSize } from './error.types';
 
 /**
- * A validation error message for form fields — the standalone sibling of
- * `mat-error` / HeroUI's FieldError.
+ * A validation error message for form fields — the standalone,
+ * Angular-native equivalent of `mat-error`.
  *
  * ```html
  * <dm-error>Email is required</dm-error>

@@ -1,4 +1,4 @@
-/** Semantic color of the active page (HeroUI-style). */
+/** Semantic color of the active page. */
 export type DmPaginationColor =
   'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 

@@ -1,7 +1,7 @@
 /** Slider size scale. */
 export type DmSliderSize = 'sm' | 'md' | 'lg';
 
-/** Semantic color of the slider fill and thumb border (HeroUI-style). */
+/** Semantic color of the slider fill and thumb border. */
 export type DmSliderColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** A dot rendered on the track, with an optional label below it. */

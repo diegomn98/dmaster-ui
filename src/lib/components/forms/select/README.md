@@ -1,6 +1,6 @@
 # Select (`dm-select`)
 
-Single-select dropdown with a HeroUI-style **color × variant** API. Full keyboard support (arrows, Home/End, Enter, Escape, typeahead), CDK-anchored panel that matches the trigger width, and Reactive Forms via `ControlValueAccessor`.
+Single-select dropdown with a **color × variant** API. Full keyboard support (arrows, Home/End, Enter, Escape, typeahead), CDK-anchored panel that matches the trigger width, and Reactive Forms via `ControlValueAccessor`.
 
 > Requires the CDK structural styles once per app:
 > `"styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", ...]`

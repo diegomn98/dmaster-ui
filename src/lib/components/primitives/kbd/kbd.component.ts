@@ -32,7 +32,7 @@ const KBD_KEY_META: DmKbdKeyMap = {
 };
 
 /**
- * Renders keyboard keys with the look of a physical key cap (HeroUI-style).
+ * Renders keyboard keys with the look of a physical key cap.
  * Named keys resolve to their symbol (`command` → `⌘`); literal letters and
  * digits go through content projection.
  *

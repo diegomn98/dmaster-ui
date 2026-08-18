@@ -24,13 +24,13 @@
   --dm-border: rgb(24 24 27 / 8%);
   --dm-border-strong: rgb(24 24 27 / 14%);
 
-  // Color system (HeroUI-style): each color exposes a base, a foreground for
+  // Color system: each color exposes a base, a foreground for
   // solid fills, and a soft tint. `default` is the neutral color.
   --dm-default: #e4e4e7;
   --dm-default-fg: #18181b;
   --dm-default-subtle: rgb(24 24 27 / 6%);
 
-  // HeroUI blue as the UI primary. The brand gradient (--dm-gradient-brand)
+  // A saturated blue as the UI primary. The brand gradient (--dm-gradient-brand)
   // derives from it, so the logo/hero/favicon always match the active theme
   // (light/dark + live palette) instead of a fixed, disconnected hue.
   --dm-primary: #006fee;
@@ -42,7 +42,7 @@
   --dm-secondary-fg: #fff;
   --dm-secondary-subtle: rgb(124 58 237 / 12%);
 
-  // Status (vivid, HeroUI-leaning). Green/amber take dark foregrounds.
+  // Status (vivid, saturated). Green/amber take dark foregrounds.
   --dm-success: #17c964;
   --dm-success-hover: #12a150;
   --dm-success-fg: #03190d;
@@ -93,7 +93,7 @@
   --dm-command-width: min(40rem, 92vw);
   --dm-command-max-height: min(70dvh, calc(100dvh - 4rem));
 
-  // HeroUI highlights the active row with a neutral tint, not the brand color.
+  // Highlights the active row with a neutral tint, not the brand color.
   --dm-command-active-bg: var(--dm-default-subtle);
   --dm-command-active-fg: var(--dm-fg);
 

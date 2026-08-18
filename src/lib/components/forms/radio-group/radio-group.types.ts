@@ -1,4 +1,4 @@
-/** Semantic color of the radio (HeroUI-style). */
+/** Semantic color of the radio. */
 export type DmRadioColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Size scale for the radio control and label. */

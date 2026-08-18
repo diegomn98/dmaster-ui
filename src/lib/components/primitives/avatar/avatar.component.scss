@@ -6,7 +6,7 @@
   overflow: hidden;
   flex-shrink: 0;
 
-  // HeroUI: relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
+  // Relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
   // gradientes ni halos.
   background: var(--dm-primary-subtle);
   color: var(--dm-primary);
@@ -31,7 +31,7 @@
   object-fit: cover;
 }
 
-// Iniciales en color de marca PLANO (HeroUI no recorta gradientes en texto).
+// Iniciales en color de marca PLANO (sin recortar gradientes en el texto).
 .dm-avatar__initials {
   font-weight: var(--dm-font-semibold);
   letter-spacing: 0.04em;

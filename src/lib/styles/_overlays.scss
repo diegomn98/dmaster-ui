@@ -32,7 +32,7 @@
 }
 
 .dm-dialog-backdrop {
-  // HeroUI: a clean, flat dark scrim with a light blur — no vignette gradient.
+  // A clean, flat dark scrim with a light blur — no vignette gradient.
   background: rgb(0 0 0 / 50%);
   backdrop-filter: blur(4px);
   animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
@@ -49,7 +49,7 @@
   background: var(--dm-bg-elevated);
   color: var(--dm-fg);
 
-  // HeroUI: a flat surface lifted by a single wide, soft, diffuse shadow —
+  // A flat surface lifted by a single wide, soft, diffuse shadow —
   // no hairline border, no inner sheen. In dark mode the shadow token carries
   // a faint 1px edge, which is enough to separate the panel from the scrim.
   box-shadow: var(--dm-shadow-lg);
@@ -364,7 +364,7 @@
 // the slide-in animation live here. Backdrop reuses the dialog scrim look.
 // ============================================================================
 .dm-drawer-backdrop {
-  // HeroUI: the same clean, flat dark scrim with a light blur as the dialog.
+  // The same clean, flat dark scrim with a light blur as the dialog.
   background: rgb(0 0 0 / 50%);
   backdrop-filter: blur(4px);
   animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
@@ -377,7 +377,7 @@
   overscroll-behavior: contain;
   padding: var(--dm-space-5);
 
-  // HeroUI flat surface: page-level bg lifted by a single wide, soft, diffuse
+  // Flat surface: page-level bg lifted by a single wide, soft, diffuse
   // shadow — no border, no inner sheen. Rounded only on the inner edge; the
   // edge flush to the viewport stays square.
   background: var(--dm-bg);

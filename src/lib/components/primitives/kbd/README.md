@@ -1,6 +1,6 @@
 # Keyboard Key (`dm-kbd`)
 
-Renders keyboard keys with the look of a physical key cap (HeroUI-style). Named
+Renders keyboard keys with the look of a physical key cap. Named
 keys resolve to their canonical symbol (`command` → `⌘`); literal letters and
 digits come through content projection.
 

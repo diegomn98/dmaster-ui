@@ -35,7 +35,7 @@ import { DmPaginationComponent } from '@dmaster/ui';
 | `siblingCount`  | `number`                                                                      | `1`                          | Pages shown on each side of the current page.                 |
 | `boundaryCount` | `number`                                                                      | `1`                          | Pages always shown at the start and end.                      |
 | `showControls`  | `boolean`                                                                     | `true`                       | Previous/next chevron buttons (disabled at the extremes).     |
-| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`                       | Item size — 2 / 2.5 / 3rem (HeroUI scale).                    |
+| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`                       | Item size — 2 / 2.5 / 3rem.                                   |
 | `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`                  | Semantic color of the active page (solid fill).               |
 | `disabled`      | `boolean`                                                                     | `false`                      | Disables every control.                                       |
 | `ariaLabel`     | `string`                                                                      | `'Pagination'`               | Accessible name of the `<nav>` landmark.                      |
@@ -70,7 +70,7 @@ Or provide `PAGINATION_DEFAULTS` directly.
 CSS variables (resolve with local fallbacks, overridable at any scope):
 
 - `--dm-pagination-gap` — gap between items (defaults to `--dm-space-1`).
-- `--dm-pagination-radius` — item radius (defaults to `--dm-radius-lg`, the HeroUI rounded square; set `--dm-radius-full` for circles).
+- `--dm-pagination-radius` — item radius (defaults to `--dm-radius-lg`, a rounded square; set `--dm-radius-full` for circles).
 - `--dm-pagination-fg` — idle item color (defaults to `--dm-fg-muted`).
 - `--dm-pagination-hover-bg` — hover wash (defaults to `--dm-bg-muted`).
 

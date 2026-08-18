@@ -1,6 +1,6 @@
 # Breadcrumbs (`dm-breadcrumbs`)
 
-A composite breadcrumb trail with a HeroUI look: flat text links that warm to
+A composite breadcrumb trail with a flat look: text links that warm to
 `--dm-fg` on hover, a chevron (or custom) separator, an auto-marked current
 page, and optional middle-collapsing into a static `…`. **No `@angular/router`
 dependency** — an item with `href` renders an anchor, an item without renders

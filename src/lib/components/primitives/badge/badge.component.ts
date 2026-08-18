@@ -4,7 +4,7 @@ import { BADGE_DEFAULTS } from './badge.tokens';
 import { DmBadgeColor, DmBadgeRadius, DmBadgeSize, DmBadgeVariant } from './badge.types';
 
 /**
- * Chip / status label with a HeroUI-style color × variant API.
+ * Chip / status label with a color × variant API.
  *
  * ```html
  * <dm-badge>Draft</dm-badge>

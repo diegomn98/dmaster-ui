@@ -15,7 +15,7 @@ export const DM_BUTTON_FALLBACK_DEFAULTS: DmButtonDefaults = {
   color: 'primary',
   variant: 'solid',
   size: 'md',
-  // HeroUI's signature look: pill by default.
+  // Pill by default — the library's signature look.
   radius: 'full',
 };
 

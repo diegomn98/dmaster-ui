@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **`dm-date-picker`** — a single-date calendar field in the forms family
-  (HeroUI-style color × variant, `ControlValueAccessor`). Native `Date` model
+  (color × variant, `ControlValueAccessor`). Native `Date` model
   normalized to local midnight; **no date library** — pure, timezone-safe
   calendar math plus `Intl.DateTimeFormat` for every month/weekday name and the
   trigger text, so the whole calendar follows the `locale` input and prerenders.
@@ -32,14 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   area, hue slider, optional alpha slider, editable hex input and quick swatches,
   in a field-family trigger that opens a CDK overlay. Pure `color-utils`
   (hex ⇄ rgb ⇄ hsv) underneath; `role="slider"` areas with `aria-valuetext`.
-- **`dm-error`** — a standalone validation line (mat-error / HeroUI
-  FieldError): danger color, `role="alert"`, fully projected content. It
+- **`dm-error`** — a standalone validation line (the Angular equivalent of
+  `mat-error`): danger color, `role="alert"`, fully projected content. It
   carries **no icon of its own** — project one (e.g. `<dm-icon>`) when you
   want one. `dm-form-field` accepts a projected `<dm-error>` and wires
   `aria-invalid` / `aria-describedby` automatically.
 - **`dm-search-field`** — a text field specialised for search: leading
   magnifier, trailing clear button that appears once there is text, and
-  search semantics (Escape clears, Enter emits `(searchSubmit)`). HeroUI-style
+  search semantics (Escape clears, Enter emits `(searchSubmit)`).
   `color` × `variant`, full `ControlValueAccessor` support.
 - **Icon system.** `dm-icon` draws an icon three ways: a **Material Symbols font
   ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons,
@@ -98,7 +98,7 @@ Initial public surface.
   - Overlays (CDK-based): `dmTooltip`, `DmDialogService`, `DmToastService`.
 - Theming system: `--dm-*` design tokens, light/dark/auto via `data-dm-theme`, three densities via `data-dm-density`, `prefers-reduced-motion` support.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
-- HeroUI-inspired design language: flat fills, pill radii, elastic press, color × variant tokens.
+- Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
 [0.4.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.3.0...v0.4.1
 [0.3.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.2.0...v0.3.0

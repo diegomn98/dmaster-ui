@@ -1,5 +1,5 @@
 /**
- * Semantic color (HeroUI-style, shared with the rest of the field family).
+ * Semantic color, shared with the rest of the field family.
  * Drives the focus ring and the selected-day fill.
  */
 export type DmDatePickerColor =

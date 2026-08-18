@@ -3,7 +3,7 @@
 :host {
   display: block;
 
-  // HeroUI: superficie claramente redondeada.
+  // Superficie claramente redondeada.
   border-radius: var(--dm-radius-xl);
 
   // El contenido de la card puede usar container queries contra ELLA.
@@ -11,7 +11,7 @@
 }
 
 // ---- Appearances -----------------------------------------------------------
-// HeroUI: superficies PLANAS. Sin gradientes de relleno ni sheen; la jerarquía
+// Superficies PLANAS. Sin gradientes de relleno ni sheen; la jerarquía
 // la dan el color de superficie, el borde y una sombra difusa (nunca hairline).
 
 :host([data-appearance='elevated']) {

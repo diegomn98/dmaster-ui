@@ -1,4 +1,4 @@
-/** Semantic color of the progress fill (HeroUI-style). */
+/** Semantic color of the progress fill. */
 export type DmProgressColor =
   'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 

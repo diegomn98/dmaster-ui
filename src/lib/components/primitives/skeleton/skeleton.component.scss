@@ -20,7 +20,7 @@
   overflow: hidden;
   width: 100%;
 
-  // HeroUI: superficie plana; el shimmer lo aporta la banda del wave.
+  // Superficie plana; el shimmer lo aporta la banda del wave.
   background-color: var(--dm-skeleton-bg, var(--dm-bg-muted));
 
   // ---- Variants ------------------------------------------------------------
@@ -71,7 +71,7 @@
     animation: dm-skeleton-pulse var(--dm-skeleton-duration, 1.6s) var(--dm-ease-in-out) infinite;
   }
 
-  // Shimmer HeroUI: banda ancha y difusa que barre el bloque como una luz
+  // Shimmer: banda ancha y difusa que barre el bloque como una luz
   // suave (caída larga a ambos lados, pico atenuado) en vez de una cortina.
   &[data-animation='wave']::after {
     content: '';

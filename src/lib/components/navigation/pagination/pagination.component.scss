@@ -21,7 +21,7 @@
   max-width: 100%;
   font-family: var(--dm-font-sans);
 
-  // ---- Sizes (HeroUI scale: 32/40/48px items) -------------------------------
+  // ---- Sizes (32/40/48px items) ---------------------------------------------
   &[data-size='sm'] {
     --dm-pg-item: 2rem;
     --dm-pg-fs: var(--dm-text-xs);
@@ -84,7 +84,7 @@
 }
 
 // ---- Items -----------------------------------------------------------------
-// Rounded-square items (radius lg), quiet at rest, hover wash, elastic HeroUI
+// Rounded-square items (radius lg), quiet at rest, hover wash, elastic
 // press. The prev/next controls share the exact same footprint.
 
 .dm-pagination__control,
@@ -114,7 +114,7 @@
     background: var(--dm-pg-hover-bg);
   }
 
-  // Press elástico HeroUI: scale corto y rápido.
+  // Press elástico: scale corto y rápido.
   &:active:not(:disabled) {
     transform: scale(0.93);
     transition-duration: var(--dm-duration-fast);

@@ -1,6 +1,6 @@
 # @dmaster/ui
 
-**Premium Angular UI components.** Standalone, signals-based, zoneless-ready, and fully themeable via CSS custom properties — with a clean HeroUI-inspired design language.
+**Premium Angular UI components.** Standalone, signals-based, zoneless-ready, and fully themeable via CSS custom properties — with a clean, flat, pill-radius design language.
 
 [![npm version](https://img.shields.io/npm/v/@dmaster/ui?color=006FEE&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
 [![npm downloads](https://img.shields.io/npm/dm/@dmaster/ui?color=338EF7&style=flat-square)](https://www.npmjs.com/package/@dmaster/ui)
@@ -18,7 +18,7 @@
 
 - **Modern Angular API** — `input()` / `output()` / `model()` signals, standalone components, no NgModules, no decorators
 - **Zoneless-ready** — designed for `provideZonelessChangeDetection()` from day one
-- **HeroUI design language** — flat colors, pill radii (`border-radius: 9999px` by default), elastic press scale, color × variant token system
+- **Flat, pill-radius design language** — flat colors, pill radii (`border-radius: 9999px` by default), elastic press scale, color × variant token system
 - **Deeply themeable** — light / dark / auto via `data-dm-theme`; every visual decision is a `--dm-*` CSS custom property you can override
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
@@ -217,7 +217,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 |                     | **@dmaster/ui**                                                  | Angular Material                                   | PrimeNG                                      | Taiga UI                                 | Spartan · ng-primitives                                                  |
 | ------------------- | ---------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
-| **What you get**    | Pre-styled components (HeroUI-inspired)                          | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
+| **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
 | **Component count** | 34                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |

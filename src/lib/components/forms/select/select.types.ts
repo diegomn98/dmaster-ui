@@ -10,7 +10,7 @@ export interface DmSelectItem<T = unknown> {
   disabled?: boolean;
 }
 
-/** Semantic color (HeroUI-style, shared with the button/badge palette). */
+/** Semantic color, shared with the button/badge palette. */
 export type DmSelectColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Visual variant of the trigger surface. */

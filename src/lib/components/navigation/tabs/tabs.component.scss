@@ -146,7 +146,7 @@
   }
 
   // ---- Variants ------------------------------------------------------------
-  // Solid: HeroUI-style pill container. The active tab reads as a lifted pill.
+  // Solid: pill container. The active tab reads as a lifted pill.
   &[data-variant='solid'] {
     padding: 0.25rem;
     background: var(--dm-bg-subtle);

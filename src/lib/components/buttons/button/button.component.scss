@@ -4,7 +4,7 @@
   display: inline-flex;
 }
 
-// Dimensiones alineadas con HeroUI: alturas y paddings fijos por tamaño, con
+// Alturas y paddings fijos por tamaño, con
 // min-width para que un botón corto no se colapse en píldora minúscula.
 .dm-button {
   position: relative;
@@ -21,7 +21,7 @@
   user-select: none;
   cursor: pointer;
 
-  // El hover uniforme (opacity 0.9) es la firma de HeroUI: la misma sensación
+  // El hover uniforme (opacity 0.9) es el sello del botón: la misma sensación
   // en solid, flat y bordered, sin gestionar hovers por variante uno a uno.
   @include mixins.transition(opacity, background-color, color, border-color, box-shadow, transform);
 
@@ -34,7 +34,7 @@
     opacity: 0.9;
   }
 
-  // Press elástico HeroUI: scale corto y rápido.
+  // Press elástico: scale corto y rápido.
   &:active:not(:disabled) {
     transform: scale(0.97);
     transition-duration: var(--dm-duration-fast);
@@ -52,7 +52,7 @@
     cursor: progress;
   }
 
-  // ---- Sizes (HeroUI: h-8 / h-10 / h-12) -----------------------------------
+  // ---- Sizes (h-8 / h-10 / h-12) -------------------------------------------
   &[data-size='sm'] {
     height: 2rem; // 32px
     min-width: 4rem; // 64px
@@ -162,7 +162,7 @@
     color: var(--dm-btn-accent);
   }
 
-  // HeroUI faded = flat con borde 1px del tono.
+  // Faded = flat con borde 1px del tono.
   &[data-variant='faded'] {
     background: var(--dm-btn-soft);
     border-color: var(--dm-border-strong);
@@ -200,7 +200,7 @@
     }
   }
 
-  // Shadow: sólido con glow del propio color proyectado debajo (seña HeroUI).
+  // Shadow: sólido con glow del propio color proyectado debajo.
   &[data-variant='shadow'] {
     background: var(--dm-btn);
     color: var(--dm-btn-fg);

@@ -1,6 +1,6 @@
 # DmDatePicker
 
-Single-date calendar picker with a HeroUI-style color × variant API. Reads as a
+Single-date calendar picker with a color × variant API. Reads as a
 sibling of the rest of the field family (`dmInput`, `dm-select`,
 `dm-search-field`) and is fully keyboard- and screen-reader-driven.
 

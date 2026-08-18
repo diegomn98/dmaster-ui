@@ -12,7 +12,7 @@ import {
 } from './button.types';
 
 /**
- * Button with a HeroUI-style color × variant API and built-in loading /
+ * Button with a color × variant API and built-in loading /
  * success / error states. Stable width (no layout shift), integrated spinner
  * and screen-reader announcements via a polite live region.
  *
@@ -48,7 +48,7 @@ export class DmButtonComponent {
   /** Corner rounding. `full` is pill-shaped. */
   readonly radius = input<DmButtonRadius>(this.defaults.radius);
 
-  /** Control size; heights follow the HeroUI scale (32/40/48px). */
+  /** Control size; heights follow the 32/40/48px scale. */
   readonly size = input<DmSize>(this.defaults.size);
 
   /** Current state. `loading` disables the button and shows the spinner. */

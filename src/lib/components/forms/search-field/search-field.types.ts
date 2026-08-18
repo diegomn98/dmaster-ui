@@ -1,4 +1,4 @@
-/** Semantic color (HeroUI-style, shared with the input/select palette). */
+/** Semantic color, shared with the input/select palette. */
 export type DmSearchFieldColor =
   'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 

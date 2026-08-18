@@ -1,6 +1,6 @@
 # Radio group (`dm-radio-group` + `dm-radio`)
 
-Single-choice radio group with a HeroUI-style color × size API. The group is the
+Single-choice radio group with a color × size API. The group is the
 `ControlValueAccessor` — items just declare their `value`. Keyboard navigation
 follows the WAI-ARIA roving-tabindex pattern (only the selected radio is a tab
 stop; arrows move focus AND selection).

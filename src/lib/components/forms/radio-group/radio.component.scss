@@ -91,7 +91,7 @@
 
   @include mixins.transition(border-color, background-color, box-shadow, transform);
 
-  // Sizes (HeroUI-ish scale: 16 / 20 / 24).
+  // Sizes (16 / 20 / 24 scale).
   :host[data-size='sm'] & {
     width: 1rem;
     height: 1rem;
@@ -123,7 +123,7 @@
     box-shadow: 0 0 0 3px var(--dm-radio-soft);
   }
 
-  // Elastic press (HeroUI signature): a tighter scale than the switch thumb.
+  // Elastic press: a tighter scale than the switch thumb.
   :host:active:not([data-disabled='true']) & {
     transform: scale(0.94);
     transition-duration: var(--dm-duration-fast);
@@ -137,7 +137,7 @@
   transform: scale(0);
   transition: transform var(--dm-duration-base) var(--dm-ease-snappy);
 
-  // Inner dot ≈ half the control (HeroUI proportions).
+  // Inner dot ≈ half the control.
   :host[data-size='sm'] & {
     width: 0.5rem;
     height: 0.5rem;

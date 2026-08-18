@@ -1,6 +1,6 @@
 # Button (`dm-button`)
 
-Button with a HeroUI-style **color × variant** API and built-in loading / success / error states. Stable width (no layout shift), integrated spinner, disabled while loading and screen-reader announcements via a polite live region. No Angular Material dependency.
+Button with a **color × variant** API and built-in loading / success / error states. Stable width (no layout shift), integrated spinner, disabled while loading and screen-reader announcements via a polite live region. No Angular Material dependency.
 
 ## Usage
 
@@ -28,7 +28,7 @@ import { DmButtonComponent } from '@dmaster/ui';
 | `color`        | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'`  | `'primary'` | Semantic color.                                                 |
 | `variant`      | `'solid' \| 'flat' \| 'faded' \| 'bordered' \| 'light' \| 'ghost' \| 'shadow'` | `'solid'`   | Visual variant. `shadow` casts a colored glow.                  |
 | `radius`       | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                     | `'md'`      | Corner rounding. `full` is pill-shaped.                         |
-| `size`         | `'sm' \| 'md' \| 'lg'`                                                         | `'md'`      | 32px / 40px / 48px heights (HeroUI scale).                      |
+| `size`         | `'sm' \| 'md' \| 'lg'`                                                         | `'md'`      | 32px / 40px / 48px heights.                                     |
 | `state`        | `'idle' \| 'loading' \| 'success' \| 'error'`                                  | `'idle'`    | `loading` disables the button; `success`/`error` flash an icon. |
 | `disabled`     | `boolean`                                                                      | `false`     | Also disabled automatically while loading.                      |
 | `type`         | `'button' \| 'submit' \| 'reset'`                                              | `'button'`  | Native button type.                                             |

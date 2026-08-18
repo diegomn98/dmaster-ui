@@ -43,7 +43,7 @@ protected readonly gbFormat = (value: number, max: number): string => `${value} 
 | `striped`        | `boolean`                                                                     | `false`            | Diagonal stripes over the fill (theme-derived, no hard colors). |
 | `ariaLabel`      | `string`                                                                      | `''`               | Accessible name. Falls back to `label`.                         |
 
-The radius is always full (pill track and fill) — the HeroUI signature.
+The radius is always full (pill track and fill) — the library's signature look.
 
 ## Global defaults
 

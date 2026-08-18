@@ -39,7 +39,7 @@
     @include mixins.focus-ring;
   }
 
-  // HeroUI press: short elastic squeeze.
+  // Press: short elastic squeeze.
   &:active:not([data-disabled]) {
     transform: scale(0.97);
     transition-duration: var(--dm-duration-fast);

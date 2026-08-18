@@ -25,7 +25,7 @@ import {
 /**
  * Text field specialised for search: a leading magnifier, a trailing clear
  * button that appears once there is text, and search semantics (Escape clears,
- * Enter submits). HeroUI-style color × variant API, and a `ControlValueAccessor`
+ * Enter submits). Color × variant API, and a `ControlValueAccessor`
  * so it drops into template- and reactive-driven forms.
  *
  * ```html

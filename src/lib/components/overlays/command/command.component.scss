@@ -59,7 +59,7 @@
   }
 }
 
-// ESC pill doubles as the close button (HeroUI pattern).
+// ESC pill doubles as the close button.
 .dm-command__esc {
   flex-shrink: 0;
   padding: 0;
@@ -124,7 +124,7 @@
   @include mixins.transition(background-color, color);
 
   // The keyboard owns the active row; hover just re-points it via the handler.
-  // HeroUI uses a quiet neutral tint (via the active tokens) — no brand color.
+  // A quiet neutral tint (via the active tokens) — no brand color.
   &[data-active] {
     background: var(--dm-command-active-bg, var(--dm-default-subtle));
     color: var(--dm-command-active-fg, var(--dm-fg));

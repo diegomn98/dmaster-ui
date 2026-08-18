@@ -1,5 +1,5 @@
 /**
- * Semantic color (HeroUI-style, shared with the rest of the field family).
+ * Semantic color, shared with the rest of the field family.
  * Drives the trigger focus ring and the panel's selected-swatch accent.
  */
 export type DmColorPickerColor =

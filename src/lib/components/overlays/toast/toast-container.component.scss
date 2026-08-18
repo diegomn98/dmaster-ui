@@ -17,7 +17,7 @@
   padding: var(--dm-space-3) var(--dm-space-4);
   border-radius: var(--dm-radius-lg);
 
-  // HeroUI glass: una superficie translúcida limpia con blur + saturate sobre
+  // Glass: una superficie translúcida limpia con blur + saturate sobre
   // el contenido de detrás. saturate() enriquece los colores que atraviesan el
   // cristal en vez de limitarse a esmerilarlos.
   background: color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent);
@@ -25,7 +25,7 @@
   color: var(--dm-fg);
   transform-origin: 100% 50%;
 
-  // Elevación HeroUI: una única sombra amplia, suave y difusa. Sin hairline
+  // Elevación: una única sombra amplia, suave y difusa. Sin hairline
   // duro, sin sheen interior.
   box-shadow: var(--dm-shadow-lg);
   animation: dm-toast-in var(--dm-duration-slow) var(--dm-ease-out);

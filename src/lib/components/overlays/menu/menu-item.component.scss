@@ -45,7 +45,7 @@
     background: var(--dm-mi-subtle);
   }
 
-  // HeroUI elastic press.
+  // Elastic press.
   &:active:not([data-disabled]) {
     transform: scale(0.97);
   }

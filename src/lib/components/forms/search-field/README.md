@@ -2,7 +2,7 @@
 
 A text field specialised for search: a leading magnifier icon, a trailing clear
 button that appears once there is text, and search semantics (Escape clears,
-Enter submits). HeroUI-style `color × variant` API, and a `ControlValueAccessor`
+Enter submits). A `color × variant` API, and a `ControlValueAccessor`
 so it works with template- and reactive-driven forms.
 
 ```ts

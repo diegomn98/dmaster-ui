@@ -47,7 +47,7 @@ export class DmPaginationComponent {
   /** Show the previous/next chevron buttons. */
   readonly showControls = input<boolean>(this.defaults.showControls);
 
-  /** Item size; heights follow the HeroUI scale (32/40/48px). */
+  /** Item size; heights follow the 32/40/48px scale. */
   readonly size = input<DmSize>(this.defaults.size);
 
   /** Semantic color of the active page. */

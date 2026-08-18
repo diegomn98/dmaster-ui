@@ -21,7 +21,7 @@ import { SELECT_DEFAULTS } from './select.tokens';
 import { DmSelectColor, DmSelectItem, DmSelectRadius, DmSelectVariant } from './select.types';
 
 /**
- * Single-select dropdown with a HeroUI-style color × variant API.
+ * Single-select dropdown with a color × variant API.
  *
  * ```html
  * <dm-select

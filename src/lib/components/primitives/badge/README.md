@@ -1,6 +1,6 @@
 # Badge / Chip (`dm-badge`)
 
-Status label / chip with a HeroUI-style **color × variant** API. No logic, pure theming.
+Status label / chip with a **color × variant** API. No logic, pure theming.
 
 ```html
 <dm-badge>Draft</dm-badge>

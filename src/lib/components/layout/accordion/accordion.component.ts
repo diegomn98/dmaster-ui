@@ -12,7 +12,7 @@ import { DmAccordionSelectionMode, DmAccordionVariant } from './accordion.types'
 
 /**
  * Container that groups collapsible `dm-accordion-item` panels and owns the
- * expansion state. HeroUI-inspired: `light` (default, flat separators),
+ * expansion state. Four variants: `light` (default, flat separators),
  * `bordered` (single card), `shadow` (single card with soft shadow),
  * `splitted` (each item is its own card).
  *

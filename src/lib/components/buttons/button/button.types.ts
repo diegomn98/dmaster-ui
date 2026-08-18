@@ -1,7 +1,7 @@
-/** Semantic color of the button (HeroUI-style). */
+/** Semantic color of the button. */
 export type DmButtonColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
-/** Visual variant (HeroUI-style). */
+/** Visual variant. */
 export type DmButtonVariant =
   'solid' | 'flat' | 'faded' | 'bordered' | 'light' | 'ghost' | 'shadow';
 

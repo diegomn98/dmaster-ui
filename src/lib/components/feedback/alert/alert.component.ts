@@ -12,7 +12,7 @@ import { ALERT_DEFAULTS } from './alert.tokens';
 import { DmAlertColor, DmAlertVariant } from './alert.types';
 
 /**
- * Contextual feedback banner with a HeroUI-style color × variant API, a
+ * Contextual feedback banner with a color × variant API, a
  * semantic icon per color, an optional dismiss button and an action slot.
  *
  * ```html

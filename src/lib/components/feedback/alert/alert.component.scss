@@ -89,7 +89,7 @@
   color: var(--dm-alert-accent);
 }
 
-// HeroUI faded = relleno subtle + borde del propio color.
+// Faded = relleno subtle + borde del propio color.
 :host([data-variant='faded']) {
   background: var(--dm-alert-soft);
   border-color: color-mix(in srgb, var(--dm-alert-line) 45%, transparent);
@@ -104,7 +104,7 @@
 
 // ---- Icon ------------------------------------------------------------------
 // Caja fija de 2rem en todas las variantes (el layout no salta al cambiar);
-// solo flat/faded pintan el círculo sutil detrás del glifo, como HeroUI.
+// solo flat/faded pintan el círculo sutil detrás del glifo.
 .dm-alert__icon {
   flex-shrink: 0;
   display: inline-flex;

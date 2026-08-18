@@ -1,6 +1,6 @@
 # Tabs (`dm-tabs`)
 
-Composite tabs with a HeroUI-style color × variant API, an **animated sliding indicator**, roving-tabindex keyboard navigation and full ARIA wiring. Panels are matched to their trigger by `value`. By default tabs are **full width** with an **underlined** look and a separator rule — a clean nav-bar out of the box.
+Composite tabs with a color × variant API, an **animated sliding indicator**, roving-tabindex keyboard navigation and full ARIA wiring. Panels are matched to their trigger by `value`. By default tabs are **full width** with an **underlined** look and a separator rule — a clean nav-bar out of the box.
 
 ## Usage
 
@@ -74,5 +74,5 @@ Overriding any of these at a scope re-skins the tabs without touching the SCSS.
 - Tabs expose `role="tab"`, `aria-selected`, `aria-controls`, roving `tabindex`.
 - Panels expose `role="tabpanel"`, `aria-labelledby`, and receive `hidden` when inactive.
 - Keyboard: `ArrowLeft` / `ArrowRight` (horizontal) or `ArrowUp` / `ArrowDown` (vertical) move focus and activation, `Home` / `End` jump to the first / last enabled tab, `Space` / `Enter` activate the focused tab.
-- Focus ring uses the global `--dm-ring` token; press shrinks with the HeroUI-style `--dm-ease-snappy`.
+- Focus ring uses the global `--dm-ring` token; press shrinks with `--dm-ease-snappy`.
 - Motion is disabled under `prefers-reduced-motion` via the global duration tokens.

@@ -1,4 +1,4 @@
-/** Semantic color of the tabs (HeroUI-style). */
+/** Semantic color of the tabs. */
 export type DmTabsColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Visual variant of the tablist. */

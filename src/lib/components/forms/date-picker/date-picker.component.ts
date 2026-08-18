@@ -60,7 +60,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 /**
- * Single-date calendar picker with a HeroUI-style color × variant API.
+ * Single-date calendar picker with a color × variant API.
  *
  * ```html
  * <dm-date-picker label="Start date" [(value)]="start" [min]="today" />

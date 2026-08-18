@@ -33,7 +33,7 @@ function clamp01(value: number): number {
 
 /**
  * Rich color picker with a saturation/value plane, hue rail, optional alpha
- * rail, a hex field and preset swatches — wrapped in a HeroUI-style
+ * rail, a hex field and preset swatches — wrapped in a
  * color × variant trigger that reads as a sibling of the rest of the field
  * family (`dmInput`, `dm-select`, `dm-date-picker`).
  *

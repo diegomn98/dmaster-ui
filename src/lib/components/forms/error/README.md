@@ -1,7 +1,7 @@
 # DmError
 
-A validation error line for form fields — the standalone sibling of
-`mat-error` / HeroUI's FieldError.
+A validation error line for form fields — the standalone,
+Angular-native equivalent of `mat-error`.
 
 ```html
 <dm-error>Email is required</dm-error>

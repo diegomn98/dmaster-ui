@@ -53,7 +53,7 @@
   // --------------------------------------------------------------------------
   // Radii
   // --------------------------------------------------------------------------
-  // HeroUI-style rounded scale: generous radii, controls feel pill-adjacent.
+  // Rounded scale: generous radii, controls feel pill-adjacent.
   --dm-radius-sm: 0.5rem; // 8px
   --dm-radius-md: 0.75rem; // 12px
   --dm-radius-lg: 0.875rem; // 14px
@@ -89,7 +89,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // Density · comfortable (default). The base scale is HeroUI's 32/40/48 so
+  // Density · comfortable (default). The base scale is 32/40/48 so
   // native `dmInput` fields line up exactly with dm-select / dm-search-field.
   // --------------------------------------------------------------------------
   --dm-control-height-sm: 2rem;
