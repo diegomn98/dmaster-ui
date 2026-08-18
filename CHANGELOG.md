@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-08-18
+
+### Changed
+
+- Rewrote design-language copy across the README, CHANGELOG, JSDoc comments,
+  per-component `README.md` files, SCSS comments and the docs site's en/es/fr
+  translations to describe the library's flat, pill-radius, color × variant
+  design language on its own terms, without attributing it to another UI
+  library.
+
 ## [0.4.1] - 2026-08-18
 
 ### Added
@@ -100,6 +110,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.4.2]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.3.0...v0.4.1
 [0.3.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.1.2...v0.2.0
