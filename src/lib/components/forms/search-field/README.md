@@ -16,7 +16,7 @@ import { DmSearchFieldComponent } from '@dmaster/ui';
   label="Search"
   placeholder="Search components…"
   [(value)]="query"
-  (search)="run($event)"
+  (searchSubmit)="run($event)"
   (cleared)="reset()"
 />
 ```
@@ -50,10 +50,10 @@ Two-way binding via `[(value)]`, or wire it to a form:
 
 ## Outputs
 
-| Output    | Payload  | Fires when                                 |
-| --------- | -------- | ------------------------------------------ |
-| `search`  | `string` | The user presses Enter.                    |
-| `cleared` | `void`   | The field is cleared (× button or Escape). |
+| Output         | Payload  | Fires when                                 |
+| -------------- | -------- | ------------------------------------------ |
+| `searchSubmit` | `string` | The user presses Enter.                    |
+| `cleared`      | `void`   | The field is cleared (× button or Escape). |
 
 ## Methods
 

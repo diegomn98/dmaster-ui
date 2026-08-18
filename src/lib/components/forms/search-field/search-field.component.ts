@@ -33,7 +33,7 @@ import {
  *   label="Search"
  *   placeholder="Search components…"
  *   [(value)]="query"
- *   (search)="run($event)"
+ *   (searchSubmit)="run($event)"
  * />
  * ```
  */
@@ -105,7 +105,7 @@ export class DmSearchFieldComponent implements ControlValueAccessor {
 
   // ---- Outputs -------------------------------------------------------------
   /** Emitted with the current value when the user presses Enter. */
-  readonly search = output<string>();
+  readonly searchSubmit = output<string>();
 
   /** Emitted after the field is cleared (× button or Escape). */
   readonly cleared = output<void>();
@@ -172,7 +172,7 @@ export class DmSearchFieldComponent implements ControlValueAccessor {
       this.clear();
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      this.search.emit(this.value());
+      this.searchSubmit.emit(this.value());
     }
   }
 

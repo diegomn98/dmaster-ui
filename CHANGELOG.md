@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `aria-invalid` / `aria-describedby` automatically.
 - **`dm-search-field`** — a text field specialised for search: leading
   magnifier, trailing clear button that appears once there is text, and
-  search semantics (Escape clears, Enter emits `(search)`). HeroUI-style
+  search semantics (Escape clears, Enter emits `(searchSubmit)`). HeroUI-style
   `color` × `variant`, full `ControlValueAccessor` support.
 - **Icon system.** `dm-icon` draws an icon three ways: a **Material Symbols font
   ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons,

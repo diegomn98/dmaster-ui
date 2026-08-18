@@ -92,7 +92,7 @@ describe('DmSearchFieldComponent', () => {
     const fixture = TestBed.createComponent(DmSearchFieldComponent);
     fixture.detectChanges();
     const submitted: string[] = [];
-    fixture.componentInstance.search.subscribe((v) => submitted.push(v));
+    fixture.componentInstance.searchSubmit.subscribe((v) => submitted.push(v));
 
     type(fixture, 'query');
     input(fixture).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
