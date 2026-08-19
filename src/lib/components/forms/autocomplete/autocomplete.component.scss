@@ -1,0 +1,336 @@
+@use 'mixins';
+
+:host {
+  display: grid;
+  gap: var(--dm-space-1);
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-autocomplete__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-autocomplete__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Control (the field surface) -------------------------------------------
+// `data-color` lives here, so we map the generic `--dm-ac*` variables (focus
+// ring + caret) from the wrapper. Same technique as dm-select / dm-search-field.
+.dm-autocomplete__control {
+  --dm-ac: var(--dm-primary);
+  --dm-ac-subtle: var(--dm-primary-subtle);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  width: 100%;
+
+  // As a grid item, avoid inheriting the native <input>'s intrinsic width so
+  // the field can shrink in constrained layouts (mirrors search-field).
+  min-width: 0;
+  padding: 0 var(--dm-control-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+
+  // Focus ring parked at 0 spread → grows out of the field on focus (same as
+  // .dm-input): a single box-shadow that animates in width.
+  box-shadow: 0 0 0 0 var(--dm-ac-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  // `default` focuses with primary, matching .dm-input — the whole field
+  // family (input, select, search, autocomplete) shares one focus language.
+  &[data-color='default'],
+  &[data-color='primary'] {
+    --dm-ac: var(--dm-primary);
+    --dm-ac-subtle: var(--dm-primary-subtle);
+  }
+
+  &[data-color='secondary'] {
+    --dm-ac: var(--dm-secondary);
+    --dm-ac-subtle: var(--dm-secondary-subtle);
+  }
+
+  &[data-color='success'] {
+    --dm-ac: var(--dm-success);
+    --dm-ac-subtle: var(--dm-success-subtle);
+  }
+
+  &[data-color='warning'] {
+    --dm-ac: var(--dm-warning);
+    --dm-ac-subtle: var(--dm-warning-subtle);
+  }
+
+  &[data-color='danger'] {
+    --dm-ac: var(--dm-danger);
+    --dm-ac-subtle: var(--dm-danger-subtle);
+  }
+
+  &:hover:not([data-disabled], :focus-within) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus-within {
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-ac);
+    box-shadow: 0 0 0 3.5px var(--dm-ac-subtle);
+  }
+
+  &[data-disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // ---- Sizes ---------------------------------------------------------------
+  &[data-size='sm'] {
+    height: 2rem;
+    font-size: var(--dm-text-xs);
+  }
+
+  &[data-size='md'] {
+    height: 2.5rem;
+    font-size: var(--dm-text-sm);
+  }
+
+  &[data-size='lg'] {
+    height: 3rem;
+    font-size: var(--dm-text-base);
+    padding-inline: calc(var(--dm-control-padding-x) + 0.125rem);
+  }
+
+  // ---- Radius --------------------------------------------------------------
+  &[data-radius='none'] {
+    border-radius: 0;
+  }
+
+  &[data-radius='sm'] {
+    border-radius: var(--dm-radius-sm);
+  }
+
+  &[data-radius='md'] {
+    border-radius: var(--dm-radius-md);
+  }
+
+  &[data-radius='lg'] {
+    border-radius: var(--dm-radius-lg);
+  }
+
+  &[data-radius='full'] {
+    border-radius: var(--dm-radius-full);
+    padding-inline: var(--dm-space-4);
+  }
+
+  // ---- Variants ------------------------------------------------------------
+  // flat: default styles above.
+  &[data-variant='bordered'] {
+    background-color: transparent;
+    border-color: var(--dm-border-strong);
+
+    &:hover:not([data-disabled], :focus-within) {
+      background-color: transparent;
+      border-color: var(--dm-fg-subtle);
+    }
+
+    &:focus-within {
+      background-color: transparent;
+    }
+  }
+
+  &[data-variant='faded'] {
+    background-color: var(--dm-bg-muted);
+    border-color: var(--dm-border);
+
+    &:focus-within {
+      background-color: var(--dm-bg-elevated);
+    }
+  }
+
+  &[data-variant='underlined'] {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding-inline: 0;
+    box-shadow: inset 0 -1px 0 var(--dm-border-strong);
+
+    &:hover:not([data-disabled], :focus-within) {
+      background-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
+    }
+
+    &:focus-within {
+      background-color: transparent;
+      box-shadow: inset 0 -2px 0 var(--dm-ac);
+    }
+  }
+
+  // ---- Invalid -------------------------------------------------------------
+  &[data-invalid] {
+    --dm-ac: var(--dm-danger);
+    --dm-ac-subtle: var(--dm-danger-subtle);
+
+    border-color: var(--dm-danger);
+
+    &[data-variant='underlined'] {
+      border-color: transparent;
+      box-shadow: inset 0 -1px 0 var(--dm-danger);
+    }
+  }
+}
+
+// ---- Icon (leading magnifier) ----------------------------------------------
+.dm-autocomplete__icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dm-fg-subtle);
+  transition: color var(--dm-duration-base) var(--dm-ease-out);
+
+  .dm-autocomplete__control:focus-within & {
+    color: var(--dm-fg-muted);
+  }
+
+  [data-size='sm'] & {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  [data-size='lg'] & {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// ---- Input (bare — the wrapper carries the surface) ------------------------
+.dm-autocomplete__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dm-fg);
+  caret-color: var(--dm-ac);
+  font-family: var(--dm-font-sans);
+  font-size: inherit;
+  line-height: var(--dm-leading-normal);
+  appearance: none;
+
+  &::placeholder {
+    color: var(--dm-fg-subtle);
+    opacity: 1;
+    transition: color var(--dm-duration-base) var(--dm-ease-out);
+  }
+
+  &:focus {
+    outline: none;
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--dm-fg-subtle) 60%, transparent);
+    }
+  }
+
+  &:disabled {
+    color: var(--dm-fg-muted);
+    cursor: not-allowed;
+  }
+}
+
+// ---- Clear button ----------------------------------------------------------
+.dm-autocomplete__clear {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background-color: color-mix(in srgb, var(--dm-fg) 8%, transparent);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-out),
+    color var(--dm-duration-fast) var(--dm-ease-out),
+    transform var(--dm-duration-fast) var(--dm-ease-snappy);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--dm-fg) 16%, transparent);
+    color: var(--dm-fg);
+  }
+
+  &:active {
+    transform: scale(0.88);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  [data-size='sm'] & {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  [data-size='lg'] & {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  svg {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-autocomplete__clear:active {
+    transform: none;
+  }
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-autocomplete__hint,
+.dm-autocomplete__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-autocomplete__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-autocomplete__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+  animation: dm-autocomplete-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-autocomplete-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-autocomplete__error {
+    animation: none;
+  }
+}

@@ -71,25 +71,30 @@
     </div>
   }
 
-  <!-- ---- Scroll container + table ---------------------------------------- -->
-  <div class="dm-table__scroll" [class.dm-table__scroll--sticky]="sticky()">
-    <table
-      class="dm-table__table"
+  @if (virtualScroll()) {
+    <!-- ---- Virtual-scroll grid (role=table div-grid) --------------------- -->
+    <div
+      class="dm-table__grid"
+      role="table"
+      [style.--dm-table-cols]="gridTemplate()"
       [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-labelledby]="!ariaLabel() && caption() ? captionId : null"
       [attr.aria-busy]="loading() ? 'true' : null"
     >
       @if (caption()) {
-        <caption class="dm-table__caption">
-          {{
-            caption()
-          }}
-        </caption>
+        <div [id]="captionId" class="dm-table__caption dm-table__caption--grid">
+          {{ caption() }}
+        </div>
       }
 
-      <thead class="dm-table__head">
-        <tr>
+      <!-- Sticky header: sits ABOVE the viewport, shares the grid template. -->
+      <div class="dm-table__vhead" role="rowgroup">
+        <div class="dm-table__vrow dm-table__vrow--head" role="row">
           @if (hasSelection()) {
-            <th scope="col" class="dm-table__th dm-table__th--select">
+            <div
+              class="dm-table__vcell dm-table__vcell--head dm-table__vcell--select"
+              role="columnheader"
+            >
               @if (showSelectAll()) {
                 <dm-checkbox
                   [checked]="allSelected()"
@@ -98,17 +103,16 @@
                   (checkedChange)="toggleAll()"
                 />
               }
-            </th>
+            </div>
           }
           @for (col of visibleColumns(); track col.key) {
-            <th
-              scope="col"
-              class="dm-table__th"
+            <div
+              class="dm-table__vcell dm-table__vcell--head"
+              role="columnheader"
               [attr.data-align]="col.align || 'start'"
               [attr.data-sortable]="col.sortable ? '' : null"
               [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
               [attr.aria-sort]="ariaSortFor(col)"
-              [style.width]="col.width || null"
             >
               @if (col.sortable) {
                 <button
@@ -139,30 +143,36 @@
               } @else {
                 <span class="dm-table__label">{{ col.header }}</span>
               }
-            </th>
+            </div>
           }
-        </tr>
-      </thead>
+        </div>
+      </div>
 
-      <tbody class="dm-table__body">
-        @if (loading()) {
+      @if (loading()) {
+        <div class="dm-table__vbody" role="rowgroup">
           @for (r of skeletonRows(); track r) {
-            <tr class="dm-table__tr dm-table__tr--skeleton">
+            <div
+              class="dm-table__vrow dm-table__vrow--skeleton"
+              role="row"
+              [style.height.px]="rowHeight()"
+            >
               @if (hasSelection()) {
-                <td class="dm-table__td dm-table__td--select">
+                <div class="dm-table__vcell dm-table__vcell--select" role="cell">
                   <dm-skeleton variant="rounded" rounded="sm" [width]="16" [height]="16" />
-                </td>
+                </div>
               }
               @for (col of visibleColumns(); track col.key) {
-                <td class="dm-table__td">
+                <div class="dm-table__vcell" role="cell">
                   <dm-skeleton height="0.75rem" [width]="col.align === 'end' ? '40%' : '70%'" />
-                </td>
+                </div>
               }
-            </tr>
+            </div>
           }
-        } @else if (isEmpty()) {
-          <tr>
-            <td [attr.colspan]="colspan()" class="dm-table__empty-cell">
+        </div>
+      } @else if (isEmpty()) {
+        <div class="dm-table__vbody" role="rowgroup">
+          <div class="dm-table__vrow dm-table__vrow--empty" role="row">
+            <div class="dm-table__empty-cell" role="cell">
               <div class="dm-table__empty">
                 <svg
                   class="dm-table__empty-icon"
@@ -185,40 +195,212 @@
                   {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
                 </p>
               </div>
-            </td>
-          </tr>
-        } @else {
-          @for (row of pagedRows(); track trackFn(row, $index); let idx = $index) {
-            <tr
-              class="dm-table__tr"
-              [attr.data-selected]="isSelected(row, idx) ? '' : null"
-              [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
-              (click)="onRowClick(row, idx)"
-            >
-              @if (hasSelection()) {
-                <td class="dm-table__td dm-table__td--select" (click)="$event.stopPropagation()">
-                  <dm-checkbox
-                    [checked]="isSelected(row, idx)"
-                    [ariaLabel]="selectRowLabel()"
-                    (checkedChange)="toggleRow(row, idx)"
-                  />
-                </td>
-              }
-              @for (col of visibleColumns(); track col.key) {
-                <td
-                  class="dm-table__td"
-                  [attr.data-align]="col.align || 'start'"
-                  [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
-                >
-                  {{ getCellValue(row, col) }}
-                </td>
-              }
-            </tr>
-          }
+            </div>
+          </div>
+        </div>
+      } @else {
+        <cdk-virtual-scroll-viewport
+          class="dm-table__viewport"
+          role="rowgroup"
+          [itemSize]="rowHeight()"
+          [style.height]="viewportHeight()"
+          (scroll)="onViewportScroll()"
+        >
+          <!-- Row click is a mouse convenience mirroring the native <tr (click)> path
+               (this is role="table", a static table — not an interactive role="grid").
+               Same reason the native path needs no key handler; the linter only exempts
+               native table elements, so the div variant disables the rule explicitly. -->
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+          <div
+            *cdkVirtualFor="let row of pagedRows(); let idx = index; trackBy: vTrackBy"
+            class="dm-table__vrow"
+            role="row"
+            [style.height.px]="rowHeight()"
+            [attr.data-even]="idx % 2 === 1 ? '' : null"
+            [attr.data-selected]="isSelected(row, idx) ? '' : null"
+            [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
+            (click)="onRowClick(row, idx)"
+          >
+            @if (hasSelection()) {
+              <!-- Swallows the row click so toggling the checkbox never navigates; mirrors
+                   the native <td (click)="$event.stopPropagation()"> cell. -->
+              <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+              <div
+                class="dm-table__vcell dm-table__vcell--select"
+                role="cell"
+                (click)="$event.stopPropagation()"
+              >
+                <dm-checkbox
+                  [checked]="isSelected(row, idx)"
+                  [ariaLabel]="selectRowLabel()"
+                  (checkedChange)="toggleRow(row, idx)"
+                />
+              </div>
+            }
+            @for (col of visibleColumns(); track col.key) {
+              <div
+                class="dm-table__vcell"
+                role="cell"
+                [attr.data-align]="col.align || 'start'"
+                [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+              >
+                {{ getCellValue(row, col) }}
+              </div>
+            }
+          </div>
+        </cdk-virtual-scroll-viewport>
+      }
+    </div>
+  } @else {
+    <!-- ---- Scroll container + table ---------------------------------------- -->
+    <div class="dm-table__scroll" [class.dm-table__scroll--sticky]="sticky()">
+      <table
+        class="dm-table__table"
+        [attr.aria-label]="ariaLabel() || null"
+        [attr.aria-busy]="loading() ? 'true' : null"
+      >
+        @if (caption()) {
+          <caption class="dm-table__caption">
+            {{
+              caption()
+            }}
+          </caption>
         }
-      </tbody>
-    </table>
-  </div>
+
+        <thead class="dm-table__head">
+          <tr>
+            @if (hasSelection()) {
+              <th scope="col" class="dm-table__th dm-table__th--select">
+                @if (showSelectAll()) {
+                  <dm-checkbox
+                    [checked]="allSelected()"
+                    [indeterminate]="someSelected()"
+                    [ariaLabel]="selectAllLabel()"
+                    (checkedChange)="toggleAll()"
+                  />
+                }
+              </th>
+            }
+            @for (col of visibleColumns(); track col.key) {
+              <th
+                scope="col"
+                class="dm-table__th"
+                [attr.data-align]="col.align || 'start'"
+                [attr.data-sortable]="col.sortable ? '' : null"
+                [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+                [attr.aria-sort]="ariaSortFor(col)"
+                [style.width]="col.width || null"
+              >
+                @if (col.sortable) {
+                  <button
+                    type="button"
+                    class="dm-table__sort-btn"
+                    [attr.data-sort]="sortDataAttr(col)"
+                    (click)="onSort(col)"
+                  >
+                    <span class="dm-table__sort-label">{{ col.header }}</span>
+                    <svg
+                      class="dm-table__sort-icon"
+                      viewBox="0 0 8 12"
+                      width="8"
+                      height="12"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        class="dm-table__sort-arrow dm-table__sort-arrow--up"
+                        d="M4 0 L8 4 L0 4 Z"
+                      />
+                      <path
+                        class="dm-table__sort-arrow dm-table__sort-arrow--down"
+                        d="M4 12 L0 8 L8 8 Z"
+                      />
+                    </svg>
+                  </button>
+                } @else {
+                  <span class="dm-table__label">{{ col.header }}</span>
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+
+        <tbody class="dm-table__body">
+          @if (loading()) {
+            @for (r of skeletonRows(); track r) {
+              <tr class="dm-table__tr dm-table__tr--skeleton">
+                @if (hasSelection()) {
+                  <td class="dm-table__td dm-table__td--select">
+                    <dm-skeleton variant="rounded" rounded="sm" [width]="16" [height]="16" />
+                  </td>
+                }
+                @for (col of visibleColumns(); track col.key) {
+                  <td class="dm-table__td">
+                    <dm-skeleton height="0.75rem" [width]="col.align === 'end' ? '40%' : '70%'" />
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (isEmpty()) {
+            <tr>
+              <td [attr.colspan]="colspan()" class="dm-table__empty-cell">
+                <div class="dm-table__empty">
+                  <svg
+                    class="dm-table__empty-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    @if (isFilteredEmpty()) {
+                      <circle cx="11" cy="11" r="7" />
+                      <path d="m20 20-3-3" />
+                    } @else {
+                      <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
+                    }
+                  </svg>
+                  <p class="dm-table__empty-text">
+                    {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (row of pagedRows(); track trackFn(row, $index); let idx = $index) {
+              <tr
+                class="dm-table__tr"
+                [attr.data-selected]="isSelected(row, idx) ? '' : null"
+                [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
+                (click)="onRowClick(row, idx)"
+              >
+                @if (hasSelection()) {
+                  <td class="dm-table__td dm-table__td--select" (click)="$event.stopPropagation()">
+                    <dm-checkbox
+                      [checked]="isSelected(row, idx)"
+                      [ariaLabel]="selectRowLabel()"
+                      (checkedChange)="toggleRow(row, idx)"
+                    />
+                  </td>
+                }
+                @for (col of visibleColumns(); track col.key) {
+                  <td
+                    class="dm-table__td"
+                    [attr.data-align]="col.align || 'start'"
+                    [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+                  >
+                    {{ getCellValue(row, col) }}
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 
   <!-- ---- Footer / pagination --------------------------------------------- -->
   @if (showPagination()) {

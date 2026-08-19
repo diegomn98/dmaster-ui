@@ -1,0 +1,137 @@
+@if (label()) {
+  <label class="dm-autocomplete__label" [id]="labelId" [attr.for]="inputId">
+    {{ label() }}
+    @if (required()) {
+      <span class="dm-autocomplete__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div
+  #controlEl
+  class="dm-autocomplete__control"
+  [attr.data-color]="color()"
+  [attr.data-variant]="variant()"
+  [attr.data-size]="size()"
+  [attr.data-radius]="radius()"
+  [attr.data-open]="open() ? '' : null"
+  [attr.data-invalid]="error() ? '' : null"
+  [attr.data-disabled]="isDisabled() ? '' : null"
+>
+  <svg
+    class="dm-autocomplete__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+
+  <input
+    #inputEl
+    class="dm-autocomplete__input"
+    type="text"
+    role="combobox"
+    [id]="inputId"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="isDisabled()"
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    [attr.aria-autocomplete]="'list'"
+    [attr.aria-haspopup]="'listbox'"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="listboxId"
+    [attr.aria-activedescendant]="activeOptionId()"
+    [attr.aria-label]="!label() && ariaLabel() ? ariaLabel() : null"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-required]="required() ? 'true' : null"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+  />
+
+  @if (showClearButton()) {
+    <button
+      type="button"
+      class="dm-autocomplete__clear"
+      tabindex="-1"
+      [attr.aria-label]="clearAriaLabel()"
+      (mousedown)="$event.preventDefault()"
+      (click)="onClearClick()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+  }
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="controlEl"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="overlayPositions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayWidth]="controlWidth"
+  (detach)="close()"
+>
+  <ul
+    #listboxEl
+    class="dm-autocomplete__panel dm-autocomplete__listbox"
+    role="listbox"
+    [id]="listboxId"
+    [attr.data-color]="color()"
+    [attr.aria-label]="label() || ariaLabel() || null"
+    (mousedown)="$event.preventDefault()"
+  >
+    @for (option of visibleOptions(); track option.value; let i = $index) {
+      <li
+        class="dm-autocomplete__option"
+        role="option"
+        tabindex="-1"
+        [id]="optionId(i)"
+        [attr.data-active]="i === activeIndex() ? '' : null"
+        [attr.data-disabled]="option.disabled ? '' : null"
+        [attr.aria-selected]="i === activeIndex()"
+        [attr.aria-disabled]="option.disabled ? 'true' : null"
+        (click)="onOptionClick(i, $event)"
+        (keydown)="onKeydown($event)"
+        (mouseenter)="onOptionHover(i)"
+      >
+        <span class="dm-autocomplete__option-text">
+          <span class="dm-autocomplete__option-label">{{ option.label }}</span>
+          @if (option.description) {
+            <span class="dm-autocomplete__option-description">{{ option.description }}</span>
+          }
+        </span>
+      </li>
+    }
+    @if (!hasResults() && noResultsLabel()) {
+      <li class="dm-autocomplete__empty" role="presentation">{{ noResultsLabel() }}</li>
+    }
+  </ul>
+</ng-template>
+
+@if (error()) {
+  <p class="dm-autocomplete__error" [id]="errorId" role="alert">{{ error() }}</p>
+} @else if (description()) {
+  <p class="dm-autocomplete__hint" [id]="hintId">{{ description() }}</p>
+}

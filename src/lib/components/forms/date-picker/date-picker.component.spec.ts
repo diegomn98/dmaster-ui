@@ -315,4 +315,136 @@ describe('DmDatePickerComponent', () => {
     await flush(fixture);
     expect(trigger(fixture).textContent).toContain('17');
   });
+
+  describe('range mode', () => {
+    /** In-month, enabled day buttons in ascending calendar order. */
+    function inMonthDays(): HTMLButtonElement[] {
+      return days().filter((d) => !d.hasAttribute('data-outside') && !d.disabled);
+    }
+
+    function openRange(value: unknown = null): ComponentFixture<DmDatePickerComponent> {
+      const fixture = create();
+      fixture.componentRef.setInput('range', true);
+      fixture.componentRef.setInput('locale', 'en-US');
+      if (value !== null) {
+        fixture.componentRef.setInput('rangeValue', value);
+      }
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it('first click sets start with a null end and keeps the panel open', () => {
+      const fixture = openRange();
+      inMonthDays()[5].click();
+      fixture.detectChanges();
+      const r = fixture.componentInstance.rangeValue();
+      expect(r?.start).toBeInstanceOf(Date);
+      expect(r?.end).toBeNull();
+      expect(panel()).not.toBeNull();
+    });
+
+    it('second click on/after the start completes the range and closes', () => {
+      const fixture = openRange();
+      const cells = inMonthDays();
+      cells[5].click();
+      fixture.detectChanges();
+      inMonthDays()[15].click();
+      fixture.detectChanges();
+      const r = fixture.componentInstance.rangeValue();
+      expect(r?.start).toBeInstanceOf(Date);
+      expect(r?.end).toBeInstanceOf(Date);
+      expect(r!.end!.getTime()).toBeGreaterThan(r!.start!.getTime());
+      expect(panel()).toBeNull();
+    });
+
+    it('a second click before the start restarts the range', () => {
+      const fixture = openRange();
+      inMonthDays()[15].click();
+      fixture.detectChanges();
+      const firstStart = fixture.componentInstance.rangeValue()!.start!;
+      inMonthDays()[5].click();
+      fixture.detectChanges();
+      const r = fixture.componentInstance.rangeValue();
+      expect(r?.end).toBeNull();
+      expect(r!.start!.getTime()).toBeLessThan(firstStart.getTime());
+      expect(panel()).not.toBeNull();
+    });
+
+    it('renders the trigger text as "start – …" then "start – end"', () => {
+      const fixture = openRange();
+      inMonthDays()[5].click();
+      fixture.detectChanges();
+      expect(trigger(fixture).textContent).toContain('–');
+      expect(trigger(fixture).textContent).toContain('…');
+
+      inMonthDays()[15].click();
+      fixture.detectChanges();
+      expect(trigger(fixture).textContent).toContain('–');
+      expect(trigger(fixture).textContent).not.toContain('…');
+    });
+
+    it('marks the days between the endpoints with data-in-range', () => {
+      openRange({
+        start: new Date(2026, 7, 10),
+        end: new Date(2026, 7, 20),
+      });
+      const band = days().filter((d) => d.hasAttribute('data-in-range'));
+      expect(band.length).toBeGreaterThan(0);
+      const start = days().find((d) => d.hasAttribute('data-range-start'));
+      const end = days().find((d) => d.hasAttribute('data-range-end'));
+      expect(start).not.toBeNull();
+      expect(end).not.toBeNull();
+    });
+
+    it('previews a tentative band on hover while picking the end', () => {
+      const fixture = openRange();
+      const cells = inMonthDays();
+      cells[5].click();
+      fixture.detectChanges();
+      inMonthDays()[15].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      fixture.detectChanges();
+      const preview = days().filter((d) => d.hasAttribute('data-in-range-preview'));
+      expect(preview.length).toBeGreaterThan(0);
+    });
+
+    it('clears the range via the clear button', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('range', true);
+      fixture.componentRef.setInput('clearable', true);
+      fixture.componentRef.setInput('rangeValue', {
+        start: new Date(2026, 7, 10),
+        end: new Date(2026, 7, 20),
+      });
+      fixture.detectChanges();
+      const clear = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+        '.dm-date-picker__clear',
+      );
+      expect(clear).not.toBeNull();
+      clear!.click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.rangeValue()).toBeNull();
+    });
+
+    it('accepts a DmDateRange through writeValue and normalises to local midnight', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('range', true);
+      fixture.detectChanges();
+      fixture.componentInstance.writeValue({
+        start: new Date(2026, 7, 10, 9, 30),
+        end: new Date(2026, 7, 20, 18, 0),
+      });
+      const r = fixture.componentInstance.rangeValue();
+      expect(r?.start?.getHours()).toBe(0);
+      expect(r?.end?.getHours()).toBe(0);
+    });
+
+    it('leaves single-mode value untouched while in range mode', () => {
+      const fixture = openRange();
+      inMonthDays()[5].click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBeNull();
+    });
+  });
 });

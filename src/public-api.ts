@@ -26,6 +26,7 @@ export * from './lib/components/feedback/alert';
 export * from './lib/components/feedback/progress';
 
 // Components · forms
+export * from './lib/components/forms/autocomplete';
 export * from './lib/components/forms/checkbox';
 export * from './lib/components/forms/color-picker';
 export * from './lib/components/forms/date-picker';

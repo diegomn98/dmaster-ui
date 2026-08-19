@@ -8,7 +8,7 @@
 [![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**34 components · 3 languages (EN/ES/FR) in the docs · 0 runtime deps beyond Angular CDK · 470+ tests**
+**35 components · 3 languages (EN/ES/FR) in the docs · 0 runtime deps beyond Angular CDK · 500+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 
@@ -23,7 +23,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.6 kB gzip, a card ~1.3 kB, the entire 34-component library ~66 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.6 kB gzip, a card ~1.3 kB, the entire 35-component library ~70 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -92,7 +92,7 @@ export class MyComponent {}
 
 ## Components
 
-34 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+35 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
 
 ### Primitives
 
@@ -133,7 +133,8 @@ export class MyComponent {}
 | [Switch](https://dmasterui.com/components/switch)                     | `dm-switch`                   | ControlValueAccessor, 3 sizes                                                              |
 | [Checkbox](https://dmasterui.com/components/checkbox)                 | `dm-checkbox`                 | ControlValueAccessor, indeterminate state                                                  |
 | [Radio Group](https://dmasterui.com/components/radio-group)           | `dm-radio-group` + `dm-radio` | ControlValueAccessor, horizontal/vertical                                                  |
-| [Select](https://dmasterui.com/components/select)                     | `dm-select`                   | CDK overlay, full keyboard nav, typeahead, CVA                                             |
+| [Select](https://dmasterui.com/components/select)                     | `dm-select`                   | Single or multiple (chips), inline filter, option groups, select-all, keyboard nav, CVA    |
+| [Autocomplete](https://dmasterui.com/components/autocomplete)         | `dm-autocomplete`             | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA       |
 | [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`         | Server-driven async load, infinite pagination                                              |
 | [Search Field](https://dmasterui.com/components/search-field)         | `dm-search-field`             | Leading icon, clear button, Escape clears, Enter submits                                   |
 | [Date Picker](https://dmasterui.com/components/date-picker)           | `dm-date-picker`              | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
@@ -211,7 +212,7 @@ Fully tree-shakeable — your app only pays for the components it imports. Measu
 | `DmButtonComponent`       | ~3.6 kB  |
 | `DmSelectComponent`       | ~5.4 kB  |
 | `DmTableComponent`        | ~10.4 kB |
-| **Entire library** (34)   | ~66 kB   |
+| **Entire library** (35)   | ~70 kB   |
 | Global CSS (tokens+reset) | ~4 kB    |
 
 Reproduce the full per-component table from the repo with `npm run size`.
@@ -238,7 +239,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
 | **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
-| **Component count** | 34                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Component count** | 35                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
 | **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 

@@ -1,4 +1,6 @@
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -8,6 +10,7 @@ import {
   model,
   output,
   untracked,
+  viewChild,
 } from '@angular/core';
 
 import { DmCheckboxComponent } from '../../forms/checkbox';
@@ -49,15 +52,34 @@ import {
  * rows. For server-side data set `[manualProcessing]="true"` and feed already
  * filtered/sorted/paged rows in; the table then only renders and emits events.
  */
+let nextCaptionId = 0;
+
 @Component({
   selector: 'dm-table',
-  imports: [DmCheckboxComponent, DmSkeletonComponent],
+  imports: [DmCheckboxComponent, DmSkeletonComponent, ScrollingModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DmTableComponent<T = unknown> {
   private readonly defaults = inject(TABLE_DEFAULTS);
+
+  /** The CDK viewport instance (present only in virtual-scroll mode). */
+  private readonly viewport = viewChild(CdkVirtualScrollViewport);
+
+  /**
+   * The CDK virtual-scroll viewport schedules its range recomputation +
+   * re-render through `NgZone.onStable`, which NEVER emits in a zoneless app —
+   * so on scroll the rendered range is stuck at its initial window and rows
+   * never advance (they render once and freeze). `checkViewportSize()` is the
+   * one public CDK API that recomputes the rendered range *synchronously*
+   * (it re-measures and re-runs the scroll strategy) instead of deferring to
+   * `onStable`. Routing the viewport's `(scroll)` through it makes virtual
+   * scroll work under zoneless change detection.
+   */
+  protected onViewportScroll(): void {
+    this.viewport()?.checkViewportSize();
+  }
 
   // ---- Data ----------------------------------------------------------------
   /** Column definitions. */
@@ -81,6 +103,28 @@ export class DmTableComponent<T = unknown> {
 
   /** Pin the header to the top of the container while scrolling. */
   readonly sticky = input<boolean>(this.defaults.sticky);
+
+  // ---- Virtual scroll ------------------------------------------------------
+  /**
+   * Render the rows inside a `cdk-virtual-scroll-viewport` so only the visible
+   * window of rows exists in the DOM — the way to render thousands of rows
+   * without bloating it. In this mode the table is drawn as a CSS-grid of
+   * `<div>`s (with full `role="table"` semantics) instead of a native
+   * `<table>`, because the CDK viewport wrapper is not a valid table child.
+   * Requires a fixed `rowHeight`; works best with pagination off (`pageSize=0`)
+   * or a large page size so the viewport holds the full filtered set.
+   */
+  readonly virtualScroll = input(false, { transform: booleanAttribute });
+
+  /**
+   * Fixed row height in px used as the viewport's `itemSize` when
+   * `virtualScroll` is on. The default (`44`) matches the comfortable-density
+   * row height; bump it for `spacious` / lower it for `compact`.
+   */
+  readonly rowHeight = input<number>(44);
+
+  /** CSS height of the scroll viewport when `virtualScroll` is on. */
+  readonly viewportHeight = input<string>('24rem');
 
   /** Accessible caption — rendered as `<caption>`. */
   readonly caption = input<string>('');
@@ -219,6 +263,25 @@ export class DmTableComponent<T = unknown> {
     () => this.visibleColumns().length + (this.hasSelection() ? 1 : 0),
   );
 
+  /**
+   * `grid-template-columns` string shared by the sticky header row and every
+   * virtualized body row (via the `--dm-table-cols` custom property) so their
+   * columns stay aligned. The optional selection column is a `min-content`
+   * track; each data column honors its `width` or falls back to a flexible
+   * `minmax(0, 1fr)` track.
+   */
+  protected readonly gridTemplate = computed(() => {
+    const tracks: string[] = [];
+    if (this.hasSelection()) tracks.push('min-content');
+    for (const col of this.visibleColumns()) {
+      tracks.push(col.width ? col.width : 'minmax(0, 1fr)');
+    }
+    return tracks.join(' ');
+  });
+
+  /** Stable id wiring the virtual-mode caption to the `role="table"` element. */
+  protected readonly captionId = `dm-table-caption-${nextCaptionId++}`;
+
   // ---- Processing pipeline: filter → sort → paginate -----------------------
   /** Filtered + sorted rows across ALL pages (empty in manual mode). */
   protected readonly processedRows = computed<T[]>(() => {
@@ -332,6 +395,9 @@ export class DmTableComponent<T = unknown> {
 
   // ---- Row helpers ---------------------------------------------------------
   protected trackFn = (row: T, index: number): DmTableKey => this.rowKey()(row, index);
+
+  /** `trackBy` for `*cdkVirtualFor` — note the `(index, row)` argument order. */
+  protected vTrackBy = (index: number, row: T): DmTableKey => this.rowKey()(row, index);
 
   protected isSelected(row: T, index: number): boolean {
     return this.selectedSet().has(this.rowKey()(row, index));

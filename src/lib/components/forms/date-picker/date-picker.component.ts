@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -22,6 +23,8 @@ import {
   addYears,
   buildMonthGrid,
   firstDayOfWeekForLocale,
+  isBefore,
+  isBetween,
   isDisabled as isDayDisabled,
   isSameDay,
   isSameMonth,
@@ -35,6 +38,7 @@ import {
   DmDatePickerRadius,
   DmDatePickerVariant,
   DmDateDisabledFn,
+  DmDateRange,
   DmFirstDayOfWeek,
   DmWeekdayFormat,
 } from './date-picker.types';
@@ -99,8 +103,22 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   protected readonly today = startOfDay(new Date());
 
   // ---- Inputs (field family) ----------------------------------------------
-  /** Two-way selected date. */
+  /** Two-way selected date (single mode). */
   readonly value = model<Date | null>(null);
+
+  /**
+   * Switches the calendar to date-range mode. The selection then flows through
+   * the separate {@link rangeValue} model instead of {@link value}, so single
+   * mode stays fully backward-compatible. Mirrors `dm-select`'s `multiple`.
+   */
+  readonly range = input(false, { transform: booleanAttribute });
+
+  /**
+   * Two-way selected range (range mode). `{ start, end: null }` after the first
+   * pick, `{ start, end }` once complete, `null` when empty. Ignored in single
+   * mode.
+   */
+  readonly rangeValue = model<DmDateRange | null>(null);
 
   /** Visible label above the trigger. */
   readonly label = input<string>('');
@@ -199,6 +217,12 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   protected readonly focusedYear = signal<number>(this.today.getFullYear());
   /** Announced to assistive tech on month/view changes. */
   protected readonly liveMessage = signal<string>('');
+  /**
+   * Day currently hovered (or roving-focused) while building a range — drives
+   * the "in-range preview" band between the chosen start and this day. `null`
+   * outside range mode, once the range is complete, or when the pointer leaves.
+   */
+  protected readonly hoverDate = signal<Date | null>(null);
 
   private readonly cvaDisabled = signal(false);
   protected readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
@@ -257,15 +281,40 @@ export class DmDatePickerComponent implements ControlValueAccessor {
 
   // ---- Derived view models -------------------------------------------------
   protected readonly displayText = computed(() => {
+    if (this.range()) {
+      const r = this.rangeValue();
+      const start = r?.start ?? null;
+      const end = r?.end ?? null;
+      if (!start && !end) {
+        return this.placeholder();
+      }
+      const fmt = this.displayFormatter();
+      const startText = start ? fmt.format(start) : '…';
+      const endText = end ? fmt.format(end) : '…';
+      return `${startText} – ${endText}`;
+    }
     const v = this.value();
     return v ? this.displayFormatter().format(v) : this.placeholder();
   });
 
-  protected readonly hasPlaceholder = computed(() => !this.value());
+  protected readonly hasPlaceholder = computed(() => {
+    if (this.range()) {
+      const r = this.rangeValue();
+      return !r || (!r.start && !r.end);
+    }
+    return !this.value();
+  });
 
-  protected readonly showClearButton = computed(
-    () => this.clearable() && this.value() !== null && !this.isDisabled(),
-  );
+  protected readonly showClearButton = computed(() => {
+    if (!this.clearable() || this.isDisabled()) {
+      return false;
+    }
+    if (this.range()) {
+      const r = this.rangeValue();
+      return !!(r && (r.start || r.end));
+    }
+    return this.value() !== null;
+  });
 
   /** Weekday header cells, ordered from the resolved first day of the week. */
   protected readonly weekdays = computed<{ label: string; long: string }[]>(() => {
@@ -374,11 +423,28 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panelEl');
 
   // ---- CVA -----------------------------------------------------------------
-  private onChange: (value: Date | null) => void = () => undefined;
+  private onChange: (value: Date | DmDateRange | null) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
-  writeValue(value: Date | null): void {
-    const normalised = value ? startOfDay(value) : null;
+  writeValue(value: Date | DmDateRange | null): void {
+    if (this.range()) {
+      const raw = this.asRange(value);
+      const normalised: DmDateRange | null = raw
+        ? {
+            start: raw.start ? startOfDay(raw.start) : null,
+            end: raw.end ? startOfDay(raw.end) : null,
+          }
+        : null;
+      this.rangeValue.set(normalised);
+      const anchor = normalised?.start ?? normalised?.end ?? null;
+      if (anchor) {
+        this.viewDate.set(startOfMonth(anchor));
+        this.focusedDate.set(anchor);
+      }
+      return;
+    }
+    const single = value instanceof Date ? value : null;
+    const normalised = single ? startOfDay(single) : null;
     this.value.set(normalised);
     if (normalised) {
       this.viewDate.set(startOfMonth(normalised));
@@ -386,7 +452,15 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     }
   }
 
-  registerOnChange(fn: (value: Date | null) => void): void {
+  /** Narrow a written CVA value to a {@link DmDateRange} (or null) in range mode. */
+  private asRange(value: Date | DmDateRange | null): DmDateRange | null {
+    if (value && typeof value === 'object' && !(value instanceof Date) && 'start' in value) {
+      return value;
+    }
+    return null;
+  }
+
+  registerOnChange(fn: (value: Date | DmDateRange | null) => void): void {
     this.onChange = fn;
   }
 
@@ -435,6 +509,47 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     return isSameDay(date, this.focusedDate());
   }
 
+  // ---- Range day states ----------------------------------------------------
+  protected isRangeStart(date: Date): boolean {
+    return this.range() && isSameDay(date, this.rangeValue()?.start ?? null);
+  }
+
+  protected isRangeEnd(date: Date): boolean {
+    return this.range() && isSameDay(date, this.rangeValue()?.end ?? null);
+  }
+
+  /** A day inside the confirmed band (endpoints and disabled days excluded). */
+  protected isInRange(date: Date): boolean {
+    if (!this.range()) {
+      return false;
+    }
+    const r = this.rangeValue();
+    return isBetween(date, r?.start ?? null, r?.end ?? null) && !this.dayDisabled(date);
+  }
+
+  /** A day inside the tentative hover/roving band while picking the end. */
+  protected isInRangePreview(date: Date): boolean {
+    if (!this.range()) {
+      return false;
+    }
+    const r = this.rangeValue();
+    const hover = this.hoverDate();
+    if (!r?.start || r.end || !hover) {
+      return false;
+    }
+    return isBetween(date, r.start, hover) && !this.dayDisabled(date);
+  }
+
+  /** aria-selected for a gridcell: single value, range endpoints, or the band. */
+  protected isDaySelected(date: Date): boolean {
+    return (
+      this.isSelected(date) ||
+      this.isRangeStart(date) ||
+      this.isRangeEnd(date) ||
+      this.isInRange(date)
+    );
+  }
+
   protected dayAriaLabel(date: Date): string {
     return this.fullDateFormatter().format(date);
   }
@@ -455,7 +570,9 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     if (this.open() || this.isDisabled()) {
       return;
     }
-    const base = this.value() ?? this.today;
+    const base = this.range()
+      ? (this.rangeValue()?.start ?? this.rangeValue()?.end ?? this.today)
+      : (this.value() ?? this.today);
     this.view.set('days');
     this.viewDate.set(startOfMonth(base));
     this.focusedDate.set(base);
@@ -469,6 +586,7 @@ export class DmDatePickerComponent implements ControlValueAccessor {
       return;
     }
     this.open.set(false);
+    this.hoverDate.set(null);
     this.onTouched();
     if (returnFocus) {
       this.triggerRef().nativeElement.focus();
@@ -481,12 +599,73 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     if (this.dayDisabled(normalised)) {
       return;
     }
+    if (this.range()) {
+      this.selectRangeDate(normalised);
+      return;
+    }
     this.value.set(normalised);
     this.onChange(normalised);
     this.viewDate.set(startOfMonth(normalised));
     this.focusedDate.set(normalised);
     if (this.closeOnSelect()) {
       this.close();
+    }
+  }
+
+  /**
+   * Range-mode click logic. First click (or a click after a complete range)
+   * begins a new range; a second click on/after the start completes it (and
+   * closes when `closeOnSelect`); a second click before the start restarts.
+   */
+  private selectRangeDate(date: Date): void {
+    const current = this.rangeValue();
+    const start = current?.start ?? null;
+    const end = current?.end ?? null;
+
+    this.viewDate.set(startOfMonth(date));
+    this.focusedDate.set(date);
+
+    // No start yet, or a finished range → open a fresh one.
+    if (!start || end) {
+      this.setRange({ start: date, end: null });
+      this.hoverDate.set(date);
+      return;
+    }
+
+    // A start is chosen: clicking before it restarts, otherwise completes.
+    if (isBefore(date, start)) {
+      this.setRange({ start: date, end: null });
+      this.hoverDate.set(date);
+      return;
+    }
+
+    this.setRange({ start, end: date });
+    this.hoverDate.set(null);
+    if (this.closeOnSelect()) {
+      this.close();
+    }
+  }
+
+  private setRange(range: DmDateRange): void {
+    this.rangeValue.set(range);
+    this.onChange(range);
+  }
+
+  /** Pointer entered a day cell — extend the hover preview while picking. */
+  protected onDayHover(date: Date): void {
+    if (!this.range()) {
+      return;
+    }
+    const r = this.rangeValue();
+    if (r?.start && !r.end) {
+      this.hoverDate.set(startOfDay(date));
+    }
+  }
+
+  /** Pointer left the grid — drop the hover preview. */
+  protected onGridLeave(): void {
+    if (this.range()) {
+      this.hoverDate.set(null);
     }
   }
 
@@ -500,7 +679,12 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   }
 
   private doClear(): void {
-    this.value.set(null);
+    if (this.range()) {
+      this.rangeValue.set(null);
+      this.hoverDate.set(null);
+    } else {
+      this.value.set(null);
+    }
     this.onChange(null);
     this.onTouched();
   }
@@ -666,6 +850,13 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     if (!isSameMonth(normalised, this.viewDate())) {
       this.viewDate.set(startOfMonth(normalised));
       this.announceMonth();
+    }
+    // Let the roving focus drive the range preview too (keyboard parity).
+    if (this.range()) {
+      const r = this.rangeValue();
+      if (r?.start && !r.end) {
+        this.hoverDate.set(normalised);
+      }
     }
   }
 

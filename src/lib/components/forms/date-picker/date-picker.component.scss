@@ -405,6 +405,12 @@
 }
 
 .dm-date-picker__day {
+  // `isolation` gives each day its own stacking context so the range band
+  // (::before, z-index -1) sits above the panel surface but under the digits,
+  // and can spill past the cell to bridge the grid gap without escaping behind
+  // the panel background.
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -419,7 +425,7 @@
 
   @include mixins.transition(background-color, color, box-shadow, transform);
 
-  &:hover:not(:disabled, [data-selected]) {
+  &:hover:not(:disabled, [data-selected], [data-range-start], [data-range-end]) {
     background-color: color-mix(in srgb, var(--dm-fg) 9%, transparent);
   }
 
@@ -440,19 +446,36 @@
     opacity: 0.5;
   }
 
-  // Today (when not selected): a clean ring in the picker's color.
-  &[data-today]:not([data-selected]) {
+  // Today (when not selected as a single value or a range endpoint): a clean
+  // ring in the picker's color.
+  &[data-today]:not([data-selected], [data-range-start], [data-range-end]) {
     box-shadow: inset 0 0 0 1.5px var(--dm-dp);
     color: var(--dm-dp);
     font-weight: var(--dm-font-semibold);
   }
 
-  // Selected: a solid disc with a soft coloured lift.
-  &[data-selected] {
+  // Selected single value / range endpoints: a solid disc with a coloured lift.
+  &[data-selected],
+  &[data-range-start],
+  &[data-range-end] {
     background-color: var(--dm-dp);
     color: var(--dm-dp-fg);
     font-weight: var(--dm-font-semibold);
     box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--dm-dp) 45%, transparent);
+  }
+
+  // In-range band (confirmed or hover/roving preview): a subtle tint of the
+  // picker color, mixed with the panel surface — never a hardcoded colour. The
+  // band is drawn behind the digits and spills 0.1875rem each side to close the
+  // 0.125rem grid gap, so consecutive days read as one continuous strip.
+  &[data-in-range]::before,
+  &[data-in-range-preview]::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.1875rem;
+    inset-inline: -0.1875rem;
+    z-index: -1;
+    background-color: color-mix(in srgb, var(--dm-dp) 16%, var(--dm-bg-elevated));
   }
 
   &:disabled {

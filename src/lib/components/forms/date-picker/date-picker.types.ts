@@ -29,3 +29,15 @@ export type DmFirstDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 'auto';
  * of holidays. Receives a local-midnight `Date`. Return `true` to disable.
  */
 export type DmDateDisabledFn = (date: Date) => boolean;
+
+/**
+ * A selected date range for the picker's `range` mode. Both ends are native
+ * `Date` (local midnight) or `null` while the range is being built:
+ * `{ start, end: null }` after the first click, `{ start, end }` once complete.
+ */
+export interface DmDateRange {
+  /** Inclusive first day of the range, or `null` when nothing is picked yet. */
+  start: Date | null;
+  /** Inclusive last day of the range, or `null` while only a start is chosen. */
+  end: Date | null;
+}

@@ -340,6 +340,88 @@ describe('DmTableComponent', () => {
     expect(el('.dm-table__scroll').classList.contains('dm-table__scroll--sticky')).toBe(true);
   });
 
+  // ---- Virtual scroll ------------------------------------------------------
+
+  const bigData = (n: number): Row[] =>
+    Array.from({ length: n }, (_v, i) => ({
+      id: i + 1,
+      name: `Person ${String(i + 1).padStart(4, '0')}`,
+      role: i % 2 === 0 ? 'Engineer' : 'Designer',
+    }));
+
+  const vHeadCells = (): HTMLElement[] =>
+    all('.dm-table__vcell--head:not(.dm-table__vcell--select)');
+  const vBodyRows = (): HTMLElement[] => all('.dm-table__viewport .dm-table__vrow');
+
+  it('renders a role="table" div-grid (no native <table>) in virtual mode', async () => {
+    create({ virtualScroll: true, data: bigData(500), pageSize: 0 });
+    await fixture.whenStable();
+
+    expect(el('.dm-table__grid')?.getAttribute('role')).toBe('table');
+    // The native <table> path must NOT be rendered.
+    expect(fixture.nativeElement.querySelector('.dm-table__table')).toBeNull();
+    // One columnheader per data column, with proper ARIA.
+    expect(vHeadCells().length).toBe(COLUMNS.length);
+    for (const cell of all('.dm-table__vcell--head')) {
+      expect(cell.getAttribute('role')).toBe('columnheader');
+    }
+    // Grid template is shared via the --dm-table-cols custom property.
+    const cols = el('.dm-table__grid').style.getPropertyValue('--dm-table-cols');
+    expect(cols.length).toBeGreaterThan(0);
+  });
+
+  it('virtualizes: renders far fewer DOM rows than the dataset length', async () => {
+    create({ virtualScroll: true, data: bigData(1000), pageSize: 0, rowHeight: 44 });
+    await fixture.whenStable();
+
+    const rendered = vBodyRows().length;
+    // The whole point: only a small window is in the DOM, never all 1000.
+    expect(rendered).toBeLessThan(100);
+    expect(rendered).toBeLessThan(fixture.componentInstance.data().length);
+  });
+
+  it('sorts from the sticky header in virtual mode', async () => {
+    create({ virtualScroll: true, data: bigData(300), pageSize: 0 });
+    await fixture.whenStable();
+    const emissions: (DmTableSortState | null)[] = [];
+    fixture.componentInstance.sortChange.subscribe((s) => emissions.push(s));
+
+    // The "name" column header (2nd) is sortable and always in the DOM.
+    const sortBtn = vHeadCells()[1].querySelector('.dm-table__sort-btn') as HTMLButtonElement;
+    sortBtn.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.componentInstance.sortState()).toEqual({ column: 'name', direction: 'asc' });
+    expect(emissions.at(-1)).toEqual({ column: 'name', direction: 'asc' });
+    // First rendered row (scroll top) is the smallest after an ascending sort.
+    const first = vBodyRows()[0];
+    if (first) {
+      const cells = first.querySelectorAll('.dm-table__vcell:not(.dm-table__vcell--select)');
+      expect(cells[1]?.textContent?.trim()).toBe('Person 0001');
+    }
+  });
+
+  it('select-all in virtual mode selects every filtered row, not just rendered ones', async () => {
+    create({ virtualScroll: true, selectionMode: 'multiple', data: bigData(800), pageSize: 0 });
+    await fixture.whenStable();
+
+    const selectAll = el('.dm-table__vcell--select input[type="checkbox"]') as HTMLInputElement;
+    selectAll.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // All 800 keys selected even though only a handful of rows are in the DOM.
+    expect(fixture.componentInstance.selectedKeys().length).toBe(800);
+    expect(vBodyRows().length).toBeLessThan(fixture.componentInstance.data().length);
+  });
+
+  it('keeps the native <table> path when virtualScroll is off (default)', () => {
+    create({ data: bigData(50) });
+    expect(el('.dm-table__table')?.tagName).toBe('TABLE');
+    expect(fixture.nativeElement.querySelector('.dm-table__grid')).toBeNull();
+  });
+
   it('honors defaults injected via TABLE_DEFAULTS', () => {
     TestBed.overrideProvider(TABLE_DEFAULTS, {
       useValue: {

@@ -1,11 +1,15 @@
 # DmDatePicker
 
-Single-date calendar picker with a color × variant API. Reads as a
-sibling of the rest of the field family (`dmInput`, `dm-select`,
+Single-date **or date-range** calendar picker with a color × variant API. Reads
+as a sibling of the rest of the field family (`dmInput`, `dm-select`,
 `dm-search-field`) and is fully keyboard- and screen-reader-driven.
 
 ```html
+<!-- Single date -->
 <dm-date-picker label="Start date" [(value)]="start" [min]="today" />
+
+<!-- Date range (opt-in; single mode is unchanged) -->
+<dm-date-picker range label="Stay" [(rangeValue)]="stay" />
 ```
 
 ## Highlights
@@ -30,19 +34,56 @@ sibling of the rest of the field family (`dmInput`, `dm-select`,
 stripped) so it round-trips cleanly through reactive forms. Wired as a
 `ControlValueAccessor`, so `[(ngModel)]` and `[formControl]` both work.
 
+## Range mode
+
+Add the `range` attribute to switch the picker into date-range selection. The
+selection then flows through a **separate** two-way model, `rangeValue`, so
+single mode stays 100% backward-compatible (same pattern as `dm-select`'s
+`multiple` + `values`).
+
+```html
+<dm-date-picker range [(rangeValue)]="stay" />
+```
+
+`rangeValue` is a `DmDateRange | null`:
+
+```ts
+interface DmDateRange {
+  start: Date | null; // inclusive first day (local midnight)
+  end: Date | null; // inclusive last day, null while only a start is chosen
+}
+```
+
+Interaction, on a single-month calendar (navigate months between the two clicks):
+
+- **First click** sets `{ start, end: null }` and keeps the panel open.
+- **Second click on/after the start** completes `{ start, end }` and closes
+  (honouring `closeOnSelect`). A click **before** the start restarts the range.
+- **Hovering** (or roving keyboard focus, via Enter/Space + arrows) **previews**
+  the tentative band between the chosen start and the hovered day.
+- `min` / `max` / `isDateDisabled` apply in both modes; disabled days can't be
+  endpoints and are excluded from the band.
+- The trigger shows `"{start} – {end}"` (or `"{start} – …"` while picking),
+  formatted with the same `displayFormat` / locale as single mode.
+
+Day cells expose these state attributes for styling: `data-range-start`,
+`data-range-end`, `data-in-range`, and `data-in-range-preview`.
+
 ## Inputs (selection)
 
-| Input             | Type                         | Default   | Notes                                         |
-| ----------------- | ---------------------------- | --------- | --------------------------------------------- |
-| `value`           | `Date \| null` (model)       | `null`    | Two-way selected date.                        |
-| `min` / `max`     | `Date \| null`               | `null`    | Inclusive selectable bounds.                  |
-| `isDateDisabled`  | `(date: Date) => boolean`    | `null`    | Disable arbitrary days.                       |
-| `firstDayOfWeek`  | `0…6 \| 'auto'`              | `'auto'`  | Leftmost column; `'auto'` follows the locale. |
-| `locale`          | `string`                     | runtime   | BCP-47 locale for all names/formatting.       |
-| `displayFormat`   | `Intl.DateTimeFormatOptions` | `{y,m,d}` | How the trigger renders the selected date.    |
-| `weekdayFormat`   | `'narrow' \| 'short'`        | `'short'` | Weekday header length.                        |
-| `showTodayButton` | `boolean`                    | `true`    | "Today" quick-jump in the footer.             |
-| `closeOnSelect`   | `boolean`                    | `true`    | Close the panel right after picking a day.    |
+| Input             | Type                          | Default   | Notes                                               |
+| ----------------- | ----------------------------- | --------- | --------------------------------------------------- |
+| `value`           | `Date \| null` (model)        | `null`    | Two-way selected date (single mode).                |
+| `range`           | `boolean` (attribute)         | `false`   | Switch to date-range mode.                          |
+| `rangeValue`      | `DmDateRange \| null` (model) | `null`    | Two-way selected range (range mode).                |
+| `min` / `max`     | `Date \| null`                | `null`    | Inclusive selectable bounds (both modes).           |
+| `isDateDisabled`  | `(date: Date) => boolean`     | `null`    | Disable arbitrary days (both modes).                |
+| `firstDayOfWeek`  | `0…6 \| 'auto'`               | `'auto'`  | Leftmost column; `'auto'` follows the locale.       |
+| `locale`          | `string`                      | runtime   | BCP-47 locale for all names/formatting.             |
+| `displayFormat`   | `Intl.DateTimeFormatOptions`  | `{y,m,d}` | How the trigger renders each date.                  |
+| `weekdayFormat`   | `'narrow' \| 'short'`         | `'short'` | Weekday header length.                              |
+| `showTodayButton` | `boolean`                     | `true`    | "Today" quick-jump in the footer.                   |
+| `closeOnSelect`   | `boolean`                     | `true`    | Close after picking (a day, or completing a range). |
 
 ## Inputs (field family)
 

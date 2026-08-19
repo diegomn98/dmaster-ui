@@ -84,6 +84,25 @@ export function isAfter(a: Date, b: Date): boolean {
   return startOfDay(a).getTime() > startOfDay(b).getTime();
 }
 
+/**
+ * Whether `date` falls **strictly between** `start` and `end` at day
+ * granularity — endpoints excluded. Order-agnostic (a `start` later than `end`
+ * is treated as the same span), so it also serves the range hover preview when
+ * the pointer is before the chosen start. Returns `false` if either bound is
+ * null.
+ */
+export function isBetween(date: Date, start: Date | null, end: Date | null): boolean {
+  if (!start || !end) {
+    return false;
+  }
+  const t = startOfDay(date).getTime();
+  const a = startOfDay(start).getTime();
+  const b = startOfDay(end).getTime();
+  const lo = Math.min(a, b);
+  const hi = Math.max(a, b);
+  return t > lo && t < hi;
+}
+
 /** `date` confined to the `[min, max]` window (either bound may be null). */
 export function clampDate(date: Date, min: Date | null, max: Date | null): Date {
   if (min && isBefore(date, min)) {

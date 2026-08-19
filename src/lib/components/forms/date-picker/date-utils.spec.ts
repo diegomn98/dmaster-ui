@@ -9,6 +9,7 @@ import {
   firstDayOfWeekForLocale,
   isAfter,
   isBefore,
+  isBetween,
   isDisabled,
   isSameDay,
   isSameMonth,
@@ -111,6 +112,41 @@ describe('date-utils', () => {
       expect(isAfter(evening, morning)).toBe(false);
       expect(isBefore(new Date(2026, 7, 16), REF)).toBe(true);
       expect(isAfter(new Date(2026, 7, 18), REF)).toBe(true);
+    });
+  });
+
+  describe('isBetween', () => {
+    const start = new Date(2026, 7, 10);
+    const end = new Date(2026, 7, 20);
+
+    it('is true strictly between the two bounds', () => {
+      expect(isBetween(new Date(2026, 7, 15), start, end)).toBe(true);
+      expect(isBetween(new Date(2026, 7, 11), start, end)).toBe(true);
+      expect(isBetween(new Date(2026, 7, 19), start, end)).toBe(true);
+    });
+
+    it('excludes the endpoints', () => {
+      expect(isBetween(start, start, end)).toBe(false);
+      expect(isBetween(end, start, end)).toBe(false);
+    });
+
+    it('is false outside the span', () => {
+      expect(isBetween(new Date(2026, 7, 9), start, end)).toBe(false);
+      expect(isBetween(new Date(2026, 7, 21), start, end)).toBe(false);
+    });
+
+    it('ignores the time component', () => {
+      expect(isBetween(new Date(2026, 7, 15, 23, 59), start, end)).toBe(true);
+    });
+
+    it('is order-agnostic (reversed bounds describe the same span)', () => {
+      expect(isBetween(new Date(2026, 7, 15), end, start)).toBe(true);
+    });
+
+    it('is false when either bound is null', () => {
+      expect(isBetween(new Date(2026, 7, 15), null, end)).toBe(false);
+      expect(isBetween(new Date(2026, 7, 15), start, null)).toBe(false);
+      expect(isBetween(new Date(2026, 7, 15), null, null)).toBe(false);
     });
   });
 

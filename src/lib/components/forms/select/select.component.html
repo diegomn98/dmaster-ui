@@ -1,24 +1,29 @@
 @if (label()) {
-  <label class="dm-select__label" [id]="labelId" [attr.for]="triggerId">
+  <!-- A <span>, not <label>: the trigger is a `div[role=combobox]` (not a
+       natively labelable control), so the accessible name comes from the
+       trigger's aria-labelledby pointing here. -->
+  <span class="dm-select__label" [id]="labelId">
     {{ label() }}
     @if (required()) {
       <span class="dm-select__required" aria-hidden="true">*</span>
     }
-  </label>
+  </span>
 }
 
-<button
+<div
   #triggerEl
-  type="button"
   class="dm-select__trigger"
   role="combobox"
   [id]="triggerId"
+  [attr.tabindex]="isDisabled() ? -1 : 0"
   [attr.data-color]="color()"
   [attr.data-variant]="variant()"
   [attr.data-size]="size()"
   [attr.data-radius]="radius()"
   [attr.data-open]="open() ? '' : null"
+  [attr.data-multiple]="multiple() ? '' : null"
   [attr.data-invalid]="error() ? '' : null"
+  [attr.data-disabled]="isDisabled() ? '' : null"
   [attr.aria-haspopup]="'listbox'"
   [attr.aria-expanded]="open()"
   [attr.aria-controls]="listboxId"
@@ -28,19 +33,49 @@
   [attr.aria-describedby]="describedBy()"
   [attr.aria-invalid]="error() ? 'true' : null"
   [attr.aria-required]="required() ? 'true' : null"
-  [disabled]="isDisabled()"
+  [attr.aria-disabled]="isDisabled() ? 'true' : null"
   (click)="toggle()"
   (keydown)="onKeydown($event)"
   (blur)="onTriggerBlur()"
 >
-  <span class="dm-select__value" [class.dm-select__value--placeholder]="hasPlaceholder()">
-    {{ displayText() }}
-  </span>
+  @if (multiple() && selectedChips().length) {
+    <span class="dm-select__chips">
+      @for (chip of selectedChips(); track chip.value) {
+        <dm-badge class="dm-select__chip" color="default" variant="flat" size="sm">
+          {{ chip.label }}
+          <button
+            type="button"
+            class="dm-select__chip-remove"
+            [attr.aria-label]="removeAriaLabel() + ' ' + chip.label"
+            [disabled]="isDisabled()"
+            (click)="removeValue(chip.value, $event)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </dm-badge>
+      }
+    </span>
+  } @else {
+    <span class="dm-select__value" [class.dm-select__value--placeholder]="hasPlaceholder()">
+      {{ displayText() }}
+    </span>
+  }
+
   @if (showClearButton()) {
-    <span
+    <button
+      type="button"
       class="dm-select__clear"
-      aria-hidden="true"
-      [attr.title]="clearAriaLabel()"
+      [attr.aria-label]="clearAriaLabel()"
       (click)="onClearClick($event)"
     >
       <svg
@@ -54,7 +89,7 @@
       >
         <path d="M18 6 6 18M6 6l12 12" />
       </svg>
-    </span>
+    </button>
   }
   <svg
     class="dm-select__chevron"
@@ -68,7 +103,7 @@
   >
     <path d="m6 9 6 6 6-6" />
   </svg>
-</button>
+</div>
 
 <ng-template
   cdkConnectedOverlay
@@ -82,53 +117,114 @@
   (backdropClick)="close(false)"
   (detach)="close(false)"
 >
-  <ul
-    #listboxEl
-    class="dm-select__panel"
-    role="listbox"
-    [id]="listboxId"
-    [attr.data-color]="color()"
-    [attr.aria-labelledby]="label() ? labelId : null"
-    (mousedown)="$event.preventDefault()"
-  >
-    @for (item of items(); track item.value; let i = $index) {
-      <li
-        class="dm-select__option"
-        role="option"
-        tabindex="-1"
-        [id]="uid + '-option-' + i"
-        [attr.data-active]="i === activeIndex() ? '' : null"
-        [attr.data-selected]="item.value === value() ? '' : null"
-        [attr.data-disabled]="item.disabled ? '' : null"
-        [attr.aria-selected]="item.value === value()"
-        [attr.aria-disabled]="item.disabled ? 'true' : null"
-        (click)="onOptionClick(i, $event)"
-        (keydown)="onKeydown($event)"
-        (mouseenter)="onOptionHover(i)"
-      >
-        <span class="dm-select__option-text">
-          <span class="dm-select__option-label">{{ item.label }}</span>
-          @if (item.description) {
-            <span class="dm-select__option-description">{{ item.description }}</span>
-          }
-        </span>
-        @if (item.value === value()) {
-          <svg
-            class="dm-select__option-check"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-        }
-      </li>
+  <div class="dm-select__panel" [attr.data-color]="color()" (mousedown)="$event.preventDefault()">
+    @if (filterable()) {
+      <div class="dm-select__filter">
+        <svg
+          class="dm-select__filter-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          #filterEl
+          type="text"
+          class="dm-select__filter-input"
+          autocomplete="off"
+          role="searchbox"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeOptionId()"
+          [attr.aria-label]="filterPlaceholder() || label() || ariaLabel()"
+          [placeholder]="filterPlaceholder()"
+          [value]="filterText()"
+          (input)="onFilterInput($event)"
+          (keydown)="onKeydown($event)"
+        />
+      </div>
     }
-  </ul>
+
+    @if (showSelectAll() && hasResults()) {
+      <div class="dm-select__actions">
+        @if (selectAllLabel()) {
+          <button type="button" class="dm-select__action" (click)="onSelectAll()">
+            {{ selectAllLabel() }}
+          </button>
+        }
+        @if (clearAllLabel()) {
+          <button
+            type="button"
+            class="dm-select__action"
+            [disabled]="!values().length"
+            (click)="onClearAll()"
+          >
+            {{ clearAllLabel() }}
+          </button>
+        }
+      </div>
+    }
+
+    <ul
+      #listboxEl
+      class="dm-select__listbox"
+      role="listbox"
+      [id]="listboxId"
+      [attr.aria-multiselectable]="multiple() ? 'true' : null"
+      [attr.aria-labelledby]="label() ? labelId : null"
+    >
+      @for (row of visibleRows(); track row.key) {
+        @if (row.kind === 'group') {
+          <li class="dm-select__group" role="presentation">{{ row.label }}</li>
+        } @else {
+          <li
+            class="dm-select__option"
+            role="option"
+            tabindex="-1"
+            [id]="optionId(row.index)"
+            [attr.data-active]="row.index === activeIndex() ? '' : null"
+            [attr.data-selected]="isSelectedValue(row.option.item.value) ? '' : null"
+            [attr.data-disabled]="row.option.disabled ? '' : null"
+            [attr.data-grouped]="row.option.groupLabel !== undefined ? '' : null"
+            [attr.aria-selected]="isSelectedValue(row.option.item.value)"
+            [attr.aria-disabled]="row.option.disabled ? 'true' : null"
+            (click)="onOptionClick(row.index, $event)"
+            (keydown)="onKeydown($event)"
+            (mouseenter)="onOptionHover(row.index)"
+          >
+            <span class="dm-select__option-text">
+              <span class="dm-select__option-label">{{ row.option.item.label }}</span>
+              @if (row.option.item.description) {
+                <span class="dm-select__option-description">{{ row.option.item.description }}</span>
+              }
+            </span>
+            @if (isSelectedValue(row.option.item.value)) {
+              <svg
+                class="dm-select__option-check"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            }
+          </li>
+        }
+      }
+      @if (!hasResults() && noResultsLabel()) {
+        <li class="dm-select__empty" role="presentation">{{ noResultsLabel() }}</li>
+      }
+    </ul>
+  </div>
 </ng-template>
 
 @if (error()) {

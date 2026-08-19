@@ -91,7 +91,7 @@
 
   @include mixins.transition(background-color, border-color, box-shadow, color);
 
-  &:hover:not(:disabled) {
+  &:not([data-disabled]):hover {
     background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
   }
 
@@ -103,7 +103,7 @@
     box-shadow: 0 0 0 3.5px var(--dm-sel-subtle);
   }
 
-  &:disabled {
+  &[data-disabled] {
     opacity: 0.6;
     cursor: not-allowed;
   }
@@ -155,7 +155,7 @@
     background-color: transparent;
     border-color: var(--dm-border-strong);
 
-    &:hover:not(:disabled) {
+    &:not([data-disabled]):hover {
       background-color: transparent;
       border-color: var(--dm-fg-subtle);
     }
@@ -185,7 +185,7 @@
     padding-inline: 0;
     box-shadow: inset 0 -1px 0 var(--dm-border-strong);
 
-    &:hover:not(:disabled) {
+    &:not([data-disabled]):hover {
       background-color: transparent;
       box-shadow: inset 0 -1px 0 var(--dm-fg-subtle);
     }
@@ -211,6 +211,77 @@
   // Rotate the chevron while the panel is open (visual affordance).
   &[data-open] .dm-select__chevron {
     transform: rotate(180deg);
+  }
+
+  // ---- Multiple: grow with chips ----------------------------------------
+  // The single-value height is a hard rule for the field family, but a
+  // chips trigger must grow. Keep the size scale as a MIN height so an
+  // empty/one-chip trigger still reads as a sibling of the other fields.
+  &[data-multiple] {
+    height: auto;
+    flex-wrap: wrap;
+    padding-block: 0.25rem;
+
+    &[data-size='sm'] {
+      min-height: 2rem;
+    }
+
+    &[data-size='md'] {
+      min-height: 2.5rem;
+    }
+
+    &[data-size='lg'] {
+      min-height: 3rem;
+    }
+  }
+}
+
+.dm-select__chips {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.dm-select__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  max-width: 100%;
+}
+
+.dm-select__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.9375rem;
+  height: 0.9375rem;
+  margin-inline-start: 0.0625rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+
+  @include mixins.transition(background-color, opacity);
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, currentcolor 20%, transparent);
+    opacity: 1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  svg {
+    width: 0.625rem;
+    height: 0.625rem;
   }
 }
 
@@ -242,7 +313,10 @@
   justify-content: center;
   width: 1.125rem;
   height: 1.125rem;
+  padding: 0;
+  border: none;
   border-radius: var(--dm-radius-full);
+  background: transparent;
   color: var(--dm-fg-muted);
   cursor: pointer;
 

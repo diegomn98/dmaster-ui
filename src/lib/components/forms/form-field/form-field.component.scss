@@ -27,7 +27,10 @@
   transform: translateY(-0.1em);
 }
 
+// `position: relative` gives a projected trailing control (e.g. a
+// show/hide-password toggle) a positioning context via `position: absolute`.
 .dm-form-field__control {
+  position: relative;
   display: grid;
 }
 
