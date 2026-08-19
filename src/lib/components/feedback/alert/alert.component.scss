@@ -38,7 +38,7 @@
   --dm-alert-fg: var(--dm-primary-fg);
   --dm-alert-soft: var(--dm-primary-subtle);
   --dm-alert-line: var(--dm-primary);
-  --dm-alert-accent: color-mix(in srgb, var(--dm-primary) 60%, var(--dm-fg));
+  --dm-alert-accent: var(--dm-primary-text);
   --dm-alert-icon-bg: color-mix(in srgb, var(--dm-primary) 18%, transparent);
 }
 
@@ -47,7 +47,7 @@
   --dm-alert-fg: var(--dm-secondary-fg);
   --dm-alert-soft: var(--dm-secondary-subtle);
   --dm-alert-line: var(--dm-secondary);
-  --dm-alert-accent: color-mix(in srgb, var(--dm-secondary) 60%, var(--dm-fg));
+  --dm-alert-accent: var(--dm-secondary-text);
   --dm-alert-icon-bg: color-mix(in srgb, var(--dm-secondary) 18%, transparent);
 }
 
@@ -56,7 +56,7 @@
   --dm-alert-fg: var(--dm-success-fg);
   --dm-alert-soft: var(--dm-success-subtle);
   --dm-alert-line: var(--dm-success);
-  --dm-alert-accent: color-mix(in srgb, var(--dm-success) 60%, var(--dm-fg));
+  --dm-alert-accent: var(--dm-success-text);
   --dm-alert-icon-bg: color-mix(in srgb, var(--dm-success) 18%, transparent);
 }
 
@@ -65,7 +65,7 @@
   --dm-alert-fg: var(--dm-warning-fg);
   --dm-alert-soft: var(--dm-warning-subtle);
   --dm-alert-line: var(--dm-warning);
-  --dm-alert-accent: color-mix(in srgb, var(--dm-warning) 60%, var(--dm-fg));
+  --dm-alert-accent: var(--dm-warning-text);
   --dm-alert-icon-bg: color-mix(in srgb, var(--dm-warning) 18%, transparent);
 }
 
@@ -74,7 +74,7 @@
   --dm-alert-fg: var(--dm-danger-fg);
   --dm-alert-soft: var(--dm-danger-subtle);
   --dm-alert-line: var(--dm-danger);
-  --dm-alert-accent: color-mix(in srgb, var(--dm-danger) 60%, var(--dm-fg));
+  --dm-alert-accent: var(--dm-danger-text);
   --dm-alert-icon-bg: color-mix(in srgb, var(--dm-danger) 18%, transparent);
 }
 
@@ -147,7 +147,7 @@
 
 .dm-alert__description {
   margin: 0;
-  color: color-mix(in srgb, currentcolor 85%, transparent);
+  color: currentcolor;
 }
 
 // ---- Action slot -----------------------------------------------------------

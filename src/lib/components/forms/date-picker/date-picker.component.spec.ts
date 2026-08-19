@@ -233,9 +233,12 @@ describe('DmDatePickerComponent', () => {
     fixture.detectChanges();
     const btn = trigger(fixture);
     expect(btn.getAttribute('aria-haspopup')).toBe('dialog');
-    expect(btn.getAttribute('aria-required')).toBe('true');
-    expect(btn.getAttribute('aria-invalid')).toBe('true');
     expect(btn.getAttribute('aria-expanded')).toBe('false');
+    // A native <button> doesn't support aria-required / aria-invalid
+    // (aria-allowed-attr); the error text conveys invalidity via describedby.
+    expect(btn.getAttribute('aria-required')).toBeNull();
+    expect(btn.getAttribute('aria-invalid')).toBeNull();
+    expect(btn.getAttribute('aria-describedby')).toBeTruthy();
   });
 
   it('marks today with aria-current and selected day with aria-selected', () => {

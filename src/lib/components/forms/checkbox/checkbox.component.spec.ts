@@ -44,17 +44,21 @@ describe('DmCheckboxComponent', () => {
     expect(fixture.nativeElement.querySelector('.dm-checkbox--checked')).toBeTruthy();
   });
 
-  it('shows the indeterminate state with aria-checked=mixed while unchecked', () => {
+  it('shows the indeterminate state via the native property while unchecked', () => {
     const fixture = TestBed.createComponent(DmCheckboxComponent);
     fixture.componentRef.setInput('indeterminate', true);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.dm-checkbox--indeterminate')).toBeTruthy();
-    expect(nativeInput(fixture).getAttribute('aria-checked')).toBe('mixed');
+    // Native `indeterminate` property drives the "mixed" announcement — no
+    // aria-checked on a native checkbox (that would trip aria-conditional-attr).
+    expect(nativeInput(fixture).indeterminate).toBe(true);
+    expect(nativeInput(fixture).getAttribute('aria-checked')).toBeNull();
 
     fixture.componentRef.setInput('checked', true);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.dm-checkbox--indeterminate')).toBeNull();
+    expect(nativeInput(fixture).indeterminate).toBe(false);
     expect(nativeInput(fixture).getAttribute('aria-checked')).toBeNull();
   });
 

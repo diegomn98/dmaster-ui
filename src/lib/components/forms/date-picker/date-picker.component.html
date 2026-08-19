@@ -24,8 +24,6 @@
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="!label() && ariaLabel() ? ariaLabel() : null"
   [attr.aria-describedby]="describedBy()"
-  [attr.aria-invalid]="error() ? 'true' : null"
-  [attr.aria-required]="required() ? 'true' : null"
   [disabled]="isDisabled()"
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"

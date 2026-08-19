@@ -9,7 +9,7 @@
   // Relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
   // gradientes ni halos.
   background: var(--dm-primary-subtle);
-  color: var(--dm-primary);
+  color: var(--dm-primary-text);
 
   // Borde limpio de 1px + sombra de contacto muy sutil que lo asienta.
   border: 1px solid var(--dm-border);
@@ -37,7 +37,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--dm-primary);
+  color: var(--dm-primary-text);
 }
 
 // Icono genérico silencioso, en el gris sutil del tema.

@@ -1,5 +1,5 @@
 @for (key of keyList(); track $index) {
-  <kbd class="dm-kbd__key dm-kbd__key--symbol" [attr.aria-label]="key.label">
+  <kbd class="dm-kbd__key dm-kbd__key--symbol" role="img" [attr.aria-label]="key.label">
     <span aria-hidden="true">{{ key.symbol }}</span>
   </kbd>
 }

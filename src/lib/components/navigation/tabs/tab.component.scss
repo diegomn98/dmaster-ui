@@ -70,7 +70,7 @@
 
 :host-context([role='tablist'][data-variant='light']) {
   &[data-selected='true'] {
-    color: var(--dm-tab-line, var(--dm-fg));
+    color: var(--dm-tab-text, var(--dm-fg));
   }
 }
 
@@ -78,7 +78,7 @@
   border-radius: 0;
 
   &[data-selected='true'] {
-    color: var(--dm-tab-line, var(--dm-fg));
+    color: var(--dm-tab-text, var(--dm-fg));
   }
 }
 

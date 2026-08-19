@@ -18,7 +18,11 @@
   // Text
   --dm-fg: #18181b;
   --dm-fg-muted: #52525b;
-  --dm-fg-subtle: #a1a1aa;
+
+  // #a1a1aa gave 2.56:1 on --dm-bg (#fff) — below AA for text. Raised to
+  // #6b6b73 (~4.8:1 on #fff, ~4.6:1 on the muted field surface) so subtle
+  // labels and field placeholders stay legible, mirroring the dark theme.
+  --dm-fg-subtle: #6b6b73;
 
   // Borders (low-opacity 1px borders are part of the look)
   --dm-border: rgb(24 24 27 / 8%);
@@ -51,10 +55,23 @@
   --dm-warning-hover: #d98e13;
   --dm-warning-fg: #3a2803;
   --dm-warning-subtle: rgb(245 165 36 / 15%);
-  --dm-danger: #f31260;
-  --dm-danger-hover: #d10e51;
+
+  // Nudged from #f31260 (white text = 4.14:1, below AA) to #e5145c (4.58:1)
+  // so solid danger buttons/badges have a legible label. Barely perceptible.
+  --dm-danger: #e5145c;
+  --dm-danger-hover: #c00c49;
   --dm-danger-fg: #fff;
-  --dm-danger-subtle: rgb(243 18 96 / 12%);
+  --dm-danger-subtle: rgb(229 20 92 / 12%);
+
+  // Accessible text shade for TINTED variants (flat/light/faded/bordered):
+  // the base hue read as small text on its own -subtle fill fails AA, so these
+  // are darkened just for text. Fills keep the vivid base color.
+  --dm-default-text: var(--dm-fg-muted);
+  --dm-primary-text: #005bc4;
+  --dm-secondary-text: #6d28d9;
+  --dm-success-text: #0c6b35;
+  --dm-warning-text: #7a5200;
+  --dm-danger-text: #b30b45;
 
   // Focus ring
   --dm-ring: rgb(0 111 238 / 55%);
@@ -123,8 +140,9 @@
   --dm-fg-muted: #a1a1aa;
 
   // #63636b daba ratio 3.2 sobre --dm-bg (#09090b) — por debajo de AA. Subido a
-  // #7c7c85 (~4.6:1) para que las etiquetas tenues sigan legibles en oscuro.
-  --dm-fg-subtle: #7c7c85;
+  // #87878f (~4.9:1 sobre superficies de campo tenues) para que las etiquetas y
+  // los placeholders sigan legibles en oscuro.
+  --dm-fg-subtle: #87878f;
 
   // Borders
   --dm-border: rgb(250 250 250 / 8%);
@@ -134,14 +152,18 @@
   --dm-default: #3f3f46;
   --dm-default-fg: #fafafa;
   --dm-default-subtle: rgb(250 250 250 / 10%);
-  --dm-primary: #338ef7;
-  --dm-primary-hover: #66aaf9;
+
+  // Nudged darker (#338ef7 → #1a72e0, #9f75ff → #8348f5): the "lifted" hues gave
+  // white solid-fill text only 3.3:1 in dark. These keep the blue/purple identity
+  // while passing AA for the label. The brand gradient tracks --dm-primary.
+  --dm-primary: #1a72e0;
+  --dm-primary-hover: #4a94f5;
   --dm-primary-fg: #fff;
-  --dm-primary-subtle: rgb(51 142 247 / 22%);
-  --dm-secondary: #9f75ff;
-  --dm-secondary-hover: #b794ff;
+  --dm-primary-subtle: rgb(26 114 224 / 26%);
+  --dm-secondary: #8348f5;
+  --dm-secondary-hover: #a274ff;
   --dm-secondary-fg: #fff;
-  --dm-secondary-subtle: rgb(159 117 255 / 20%);
+  --dm-secondary-subtle: rgb(131 72 245 / 24%);
 
   // Status
   --dm-success: #17c964;
@@ -152,10 +174,23 @@
   --dm-warning-hover: #f7b955;
   --dm-warning-fg: #3a2803;
   --dm-warning-subtle: rgb(245 165 36 / 20%);
-  --dm-danger: #ff4d6d;
+
+  // Nudged from #ff4d6d (white text = 3.21:1, well below AA) to #e11f4b
+  // (4.67:1) so solid danger surfaces are readable on dark too.
+  --dm-danger: #e11f4b;
   --dm-danger-hover: #ff6b85;
   --dm-danger-fg: #fff;
-  --dm-danger-subtle: rgb(255 77 109 / 20%);
+  --dm-danger-subtle: rgb(225 31 75 / 24%);
+
+  // Accessible text shade for tinted variants (light-theme counterpart above).
+  // On dark, the lifted base hues already read well on their tints; primary/
+  // secondary/danger use their lighter -hover for extra margin.
+  --dm-default-text: var(--dm-fg-muted);
+  --dm-primary-text: #7ab5fa;
+  --dm-secondary-text: #b794ff;
+  --dm-success-text: #45d483;
+  --dm-warning-text: #f9c87e;
+  --dm-danger-text: #ff6b85;
 
   // Focus ring
   --dm-ring: rgb(102 170 249 / 60%);

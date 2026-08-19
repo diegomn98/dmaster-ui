@@ -112,7 +112,7 @@
     --dm-btn-fg: var(--dm-primary-fg);
     --dm-btn-soft: var(--dm-primary-subtle);
     --dm-btn-line: var(--dm-primary);
-    --dm-btn-accent: var(--dm-primary);
+    --dm-btn-accent: var(--dm-primary-text);
   }
 
   &[data-color='secondary'] {
@@ -121,7 +121,7 @@
     --dm-btn-fg: var(--dm-secondary-fg);
     --dm-btn-soft: var(--dm-secondary-subtle);
     --dm-btn-line: var(--dm-secondary);
-    --dm-btn-accent: var(--dm-secondary);
+    --dm-btn-accent: var(--dm-secondary-text);
   }
 
   &[data-color='success'] {
@@ -130,7 +130,7 @@
     --dm-btn-fg: var(--dm-success-fg);
     --dm-btn-soft: var(--dm-success-subtle);
     --dm-btn-line: var(--dm-success);
-    --dm-btn-accent: var(--dm-success);
+    --dm-btn-accent: var(--dm-success-text);
   }
 
   &[data-color='warning'] {
@@ -139,7 +139,7 @@
     --dm-btn-fg: var(--dm-warning-fg);
     --dm-btn-soft: var(--dm-warning-subtle);
     --dm-btn-line: var(--dm-warning);
-    --dm-btn-accent: var(--dm-warning);
+    --dm-btn-accent: var(--dm-warning-text);
   }
 
   &[data-color='danger'] {
@@ -148,7 +148,7 @@
     --dm-btn-fg: var(--dm-danger-fg);
     --dm-btn-soft: var(--dm-danger-subtle);
     --dm-btn-line: var(--dm-danger);
-    --dm-btn-accent: var(--dm-danger);
+    --dm-btn-accent: var(--dm-danger-text);
   }
 
   // ---- Variants ------------------------------------------------------------

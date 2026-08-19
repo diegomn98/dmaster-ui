@@ -1,5 +1,5 @@
 @if (!hidden()) {
-  <li class="dm-breadcrumb-item">
+  <div class="dm-breadcrumb-item">
     @if (isLink()) {
       <a class="dm-breadcrumb-item__link" [attr.href]="href()">
         <ng-container [ngTemplateOutlet]="label" />
@@ -36,10 +36,10 @@
         }
       </span>
     }
-  </li>
+  </div>
 
   @if (showEllipsis()) {
-    <li class="dm-breadcrumb-item dm-breadcrumb-item--ellipsis">
+    <div class="dm-breadcrumb-item dm-breadcrumb-item--ellipsis" aria-hidden="true">
       <span class="dm-breadcrumb-item__ellipsis" aria-hidden="true">…</span>
       <span class="dm-breadcrumb-item__separator" aria-hidden="true">
         @if (parent.hasCustomSeparator()) {
@@ -61,7 +61,7 @@
           </svg>
         }
       </span>
-    </li>
+    </div>
   }
 }
 

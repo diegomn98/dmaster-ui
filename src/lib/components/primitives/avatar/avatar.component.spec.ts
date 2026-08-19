@@ -26,7 +26,10 @@ describe('DmAvatarComponent', () => {
     createComponent();
 
     expect(host().querySelector('.dm-avatar__icon')).toBeTruthy();
-    expect(host().getAttribute('role')).toBe('img');
+    // No alt and no initials → nothing to name it, so the fallback is decorative:
+    // no img role (a nameless role="img" would trip role-img-alt).
+    expect(host().getAttribute('role')).toBeNull();
+    expect(host().getAttribute('aria-label')).toBeNull();
     expect(host().style.width).toBe('2.5rem');
   });
 

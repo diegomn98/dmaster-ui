@@ -8,6 +8,7 @@
   [attr.data-size]="size()"
   [attr.data-state]="state()"
   [attr.aria-busy]="isLoading()"
+  [attr.aria-label]="ariaLabel() || null"
   (click)="onClick($event)"
 >
   <span class="dm-button__label">

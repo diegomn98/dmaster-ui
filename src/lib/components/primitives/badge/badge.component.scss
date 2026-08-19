@@ -46,7 +46,7 @@
   --dm-badge-fg: var(--dm-default-fg);
   --dm-badge-soft: var(--dm-default-subtle);
   --dm-badge-line: var(--dm-border-strong);
-  --dm-badge-accent: var(--dm-fg-muted);
+  --dm-badge-accent: var(--dm-default-text);
   --dm-badge-dot: var(--dm-fg-subtle);
 }
 
@@ -55,7 +55,7 @@
   --dm-badge-fg: var(--dm-primary-fg);
   --dm-badge-soft: var(--dm-primary-subtle);
   --dm-badge-line: var(--dm-primary);
-  --dm-badge-accent: var(--dm-primary);
+  --dm-badge-accent: var(--dm-primary-text);
   --dm-badge-dot: var(--dm-primary);
 }
 
@@ -64,7 +64,7 @@
   --dm-badge-fg: var(--dm-secondary-fg);
   --dm-badge-soft: var(--dm-secondary-subtle);
   --dm-badge-line: var(--dm-secondary);
-  --dm-badge-accent: var(--dm-secondary);
+  --dm-badge-accent: var(--dm-secondary-text);
   --dm-badge-dot: var(--dm-secondary);
 }
 
@@ -73,7 +73,7 @@
   --dm-badge-fg: var(--dm-success-fg);
   --dm-badge-soft: var(--dm-success-subtle);
   --dm-badge-line: var(--dm-success);
-  --dm-badge-accent: var(--dm-success);
+  --dm-badge-accent: var(--dm-success-text);
   --dm-badge-dot: var(--dm-success);
 }
 
@@ -82,7 +82,7 @@
   --dm-badge-fg: var(--dm-warning-fg);
   --dm-badge-soft: var(--dm-warning-subtle);
   --dm-badge-line: var(--dm-warning);
-  --dm-badge-accent: var(--dm-warning);
+  --dm-badge-accent: var(--dm-warning-text);
   --dm-badge-dot: var(--dm-warning);
 }
 
@@ -91,7 +91,7 @@
   --dm-badge-fg: var(--dm-danger-fg);
   --dm-badge-soft: var(--dm-danger-subtle);
   --dm-badge-line: var(--dm-danger);
-  --dm-badge-accent: var(--dm-danger);
+  --dm-badge-accent: var(--dm-danger-text);
   --dm-badge-dot: var(--dm-danger);
 }
 

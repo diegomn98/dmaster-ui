@@ -33,6 +33,12 @@ import { DmBreadcrumbsComponent } from './breadcrumbs.component';
   templateUrl: './breadcrumb-item.component.html',
   styleUrl: './breadcrumb-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    // The host renders as `display: contents`, so it carries the list-item
+    // semantics itself: the `<ol role="list">` sees each crumb as a `listitem`
+    // even though a custom element sits between them in the DOM.
+    '[attr.role]': "hidden() ? null : 'listitem'",
+  },
 })
 export class DmBreadcrumbItemComponent implements OnInit, OnDestroy {
   protected readonly parent = inject<DmBreadcrumbsComponent>(

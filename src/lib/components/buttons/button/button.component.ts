@@ -69,6 +69,13 @@ export class DmButtonComponent {
   /** Announced on error. */
   readonly errorLabel = input<string>('');
 
+  /**
+   * Accessible name for the inner `<button>`. Required for icon-only buttons,
+   * whose glyph carries no text — set this so screen readers announce the
+   * action. Placed on the real button, not the host wrapper.
+   */
+  readonly ariaLabel = input<string>('');
+
   /** Emitted on click, only while the button is interactive. */
   readonly clicked = output<MouseEvent>();
 

@@ -80,6 +80,9 @@
   --dm-sel: var(--dm-primary);
   --dm-sel-subtle: var(--dm-primary-subtle);
 
+  // Accent used as TEXT (selected/active option label): the AA-safe -text shade.
+  --dm-sel-text: var(--dm-primary-text);
+
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -99,31 +102,37 @@
   &[data-color='default'] {
     --dm-sel: var(--dm-primary);
     --dm-sel-subtle: var(--dm-primary-subtle);
+    --dm-sel-text: var(--dm-primary-text);
   }
 
   &[data-color='primary'] {
     --dm-sel: var(--dm-primary);
     --dm-sel-subtle: var(--dm-primary-subtle);
+    --dm-sel-text: var(--dm-primary-text);
   }
 
   &[data-color='secondary'] {
     --dm-sel: var(--dm-secondary);
     --dm-sel-subtle: var(--dm-secondary-subtle);
+    --dm-sel-text: var(--dm-secondary-text);
   }
 
   &[data-color='success'] {
     --dm-sel: var(--dm-success);
     --dm-sel-subtle: var(--dm-success-subtle);
+    --dm-sel-text: var(--dm-success-text);
   }
 
   &[data-color='warning'] {
     --dm-sel: var(--dm-warning);
     --dm-sel-subtle: var(--dm-warning-subtle);
+    --dm-sel-text: var(--dm-warning-text);
   }
 
   &[data-color='danger'] {
     --dm-sel: var(--dm-danger);
     --dm-sel-subtle: var(--dm-danger-subtle);
+    --dm-sel-text: var(--dm-danger-text);
   }
 }
 
@@ -173,7 +182,7 @@
   border: none;
   border-radius: var(--dm-radius-sm);
   background: transparent;
-  color: var(--dm-sel);
+  color: var(--dm-sel-text);
   font: inherit;
   font-size: var(--dm-text-xs);
   font-weight: var(--dm-font-medium);
@@ -249,12 +258,12 @@
 
   &[data-active] {
     background: var(--dm-sel-subtle);
-    color: var(--dm-sel);
+    color: var(--dm-sel-text);
   }
 
   &[data-selected] {
     font-weight: var(--dm-font-medium);
-    color: var(--dm-sel);
+    color: var(--dm-sel-text);
   }
 
   &[data-disabled] {
@@ -293,7 +302,7 @@
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  color: var(--dm-sel);
+  color: var(--dm-sel-text);
 }
 
 @keyframes dm-select-panel-in {

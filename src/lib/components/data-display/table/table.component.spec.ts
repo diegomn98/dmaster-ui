@@ -238,10 +238,10 @@ describe('DmTableComponent', () => {
   it('select-all toggles every filtered row and reflects indeterminate state', () => {
     create({ selectionMode: 'multiple' });
 
-    // one selected → header is indeterminate
+    // one selected → header is indeterminate (native property, not aria-checked)
     rowCheckboxes()[0].click();
     fixture.detectChanges();
-    expect(selectAllCheckbox().getAttribute('aria-checked')).toBe('mixed');
+    expect(selectAllCheckbox().indeterminate).toBe(true);
 
     // select-all → all keys selected
     selectAllCheckbox().click();

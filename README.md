@@ -203,6 +203,20 @@ The library is server-safe: no component or service touches `window`, `localStor
 
 ---
 
+## Accessibility
+
+Accessibility isn't a checkbox here — it's a gate. Every prerendered docs page (which exercises every component and variant) is scanned with [**axe-core**](https://github.com/dequelabs/axe-core) for **WCAG 2.1 Level A + AA** compliance, in **both light and dark themes**, plus every overlay opened — and the suite must be **green on every pull request**.
+
+Concretely, components ship with: semantic roles and ARIA wired on the host, full keyboard support (roving focus, typeahead, focus traps in overlays), visible `:focus-visible` rings, ≥44px touch targets, `prefers-reduced-motion` honored, and a color system where every text/fill pair — including the vivid `flat` / `light` / `faded` variants — clears the 4.5:1 contrast ratio in both themes. Icon-only `dm-button`s take an `ariaLabel`; form controls forward validity through `aria-describedby` to `dm-error`.
+
+Run it yourself against the prerendered build:
+
+```bash
+npm run build:app && npm run test:a11y
+```
+
+---
+
 ## Bundle size
 
 Fully tree-shakeable — your app only pays for the components it imports. Measured with the same pipeline the Angular CLI applies to published libraries (linker + minify + gzip, `@angular/*` and `rxjs` external):

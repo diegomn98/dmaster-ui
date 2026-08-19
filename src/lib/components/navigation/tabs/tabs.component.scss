@@ -108,6 +108,7 @@
     --dm-tab-fg: var(--dm-default-fg);
     --dm-tab-subtle: var(--dm-default-subtle);
     --dm-tab-line: var(--dm-fg);
+    --dm-tab-text: var(--dm-fg-muted);
   }
 
   &[data-color='primary'] {
@@ -115,6 +116,7 @@
     --dm-tab-fg: var(--dm-primary-fg);
     --dm-tab-subtle: var(--dm-primary-subtle);
     --dm-tab-line: var(--dm-primary);
+    --dm-tab-text: var(--dm-primary-text);
   }
 
   &[data-color='secondary'] {
@@ -122,6 +124,7 @@
     --dm-tab-fg: var(--dm-secondary-fg);
     --dm-tab-subtle: var(--dm-secondary-subtle);
     --dm-tab-line: var(--dm-secondary);
+    --dm-tab-text: var(--dm-secondary-text);
   }
 
   &[data-color='success'] {
@@ -129,6 +132,7 @@
     --dm-tab-fg: var(--dm-success-fg);
     --dm-tab-subtle: var(--dm-success-subtle);
     --dm-tab-line: var(--dm-success);
+    --dm-tab-text: var(--dm-success-text);
   }
 
   &[data-color='warning'] {
@@ -136,6 +140,7 @@
     --dm-tab-fg: var(--dm-warning-fg);
     --dm-tab-subtle: var(--dm-warning-subtle);
     --dm-tab-line: var(--dm-warning);
+    --dm-tab-text: var(--dm-warning-text);
   }
 
   &[data-color='danger'] {
@@ -143,6 +148,7 @@
     --dm-tab-fg: var(--dm-danger-fg);
     --dm-tab-subtle: var(--dm-danger-subtle);
     --dm-tab-line: var(--dm-danger);
+    --dm-tab-text: var(--dm-danger-text);
   }
 
   // ---- Variants ------------------------------------------------------------

@@ -187,7 +187,8 @@ describe('DmBreadcrumbsComponent', () => {
 
     const ellipsis = fixture.nativeElement.querySelector('.dm-breadcrumb-item--ellipsis');
     expect(ellipsis).toBeTruthy();
-    expect(ellipsis.getAttribute('aria-hidden')).toBeNull(); // wrapper li; inner span is aria-hidden
+    // The ellipsis is purely decorative; the whole wrapper is aria-hidden.
+    expect(ellipsis.getAttribute('aria-hidden')).toBe('true');
     expect(ellipsis.querySelector('a')).toBeNull(); // not interactive
     // before=1, after=2 → visible A, D, E; B and C removed from the DOM.
     expect(realItems().length).toBe(3);

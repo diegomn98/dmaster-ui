@@ -28,8 +28,10 @@ import { DmAvatarShape, DmAvatarSize } from './avatar.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.data-shape]': 'shape()',
-    '[attr.role]': "showImage() ? null : 'img'",
-    '[attr.aria-label]': 'showImage() ? null : alt() || initials() || null',
+    // Only expose an `img` role when we can actually name it (alt/initials).
+    // A nameless fallback (generic icon) is decorative — no role, no violation.
+    '[attr.role]': 'hostLabel() ? "img" : null',
+    '[attr.aria-label]': 'hostLabel()',
     '[style.width]': 'cssSize()',
     '[style.height]': 'cssSize()',
     '[style.font-size]': 'fontSize()',
@@ -60,6 +62,15 @@ export class DmAvatarComponent {
   });
 
   protected readonly showImage = computed(() => !!this.src() && !this.failed());
+
+  /**
+   * Accessible name for the host when the image isn't showing. Null while the
+   * `<img>` is visible (it carries its own alt) or when the fallback is the
+   * generic icon with no name to give — in which case the host stays decorative.
+   */
+  protected readonly hostLabel = computed(() =>
+    this.showImage() ? null : this.alt() || this.initials() || null,
+  );
 
   protected readonly cssSize = computed(() => {
     const size = this.size();
