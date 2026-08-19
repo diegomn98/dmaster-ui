@@ -7,13 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-19
+
 ### Added
 
+- **`dm-autocomplete`** — a free-text field that suggests options as you type.
+  Unlike `dm-select`, the trigger is an editable input: type anything, filter
+  the suggestions in a CDK overlay, and pick one or keep your own text. Full
+  keyboard navigation, an `(optionSelected)` output carrying the chosen option,
+  `openOnFocus`, `ControlValueAccessor`, and `aria-autocomplete="list"`.
 - **Bundle-size audit** — the README now documents the real tree-shaken cost
-  per component (a button is ~3.6 kB gzip; the entire 34-component library
-  ~66 kB), measured with the same linker + minify pipeline the Angular CLI
-  applies to published libraries. Reproducible from the repo with
-  `npm run size`.
+  per component (a button is ~3.6 kB gzip; the entire library ~70 kB),
+  measured with the same linker + minify pipeline the Angular CLI applies to
+  published libraries. Reproducible from the repo with `npm run size`.
+
+### Changed
+
+- **`dm-select`** gained **multiple selection** (`multiple` + `[(values)]`,
+  rendered as removable chips), an **inline filter** (`filterable` +
+  `filterPlaceholder` / `noResultsLabel`), **option groups**
+  (`DmSelectGroup` / `DmSelectOptionOrGroup` in the `items` input), and
+  **select-all / clear-all** actions (`selectAllLabel` / `clearAllLabel`).
+  Single-select is unchanged — the new modes are additive (`value` stays for
+  single, `values` is separate for multiple), so existing usage is untouched.
+  Boolean inputs (`multiple`, `filterable`, `clearable`, `disabled`,
+  `required`) accept bare attributes via `booleanAttribute`. The trigger is now
+  a `div[role="combobox"]` (was a `<button>`) so chips can carry remove buttons.
+- **`dm-date-picker`** gained a **range** mode (`range` attribute +
+  `[(rangeValue)]`, a `DmDateRange { start; end }`): pick a start, then an end,
+  with a live hover-preview band between them and a `"start – end"` trigger.
+  Single mode (`[(value)]`) is unchanged — the range value flows through a
+  separate model, so nothing breaks.
+- **`dm-table`** gained a **virtual-scroll** mode (inputs `virtualScroll`,
+  `rowHeight`, `viewportHeight`): rows render inside a
+  `cdk-virtual-scroll-viewport` as a `role="table"` div-grid, so thousands of
+  rows stay smooth without bloating the DOM. Sticky header, selection, sort and
+  search all still work. Off by default — the native `<table>` path is
+  unchanged.
+- The **`dm-select` / `dm-autocomplete` dropdown panels** were visually
+  refined: the active/selected option now uses the primary tint (matching the
+  trigger's focus ring instead of a flat grey), the inline filter is a filled
+  search pill, and the panel gains a hairline border, a softer lifted shadow
+  and a slim custom scrollbar.
+- **Documentation site** — every one of the 35 component pages was brought
+  to the same standard: ~6 realistic demos each (up from 1–2 on the thinnest
+  pages) plus a **"Composition"** recipe that uses the component together
+  with its siblings as real product UI (a pricing card, a signup form, a
+  billing panel, an admin table, a shopping-cart drawer…), each with
+  Preview / HTML / TS tabs. Form pages now consistently demonstrate
+  validation with `<dm-error>`. All new copy is translated (en/es/fr).
+
+### Fixed
+
+- **`dm-form-field`** — its control wrapper is now a positioning context
+  (`position: relative`), so a projected trailing icon (e.g. a show/hide
+  password toggle) can be absolutely positioned inside it without extra
+  markup. Purely additive CSS — no visual change unless a consumer opts in.
 
 ## [0.4.2] - 2026-08-18
 
@@ -118,6 +167,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.5.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.3.0...v0.4.1
 [0.3.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.2.0...v0.3.0
