@@ -10,12 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diegomn98/dmaster-ui-workspace.git",
-    "directory": "projects/ngx-dmaster-ui"
+    "url": "git+https://github.com/diegomn98/dmaster-ui.git"
   },
   "homepage": "https://dmasterui.com",
   "bugs": {
-    "url": "https://github.com/diegomn98/dmaster-ui-workspace/issues"
+    "url": "https://github.com/diegomn98/dmaster-ui/issues"
   },
   "keywords": [
     "angular",

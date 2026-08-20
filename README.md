@@ -16,6 +16,12 @@
 
 **[▶ Try it now on StackBlitz](https://stackblitz.com/github/diegomn98/dmaster-ui-workspace/tree/main/examples/starter)** — a minimal zoneless Angular 20 app already wired up with the library; no install needed. (Source: [`examples/starter`](https://github.com/diegomn98/dmaster-ui-workspace/tree/main/examples/starter).)
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs-assets/overview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./docs-assets/overview-light.png">
+  <img alt="@dmaster/ui — component gallery (light and dark themes)" src="./docs-assets/overview-light.png" width="100%">
+</picture>
+
 ---
 
 ## Why @dmaster/ui?
