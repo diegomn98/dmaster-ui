@@ -9,20 +9,24 @@
 :root {
   color-scheme: light;
 
-  // Surfaces
+  // Surfaces. `muted` sat at #f4f4f5, which reads at ~1.09:1 against white —
+  // flat field fills were nearly invisible on white cards and on the docs
+  // playground. Lowered to #e9e9ec (~1.21:1 vs #fff) so borderless flat
+  // surfaces stay visible. Deliberate; don't lift it back without checking
+  // every flat fill against --dm-bg.
   --dm-bg: #fff;
   --dm-bg-subtle: #fafafa;
-  --dm-bg-muted: #f4f4f5;
+  --dm-bg-muted: #e9e9ec;
   --dm-bg-elevated: #fff;
 
   // Text
   --dm-fg: #18181b;
   --dm-fg-muted: #52525b;
 
-  // #a1a1aa gave 2.56:1 on --dm-bg (#fff) — below AA for text. Raised to
-  // #6b6b73 (~4.8:1 on #fff, ~4.6:1 on the muted field surface) so subtle
-  // labels and field placeholders stay legible, mirroring the dark theme.
-  --dm-fg-subtle: #6b6b73;
+  // #a1a1aa gave 2.56:1 on --dm-bg (#fff) — below AA for text. Darkened to
+  // #64646c (~5.9:1 on #fff, ~4.8:1 on the muted field surface #e9e9ec) so
+  // subtle labels and field placeholders stay legible, mirroring dark.
+  --dm-fg-subtle: #64646c;
 
   // Borders (low-opacity 1px borders are part of the look)
   --dm-border: rgb(24 24 27 / 8%);
@@ -103,6 +107,9 @@
   --dm-kbd-bg: var(--dm-bg-muted);
   --dm-kbd-fg: var(--dm-fg-muted);
   --dm-kbd-border: var(--dm-border);
+  --dm-empty-state-icon-bg: var(--dm-bg-muted);
+  --dm-empty-state-icon-fg: var(--dm-fg-subtle);
+  --dm-button-group-divider: color-mix(in srgb, var(--dm-fg) 15%, transparent);
   --dm-command-bg: var(--dm-bg-elevated);
   --dm-command-border: var(--dm-border);
   --dm-command-radius: var(--dm-radius-xl);
@@ -129,20 +136,24 @@
 [data-dm-theme='dark'] {
   color-scheme: dark;
 
-  // Surfaces
+  // Surfaces — re-spaced ramp (deliberate, don't compress it again): the old
+  // steps (#101012 / #1a1a1e / #1c1c21) sat ~1.02:1 apart, so flat fills and
+  // "elevated" panels were indistinguishable from each other and from the
+  // docs stage. Each step now reads against the previous one (muted vs bg
+  // ~×1.27, elevated vs muted ~×1.10) while keeping the near-black identity.
   --dm-bg: #09090b;
-  --dm-bg-subtle: #101012;
-  --dm-bg-muted: #1a1a1e;
-  --dm-bg-elevated: #1c1c21;
+  --dm-bg-subtle: #131316;
+  --dm-bg-muted: #232328;
+  --dm-bg-elevated: #2b2b32;
 
   // Text
   --dm-fg: #fafafa;
   --dm-fg-muted: #a1a1aa;
 
-  // #63636b daba ratio 3.2 sobre --dm-bg (#09090b) — por debajo de AA. Subido a
-  // #87878f (~4.9:1 sobre superficies de campo tenues) para que las etiquetas y
-  // los placeholders sigan legibles en oscuro.
-  --dm-fg-subtle: #87878f;
+  // #87878f daba ~4.4:1 sobre el nuevo --dm-bg-muted (#232328) — por debajo de
+  // AA. Subido a #8f8f97 (~4.9:1 sobre muted, ~6.2:1 sobre --dm-bg) para que
+  // etiquetas y placeholders sigan legibles en oscuro tras re-espaciar la escala.
+  --dm-fg-subtle: #8f8f97;
 
   // Borders
   --dm-border: rgb(250 250 250 / 8%);
