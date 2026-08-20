@@ -1,0 +1,131 @@
+@use 'mixins';
+
+// Color × size map to generic local vars (slider/badge pattern): each color
+// sets --dm-rating-color once, and the filled layer below consumes it
+// regardless of the active data-color.
+:host {
+  --dm-rating-size: 1.5rem;
+  --dm-rating-gap: var(--dm-space-1);
+  --dm-rating-color: var(--dm-rating-fill, var(--dm-warning));
+  --dm-rating-empty: var(--dm-rating-empty-color, var(--dm-fg-subtle));
+
+  display: inline-flex;
+  outline: none;
+
+  &[data-size='sm'] {
+    --dm-rating-size: 1.125rem;
+  }
+
+  &[data-size='lg'] {
+    --dm-rating-size: 2rem;
+  }
+
+  &[data-color='default'] {
+    --dm-rating-color: var(--dm-fg);
+  }
+
+  &[data-color='primary'] {
+    --dm-rating-color: var(--dm-primary);
+  }
+
+  &[data-color='secondary'] {
+    --dm-rating-color: var(--dm-secondary);
+  }
+
+  &[data-color='success'] {
+    --dm-rating-color: var(--dm-success);
+  }
+
+  &[data-color='warning'] {
+    --dm-rating-color: var(--dm-warning);
+  }
+
+  &[data-color='danger'] {
+    --dm-rating-color: var(--dm-danger);
+  }
+
+  &[data-disabled='true'] {
+    opacity: 0.5;
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+
+    border-radius: var(--dm-radius-md);
+  }
+}
+
+.dm-rating__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-rating-gap);
+
+  // Keep the row a comfortable touch height without inflating small stars.
+  min-block-size: max(var(--dm-rating-size), 2rem);
+}
+
+// Each star stacks an empty base glyph and a width-clipped filled glyph, so
+// fractional fills (half-stars, readonly averages like 3.7) render precisely.
+.dm-rating__star {
+  position: relative;
+  display: inline-flex;
+  inline-size: var(--dm-rating-size);
+  block-size: var(--dm-rating-size);
+
+  &--interactive {
+    cursor: pointer;
+
+    @include mixins.touch-target;
+
+    &:active {
+      transform: scale(0.92);
+      transition: transform var(--dm-duration-fast) var(--dm-ease-snappy);
+    }
+  }
+}
+
+.dm-rating__layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  &--empty {
+    inline-size: 100%;
+    color: var(--dm-rating-empty);
+  }
+
+  // Width is set inline per star (fraction%); it clips the filled glyph.
+  &--full {
+    inline-size: 0;
+    color: var(--dm-rating-color);
+    transition: inline-size var(--dm-duration-base) var(--dm-ease-snappy);
+  }
+}
+
+.dm-rating__svg,
+.dm-rating__char {
+  flex: none;
+  inline-size: var(--dm-rating-size);
+  block-size: var(--dm-rating-size);
+}
+
+.dm-rating__svg {
+  fill: currentcolor;
+}
+
+.dm-rating__char {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--dm-rating-size);
+  line-height: 1;
+}
+
+@include mixins.reduced-motion {
+  .dm-rating__layer--full,
+  .dm-rating__star--interactive:active {
+    transition: none;
+  }
+}

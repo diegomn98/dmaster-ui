@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Six new components** — the last pieces for a 1.0 catalogue (41 in total):
+  - **`dm-stepper`** + **`dm-step`** — horizontal/vertical multi-step wizard with
+    `[(activeStep)]`, `linear` mode (can't skip past an incomplete step),
+    per-step `completed` / `error` / `optional` / `disabled` states, keyboard
+    focus between steps, `next()` / `previous()`, and `aria-current="step"`.
+  - **`dm-rating`** — star rating as a `ControlValueAccessor` (`role="slider"`):
+    `[(value)]`, `max`, `allowHalf` (hover + keyboard half-stars), a `readonly`
+    display mode that renders fractional averages (`3.7`), sizes, colors and a
+    custom `character` glyph. Clicking the current value clears to `0`.
+  - **`dm-tree`** — data-driven hierarchical tree implementing the full
+    WAI-ARIA Tree View pattern: `role="tree"` / `treeitem` / `group`,
+    `aria-level` / `setsize` / `posinset`, roving tabindex, and the complete
+    keyboard model (arrows, Home/End, Enter/Space, `*`). Single or multiple
+    selection via `[(selectedIds)]`, `[(expandedIds)]`, `expandAll()` /
+    `collapseAll()`, optional guide lines.
+  - **`dm-file-upload`** — drag-and-drop dropzone over a hidden native
+    `<input type="file">`: `[(files)]`, `multiple`, `accept`, `maxSize`,
+    `maxFiles`, image thumbnails, per-file `progress`, `(fileRejected)` with a
+    typed reason, `role="alert"` rejections, labelled remove buttons, and a
+    pure `formatFileSize()` helper. SSR-safe object URLs.
+  - **`dm-timeline`** + **`dm-timeline-item`** — vertical/horizontal event
+    timeline: `<time datetime>` stamps, per-item `color` / `variant`
+    (`solid` | `outlined`) / `state` (`active` pulse, `completed`, `error`),
+    `align="alternate"` zig-zag, and a `dmTimelineMarker` directive to project
+    a custom marker (avatar, icon). `role="list"` / `listitem` semantics.
+  - **`dm-number-input`** — numeric spinbutton that reads as a sibling of the
+    field family: `role="spinbutton"` with ± controls, `min` / `max` / `step` /
+    `precision`, the full keyboard map (arrows, Shift×10, PageUp/Down,
+    Home/End), press-and-hold, `Intl` formatting on blur (`formatOptions`),
+    `hideControls`, and `ControlValueAccessor`.
 - **`dm-button` — `ariaLabel` input.** Sets the accessible name on the inner
   `<button>` (not the host wrapper), so **icon-only buttons** announce their
   action to screen readers: `<dm-button ariaLabel="Delete"><dm-icon name="trash" /></dm-button>`.

@@ -31,9 +31,12 @@ export * from './lib/components/forms/checkbox';
 export * from './lib/components/forms/color-picker';
 export * from './lib/components/forms/date-picker';
 export * from './lib/components/forms/error';
+export * from './lib/components/forms/file-upload';
 export * from './lib/components/forms/form-field';
+export * from './lib/components/forms/number-input';
 export * from './lib/components/forms/paginated-select';
 export * from './lib/components/forms/radio-group';
+export * from './lib/components/forms/rating';
 export * from './lib/components/forms/search-field';
 export * from './lib/components/forms/select';
 export * from './lib/components/forms/slider';
@@ -42,10 +45,13 @@ export * from './lib/components/forms/switch';
 // Components · navigation
 export * from './lib/components/navigation/breadcrumbs';
 export * from './lib/components/navigation/pagination';
+export * from './lib/components/navigation/stepper';
 export * from './lib/components/navigation/tabs';
 
 // Components · data-display
 export * from './lib/components/data-display/table';
+export * from './lib/components/data-display/timeline';
+export * from './lib/components/data-display/tree';
 
 // Components · overlays
 export * from './lib/components/overlays/command';

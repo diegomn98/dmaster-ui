@@ -1,0 +1,371 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance), all with a fallback
+// to a semantic global token so the component works without extra theme wiring:
+//   --dm-file-upload-border   dashed dropzone border   → --dm-border-strong
+//   --dm-file-upload-radius   dropzone/list rounding    → --dm-radius-lg
+//   --dm-file-upload-item-bg  list row surface          → --dm-bg-muted
+
+:host {
+  display: grid;
+  gap: var(--dm-space-3);
+  width: 100%;
+
+  // Disabled dims only the dropzone (the interactive cue). The file list stays
+  // fully legible: the user must still be able to READ what's attached even
+  // when they can't change it — and dimming small text there would break AA.
+  &[data-disabled] .dm-file-upload__dropzone {
+    opacity: 0.6;
+  }
+}
+
+// ---- Dropzone --------------------------------------------------------------
+.dm-file-upload__dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dm-space-1);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--dm-space-6) var(--dm-space-4);
+  border: 1.5px dashed var(--dm-file-upload-border, var(--dm-border-strong));
+  border-radius: var(--dm-file-upload-radius, var(--dm-radius-lg));
+  background-color: transparent;
+  color: var(--dm-fg-muted);
+  font-family: var(--dm-font-sans);
+  text-align: center;
+  cursor: pointer;
+
+  @include mixins.transition(background-color, border-color, color);
+
+  &:hover:not(:disabled) {
+    border-color: var(--dm-fg-subtle);
+    background-color: color-mix(in srgb, var(--dm-fg) 4%, transparent);
+  }
+
+  // Drag-over / active: primary tint. The text/icon use --dm-primary-text
+  // (AA on the subtle tint) rather than the base --dm-primary.
+  &[data-dragging] {
+    border-color: var(--dm-primary);
+    border-style: solid;
+    background-color: var(--dm-primary-subtle);
+    color: var(--dm-primary-text);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.dm-file-upload__icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--dm-fg-subtle);
+  transition: color var(--dm-duration-base) var(--dm-ease-out);
+
+  .dm-file-upload__dropzone[data-dragging] & {
+    color: var(--dm-primary-text);
+  }
+}
+
+.dm-file-upload__label {
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg);
+
+  .dm-file-upload__dropzone[data-dragging] & {
+    color: var(--dm-primary-text);
+  }
+}
+
+.dm-file-upload__hint {
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg-muted);
+}
+
+// ---- Hidden native input ---------------------------------------------------
+.dm-file-upload__native {
+  @include mixins.visually-hidden;
+}
+
+// ---- Rejection alert -------------------------------------------------------
+.dm-file-upload__error {
+  margin: 0;
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-danger-text);
+  animation: dm-file-upload-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-file-upload-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+// ---- Selected-file list ----------------------------------------------------
+.dm-file-upload__list {
+  display: grid;
+  gap: var(--dm-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dm-file-upload__item {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-3);
+  padding: var(--dm-space-2) var(--dm-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-file-upload-item-bg, var(--dm-bg-muted));
+  transition:
+    border-color var(--dm-duration-base) var(--dm-ease-out),
+    background-color var(--dm-duration-base) var(--dm-ease-out);
+
+  // Completed: a whisper of the success color hems the row in, without shouting.
+  &[data-status='done'] {
+    border-color: color-mix(in srgb, var(--dm-success) 30%, transparent);
+    background-color: color-mix(in srgb, var(--dm-success) 7%, var(--dm-bg-muted));
+  }
+}
+
+// Thumbnail column: holds the image/glyph and the corner success badge.
+.dm-file-upload__thumb-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.dm-file-upload__thumb {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--dm-radius-sm);
+  object-fit: cover;
+  background-color: var(--dm-bg-subtle);
+}
+
+.dm-file-upload__glyph {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--dm-fg-subtle);
+}
+
+// Corner check badge that pops in the moment an upload completes.
+.dm-file-upload__badge {
+  position: absolute;
+  right: -0.28rem;
+  bottom: -0.28rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: var(--dm-radius-full);
+  background-color: var(--dm-success);
+  color: var(--dm-success-fg);
+  box-shadow: 0 0 0 2px var(--dm-file-upload-item-bg, var(--dm-bg-muted));
+  animation: dm-file-upload-pop var(--dm-duration-base) var(--dm-ease-snappy) both;
+
+  svg {
+    width: 0.72rem;
+    height: 0.72rem;
+  }
+
+  @include mixins.reduced-motion {
+    animation: none;
+  }
+}
+
+@keyframes dm-file-upload-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  60% {
+    transform: scale(1.12);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dm-file-upload__meta {
+  display: grid;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.dm-file-upload__name {
+  @include mixins.truncate;
+
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  color: var(--dm-fg);
+}
+
+.dm-file-upload__size {
+  font-size: var(--dm-text-xs);
+  color: var(--dm-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// Uploading: the size sits left, the live percentage right.
+.dm-file-upload__status {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--dm-space-2);
+}
+
+.dm-file-upload__pct {
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--dm-primary-text);
+}
+
+// Done: a green check + "Uploaded · size", replacing the bar entirely.
+.dm-file-upload__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-success-text);
+  font-variant-numeric: tabular-nums;
+
+  svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+  }
+}
+
+// ---- Per-file progress -----------------------------------------------------
+.dm-file-upload__progress {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 0.3125rem;
+  margin-top: 0.25rem;
+  border-radius: var(--dm-radius-full);
+  background-color: color-mix(in srgb, var(--dm-fg) 12%, transparent);
+}
+
+.dm-file-upload__progress-fill {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--dm-primary);
+  transition: width var(--dm-duration-slow) var(--dm-ease-out);
+
+  // A soft travelling sheen signals the transfer is live, not stalled.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--dm-primary-fg) 45%, transparent),
+      transparent
+    );
+    animation: dm-file-upload-sheen 1.3s var(--dm-ease-in-out) infinite;
+  }
+
+  @include mixins.reduced-motion {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+@keyframes dm-file-upload-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+// ---- Remove button ---------------------------------------------------------
+.dm-file-upload__remove {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background-color: color-mix(in srgb, var(--dm-fg) 8%, transparent);
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-out),
+    color var(--dm-duration-fast) var(--dm-ease-out),
+    transform var(--dm-duration-fast) var(--dm-ease-snappy);
+
+  @include mixins.touch-target;
+
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--dm-danger) 16%, transparent);
+    color: var(--dm-danger-text);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.9);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-file-upload__error {
+    animation: none;
+  }
+
+  .dm-file-upload__progress-fill {
+    transition: none;
+  }
+
+  .dm-file-upload__remove:active {
+    transform: none;
+  }
+}

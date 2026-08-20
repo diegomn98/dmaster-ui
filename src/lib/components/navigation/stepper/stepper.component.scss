@@ -1,0 +1,84 @@
+@use 'mixins';
+
+// Component tokens (set here on the container, consumed by the projected steps):
+//   --dm-stepper-accent        base accent (solid active / completed indicator)
+//   --dm-stepper-accent-fg     text/glyph ON the solid accent fill
+//   --dm-stepper-accent-soft   tinted halo behind the active indicator
+//   --dm-stepper-line          connector rail color (upcoming segments)
+//   --dm-stepper-ind           indicator diameter
+//   --dm-stepper-ind-fs        indicator number font-size
+
+:host {
+  --dm-stepper-line: var(--dm-border-strong);
+
+  display: flex;
+  min-width: 0;
+  font-family: var(--dm-font-sans);
+}
+
+// ---- Colors → generic accent vars -----------------------------------------
+:host([data-color='default']) {
+  --dm-stepper-accent: var(--dm-fg);
+  --dm-stepper-accent-fg: var(--dm-bg);
+  --dm-stepper-accent-soft: var(--dm-default-subtle);
+}
+
+:host([data-color='primary']) {
+  --dm-stepper-accent: var(--dm-primary);
+  --dm-stepper-accent-fg: var(--dm-primary-fg);
+  --dm-stepper-accent-soft: var(--dm-primary-subtle);
+}
+
+:host([data-color='secondary']) {
+  --dm-stepper-accent: var(--dm-secondary);
+  --dm-stepper-accent-fg: var(--dm-secondary-fg);
+  --dm-stepper-accent-soft: var(--dm-secondary-subtle);
+}
+
+:host([data-color='success']) {
+  --dm-stepper-accent: var(--dm-success);
+  --dm-stepper-accent-fg: var(--dm-success-fg);
+  --dm-stepper-accent-soft: var(--dm-success-subtle);
+}
+
+:host([data-color='warning']) {
+  --dm-stepper-accent: var(--dm-warning);
+  --dm-stepper-accent-fg: var(--dm-warning-fg);
+  --dm-stepper-accent-soft: var(--dm-warning-subtle);
+}
+
+:host([data-color='danger']) {
+  --dm-stepper-accent: var(--dm-danger);
+  --dm-stepper-accent-fg: var(--dm-danger-fg);
+  --dm-stepper-accent-soft: var(--dm-danger-subtle);
+}
+
+// ---- Sizes -----------------------------------------------------------------
+:host([data-size='sm']) {
+  --dm-stepper-ind: 1.5rem;
+  --dm-stepper-ind-fs: var(--dm-text-xs);
+}
+
+:host([data-size='md']) {
+  --dm-stepper-ind: 1.75rem;
+  --dm-stepper-ind-fs: var(--dm-text-sm);
+}
+
+:host([data-size='lg']) {
+  --dm-stepper-ind: 2rem;
+  --dm-stepper-ind-fs: var(--dm-text-base);
+}
+
+// ---- Orientation: layout ---------------------------------------------------
+// Horizontal: a single wrapping flex row. Step hosts use `display: contents`
+// (see step.scss) so their header + panel become siblings here; headers share
+// the row (order 1) and the active panel drops to a full-width line (order 2).
+:host([data-orientation='horizontal']) {
+  flex-flow: row wrap;
+  align-items: flex-start;
+}
+
+// Vertical: a column of step blocks, each stacking its header over its panel.
+:host([data-orientation='vertical']) {
+  flex-direction: column;
+}

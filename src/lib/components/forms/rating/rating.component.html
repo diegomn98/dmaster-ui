@@ -1,0 +1,29 @@
+<ng-template #glyph>
+  @if (character()) {
+    <span class="dm-rating__char" aria-hidden="true">{{ character() }}</span>
+  } @else {
+    <svg class="dm-rating__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+      />
+    </svg>
+  }
+</ng-template>
+
+<div class="dm-rating__stars" (pointerleave)="clearHover()">
+  @for (star of stars(); track star.index) {
+    <span
+      class="dm-rating__star"
+      [class.dm-rating__star--interactive]="isInteractive()"
+      (pointermove)="onStarPointerMove($event, star.index)"
+      (pointerdown)="onStarPointerDown($event, star.index)"
+    >
+      <span class="dm-rating__layer dm-rating__layer--empty">
+        <ng-container [ngTemplateOutlet]="glyph" />
+      </span>
+      <span class="dm-rating__layer dm-rating__layer--full" [style.inline-size.%]="star.percent">
+        <ng-container [ngTemplateOutlet]="glyph" />
+      </span>
+    </span>
+  }
+</div>

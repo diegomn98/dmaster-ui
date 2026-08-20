@@ -1,0 +1,310 @@
+@use 'mixins';
+
+// The item host melts away (`display: contents`): its two cells — rail and
+// content — join the parent's grid directly and pin themselves to the item's
+// row/column via `--dm-timeline-i` (stamped on the host by the component).
+// Size / spacing vars cascade from the .dm-timeline container; the accent vars
+// are mapped HERE from the item's effective `data-color` (own color, else the
+// parent's), so a single mapping serves both levels.
+:host {
+  display: contents;
+}
+
+// ---- Colors → generic accent vars -----------------------------------------
+//   --dm-timeline-accent       solid marker fill / outlined ring / completed connector
+//   --dm-timeline-accent-fg    glyph ON the solid fill             (AA on the vivid base)
+//   --dm-timeline-accent-text  glyph on the outlined / tinted marker (AA on surfaces)
+//   --dm-timeline-accent-soft  halo behind the active marker
+:host([data-color='default']) {
+  --dm-timeline-accent: var(--dm-fg);
+  --dm-timeline-accent-fg: var(--dm-bg);
+  --dm-timeline-accent-text: var(--dm-default-text);
+  --dm-timeline-accent-soft: var(--dm-default-subtle);
+}
+
+:host([data-color='primary']) {
+  --dm-timeline-accent: var(--dm-primary);
+  --dm-timeline-accent-fg: var(--dm-primary-fg);
+  --dm-timeline-accent-text: var(--dm-primary-text);
+  --dm-timeline-accent-soft: var(--dm-primary-subtle);
+}
+
+:host([data-color='secondary']) {
+  --dm-timeline-accent: var(--dm-secondary);
+  --dm-timeline-accent-fg: var(--dm-secondary-fg);
+  --dm-timeline-accent-text: var(--dm-secondary-text);
+  --dm-timeline-accent-soft: var(--dm-secondary-subtle);
+}
+
+:host([data-color='success']) {
+  --dm-timeline-accent: var(--dm-success);
+  --dm-timeline-accent-fg: var(--dm-success-fg);
+  --dm-timeline-accent-text: var(--dm-success-text);
+  --dm-timeline-accent-soft: var(--dm-success-subtle);
+}
+
+:host([data-color='warning']) {
+  --dm-timeline-accent: var(--dm-warning);
+  --dm-timeline-accent-fg: var(--dm-warning-fg);
+  --dm-timeline-accent-text: var(--dm-warning-text);
+  --dm-timeline-accent-soft: var(--dm-warning-subtle);
+}
+
+:host([data-color='danger']),
+:host([data-state='error']) {
+  --dm-timeline-accent: var(--dm-danger);
+  --dm-timeline-accent-fg: var(--dm-danger-fg);
+  --dm-timeline-accent-text: var(--dm-danger-text);
+  --dm-timeline-accent-soft: var(--dm-danger-subtle);
+}
+
+// ---- Rail cell -------------------------------------------------------------
+.dm-timeline-item__rail {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+// Slot for a projected `[dmTimelineMarker]`. Collapses when empty.
+.dm-timeline-item__custom {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--dm-timeline-marker, 1.375rem);
+  min-height: var(--dm-timeline-marker, 1.375rem);
+
+  &:empty {
+    display: none;
+  }
+
+  // Belt and braces: even if the consumer forgot to import the marker
+  // directive, a projected custom marker still replaces the default dot.
+  &:not(:empty) + .dm-timeline-item__marker {
+    display: none;
+  }
+}
+
+.dm-timeline-item__marker {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--dm-timeline-marker, 1.375rem);
+  height: var(--dm-timeline-marker, 1.375rem);
+  font-size: calc(var(--dm-timeline-marker, 1.375rem) * 0.62);
+  line-height: 1;
+  border-radius: var(--dm-radius-full);
+
+  @include mixins.transition(background-color, color, border-color, box-shadow);
+}
+
+.dm-timeline-item__glyph {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.dm-timeline-item__connector {
+  flex: 1 1 auto;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-timeline-line, var(--dm-border-strong));
+
+  @include mixins.transition(background-color);
+}
+
+// ---- Marker variants -------------------------------------------------------
+// Solid = vivid accent fill → glyph uses the `-fg` token.
+:host([data-variant='solid']) .dm-timeline-item__marker {
+  color: var(--dm-timeline-accent-fg);
+  background: var(--dm-timeline-accent);
+}
+
+// Outlined = surface fill + accent ring → glyph uses the accessible `-text` token.
+:host([data-variant='outlined']) .dm-timeline-item__marker {
+  color: var(--dm-timeline-accent-text);
+  background: var(--dm-timeline-surface, var(--dm-bg));
+  border: 0.125rem solid var(--dm-timeline-accent);
+}
+
+// ---- States ----------------------------------------------------------------
+// Active: soft halo + an expanding ring that pulses outwards.
+:host([data-state='active']) .dm-timeline-item__marker {
+  box-shadow: 0 0 0 0.2rem var(--dm-timeline-accent-soft);
+  animation: dm-timeline-pulse var(--dm-timeline-pulse, 1.8s) var(--dm-ease-out) infinite;
+}
+
+// Outlined + active: a filled core so the ring reads as "current", not empty.
+:host([data-variant='outlined'][data-state='active']) .dm-timeline-item__marker::after {
+  content: '';
+  width: 40%;
+  height: 40%;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-timeline-accent);
+}
+
+// Completed: the connector towards the next item takes the accent.
+:host([data-state='completed']) {
+  --dm-timeline-line: var(--dm-timeline-accent);
+}
+
+// Error: title text sits on the page surface → accessible `-text` shade.
+:host([data-state='error']) .dm-timeline-item__title {
+  color: var(--dm-danger-text);
+}
+
+@keyframes dm-timeline-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0.2rem var(--dm-timeline-accent-soft),
+      0 0 0 0.2rem color-mix(in srgb, var(--dm-timeline-accent) 45%, transparent);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0.2rem var(--dm-timeline-accent-soft),
+      0 0 0 0.8rem transparent;
+  }
+}
+
+// ---- Content cell ----------------------------------------------------------
+.dm-timeline-item__content {
+  min-width: 0;
+}
+
+// Title + time share a wrapping row, vertically centered on the marker.
+.dm-timeline-item__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--dm-space-2);
+  align-content: center;
+  align-items: baseline;
+  min-height: var(--dm-timeline-marker, 1.375rem);
+}
+
+.dm-timeline-item__title {
+  min-width: 0;
+  font-size: var(--dm-timeline-title-fs, var(--dm-text-sm));
+  font-weight: var(--dm-font-semibold);
+  line-height: var(--dm-leading-tight);
+  color: var(--dm-fg);
+  overflow-wrap: anywhere;
+
+  @include mixins.transition(color);
+}
+
+.dm-timeline-item__time {
+  font-size: var(--dm-text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--dm-leading-tight);
+  color: var(--dm-fg-muted);
+  white-space: nowrap;
+}
+
+.dm-timeline-item__body {
+  font-size: var(--dm-timeline-body-fs, var(--dm-text-sm));
+  line-height: var(--dm-leading-normal);
+  color: var(--dm-fg-muted);
+  overflow-wrap: anywhere;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.dm-timeline-item__header + .dm-timeline-item__body:not(:empty) {
+  margin-top: var(--dm-space-1);
+}
+
+// ---- Orientation: vertical -------------------------------------------------
+// Rail = column 1 (stretched to the row height so the connector reaches the
+// next marker), content = column 2. Items are spaced by the content's bottom
+// padding, which the connector runs through.
+:host([data-orientation='vertical']) {
+  .dm-timeline-item__rail {
+    flex-direction: column;
+    grid-row: var(--dm-timeline-i);
+    grid-column: 1;
+    align-self: stretch;
+  }
+
+  .dm-timeline-item__connector {
+    width: 0.125rem;
+    min-height: var(--dm-space-2);
+    margin-block: var(--dm-space-1);
+  }
+
+  .dm-timeline-item__content {
+    grid-row: var(--dm-timeline-i);
+    grid-column: 2;
+    padding-bottom: var(--dm-timeline-gap, var(--dm-space-4));
+  }
+}
+
+:host([data-orientation='vertical'][data-last]) .dm-timeline-item__content {
+  padding-bottom: 0;
+}
+
+// Alternate (from md): rail in the center column, content on the `end` side
+// by default and flipped to the `start` column (right-aligned) for odd items.
+:host([data-orientation='vertical'][data-align='alternate']) {
+  @include mixins.respond-to(md) {
+    .dm-timeline-item__rail {
+      grid-column: 2;
+    }
+
+    .dm-timeline-item__content {
+      grid-column: 3;
+    }
+  }
+}
+
+:host([data-orientation='vertical'][data-align='alternate'][data-side='start']) {
+  @include mixins.respond-to(md) {
+    .dm-timeline-item__content {
+      grid-column: 1;
+      text-align: end;
+    }
+
+    .dm-timeline-item__header {
+      justify-content: flex-end;
+    }
+  }
+}
+
+// ---- Orientation: horizontal ----------------------------------------------
+// Rail = row 1 (marker + a connector that runs to the item's right edge, where
+// the next item's marker begins), content = row 2, both in the item's column.
+:host([data-orientation='horizontal']) {
+  .dm-timeline-item__rail {
+    flex-direction: row;
+    grid-row: 1;
+    grid-column: var(--dm-timeline-i);
+    align-self: center;
+  }
+
+  .dm-timeline-item__connector {
+    height: 0.125rem;
+    min-width: var(--dm-space-2);
+    margin-inline: var(--dm-space-1);
+  }
+
+  .dm-timeline-item__content {
+    grid-row: 2;
+    grid-column: var(--dm-timeline-i);
+    padding-top: var(--dm-space-2);
+    padding-inline-end: var(--dm-timeline-gap, var(--dm-space-4));
+  }
+}
+
+:host([data-orientation='horizontal'][data-last]) .dm-timeline-item__content {
+  padding-inline-end: 0;
+}
+
+// ---- Motion ----------------------------------------------------------------
+@include mixins.reduced-motion {
+  :host([data-state='active']) .dm-timeline-item__marker {
+    animation: none;
+  }
+}

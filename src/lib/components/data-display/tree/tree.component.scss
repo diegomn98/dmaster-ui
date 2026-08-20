@@ -1,0 +1,164 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance), all with fallbacks
+// so the component works without any extra theme wiring:
+//   --dm-tree-indent        indentation added per level
+//   --dm-tree-row-radius     row corner rounding
+//   --dm-tree-selected-bg    selected row surface (flat, tinted)
+//   --dm-tree-selected-fg    selected row text (AA on the tinted surface)
+//   --dm-tree-hover-bg       hover / active row surface
+//   --dm-tree-guide          connector guide-line color
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.dm-tree {
+  --dm-tree-indent: 1.25rem;
+  --dm-tree-depth: 0;
+
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  color: var(--dm-fg);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  list-style: none;
+}
+
+.dm-tree__group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dm-tree__item {
+  // Focus lives on the treeitem (roving tabindex); keep its outline tidy.
+  outline: none;
+
+  &:focus-visible > .dm-tree__row {
+    @include mixins.focus-ring;
+
+    border-radius: var(--dm-tree-row-radius, var(--dm-radius-md));
+  }
+}
+
+// ---- Row -------------------------------------------------------------------
+
+.dm-tree__row {
+  position: relative;
+  display: flex;
+  gap: var(--dm-space-2);
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding-block: var(--dm-space-1);
+  padding-inline: calc(var(--dm-tree-depth) * var(--dm-tree-indent) + var(--dm-space-2))
+    var(--dm-space-3);
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--dm-tree-row-radius, var(--dm-radius-md));
+
+  @include mixins.transition(background-color, color);
+
+  // Guarantees the 44px touch target without changing the visible row height.
+  @include mixins.touch-target;
+
+  &:hover {
+    background: var(--dm-tree-hover-bg, var(--dm-bg-muted));
+  }
+
+  .dm-tree__item[data-selected] > & {
+    color: var(--dm-tree-selected-fg, var(--dm-primary-text));
+    background: var(--dm-tree-selected-bg, var(--dm-primary-subtle));
+    font-weight: 600;
+  }
+
+  .dm-tree__item[data-disabled] > & {
+    color: var(--dm-fg-subtle);
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
+
+// ---- Disclosure chevron ----------------------------------------------------
+
+.dm-tree__chevron {
+  // Sits above the row's touch-target ::after so it stays independently
+  // clickable while the rest of the row selects.
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  color: var(--dm-fg-muted);
+  border-radius: var(--dm-radius-sm);
+
+  @include mixins.transition(transform, color, background-color);
+  @include mixins.touch-target;
+
+  &:hover {
+    color: var(--dm-fg);
+    background: var(--dm-bg-muted);
+  }
+
+  svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  .dm-tree__item[aria-expanded='true'] > .dm-tree__row > & {
+    transform: rotate(90deg);
+  }
+}
+
+// Placeholder that keeps leaf labels aligned with their expandable siblings.
+.dm-tree__spacer {
+  flex-shrink: 0;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+// ---- Leading icon slot (decorative marker, no dm-icon dependency) ----------
+
+.dm-tree__icon {
+  flex-shrink: 0;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  background: currentcolor;
+  border-radius: var(--dm-radius-full);
+  opacity: 0.55;
+}
+
+.dm-tree__label {
+  @include mixins.truncate;
+
+  flex: 1;
+  min-inline-size: 0;
+}
+
+// ---- Connector guide lines (optional) --------------------------------------
+
+.dm-tree[data-guides] .dm-tree__group {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+
+    // Align the rule with the parent's chevron center.
+    inset-inline-start: calc(
+      var(--dm-tree-depth, 0) * var(--dm-tree-indent) + var(--dm-space-2) + 0.625rem
+    );
+    inline-size: 1px;
+    background: var(--dm-tree-guide, var(--dm-border));
+  }
+}

@@ -1,0 +1,78 @@
+<!-- The tree container owns the keyboard model; focus roves across the
+     treeitems (roving tabindex), so the container itself is intentionally not a
+     tab stop. -->
+<!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+<ul
+  class="dm-tree"
+  role="tree"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-labelledby]="ariaLabelledby() || null"
+  [attr.aria-multiselectable]="selectionMode() === 'multiple' ? 'true' : null"
+  [attr.data-guides]="showGuides() ? '' : null"
+  (keydown)="onKeydown($event)"
+>
+  @for (entry of rootEntries(); track entry.node.id) {
+    <ng-container [ngTemplateOutlet]="nodeTpl" [ngTemplateOutletContext]="{ $implicit: entry }" />
+  }
+</ul>
+
+<ng-template #nodeTpl let-entry>
+  @let node = entry.node;
+  <li
+    class="dm-tree__item"
+    role="treeitem"
+    [style.--dm-tree-depth]="entry.level - 1"
+    [attr.data-id]="node.id"
+    [attr.aria-level]="entry.level"
+    [attr.aria-setsize]="entry.setsize"
+    [attr.aria-posinset]="entry.posinset"
+    [attr.aria-selected]="ariaSelected(node)"
+    [attr.aria-expanded]="entry.hasChildren ? isExpanded(node.id) : null"
+    [attr.aria-disabled]="node.disabled ? 'true' : null"
+    [attr.tabindex]="node.id === activeNodeId() ? 0 : -1"
+    [attr.data-selected]="isSelected(node.id) ? '' : null"
+    [attr.data-disabled]="node.disabled ? '' : null"
+  >
+    <!-- The row is the pointer target. Keyboard is handled once, at the
+         role="tree" container (the WAI-ARIA tree pattern), so this static
+         element deliberately has no key handler of its own. -->
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+    <div class="dm-tree__row" (click)="onRowClick(entry)">
+      @if (entry.hasChildren) {
+        <!-- Disclosure toggle. A non-focusable, aria-hidden span (not a button)
+             so the tree keeps a single tab stop; expansion is also reachable via
+             Left/Right on the treeitem. -->
+        <span class="dm-tree__chevron" aria-hidden="true" (click)="onChevronClick($event, node)">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="m9 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      } @else {
+        <span class="dm-tree__spacer" aria-hidden="true"></span>
+      }
+
+      @if (node.icon) {
+        <span class="dm-tree__icon" aria-hidden="true"></span>
+      }
+
+      <span class="dm-tree__label">{{ node.label }}</span>
+    </div>
+
+    @if (entry.hasChildren && isExpanded(node.id)) {
+      <ul class="dm-tree__group" role="group">
+        @for (child of childEntries(node.id); track child.node.id) {
+          <ng-container
+            [ngTemplateOutlet]="nodeTpl"
+            [ngTemplateOutletContext]="{ $implicit: child }"
+          />
+        }
+      </ul>
+    }
+  </li>
+</ng-template>

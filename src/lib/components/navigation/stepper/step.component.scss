@@ -1,0 +1,254 @@
+@use 'mixins';
+
+// The step reads the accent / size CSS variables set on its parent
+// .dm-stepper container (they cascade through the DOM), so it never duplicates
+// the stepper inputs. Per-state styling keys off the host `data-state`.
+
+// ---- Header button ---------------------------------------------------------
+.dm-step__header {
+  display: flex;
+  align-items: center;
+  gap: var(--dm-space-3);
+  min-width: 0;
+  margin: 0;
+  padding: var(--dm-space-2);
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dm-radius-md);
+  cursor: pointer;
+  outline: none;
+
+  @include mixins.transition(background-color, color, opacity);
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  // Press: brief elastic squeeze on the indicator.
+  &:active:not(:disabled) .dm-step__indicator {
+    transform: scale(0.94);
+    transition-duration: var(--dm-duration-fast);
+  }
+}
+
+// ---- Indicator -------------------------------------------------------------
+.dm-step__indicator {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--dm-stepper-ind, 1.75rem);
+  height: var(--dm-stepper-ind, 1.75rem);
+  font-size: var(--dm-stepper-ind-fs, var(--dm-text-sm));
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: var(--dm-fg-muted);
+  background: var(--dm-bg-muted);
+  border: 1px solid var(--dm-border-strong);
+  border-radius: var(--dm-radius-full);
+
+  @include mixins.transition(background-color, color, border-color, box-shadow, transform);
+}
+
+.dm-step__glyph {
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.dm-step__number {
+  font-variant-numeric: tabular-nums;
+}
+
+// ---- Label -----------------------------------------------------------------
+.dm-step__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.dm-step__label {
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: 1.2;
+  color: var(--dm-fg-muted);
+
+  @include mixins.truncate;
+  @include mixins.transition(color);
+}
+
+.dm-step__optional {
+  font-size: var(--dm-text-xs);
+  line-height: 1.2;
+  color: var(--dm-fg-subtle);
+
+  @include mixins.truncate;
+}
+
+// ---- Connector -------------------------------------------------------------
+// Horizontal: a flexible rule that fills the rest of the header, reaching the
+// next step. Repurposed / hidden in vertical (the rail is drawn on the host).
+.dm-step__connector {
+  flex: 1 1 auto;
+  min-width: var(--dm-space-4);
+  height: 0.125rem;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-stepper-line);
+
+  @include mixins.transition(background-color);
+}
+
+:host(:last-child) .dm-step__connector {
+  display: none;
+}
+
+// ---- Panel -----------------------------------------------------------------
+.dm-step__panel {
+  min-width: 0;
+  padding-block: var(--dm-space-3) var(--dm-space-2);
+
+  &:not([hidden]) {
+    animation: dm-step-panel-in var(--dm-duration-base) var(--dm-ease-out);
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+@keyframes dm-step-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+// ---- Per-state accents -----------------------------------------------------
+// All indicator fills are SOLID accent colors, so their glyph/number uses the
+// `-fg` token (white / contrast) — never `-text` (which is for tinted fills).
+:host([data-state='active']) {
+  .dm-step__indicator {
+    color: var(--dm-stepper-accent-fg);
+    background: var(--dm-stepper-accent);
+    border-color: transparent;
+    box-shadow: 0 0 0 0.25rem var(--dm-stepper-accent-soft);
+  }
+
+  .dm-step__label {
+    font-weight: var(--dm-font-semibold);
+    color: var(--dm-fg);
+  }
+}
+
+:host([data-state='completed']) {
+  --dm-stepper-line: var(--dm-stepper-accent);
+
+  .dm-step__indicator {
+    color: var(--dm-stepper-accent-fg);
+    background: var(--dm-stepper-accent);
+    border-color: transparent;
+  }
+
+  .dm-step__label {
+    color: var(--dm-fg);
+  }
+}
+
+:host([data-state='error']) {
+  .dm-step__indicator {
+    color: var(--dm-danger-fg);
+    background: var(--dm-danger);
+    border-color: transparent;
+  }
+
+  // Text sits on the page background, so use the accessible `-text` token.
+  .dm-step__label {
+    color: var(--dm-danger-text);
+  }
+}
+
+:host([data-state='disabled']) {
+  opacity: 0.5;
+}
+
+.dm-step__header:hover:not(:disabled) .dm-step__label {
+  color: var(--dm-fg);
+}
+
+// ---- Orientation: horizontal ----------------------------------------------
+// The step host melts away so its header + panel join the parent's wrapping
+// flex row directly. Headers share the row; the active panel wraps full-width.
+:host([data-orientation='horizontal']) {
+  display: contents;
+
+  .dm-step__header {
+    order: 1;
+    flex: 1 1 0;
+  }
+
+  .dm-step__panel {
+    order: 2;
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+
+// ---- Orientation: vertical -------------------------------------------------
+:host([data-orientation='vertical']) {
+  position: relative;
+  display: block;
+  padding-bottom: var(--dm-space-2);
+
+  .dm-step__header {
+    width: 100%;
+  }
+
+  // The inline connector is unused; the rail is the ::before below.
+  .dm-step__connector {
+    display: none;
+  }
+
+  // Panel indented so its content aligns under the label, clearing the rail.
+  .dm-step__panel {
+    margin-left: calc(var(--dm-space-2) + var(--dm-stepper-ind, 1.75rem) / 2);
+    padding-left: calc(var(--dm-stepper-ind, 1.75rem) / 2 + var(--dm-space-3));
+  }
+
+  // Vertical rail: from below this indicator down to the next step's indicator.
+  &::before {
+    content: '';
+    position: absolute;
+    top: calc(var(--dm-space-2) + var(--dm-stepper-ind, 1.75rem));
+    bottom: calc(-1 * var(--dm-space-2));
+    left: calc(var(--dm-space-2) + var(--dm-stepper-ind, 1.75rem) / 2 - 0.0625rem);
+    width: 0.125rem;
+    background: var(--dm-stepper-line);
+
+    @include mixins.transition(background-color);
+  }
+
+  &:last-child::before {
+    display: none;
+  }
+}
+
+// Touch: keep the header tap target comfortable on coarse pointers.
+@media (pointer: coarse) {
+  .dm-step__header {
+    min-height: 2.75rem;
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-step__panel:not([hidden]) {
+    animation: none;
+  }
+}

@@ -1,0 +1,146 @@
+<button
+  type="button"
+  class="dm-file-upload__dropzone"
+  [attr.data-dragging]="dragging() ? '' : null"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-describedby]="hint() ? hintId : null"
+  [disabled]="disabled()"
+  (click)="open()"
+  (dragenter)="onDragOver($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  <svg
+    class="dm-file-upload__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 13v8" />
+    <path d="m8 17 4-4 4 4" />
+    <path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3" />
+  </svg>
+
+  <span class="dm-file-upload__label">{{ label() }}</span>
+
+  @if (hint()) {
+    <span class="dm-file-upload__hint" [id]="hintId">{{ hint() }}</span>
+  }
+</button>
+
+<input
+  #fileInput
+  class="dm-file-upload__native"
+  type="file"
+  tabindex="-1"
+  aria-hidden="true"
+  [attr.accept]="accept() || null"
+  [multiple]="multiple()"
+  [disabled]="disabled()"
+  (change)="onInputChange($event)"
+/>
+
+@if (rejection()) {
+  <p class="dm-file-upload__error" role="alert">{{ rejectionText() }}</p>
+}
+
+@if (rows().length) {
+  <ul class="dm-file-upload__list">
+    @for (row of rows(); track row.file) {
+      <li class="dm-file-upload__item" [attr.data-status]="row.status">
+        <span class="dm-file-upload__thumb-wrap">
+          @if (row.url) {
+            <img class="dm-file-upload__thumb" [src]="row.url" alt="" />
+          } @else {
+            <svg
+              class="dm-file-upload__glyph"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+              <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+            </svg>
+          }
+
+          @if (row.status === 'done') {
+            <span class="dm-file-upload__badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.25">
+                <path d="m5 13 4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          }
+        </span>
+
+        <div class="dm-file-upload__meta">
+          <span class="dm-file-upload__name" [title]="row.name">{{ row.name }}</span>
+
+          @switch (row.status) {
+            @case ('uploading') {
+              <span class="dm-file-upload__status">
+                <span class="dm-file-upload__size">{{ row.size }}</span>
+                <span class="dm-file-upload__pct">{{ row.value }}%</span>
+              </span>
+              <div
+                class="dm-file-upload__progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-valuenow]="row.value"
+                [attr.aria-label]="row.name"
+              >
+                <div class="dm-file-upload__progress-fill" [style.width.%]="row.value"></div>
+              </div>
+            }
+            @case ('done') {
+              <span class="dm-file-upload__done">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.75"
+                  aria-hidden="true"
+                >
+                  <path d="m5 13 4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {{ uploadedLabel() }} · {{ row.size }}
+              </span>
+            }
+            @default {
+              <span class="dm-file-upload__size">{{ row.size }}</span>
+            }
+          }
+        </div>
+
+        <button
+          type="button"
+          class="dm-file-upload__remove"
+          [attr.aria-label]="removeLabel() + ' ' + row.name"
+          [disabled]="disabled()"
+          (click)="remove(row.file)"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </li>
+    }
+  </ul>
+}

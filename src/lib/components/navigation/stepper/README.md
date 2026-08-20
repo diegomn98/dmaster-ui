@@ -1,0 +1,107 @@
+# Stepper (`dm-stepper` + `dm-step`)
+
+Guides a user through an ordered sequence of steps, one panel at a time. It is a
+**navigational list of steps** — not a tablist: each header is a `<button>`, the
+active one carries `aria-current="step"`, and each connects to its own panel via
+`aria-controls` / `aria-labelledby`. No Angular Material dependency.
+
+## Usage
+
+```ts
+import { DmStepperComponent, DmStepComponent } from '@dmaster/ui';
+```
+
+```html
+<dm-stepper [(activeStep)]="step" color="primary">
+  <dm-step label="Account">
+    <!-- panel body for step 1 -->
+  </dm-step>
+  <dm-step label="Shipping" [completed]="shippingDone()">…</dm-step>
+  <dm-step label="Payment" optional>…</dm-step>
+</dm-stepper>
+```
+
+### Linear mode
+
+In `linear` mode a step ahead of the active one is selectable only once every
+prior step is `completed`. Going back is always allowed.
+
+```html
+<dm-stepper [(activeStep)]="step" linear>
+  <dm-step label="Details" [completed]="form.valid">…</dm-step>
+  <dm-step label="Review">…</dm-step>
+</dm-stepper>
+```
+
+Drive progression from your own buttons with `next()` / `previous()`:
+
+```html
+<dm-stepper #s [(activeStep)]="step" linear>…</dm-stepper>
+<dm-button (click)="s.previous()">Back</dm-button>
+<dm-button (click)="s.next()">Continue</dm-button>
+```
+
+### Vertical
+
+```html
+<dm-stepper orientation="vertical" [(activeStep)]="step">
+  <dm-step label="Order placed" completed>…</dm-step>
+  <dm-step label="Out for delivery">…</dm-step>
+  <dm-step label="Delivered">…</dm-step>
+</dm-stepper>
+```
+
+## API — `dm-stepper`
+
+| Input / Output          | Type                                                                          | Default        | Description                                            |
+| ----------------------- | ----------------------------------------------------------------------------- | -------------- | ------------------------------------------------------ |
+| `activeStep`            | `number` (two-way)                                                            | `0`            | Zero-based index of the active step. `[(activeStep)]`. |
+| `orientation`           | `'horizontal' \| 'vertical'`                                                  | `'horizontal'` | Layout direction.                                      |
+| `linear`                | `boolean` (attribute)                                                         | `false`        | Block jumping ahead past an incomplete step.           |
+| `color`                 | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`    | Accent of the active / completed indicators.           |
+| `size`                  | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`         | Indicator diameter + type scale.                       |
+| `ariaLabel`             | `string`                                                                      | `''`           | Accessible label for the step list.                    |
+| `next()` / `previous()` | method                                                                        | —              | Move to the next reachable / previous enabled step.    |
+
+## API — `dm-step`
+
+| Input           | Type                  | Default      | Description                                                  |
+| --------------- | --------------------- | ------------ | ------------------------------------------------------------ |
+| `label`         | `string`              | `''`         | Short label shown in the header.                             |
+| `optional`      | `boolean` (attribute) | `false`      | Renders the `optionalLabel` hint under the label.            |
+| `optionalLabel` | `string`              | `'Optional'` | Copy for the optional hint (localise from the consumer).     |
+| `completed`     | `boolean` (attribute) | `false`      | Shows the check glyph; unlocks later steps in `linear` mode. |
+| `error`         | `boolean` (attribute) | `false`      | Warning glyph + danger accent.                               |
+| `disabled`      | `boolean` (attribute) | `false`      | Not selectable; keyboard navigation skips it.                |
+
+The projected content of each `<dm-step>` is its panel body, rendered only while
+that step is active.
+
+## Global defaults
+
+```ts
+providers: [provideStepperDefaults({ orientation: 'vertical', color: 'success' })];
+```
+
+Or provide `STEPPER_DEFAULTS` directly.
+
+## Theming
+
+CSS variables set on the container and consumed by the steps:
+
+- `--dm-stepper-accent` / `--dm-stepper-accent-fg` — solid indicator fill + its glyph color.
+- `--dm-stepper-accent-soft` — halo behind the active indicator.
+- `--dm-stepper-line` — connector rail (turns accent for completed segments).
+- `--dm-stepper-ind` / `--dm-stepper-ind-fs` — indicator diameter + number size.
+
+## Accessibility
+
+- Container is `role="list"`; each step is `role="listitem"` with a `<button>` header.
+- The active header carries `aria-current="step"`; each header wires `aria-controls`
+  to its `role="region"` panel, which is `aria-labelledby` the header.
+- Arrow keys (Left/Right, or Up/Down when vertical) move focus between headers;
+  `Home` / `End` jump to the first / last enabled step; `Enter` / `Space` activate.
+- `disabled` steps use the native disabled button; linear-locked steps expose
+  `aria-disabled="true"` while staying focusable.
+- Indicator glyphs are `aria-hidden`; state is conveyed by the visible label.
+- Motion honors `prefers-reduced-motion`.

@@ -1,0 +1,78 @@
+@use 'mixins';
+
+// The timeline is ONE grid. Each projected item host is `display: contents`,
+// so its rail cell and content cell become direct cells of this grid and pin
+// themselves to the item's row (vertical) / column (horizontal) through the
+// `--dm-timeline-i` custom property the item host stamps. Sharing the grid is
+// what keeps the content column aligned across items when a custom marker is
+// wider than the default dot.
+//
+// Component tokens (set on this container, consumed by the projected items):
+//   --dm-timeline-marker      marker diameter
+//   --dm-timeline-gap         space between consecutive items
+//   --dm-timeline-col-gap     space between the rail and the content
+//   --dm-timeline-title-fs    title font-size
+//   --dm-timeline-body-fs     time / body font-size
+//   --dm-timeline-line        connector color           (fallback: --dm-border-strong)
+//   --dm-timeline-surface     outlined marker fill      (fallback: --dm-bg)
+//   --dm-timeline-col         min column width, horizontal (fallback: 10rem)
+//   --dm-timeline-pulse       active ring pulse duration (fallback: 1.8s)
+// The accent vars (--dm-timeline-accent*) are mapped per item from its
+// effective `data-color` — see timeline-item.component.scss.
+
+:host {
+  display: grid;
+  min-width: 0;
+  font-family: var(--dm-font-sans);
+}
+
+// ---- Sizes -----------------------------------------------------------------
+:host([data-size='sm']) {
+  --dm-timeline-marker: 1.125rem;
+  --dm-timeline-gap: var(--dm-space-3);
+  --dm-timeline-col-gap: var(--dm-space-3);
+  --dm-timeline-title-fs: var(--dm-text-sm);
+  --dm-timeline-body-fs: var(--dm-text-xs);
+}
+
+:host([data-size='md']) {
+  --dm-timeline-marker: 1.375rem;
+  --dm-timeline-gap: var(--dm-space-4);
+  --dm-timeline-col-gap: var(--dm-space-3);
+  --dm-timeline-title-fs: var(--dm-text-sm);
+  --dm-timeline-body-fs: var(--dm-text-sm);
+}
+
+:host([data-size='lg']) {
+  --dm-timeline-marker: 1.75rem;
+  --dm-timeline-gap: var(--dm-space-5);
+  --dm-timeline-col-gap: var(--dm-space-4);
+  --dm-timeline-title-fs: var(--dm-text-base);
+  --dm-timeline-body-fs: var(--dm-text-sm);
+}
+
+// ---- Orientation: vertical -------------------------------------------------
+// Rail column (auto: grows with the widest marker) + content column.
+:host([data-orientation='vertical']) {
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--dm-timeline-col-gap);
+}
+
+// Alternate: the rail moves to a center column flanked by two equal content
+// columns; items zig-zag their content between them. Mobile keeps `start`.
+:host([data-orientation='vertical'][data-align='alternate']) {
+  @include mixins.respond-to(md) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+}
+
+// ---- Orientation: horizontal ----------------------------------------------
+// One column per item (rail row on top, content row below), scrolling
+// sideways when the items no longer fit.
+:host([data-orientation='horizontal']) {
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(var(--dm-timeline-col, 10rem), 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}

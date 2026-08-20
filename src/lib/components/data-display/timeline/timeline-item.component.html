@@ -1,0 +1,58 @@
+<!-- Rail cell: marker + connector to the next item. The default marker and the
+     connector are decorative; a projected custom marker keeps its own semantics. -->
+<div class="dm-timeline-item__rail">
+  <span class="dm-timeline-item__custom"><ng-content select="[dmTimelineMarker]" /></span>
+
+  @if (!customMarker()) {
+    <span class="dm-timeline-item__marker" aria-hidden="true">
+      @switch (state()) {
+        @case ('completed') {
+          <svg viewBox="0 0 24 24" fill="none" class="dm-timeline-item__glyph">
+            <path
+              d="M20 6.5 9.5 17 4 11.5"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+        @case ('error') {
+          <svg viewBox="0 0 24 24" fill="none" class="dm-timeline-item__glyph">
+            <path
+              d="M12 7.5v5.5"
+              stroke="currentColor"
+              stroke-width="2.25"
+              stroke-linecap="round"
+            />
+            <circle cx="12" cy="16.75" r="1.15" fill="currentColor" />
+          </svg>
+        }
+      }
+    </span>
+  }
+
+  @if (!isLast()) {
+    <span class="dm-timeline-item__connector" aria-hidden="true"></span>
+  }
+</div>
+
+<!-- Content cell: header (title + time) and the projected body. -->
+<div class="dm-timeline-item__content">
+  @if (hasHeader()) {
+    <div class="dm-timeline-item__header">
+      @if (title()) {
+        <strong class="dm-timeline-item__title">{{ title() }}</strong>
+      }
+      @if (time()) {
+        @if (datetime()) {
+          <time class="dm-timeline-item__time" [attr.datetime]="datetime()">{{ time() }}</time>
+        } @else {
+          <span class="dm-timeline-item__time">{{ time() }}</span>
+        }
+      }
+    </div>
+  }
+
+  <div class="dm-timeline-item__body"><ng-content /></div>
+</div>
