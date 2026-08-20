@@ -1,0 +1,131 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance, all with fallback):
+//   --dm-empty-state-icon-bg   circle behind the glyph
+//   --dm-empty-state-icon-fg   glyph color
+//   --dm-empty-state-padding   outer padding
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-1);
+  padding: var(--dm-empty-state-padding, var(--dm-space-8) var(--dm-space-4));
+  text-align: center;
+  font-family: var(--dm-font-sans);
+}
+
+// ---- Icon ------------------------------------------------------------------
+// Two consecutive media boxes: the custom (projected) one first, the built-in
+// glyph second. When the custom slot has content, CSS hides the default —
+// zero JS, same `:empty` trick the alert action slot uses.
+.dm-empty-state__media {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--dm-space-2);
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-empty-state-icon-bg, var(--dm-bg-muted));
+  color: var(--dm-empty-state-icon-fg, var(--dm-fg-subtle));
+}
+
+.dm-empty-state__media--custom:empty {
+  display: none;
+}
+
+.dm-empty-state__media--custom:not(:empty) + .dm-empty-state__media--default {
+  display: none;
+}
+
+// ---- Text ------------------------------------------------------------------
+.dm-empty-state__title {
+  margin: 0;
+  font-weight: var(--dm-font-semibold);
+  color: var(--dm-fg);
+}
+
+.dm-empty-state__description {
+  margin: 0;
+  max-width: 36ch;
+  color: var(--dm-fg-muted);
+  line-height: var(--dm-leading-snug);
+}
+
+// ---- Actions ---------------------------------------------------------------
+.dm-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  margin-top: var(--dm-space-3);
+
+  // Sin contenido proyectado el hueco desaparece (ng-content no deja nodos).
+  &:empty {
+    display: none;
+  }
+}
+
+// ---- Sizes -----------------------------------------------------------------
+:host([data-size='sm']) {
+  .dm-empty-state__media {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  .dm-empty-state__title {
+    font-size: var(--dm-text-sm);
+  }
+
+  .dm-empty-state__description {
+    font-size: var(--dm-text-xs);
+  }
+}
+
+:host([data-size='md']) {
+  .dm-empty-state__media {
+    width: 3.5rem;
+    height: 3.5rem;
+
+    svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+
+  .dm-empty-state__title {
+    font-size: var(--dm-text-base);
+  }
+
+  .dm-empty-state__description {
+    font-size: var(--dm-text-sm);
+  }
+}
+
+:host([data-size='lg']) {
+  gap: var(--dm-space-2);
+
+  .dm-empty-state__media {
+    width: 4.5rem;
+    height: 4.5rem;
+
+    svg {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+
+  .dm-empty-state__title {
+    font-size: var(--dm-text-lg);
+  }
+
+  .dm-empty-state__description {
+    font-size: var(--dm-text-sm);
+  }
+}

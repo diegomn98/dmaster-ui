@@ -1,0 +1,33 @@
+@use 'mixins';
+
+// Component tokens (overridable globally or per-instance, all with fallback):
+//   --dm-toggle-track-bg   muted track behind the segments
+//   --dm-toggle-inset      padding between the track and the segments
+
+:host {
+  display: inline-flex;
+  flex-direction: row;
+  gap: 0;
+  padding: var(--dm-toggle-inset, 0.1875rem);
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-md);
+  background: var(--dm-toggle-track-bg, var(--dm-bg-muted));
+  font-family: var(--dm-font-sans);
+  vertical-align: middle;
+}
+
+:host([data-orientation='vertical']) {
+  flex-direction: column;
+}
+
+// Full-width: the group stretches and its segments share the space equally.
+:host([data-full-width='true']) {
+  display: flex;
+  width: 100%;
+}
+
+:host([data-disabled='true']),
+:host([aria-disabled='true']) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

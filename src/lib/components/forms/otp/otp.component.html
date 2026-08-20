@@ -1,0 +1,25 @@
+@for (i of slots(); track i) {
+  <input
+    #cell
+    class="dm-otp__cell"
+    [type]="mask() ? 'password' : 'text'"
+    [attr.inputmode]="inputMode()"
+    autocomplete="one-time-code"
+    autocapitalize="off"
+    autocorrect="off"
+    spellcheck="false"
+    maxlength="1"
+    [value]="cellValue(i)"
+    [disabled]="isDisabled()"
+    [attr.data-filled]="cellValue(i) ? 'true' : null"
+    [attr.aria-label]="(ariaLabel() || 'Character') + ' ' + (i + 1) + ' of ' + length()"
+    (input)="onInput(i, $event)"
+    (keydown)="onKeydown(i, $event)"
+    (paste)="onPaste(i, $event)"
+    (focus)="onFocus($event)"
+    (blur)="onBlur()"
+  />
+  @if (showSeparatorAfter(i)) {
+    <span class="dm-otp__sep" aria-hidden="true"></span>
+  }
+}

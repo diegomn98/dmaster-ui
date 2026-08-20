@@ -1,0 +1,109 @@
+@use 'mixins';
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  padding: 0 var(--dm-space-3);
+  border-radius: calc(var(--dm-radius-md) - 0.1875rem);
+  background: transparent;
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+
+  @include mixins.transition(background-color, color, box-shadow);
+}
+
+// Full-width group: segments share the row/column equally.
+:host-context([data-full-width='true']) {
+  flex: 1;
+}
+
+// ---- Sizes (aligned with the field family: 32 / 40 / 48) -------------------
+:host([data-size='sm']) {
+  height: 1.75rem;
+  padding: 0 var(--dm-space-2);
+  font-size: var(--dm-text-xs);
+}
+
+:host([data-size='md']) {
+  height: 2.125rem;
+}
+
+:host([data-size='lg']) {
+  height: 2.625rem;
+  padding: 0 var(--dm-space-4);
+  font-size: var(--dm-text-base);
+}
+
+// ---- Interaction on the unselected state -----------------------------------
+:host(:hover:not([data-selected='true'], [data-disabled])) {
+  color: var(--dm-fg);
+  background: color-mix(in srgb, var(--dm-fg) 6%, transparent);
+}
+
+:host(:focus-visible) {
+  outline: none;
+
+  @include mixins.focus-ring;
+}
+
+:host([data-disabled]) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// ---- Colors → generic fill vars --------------------------------------------
+// default keeps the neutral "raised chip" look; the rest fill with their
+// solid color so the selected label reads on a vivid background.
+:host([data-color='default']) {
+  --dm-toggle-fill: var(--dm-bg-elevated);
+  --dm-toggle-fill-fg: var(--dm-fg);
+
+  // The raised chip gets a hairline ring on top of the soft shadow: elevated
+  // vs the muted track is a subtle step, so the ring marks the edge on both
+  // themes without shifting layout (shadow, not border).
+  --dm-toggle-fill-shadow: 0 0 0 1px var(--dm-border), var(--dm-shadow-sm);
+}
+
+:host([data-color='primary']) {
+  --dm-toggle-fill: var(--dm-primary);
+  --dm-toggle-fill-fg: var(--dm-primary-fg);
+  --dm-toggle-fill-shadow: none;
+}
+
+:host([data-color='secondary']) {
+  --dm-toggle-fill: var(--dm-secondary);
+  --dm-toggle-fill-fg: var(--dm-secondary-fg);
+  --dm-toggle-fill-shadow: none;
+}
+
+:host([data-color='success']) {
+  --dm-toggle-fill: var(--dm-success);
+  --dm-toggle-fill-fg: var(--dm-success-fg);
+  --dm-toggle-fill-shadow: none;
+}
+
+:host([data-color='warning']) {
+  --dm-toggle-fill: var(--dm-warning);
+  --dm-toggle-fill-fg: var(--dm-warning-fg);
+  --dm-toggle-fill-shadow: none;
+}
+
+:host([data-color='danger']) {
+  --dm-toggle-fill: var(--dm-danger);
+  --dm-toggle-fill-fg: var(--dm-danger-fg);
+  --dm-toggle-fill-shadow: none;
+}
+
+// ---- Selected --------------------------------------------------------------
+:host([data-selected='true']) {
+  background: var(--dm-toggle-fill);
+  color: var(--dm-toggle-fill-fg);
+  box-shadow: var(--dm-toggle-fill-shadow);
+}

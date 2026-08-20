@@ -1,0 +1,161 @@
+@use 'mixins';
+
+// Component tokens map from data-color to a generic focus var, exactly like the
+// rest of the field family (input, select, number). `default` focuses primary.
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dm-space-2);
+  font-family: var(--dm-font-sans);
+}
+
+.dm-otp__cell {
+  --dm-otp: var(--dm-primary);
+  --dm-otp-subtle: var(--dm-primary-subtle);
+
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+
+  // Hairline on the flat cells too (not just bordered): a 40px fill alone is
+  // too small to define the cell edge on close surfaces — light or dark.
+  border: 1px solid var(--dm-border);
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-muted);
+  color: var(--dm-fg);
+  font-family: inherit;
+  font-size: var(--dm-text-lg);
+  font-weight: var(--dm-font-medium);
+  text-align: center;
+  caret-color: var(--dm-otp);
+
+  // Focus ring parked at 0 spread → grows out of the cell (same as .dm-input).
+  box-shadow: 0 0 0 0 var(--dm-otp-subtle);
+
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  &[data-filled='true'] {
+    border-color: color-mix(in srgb, var(--dm-otp) 30%, transparent);
+  }
+
+  &:hover:not(:disabled, :focus) {
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
+
+  &:focus {
+    outline: none;
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-otp);
+    box-shadow: 0 0 0 3.5px var(--dm-otp-subtle);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// ---- Variants (field-family surfaces) ---------------------------------------
+// flat (default): muted fill, no border — inherited from the base above.
+// bordered: elevated ("white") fill + visible border, like a classic input.
+:host([data-variant='bordered']) .dm-otp__cell {
+  background-color: var(--dm-bg-elevated);
+  border-color: var(--dm-border);
+
+  &:hover:not(:disabled, :focus) {
+    background-color: var(--dm-bg-elevated);
+    border-color: var(--dm-border-strong, var(--dm-border));
+  }
+
+  &:focus {
+    border-color: var(--dm-otp);
+  }
+}
+
+// faded: muted fill + soft border.
+:host([data-variant='faded']) .dm-otp__cell {
+  border-color: var(--dm-border);
+}
+
+// underlined: bare cells with a bottom rule only — minimal look.
+:host([data-variant='underlined']) .dm-otp__cell {
+  background-color: transparent;
+  border-radius: 0;
+  border-color: transparent;
+  border-bottom: 2px solid var(--dm-border);
+  box-shadow: none;
+
+  &[data-filled='true'] {
+    border-bottom-color: color-mix(in srgb, var(--dm-otp) 45%, transparent);
+  }
+
+  &:hover:not(:disabled, :focus) {
+    background-color: transparent;
+    border-bottom-color: var(--dm-border-strong, var(--dm-border));
+  }
+
+  &:focus {
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--dm-otp);
+    box-shadow: none;
+  }
+}
+
+// ---- Group separator --------------------------------------------------------
+// A short dash between cell groups (groupSize): decorative, aria-hidden.
+.dm-otp__sep {
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 2px;
+  border-radius: var(--dm-radius-full);
+  background: var(--dm-fg-subtle);
+  opacity: 0.6;
+}
+
+// ---- Colors → generic focus var (default = primary, field-family rule) -----
+:host([data-color='default']) .dm-otp__cell,
+:host([data-color='primary']) .dm-otp__cell {
+  --dm-otp: var(--dm-primary);
+  --dm-otp-subtle: var(--dm-primary-subtle);
+}
+
+:host([data-color='secondary']) .dm-otp__cell {
+  --dm-otp: var(--dm-secondary);
+  --dm-otp-subtle: var(--dm-secondary-subtle);
+}
+
+:host([data-color='success']) .dm-otp__cell {
+  --dm-otp: var(--dm-success);
+  --dm-otp-subtle: var(--dm-success-subtle);
+}
+
+:host([data-color='warning']) .dm-otp__cell {
+  --dm-otp: var(--dm-warning);
+  --dm-otp-subtle: var(--dm-warning-subtle);
+}
+
+:host([data-color='danger']) .dm-otp__cell {
+  --dm-otp: var(--dm-danger);
+  --dm-otp-subtle: var(--dm-danger-subtle);
+}
+
+// ---- Sizes (32 / 40 / 48, matching the field family) -----------------------
+:host([data-size='sm']) .dm-otp__cell {
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--dm-text-base);
+}
+
+:host([data-size='md']) .dm-otp__cell {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+:host([data-size='lg']) .dm-otp__cell {
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--dm-text-xl);
+}

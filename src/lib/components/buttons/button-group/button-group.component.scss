@@ -1,0 +1,121 @@
+// ViewEncapsulation.None — every rule is scoped under `.dm-button-group` so it
+// can reach the inner `.dm-button` of each projected button without leaking.
+//
+// Component tokens (overridable globally or per-instance, with fallback):
+//   --dm-button-group-divider   1px seam between non-bordered segments
+
+.dm-button-group {
+  display: inline-flex;
+  flex-direction: row;
+  vertical-align: middle;
+  isolation: isolate;
+
+  // Each projected button host: relative so the hovered/focused one can rise
+  // above its neighbours (its border/focus ring is never clipped by the next),
+  // and so the seam pseudo-element can anchor to it.
+  > dm-button {
+    position: relative;
+  }
+
+  > dm-button:hover,
+  > dm-button:focus-within {
+    z-index: 1;
+  }
+
+  // The bar is rigid: the elastic per-button press would deform the group, so
+  // it is disabled here — feedback stays via the button's own hover/active
+  // color shifts.
+  .dm-button:active:not(:disabled) {
+    transform: none;
+  }
+
+  // ---- Seam between segments ----------------------------------------------
+  // A subtle 1px divider owned by the group. It reads on any fill (solid,
+  // flat, light, ghost…) because it mixes from the foreground. Bordered
+  // buttons bring their own 2px border, so their pairs collapse the shared
+  // border instead (below) and the seam is suppressed via :has().
+  > dm-button + dm-button::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    background: var(--dm-button-group-divider, color-mix(in srgb, var(--dm-fg) 15%, transparent));
+    pointer-events: none;
+  }
+
+  > dm-button + dm-button:has(> .dm-button[data-variant='bordered'])::before {
+    display: none;
+  }
+
+  // ---- Horizontal (default) ------------------------------------------------
+  &[data-orientation='horizontal'] {
+    > dm-button + dm-button::before {
+      inset-block: 15%;
+      inset-inline-start: 0;
+      width: 1px;
+    }
+
+    // Collapse the 2px shared border between adjacent bordered buttons.
+    > dm-button + dm-button:has(> .dm-button[data-variant='bordered']) {
+      margin-inline-start: -2px;
+    }
+
+    > dm-button:not(:first-of-type) .dm-button {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+
+    > dm-button:not(:last-of-type) .dm-button {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+  }
+
+  // ---- Vertical ------------------------------------------------------------
+  &[data-orientation='vertical'] {
+    flex-direction: column;
+
+    > dm-button + dm-button::before {
+      inset-inline: 15%;
+      inset-block-start: 0;
+      height: 1px;
+    }
+
+    > dm-button + dm-button:has(> .dm-button[data-variant='bordered']) {
+      margin-block-start: -2px;
+    }
+
+    > dm-button:not(:first-of-type) .dm-button {
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+    }
+
+    > dm-button:not(:last-of-type) .dm-button {
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    // Stacked buttons should share one width, not each keep its intrinsic one.
+    > dm-button .dm-button {
+      width: 100%;
+    }
+  }
+
+  // ---- Full width ----------------------------------------------------------
+  &[data-full-width='true'] {
+    display: flex;
+    width: 100%;
+
+    > dm-button {
+      flex: 1;
+    }
+
+    > dm-button .dm-button {
+      width: 100%;
+    }
+  }
+
+  // ---- Group-level disabled ------------------------------------------------
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,30 @@
+@if (!hideIcon()) {
+  <div class="dm-empty-state__media dm-empty-state__media--custom" aria-hidden="true">
+    <ng-content select="[dmEmptyStateIcon]" />
+  </div>
+  <div class="dm-empty-state__media dm-empty-state__media--default" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M4 13.5 6.2 6.9A2 2 0 0 1 8.1 5.5h7.8a2 2 0 0 1 1.9 1.4L20 13.5" />
+      <path
+        d="M4 13.5h4.6l1.4 2.3h4l1.4-2.3H20v3.2a2.3 2.3 0 0 1-2.3 2.3H6.3A2.3 2.3 0 0 1 4 16.7v-3.2Z"
+      />
+    </svg>
+  </div>
+}
+
+@if (title()) {
+  <p class="dm-empty-state__title">{{ title() }}</p>
+}
+
+@if (description()) {
+  <p class="dm-empty-state__description">{{ description() }}</p>
+}
+
+<div class="dm-empty-state__actions"><ng-content /></div>

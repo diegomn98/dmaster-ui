@@ -10,7 +10,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0F6E56?style=flat-square)](https://dmasterui.com)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**41 components · 3 languages (EN/ES/FR) in the docs · 0 runtime deps beyond Angular CDK · 600+ tests**
+**45 components · 3 languages (EN/ES/FR) in the docs · 0 runtime deps beyond Angular CDK · 600+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 
@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.6 kB gzip, a card ~1.3 kB, the entire 41-component library ~78 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 45-component library ~94 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -102,7 +102,7 @@ export class MyComponent {}
 
 ## Components
 
-41 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+45 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
 
 ### Primitives
 
@@ -132,29 +132,32 @@ export class MyComponent {}
 
 ### Buttons
 
-| Component                                         | Selector    | Highlights                                                              |
-| ------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
-| [Button](https://dmasterui.com/components/button) | `dm-button` | 7 variants · 6 colors · idle/loading/success/error states · live region |
+| Component                                                     | Selector          | Highlights                                                                        |
+| ------------------------------------------------------------- | ----------------- | --------------------------------------------------------------------------------- |
+| [Button](https://dmasterui.com/components/button)             | `dm-button`       | 7 variants · 6 colors · idle/loading/success/error states · live region           |
+| [Button Group](https://dmasterui.com/components/button-group) | `dm-button-group` | Attached bar with 1px seams, group-level color/variant/size cascade, split-button |
 
 ### Forms
 
-| Component                                                             | Selector                      | Highlights                                                                                 |
-| --------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| [Switch](https://dmasterui.com/components/switch)                     | `dm-switch`                   | ControlValueAccessor, 3 sizes                                                              |
-| [Checkbox](https://dmasterui.com/components/checkbox)                 | `dm-checkbox`                 | ControlValueAccessor, indeterminate state                                                  |
-| [Radio Group](https://dmasterui.com/components/radio-group)           | `dm-radio-group` + `dm-radio` | ControlValueAccessor, horizontal/vertical                                                  |
-| [Select](https://dmasterui.com/components/select)                     | `dm-select`                   | Single or multiple (chips), inline filter, option groups, select-all, keyboard nav, CVA    |
-| [Autocomplete](https://dmasterui.com/components/autocomplete)         | `dm-autocomplete`             | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA       |
-| [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`         | Server-driven async load, infinite pagination                                              |
-| [Search Field](https://dmasterui.com/components/search-field)         | `dm-search-field`             | Leading icon, clear button, Escape clears, Enter submits                                   |
-| [Date Picker](https://dmasterui.com/components/date-picker)           | `dm-date-picker`              | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
-| [Color Picker](https://dmasterui.com/components/color-picker)         | `dm-color-picker`             | Saturation/hue/alpha area, editable hex, swatches                                          |
-| [Slider](https://dmasterui.com/components/slider)                     | `dm-slider`                   | Pointer drag + full keyboard map, value bubble, marks                                      |
-| [Rating](https://dmasterui.com/components/rating)                     | `dm-rating`                   | Star rating, half stars, readonly fractional average, custom glyph, `role="slider"`, CVA   |
-| [Number Input](https://dmasterui.com/components/number-input)         | `dm-number-input`             | Spinbutton with ± controls, keyboard map, clamp/precision, `Intl` formatting, CVA          |
-| [File Upload](https://dmasterui.com/components/file-upload)           | `dm-file-upload`              | Drag-and-drop dropzone, thumbnails, per-file progress, accept/size/count validation        |
-| [Form Field](https://dmasterui.com/components/form-field)             | `dm-form-field` + `dmInput`   | Label, hint, error, wraps any native input/textarea/select                                 |
-| [Error](https://dmasterui.com/components/error-message)               | `dm-error`                    | Validation line, `role="alert"`, no built-in icon (project your own)                       |
+| Component                                                             | Selector                        | Highlights                                                                                 |
+| --------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------ |
+| [Switch](https://dmasterui.com/components/switch)                     | `dm-switch`                     | ControlValueAccessor, 3 sizes                                                              |
+| [Checkbox](https://dmasterui.com/components/checkbox)                 | `dm-checkbox`                   | ControlValueAccessor, indeterminate state                                                  |
+| [Radio Group](https://dmasterui.com/components/radio-group)           | `dm-radio-group` + `dm-radio`   | ControlValueAccessor, horizontal/vertical                                                  |
+| [Select](https://dmasterui.com/components/select)                     | `dm-select`                     | Single or multiple (chips), inline filter, option groups, select-all, keyboard nav, CVA    |
+| [Autocomplete](https://dmasterui.com/components/autocomplete)         | `dm-autocomplete`               | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA       |
+| [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`           | Server-driven async load, infinite pagination                                              |
+| [Search Field](https://dmasterui.com/components/search-field)         | `dm-search-field`               | Leading icon, clear button, Escape clears, Enter submits                                   |
+| [Date Picker](https://dmasterui.com/components/date-picker)           | `dm-date-picker`                | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
+| [Color Picker](https://dmasterui.com/components/color-picker)         | `dm-color-picker`               | Saturation/hue/alpha area, editable hex, swatches                                          |
+| [Slider](https://dmasterui.com/components/slider)                     | `dm-slider`                     | Pointer drag + full keyboard map, value bubble, marks                                      |
+| [Rating](https://dmasterui.com/components/rating)                     | `dm-rating`                     | Star rating, half stars, readonly fractional average, custom glyph, `role="slider"`, CVA   |
+| [Number Input](https://dmasterui.com/components/number-input)         | `dm-number-input`               | Spinbutton with ± controls, keyboard map, clamp/precision, `Intl` formatting, CVA          |
+| [OTP Input](https://dmasterui.com/components/otp)                     | `dm-otp`                        | One-time-code / PIN cells, 4 surface variants, group separators, paste distribution, CVA   |
+| [Toggle Group](https://dmasterui.com/components/toggle-group)         | `dm-toggle-group` + `dm-toggle` | Segmented control, single/multiple, radiogroup or aria-pressed, roving keyboard, CVA       |
+| [File Upload](https://dmasterui.com/components/file-upload)           | `dm-file-upload`                | Drag-and-drop dropzone, thumbnails, per-file progress, accept/size/count validation        |
+| [Form Field](https://dmasterui.com/components/form-field)             | `dm-form-field` + `dmInput`     | Label, hint, error, wraps any native input/textarea/select                                 |
+| [Error](https://dmasterui.com/components/error-message)               | `dm-error`                      | Validation line, `role="alert"`, no built-in icon (project your own)                       |
 
 ### Navigation
 
@@ -167,11 +170,12 @@ export class MyComponent {}
 
 ### Data Display
 
-| Component                                             | Selector                           | Highlights                                                       |
-| ----------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
-| [Table](https://dmasterui.com/components/table)       | `dm-table`                         | Search → sort → paginate pipeline, row selection, virtual scroll |
-| [Tree](https://dmasterui.com/components/tree)         | `dm-tree`                          | WAI-ARIA tree view, roving focus, single/multiple selection      |
-| [Timeline](https://dmasterui.com/components/timeline) | `dm-timeline` + `dm-timeline-item` | Vertical/horizontal events, states, custom markers, alternate    |
+| Component                                                   | Selector                           | Highlights                                                       |
+| ----------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
+| [Table](https://dmasterui.com/components/table)             | `dm-table`                         | Search → sort → paginate pipeline, row selection, virtual scroll |
+| [Tree](https://dmasterui.com/components/tree)               | `dm-tree`                          | WAI-ARIA tree view, roving focus, single/multiple selection      |
+| [Timeline](https://dmasterui.com/components/timeline)       | `dm-timeline` + `dm-timeline-item` | Vertical/horizontal events, states, custom markers, alternate    |
+| [Empty state](https://dmasterui.com/components/empty-state) | `dm-empty-state`                   | Icon + title + description + actions, custom icon slot, 3 sizes  |
 
 ### Overlays (require CDK)
 
@@ -239,11 +243,11 @@ Fully tree-shakeable — your app only pays for the components it imports. Measu
 | ------------------------- | -------- |
 | `DmCardComponent`         | ~1.3 kB  |
 | `DmBadgeComponent`        | ~1.8 kB  |
-| `DmButtonComponent`       | ~3.6 kB  |
-| `DmSelectComponent`       | ~5.4 kB  |
-| `DmTableComponent`        | ~10.4 kB |
-| **Entire library** (41)   | ~78 kB   |
-| Global CSS (tokens+reset) | ~4 kB    |
+| `DmButtonComponent`       | ~3.8 kB  |
+| `DmSelectComponent`       | ~8.1 kB  |
+| `DmTableComponent`        | ~11.8 kB |
+| **Entire library** (45)   | ~94 kB   |
+| Global CSS (tokens+reset) | ~4.7 kB  |
 
 Reproduce the full per-component table from the repo with `npm run size`.
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 
 import { DmSize } from '../../../core/types/common.types';
 import { DmSpinnerComponent } from '../../primitives/spinner';
+import { DM_BUTTON_GROUP } from '../button-group/button-group.types';
 import { BUTTON_DEFAULTS } from './button.tokens';
 import {
   DmButtonColor,
@@ -26,6 +27,9 @@ import {
  * </dm-button>
  * ```
  *
+ * Inside a `<dm-button-group>`, appearance not set on the button itself is
+ * inherited from the group (`color`, `variant`, `size`, `radius`, `disabled`).
+ *
  * The library ships no copy of its own: pass `loadingLabel` / `successLabel` /
  * `errorLabel` for the live announcements.
  */
@@ -39,17 +43,20 @@ import {
 export class DmButtonComponent {
   private readonly defaults = inject(BUTTON_DEFAULTS);
 
-  /** Semantic color. */
-  readonly color = input<DmButtonColor>(this.defaults.color);
+  /** Optional parent group; group-level appearance cascades to this button. */
+  private readonly group = inject(DM_BUTTON_GROUP, { optional: true });
 
-  /** Visual variant. */
-  readonly variant = input<DmButtonVariant>(this.defaults.variant);
+  /** Semantic color. Unset inside a group → inherits the group's. */
+  readonly color = input<DmButtonColor | undefined>(undefined);
 
-  /** Corner rounding. `full` is pill-shaped. */
-  readonly radius = input<DmButtonRadius>(this.defaults.radius);
+  /** Visual variant. Unset inside a group → inherits the group's. */
+  readonly variant = input<DmButtonVariant | undefined>(undefined);
 
-  /** Control size; heights follow the 32/40/48px scale. */
-  readonly size = input<DmSize>(this.defaults.size);
+  /** Corner rounding. `full` is pill-shaped. Unset inside a group → inherits. */
+  readonly radius = input<DmButtonRadius | undefined>(undefined);
+
+  /** Control size; heights follow the 32/40/48px scale. Unset inside a group → inherits. */
+  readonly size = input<DmSize | undefined>(undefined);
 
   /** Current state. `loading` disables the button and shows the spinner. */
   readonly state = input<DmButtonState>('idle');
@@ -79,8 +86,27 @@ export class DmButtonComponent {
   /** Emitted on click, only while the button is interactive. */
   readonly clicked = output<MouseEvent>();
 
+  // Resolution order: own input → parent group → injected defaults.
+  protected readonly resolvedColor = computed<DmButtonColor>(
+    () => this.color() ?? this.group?.color() ?? this.defaults.color,
+  );
+
+  protected readonly resolvedVariant = computed<DmButtonVariant>(
+    () => this.variant() ?? this.group?.variant() ?? this.defaults.variant,
+  );
+
+  protected readonly resolvedRadius = computed<DmButtonRadius>(
+    () => this.radius() ?? this.group?.radius() ?? this.defaults.radius,
+  );
+
+  protected readonly resolvedSize = computed<DmSize>(
+    () => this.size() ?? this.group?.size() ?? this.defaults.size,
+  );
+
   protected readonly isLoading = computed(() => this.state() === 'loading');
-  protected readonly isDisabled = computed(() => this.disabled() || this.isLoading());
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.isLoading() || (this.group?.isDisabled() ?? false),
+  );
 
   protected readonly liveMessage = computed(() => {
     switch (this.state()) {

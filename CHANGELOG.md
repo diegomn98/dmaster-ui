@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Surface ramp re-spaced for contrast** (both themes). The dark steps sat
+  ~1.02:1 apart, so flat fills, the toggle's raised chip and "elevated" panels
+  were indistinguishable; the light `muted` (#f4f4f5) was near-invisible on
+  white. New values — dark: `--dm-bg-subtle` #131316, `--dm-bg-muted` #232328,
+  `--dm-bg-elevated` #2b2b32; light: `--dm-bg-muted` #e9e9ec. `--dm-fg-subtle`
+  adjusted in both themes (#64646c light / #8f8f97 dark) to keep placeholders
+  ≥4.5:1 on the new muted surfaces. Every flat field, track and panel becomes
+  visibly separable without adding borders.
+- **`dm-otp`** cells gain a hairline `--dm-border` edge on the flat variant
+  (a 40px fill alone can't define the cell edge), and the **`dm-toggle-group`**
+  raised chip gains a hairline ring on top of its shadow.
+
+### Added
+
+- **`dm-otp`** — one-time-code / PIN field: a row of single-character cells that
+  behaves as one control. Typing advances, Backspace clears and steps back,
+  arrows/Home/End navigate, paste is distributed across cells and positions are
+  preserved (clearing a middle cell never shifts the rest). `length`, `mode`
+  (`numeric | alphanumeric | text`), `variant` (`flat | bordered | faded |
+  underlined` — `bordered` is the elevated "white" surface), `groupSize`
+  (separator after every N cells: `123 – 456`), `mask`, `size`, `color`,
+  `autoFocus`, `(completed)`. `ControlValueAccessor` + `[(value)]`;
+  `autocomplete="one-time-code"`. Defaults via `OTP_DEFAULTS` /
+  `provideOtpDefaults()`.
+- **`dm-button-group`** — joins a row/column of `dm-button`s into one attached
+  bar: outer corners keep the pill radius, a subtle 1px seam separates the
+  segments (bordered buttons collapse their shared border instead) and the
+  per-button elastic press is disabled so the bar stays rigid. Appearance set
+  on the group **cascades** to every button (`color`, `variant`, `size`,
+  `radius`, `disabled` — each button's own inputs win). `orientation`,
+  `fullWidth`, `role="group"` + `ariaLabel`; the split-button pattern is a
+  group of two with a `dmMenuTrigger` caret. Defaults via
+  `BUTTON_GROUP_DEFAULTS` / `provideButtonGroupDefaults()`.
+- **`dm-toggle-group`** + **`dm-toggle`** — segmented control grouping toggle
+  items in one flat, rounded surface. Two modes: exclusive **single** choice
+  (`[(value)]`, `role="radiogroup"` with roving-tabindex arrow keys) or
+  independent **multiple** toggles (bare `multiple`, `[(values)]`, `role="group"`
+  with `aria-pressed` buttons). `color`, `size` (sm/md/lg), `orientation`,
+  `fullWidth`, per-item `disabled`. Both models are separate; the whole group is
+  a `ControlValueAccessor`. Defaults via `TOGGLE_GROUP_DEFAULTS` /
+  `provideToggleGroupDefaults()`.
+- **`dm-empty-state`** — placeholder for "there is nothing here yet": built-in
+  inbox glyph (replaceable via the `dmEmptyStateIcon` slot), `title`,
+  `description`, a centered actions row for projected buttons, `size`
+  (`sm | md | lg`) and `hideIcon`. Defaults injectable via
+  `EMPTY_STATE_DEFAULTS` / `provideEmptyStateDefaults()`.
+
 ## [0.6.0] - 2026-08-20
 
 ### Added
