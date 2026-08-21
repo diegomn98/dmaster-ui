@@ -29,6 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`dm-otp`** cells gain a hairline `--dm-border` edge on the flat variant
   (a 40px fill alone can't define the cell edge), and the **`dm-toggle-group`**
   raised chip gains a hairline ring on top of its shadow.
+- **`dm-tabs`** visual polish: the selected tab is now semibold with a
+  `default` cursor; unselected tabs get a subtle neutral hover wash on the
+  contained variants (`underlined` stays flat, text-color only); tighter
+  letter-spacing (−0.01em) and press scale (0.96); the `underlined` indicator
+  thickens to 2.5px.
 
 ### Fixed
 
