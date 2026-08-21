@@ -30,14 +30,7 @@
   white-space: nowrap;
   outline: none;
 
-  @include mixins.transition(
-    background-color,
-    color,
-    box-shadow,
-    border-color,
-    opacity,
-    transform
-  );
+  @include mixins.transition(background-color, color, box-shadow, border-color, opacity, transform);
 
   &:hover:not([data-disabled], [data-selected='true']) {
     color: var(--dm-fg);
