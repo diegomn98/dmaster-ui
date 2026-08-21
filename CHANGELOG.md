@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-21
+
 ### Changed
 
 - **Surface ramp re-spaced for contrast** (both themes). The dark steps sat
@@ -306,6 +308,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.7.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.1...v0.4.2

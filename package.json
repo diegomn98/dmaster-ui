@@ -1,6 +1,6 @@
 {
   "name": "@dmaster/ui",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Modern, premium Angular UI components. Standalone, signals-based, themeable via CSS variables.",
   "license": "MIT",
   "author": {
