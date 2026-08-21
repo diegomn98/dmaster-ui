@@ -59,7 +59,9 @@ import type { DmToggleComponent } from './toggle.component';
   host: {
     '[attr.role]': 'multiple() ? "group" : "radiogroup"',
     '[attr.aria-label]': 'ariaLabel() || null',
-    '[attr.aria-orientation]': 'orientation()',
+    // aria-orientation is only a supported attribute on role="radiogroup" —
+    // role="group" (multiple mode) doesn't allow it (axe: aria-allowed-attr).
+    '[attr.aria-orientation]': 'multiple() ? null : orientation()',
     '[attr.aria-disabled]': 'isDisabled() ? "true" : null',
     '[attr.data-orientation]': 'orientation()',
     '[attr.data-size]': 'size()',

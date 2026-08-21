@@ -150,10 +150,11 @@
   --dm-fg: #fafafa;
   --dm-fg-muted: #a1a1aa;
 
-  // #87878f daba ~4.4:1 sobre el nuevo --dm-bg-muted (#232328) — por debajo de
-  // AA. Subido a #8f8f97 (~4.9:1 sobre muted, ~6.2:1 sobre --dm-bg) para que
-  // etiquetas y placeholders sigan legibles en oscuro tras re-espaciar la escala.
-  --dm-fg-subtle: #8f8f97;
+  // #8f8f97 daba solo 4.37:1 sobre --dm-bg-elevated (#2b2b32, el peldaño más
+  // claro) — por debajo de AA (el Overview y las notas del timeline usan
+  // fg-subtle sobre tarjetas elevadas). Subido a #92929a: ~4.55:1 sobre
+  // elevated, ~5.1:1 sobre muted, ~6.4:1 sobre bg.
+  --dm-fg-subtle: #92929a;
 
   // Borders
   --dm-border: rgb(250 250 250 / 8%);
@@ -162,7 +163,11 @@
   // Color system (lifted for dark surfaces)
   --dm-default: #3f3f46;
   --dm-default-fg: #fafafa;
-  --dm-default-subtle: rgb(250 250 250 / 10%);
+
+  // 10% white composited over the lighter --dm-bg-elevated (#2b2b32) landed at
+  // #404046 — only 4.01:1 against --dm-fg-muted (the flat badge/chip text).
+  // Lowered to 6%: ~4.56:1 over elevated, ~5.1:1 over muted.
+  --dm-default-subtle: rgb(250 250 250 / 6%);
 
   // Nudged darker (#338ef7 → #1a72e0, #9f75ff → #8348f5): the "lifted" hues gave
   // white solid-fill text only 3.3:1 in dark. These keep the blue/purple identity
@@ -170,7 +175,11 @@
   --dm-primary: #1a72e0;
   --dm-primary-hover: #4a94f5;
   --dm-primary-fg: #fff;
-  --dm-primary-subtle: rgb(26 114 224 / 26%);
+
+  // 26% composited over --dm-bg-elevated gave only 4.26:1 against --dm-fg-muted
+  // (radio-group's selected-option hint text sits on this fill). Lowered to
+  // 19%: ~4.58:1 vs fg-muted, ~5.5:1 vs --dm-primary-text.
+  --dm-primary-subtle: rgb(26 114 224 / 19%);
   --dm-secondary: #8348f5;
   --dm-secondary-hover: #a274ff;
   --dm-secondary-fg: #fff;
@@ -184,14 +193,21 @@
   --dm-warning: #f5a524;
   --dm-warning-hover: #f7b955;
   --dm-warning-fg: #3a2803;
-  --dm-warning-subtle: rgb(245 165 36 / 20%);
+
+  // 20% composited TWICE (a flat warning button nested in a flat warning
+  // alert — the alert's action-slot demo) compounds to #73572d, only 4.34:1
+  // against --dm-warning-text. Lowered to 18%: double-stacked ~4.64:1.
+  --dm-warning-subtle: rgb(245 165 36 / 18%);
 
   // Nudged from #ff4d6d (white text = 3.21:1, well below AA) to #e11f4b
   // (4.67:1) so solid danger surfaces are readable on dark too.
   --dm-danger: #e11f4b;
   --dm-danger-hover: #ff6b85;
   --dm-danger-fg: #fff;
-  --dm-danger-subtle: rgb(225 31 75 / 24%);
+
+  // 24% composited over --dm-bg-elevated gave only 4.35:1 against
+  // --dm-danger-text (flat badge/button fills). Lowered to 19%: ~4.56:1.
+  --dm-danger-subtle: rgb(225 31 75 / 19%);
 
   // Accessible text shade for tinted variants (light-theme counterpart above).
   // On dark, the lifted base hues already read well on their tints; primary/

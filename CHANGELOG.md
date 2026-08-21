@@ -14,12 +14,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   were indistinguishable; the light `muted` (#f4f4f5) was near-invisible on
   white. New values — dark: `--dm-bg-subtle` #131316, `--dm-bg-muted` #232328,
   `--dm-bg-elevated` #2b2b32; light: `--dm-bg-muted` #e9e9ec. `--dm-fg-subtle`
-  adjusted in both themes (#64646c light / #8f8f97 dark) to keep placeholders
-  ≥4.5:1 on the new muted surfaces. Every flat field, track and panel becomes
-  visibly separable without adding borders.
+  adjusted in both themes (#64646c light / #92929a dark) to keep placeholders
+  ≥4.5:1 against the lightest dark surface (`--dm-bg-elevated`). Every flat
+  field, track and panel becomes visibly separable without adding borders.
+- **Tinted fills re-tuned for the new (lighter) dark `elevated` surface.**
+  Composited over it, `--dm-{default,primary,danger,warning}-subtle` used to
+  land 0.15–0.5 below the 4.5:1 floor against their paired text token (axe
+  caught this across badge/button/alert/radio-group/select/pagination/dialog
+  in dark) — worst case, `warning`'s alert-with-a-nested-flat-button pattern
+  double-composites the tint, compounding the miss. Alphas lowered in dark:
+  `default-subtle` 10%→6%, `primary-subtle` 26%→19%, `danger-subtle` 24%→19%,
+  `warning-subtle` 20%→18% (sized for the double-composite case). Light theme
+  and `success`/`secondary` were unaffected and untouched.
 - **`dm-otp`** cells gain a hairline `--dm-border` edge on the flat variant
   (a 40px fill alone can't define the cell edge), and the **`dm-toggle-group`**
   raised chip gains a hairline ring on top of its shadow.
+
+### Fixed
+
+- **`dm-toggle-group`** no longer sets `aria-orientation` in `multiple` mode:
+  the attribute is only valid on `role="radiogroup"` (single mode), not on the
+  generic `role="group"` multiple uses — axe: `aria-allowed-attr`.
 
 ### Added
 
@@ -28,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   arrows/Home/End navigate, paste is distributed across cells and positions are
   preserved (clearing a middle cell never shifts the rest). `length`, `mode`
   (`numeric | alphanumeric | text`), `variant` (`flat | bordered | faded |
-  underlined` — `bordered` is the elevated "white" surface), `groupSize`
+underlined` — `bordered` is the elevated "white" surface), `groupSize`
   (separator after every N cells: `123 – 456`), `mask`, `size`, `color`,
   `autoFocus`, `(completed)`. `ControlValueAccessor` + `[(value)]`;
   `autocomplete="one-time-code"`. Defaults via `OTP_DEFAULTS` /
