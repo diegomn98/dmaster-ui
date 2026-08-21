@@ -1,9 +1,10 @@
 @use 'mixins';
 
-// The tab consumes the CSS variables set on its parent .dm-tabs__list. Colors,
-// sizes and radii inherit through the DOM — no need to duplicate parent inputs
-// on the tab itself. Variant-specific selected states live in :host-context
-// blocks so the tab reads the parent's data-variant without an @Input.
+// The tab consumes CSS variables set on its parent .dm-tabs__list: colors, sizes
+// and radii inherit through the DOM — no need to duplicate parent inputs here.
+// Variant-specific selected states use :host-context to read the parent's
+// data-variant attribute. Hover adds a subtle background tint for all contained
+// variants; underlined keeps the flat look (text color only).
 
 :host {
   position: relative; // sit above the sliding indicator (z-index 0)
@@ -18,7 +19,7 @@
   font-family: var(--dm-font-sans);
   font-size: var(--dm-tab-fs, var(--dm-text-sm));
   font-weight: var(--dm-font-medium);
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--dm-fg-muted);
   background: transparent;
@@ -29,19 +30,27 @@
   white-space: nowrap;
   outline: none;
 
-  @include mixins.transition(background-color, color, box-shadow, border-color, opacity, transform);
+  @include mixins.transition(
+    background-color,
+    color,
+    box-shadow,
+    border-color,
+    opacity,
+    transform
+  );
 
-  &:hover:not([data-disabled]) {
+  &:hover:not([data-disabled], [data-selected='true']) {
     color: var(--dm-fg);
+    background: var(--dm-default-subtle);
   }
 
   &:focus-visible {
     @include mixins.focus-ring;
   }
 
-  // Press: short elastic squeeze.
+  // Press: tight elastic squeeze.
   &:active:not([data-disabled]) {
-    transform: scale(0.97);
+    transform: scale(0.96);
     transition-duration: var(--dm-duration-fast);
   }
 
@@ -49,12 +58,17 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  &[data-selected='true'] {
+    font-weight: var(--dm-font-semibold);
+    cursor: default;
+  }
 }
 
-// ---- Variant-specific selected states -------------------------------------
-// The active pill / underline is drawn by the parent's sliding indicator; the
-// tab itself only changes text color when selected. :host-context reads the
-// parent's data-variant so the tab does not need to duplicate the input.
+// ---- Variant-specific selected colors + hover overrides ----------------------
+// Weight and cursor come from the base :host[data-selected] above; each variant
+// block only sets the selected text color. :host-context reads the parent's
+// data-variant so the tab does not need to duplicate the input.
 
 :host-context([role='tablist'][data-variant='solid']) {
   &[data-selected='true'] {
@@ -76,6 +90,11 @@
 
 :host-context([role='tablist'][data-variant='underlined']) {
   border-radius: 0;
+
+  // Underlined tabs stay flat: no background fill, just the text color lift.
+  &:hover:not([data-disabled], [data-selected='true']) {
+    background: transparent;
+  }
 
   &[data-selected='true'] {
     color: var(--dm-tab-text, var(--dm-fg));
