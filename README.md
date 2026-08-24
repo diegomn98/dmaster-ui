@@ -100,6 +100,21 @@ export class MyComponent {}
 
 ---
 
+## Engineering & quality gates
+
+Every pull request clears the same automated bar before it can merge — these run on CI, not on trust:
+
+- **Accessibility is a gate, not a claim** — [axe-core](https://github.com/dequelabs/axe-core) (WCAG 2.1 A + AA) scans every prerendered docs page in **both light and dark themes**, plus every opened overlay. Zero violations required. ([details](#accessibility))
+- **Visual regression** — every route is screenshotted in light + dark and pixel-diffed against committed baselines, inside a **pinned Playwright container** so rendering is deterministic across machines and CI.
+- **Real-consumer integration** — the library is packed with `npm pack` and installed into a separate, isolated Angular app (`examples/starter`) that builds against the **published tarball** — catching exports-map, peer-dependency and type-resolution breakage the monorepo (whose paths point at source) never sees.
+- **SSR safety** — the [docs site](https://dmasterui.com) is fully statically prerendered on every build, so any component that reaches for a browser-only global fails CI immediately.
+- **Package hygiene** — [publint](https://publint.dev) validates the published layout on every PR; releases go to npm with **signed [provenance](https://docs.npmjs.com/generating-provenance-statements)** (Sigstore attestation).
+- **Tree-shake audit** — per-component gzip cost is measured through the exact linker + minify pipeline the Angular CLI applies to published libraries, not a naive bundle. Reproducible with `npm run size`. ([bundle table](#bundle-size))
+
+The four CI jobs — build/test/lint/publint, integration, a11y and visual — run in parallel and must all be green to merge.
+
+---
+
 ## Components
 
 45 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
@@ -273,7 +288,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
 | **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
-| **Component count** | 35                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Component count** | 45                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
 | **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 
