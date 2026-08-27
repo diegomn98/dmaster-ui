@@ -1,9 +1,15 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance, all with fallback):
-//   --dm-alert-radius    corner rounding, inherits --dm-radius-lg
-//   --dm-alert-padding   outer padding
-//   --dm-alert-gap       gap between icon / content / action / close
+//   --dm-alert-radius        corner rounding, inherits --dm-radius-lg
+//   --dm-alert-padding       outer padding
+//   --dm-alert-gap           gap between icon / content / action / close
+//   --dm-alert-icon-size     icon box (width & height)
+//   --dm-alert-font-size     content text size
+//   --dm-alert-title-weight  title font weight
+//   --dm-alert-bg            surface, inherits the variant's background
+//   --dm-alert-color         text color, inherits the variant's foreground
+//   --dm-alert-border-color  border of the faded/bordered variants
 
 :host {
   display: flex;
@@ -80,26 +86,26 @@
 
 // ---- Variants --------------------------------------------------------------
 :host([data-variant='solid']) {
-  background: var(--dm-alert);
-  color: var(--dm-alert-fg);
+  background: var(--dm-alert-bg, var(--dm-alert));
+  color: var(--dm-alert-color, var(--dm-alert-fg));
 }
 
 :host([data-variant='flat']) {
-  background: var(--dm-alert-soft);
-  color: var(--dm-alert-accent);
+  background: var(--dm-alert-bg, var(--dm-alert-soft));
+  color: var(--dm-alert-color, var(--dm-alert-accent));
 }
 
 // Faded = relleno subtle + borde del propio color.
 :host([data-variant='faded']) {
-  background: var(--dm-alert-soft);
-  border-color: color-mix(in srgb, var(--dm-alert-line) 45%, transparent);
-  color: var(--dm-alert-accent);
+  background: var(--dm-alert-bg, var(--dm-alert-soft));
+  border-color: var(--dm-alert-border-color, color-mix(in srgb, var(--dm-alert-line) 45%, transparent));
+  color: var(--dm-alert-color, var(--dm-alert-accent));
 }
 
 :host([data-variant='bordered']) {
-  background: transparent;
-  border-color: color-mix(in srgb, var(--dm-alert-line) 45%, transparent);
-  color: var(--dm-alert-accent);
+  background: var(--dm-alert-bg, transparent);
+  border-color: var(--dm-alert-border-color, color-mix(in srgb, var(--dm-alert-line) 45%, transparent));
+  color: var(--dm-alert-color, var(--dm-alert-accent));
 }
 
 // ---- Icon ------------------------------------------------------------------
@@ -110,8 +116,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: var(--dm-alert-icon-size, 2rem);
+  height: var(--dm-alert-icon-size, 2rem);
   border-radius: var(--dm-radius-full);
 
   svg {
@@ -135,14 +141,14 @@
   align-content: center;
   gap: var(--dm-space-1);
   min-height: 2rem;
-  font-size: var(--dm-text-sm);
+  font-size: var(--dm-alert-font-size, var(--dm-text-sm));
   line-height: var(--dm-leading-snug);
   overflow-wrap: break-word;
 }
 
 .dm-alert__title {
   margin: 0;
-  font-weight: var(--dm-font-semibold);
+  font-weight: var(--dm-alert-title-weight, var(--dm-font-semibold));
 }
 
 .dm-alert__description {

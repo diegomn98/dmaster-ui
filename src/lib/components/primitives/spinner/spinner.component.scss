@@ -10,17 +10,17 @@ svg {
   height: 100%;
 
   // El conjunto gira a ritmo constante...
-  animation: dm-spinner-rotate 2s linear infinite;
+  animation: dm-spinner-rotate var(--dm-spinner-duration, 2s) linear infinite;
 }
 
 // Órbita apenas sugerida para no competir con el arco.
 .dm-spinner__track {
-  stroke: currentcolor;
-  opacity: 0.16;
+  stroke: var(--dm-spinner-color, currentcolor);
+  opacity: var(--dm-spinner-track-opacity, 0.16);
 }
 
 .dm-spinner__arc {
-  stroke: currentcolor;
+  stroke: var(--dm-spinner-color, currentcolor);
   stroke-linecap: round;
 
   // ...mientras el arco crece y se encoge: la "cola de cometa" de los mejores

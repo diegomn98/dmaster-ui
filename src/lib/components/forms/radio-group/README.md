@@ -52,3 +52,13 @@ Global defaults: `provideRadioDefaults({...})` / `RADIO_DEFAULTS`.
   `Space` / `Enter` (re)select the focused radio.
 - ≥44px touch target on each radio; dot animation honors reduced-motion via the
   duration tokens.
+
+## Design tokens
+
+| Token                  | Default                                          | Description                                       |
+| ---------------------- | ------------------------------------------------ | ------------------------------------------------- |
+| `--dm-radio-group-gap` | `var(--dm-space-3)` (`var(--dm-space-4)` horizontal) | Gap between the radios in the group.          |
+| `--dm-radio-size`      | `1rem` / `1.25rem` / `1.5rem` (sm / md / lg)     | Diameter of the radio control circle.             |
+| `--dm-radio-dot-size`  | `0.5rem` / `0.625rem` / `0.75rem` (sm / md / lg) | Diameter of the inner selected dot.               |
+| `--dm-radio-border`    | `var(--dm-border-strong)`                        | Border color of the unchecked control.            |
+| `--dm-radio-label-fg`  | `var(--dm-fg)`                                   | Color of the projected label text.                |

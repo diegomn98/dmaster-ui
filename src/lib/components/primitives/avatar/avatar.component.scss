@@ -8,21 +8,21 @@
 
   // Relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
   // gradientes ni halos.
-  background: var(--dm-primary-subtle);
-  color: var(--dm-primary-text);
+  background: var(--dm-avatar-bg, var(--dm-primary-subtle));
+  color: var(--dm-avatar-fg, var(--dm-primary-text));
 
   // Borde limpio de 1px + sombra de contacto muy sutil que lo asienta.
-  border: 1px solid var(--dm-border);
+  border: 1px solid var(--dm-avatar-border, var(--dm-border));
   box-shadow: var(--dm-shadow-sm);
   user-select: none;
 }
 
 :host([data-shape='circle']) {
-  border-radius: var(--dm-radius-full);
+  border-radius: var(--dm-avatar-radius, var(--dm-radius-full));
 }
 
 :host([data-shape='square']) {
-  border-radius: var(--dm-radius-md);
+  border-radius: var(--dm-avatar-radius, var(--dm-radius-md));
 }
 
 .dm-avatar__img {
@@ -37,12 +37,12 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--dm-primary-text);
+  color: var(--dm-avatar-fg, var(--dm-primary-text));
 }
 
 // Icono genérico silencioso, en el gris sutil del tema.
 .dm-avatar__icon {
   width: 55%;
   height: 55%;
-  color: var(--dm-fg-subtle);
+  color: var(--dm-avatar-icon-color, var(--dm-fg-subtle));
 }

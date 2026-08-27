@@ -6,8 +6,8 @@
 
 .dm-toasts {
   display: grid;
-  gap: var(--dm-space-3);
-  width: min(22rem, calc(100vw - 2rem));
+  gap: var(--dm-toast-gap, var(--dm-space-3));
+  width: var(--dm-toast-width, min(22rem, calc(100vw - 2rem)));
 }
 
 .dm-toast {
@@ -15,19 +15,19 @@
   align-items: flex-start;
   gap: var(--dm-space-3);
   padding: var(--dm-space-3) var(--dm-space-4);
-  border-radius: var(--dm-radius-lg);
+  border-radius: var(--dm-toast-radius, var(--dm-radius-lg));
 
   // Glass: una superficie translúcida limpia con blur + saturate sobre
   // el contenido de detrás. saturate() enriquece los colores que atraviesan el
   // cristal en vez de limitarse a esmerilarlos.
-  background: color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent);
+  background: var(--dm-toast-bg, color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent));
   backdrop-filter: blur(16px) saturate(160%);
-  color: var(--dm-fg);
+  color: var(--dm-toast-fg, var(--dm-fg));
   transform-origin: 100% 50%;
 
   // Elevación: una única sombra amplia, suave y difusa. Sin hairline
   // duro, sin sheen interior.
-  box-shadow: var(--dm-shadow-lg);
+  box-shadow: var(--dm-toast-shadow, var(--dm-shadow-lg));
   animation: dm-toast-in var(--dm-duration-slow) var(--dm-ease-out);
 
   &[data-variant='success'] .dm-toast__icon {

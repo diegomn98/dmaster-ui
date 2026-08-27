@@ -126,3 +126,24 @@ CSS variables set on the container and consumed by the items:
   its own semantics.
 - Use `datetime` so the stamp is a real `<time>` element with a machine-readable value.
 - The `active` pulse honors `prefers-reduced-motion`.
+
+## Design tokens
+
+Public CSS custom properties. Set them on `dm-timeline` (or any ancestor) to re-skin the timeline; every token falls back to the default shown. The `--dm-timeline-accent*` vars are internal per-item color mappings — recolor through the `color` input or the semantic `--dm-{color}` tokens instead.
+
+| Token                        | Default                                     | Description                                                  |
+| ---------------------------- | ------------------------------------------- | ------------------------------------------------------------ |
+| `--dm-timeline-marker`       | `1.125rem` / `1.375rem` / `1.75rem` per size | Diameter of the default marker.                              |
+| `--dm-timeline-marker-radius` | `var(--dm-radius-full)`                    | Corner radius of the default marker.                         |
+| `--dm-timeline-gap`          | `var(--dm-space-3/4/5)` per size            | Space between consecutive items.                             |
+| `--dm-timeline-col-gap`      | `var(--dm-space-3/3/4)` per size            | Gap between the rail and the content.                        |
+| `--dm-timeline-line`         | `var(--dm-border-strong)`                   | Connector color (turns accent after a `completed` item).     |
+| `--dm-timeline-line-width`   | `0.125rem`                                  | Thickness of the connector line (both orientations).         |
+| `--dm-timeline-surface`      | `var(--dm-bg)`                              | Fill of `outlined` markers.                                  |
+| `--dm-timeline-title-fs`     | `var(--dm-text-sm)` (`base` on `lg`)        | Title font size.                                             |
+| `--dm-timeline-title-fg`     | `var(--dm-fg)`                              | Title text color.                                            |
+| `--dm-timeline-time-fg`      | `var(--dm-fg-muted)`                        | Time stamp text color.                                       |
+| `--dm-timeline-body-fs`      | `var(--dm-text-xs/sm/sm)` per size          | Body font size.                                              |
+| `--dm-timeline-body-fg`      | `var(--dm-fg-muted)`                        | Body text color.                                             |
+| `--dm-timeline-col`          | `10rem`                                     | Minimum column width in horizontal mode.                     |
+| `--dm-timeline-pulse`        | `1.8s`                                      | Duration of the `active` ring pulse.                         |

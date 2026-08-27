@@ -16,8 +16,8 @@
   align-items: center;
   gap: var(--dm-space-1);
   min-width: 0;
-  padding: 0.125rem 0.25rem;
-  border-radius: var(--dm-radius-sm);
+  padding: var(--dm-breadcrumbs-item-padding, 0.125rem 0.25rem);
+  border-radius: var(--dm-breadcrumbs-item-radius, var(--dm-radius-sm));
   line-height: 1.2;
   color: var(--dm-breadcrumbs-fg, var(--dm-fg-muted));
   text-decoration: none;
@@ -52,7 +52,7 @@
 }
 
 .dm-breadcrumb-item__page[aria-disabled='true'] {
-  color: var(--dm-fg-subtle);
+  color: var(--dm-breadcrumbs-fg-disabled, var(--dm-fg-subtle));
   cursor: not-allowed;
 }
 
@@ -64,7 +64,7 @@
 // Mobile-first: cap intermediate (link) crumbs so a long trail never overflows.
 // The width cap is lifted from the `sm` breakpoint up.
 .dm-breadcrumb-item__link .dm-breadcrumb-item__label {
-  max-width: 9rem;
+  max-width: var(--dm-breadcrumbs-label-max-width, 9rem);
 
   @include mixins.truncate;
 

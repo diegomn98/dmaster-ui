@@ -69,3 +69,16 @@ CSS variables (inherit from the global tokens, overridable at any scope):
 - `aria-valuetext` mirrors the formatted value, so custom formats (`48 GB of 64 GB`) are announced as written.
 - Accessible name comes from `ariaLabel`, falling back to `label`.
 - `prefers-reduced-motion: reduce` disables the indeterminate sweep entirely (consistent with `dm-skeleton`): the fill renders as a static, softened full-width bar (55% opacity), which reads as an active tinted track rather than a completed one. Determinate width changes use the global duration tokens, which the theme zeroes under reduced motion.
+
+## Design tokens
+
+| Token                        | Default                | Description                                                          |
+| ---------------------------- | ---------------------- | -------------------------------------------------------------------- |
+| `--dm-progress-track`        | `var(--dm-bg-muted)`   | Track surface color.                                                 |
+| `--dm-progress-color`        | mapped from `color`    | Fill color (set it to use an arbitrary color instead of the map).    |
+| `--dm-progress-track-height` | `0.5rem` (md)          | Track thickness; overrides every `size` (sm `0.25rem`, lg `0.75rem`). |
+| `--dm-progress-radius`       | `var(--dm-radius-full)` | Rounding of both track and fill.                                    |
+| `--dm-progress-gap`          | `var(--dm-space-2)`    | Gap between the label row and the track.                             |
+| `--dm-progress-label-color`  | `var(--dm-fg)`         | Label text color.                                                    |
+| `--dm-progress-value-color`  | `var(--dm-fg-muted)`   | Value text color.                                                    |
+| `--dm-progress-font-size`    | `var(--dm-text-sm)`    | Font size of the label row.                                          |

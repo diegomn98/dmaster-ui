@@ -85,15 +85,6 @@ providers: [provideBreadcrumbsDefaults({ ariaLabel: 'You are here', size: 'lg' }
 
 Or provide `BREADCRUMBS_DEFAULTS` directly.
 
-## Theming
-
-CSS variables (inherit from the semantic tokens, overridable at any scope):
-
-- `--dm-breadcrumbs-fg` — resting link/text color (defaults to `--dm-fg-muted`).
-- `--dm-breadcrumbs-fg-active` — hover + current page color (defaults to `--dm-fg`).
-- `--dm-breadcrumbs-sep` — separator color (defaults to `--dm-fg-subtle`).
-- `--dm-breadcrumbs-gap` — inline spacing around separators (size-scaled).
-
 ## Accessibility
 
 - Renders a `<nav aria-label>` landmark around an `<ol>` of `<li>` items.
@@ -103,3 +94,19 @@ CSS variables (inherit from the semantic tokens, overridable at any scope):
 - On narrow viewports intermediate crumbs truncate with an ellipsis; the cap is
   lifted from the `sm` breakpoint up.
 - Motion is disabled under `prefers-reduced-motion`.
+
+## Design tokens
+
+Public CSS custom properties, consumed with local fallbacks — override them at any scope (globally, per theme, or on a subtree) without touching the SCSS.
+
+| Token                              | Default                          | Description                                             |
+| ---------------------------------- | -------------------------------- | ------------------------------------------------------- |
+| `--dm-breadcrumbs-fg`              | `var(--dm-fg-muted)`             | Resting link / crumb text color.                        |
+| `--dm-breadcrumbs-fg-active`       | `var(--dm-fg)`                   | Hover + current page text color.                        |
+| `--dm-breadcrumbs-fg-disabled`     | `var(--dm-fg-subtle)`            | Text color of a disabled crumb.                         |
+| `--dm-breadcrumbs-sep`             | `var(--dm-fg-subtle)`            | Separator (chevron / custom text) color.                |
+| `--dm-breadcrumbs-font-size`       | Size-scaled (`--dm-text-xs/sm/base`) | Trail font size (overrides the `size` scale).       |
+| `--dm-breadcrumbs-item-radius`     | `var(--dm-radius-sm)`            | Corner radius of each crumb (hover / focus surface).    |
+| `--dm-breadcrumbs-item-padding`    | `0.125rem 0.25rem`               | Inner padding of each crumb.                            |
+| `--dm-breadcrumbs-gap`             | Size-scaled (`0.375–0.625rem`)   | Inline spacing around separators (set per `size` on the list). |
+| `--dm-breadcrumbs-label-max-width` | `9rem`                           | Truncation cap for intermediate crumbs below the `sm` breakpoint. |

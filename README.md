@@ -10,7 +10,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0F6E56?style=flat-square)](https://dmasterui.com)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**45 components · 3 languages (EN/ES/FR) in the docs · 0 runtime deps beyond Angular CDK · 600+ tests**
+**44 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 600+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 
@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 45-component library ~94 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 44-component library ~92 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -117,7 +117,7 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 
 ## Components
 
-45 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+44 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
 
 ### Primitives
 
@@ -159,9 +159,8 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 | [Switch](https://dmasterui.com/components/switch)                     | `dm-switch`                     | ControlValueAccessor, 3 sizes                                                              |
 | [Checkbox](https://dmasterui.com/components/checkbox)                 | `dm-checkbox`                   | ControlValueAccessor, indeterminate state                                                  |
 | [Radio Group](https://dmasterui.com/components/radio-group)           | `dm-radio-group` + `dm-radio`   | ControlValueAccessor, horizontal/vertical                                                  |
-| [Select](https://dmasterui.com/components/select)                     | `dm-select`                     | Single or multiple (chips), inline filter, option groups, select-all, keyboard nav, CVA    |
+| [Select](https://dmasterui.com/components/select)                     | `dm-select`                     | Single or multiple (chips), inline filter, groups, select-all, CVA — or **server-driven**: `loadFn` pages via rxResource, infinite scroll / load-more, debounced server search |
 | [Autocomplete](https://dmasterui.com/components/autocomplete)         | `dm-autocomplete`               | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA       |
-| [Paginated Select](https://dmasterui.com/components/paginated-select) | `dm-paginated-select`           | Server-driven async load, infinite pagination                                              |
 | [Search Field](https://dmasterui.com/components/search-field)         | `dm-search-field`               | Leading icon, clear button, Escape clears, Enter submits                                   |
 | [Date Picker](https://dmasterui.com/components/date-picker)           | `dm-date-picker`                | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`) |
 | [Color Picker](https://dmasterui.com/components/color-picker)         | `dm-color-picker`               | Saturation/hue/alpha area, editable hex, swatches                                          |
@@ -208,24 +207,134 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 
 ## Theming
 
-Tokens live on `<html>` attributes — no class toggling, no JavaScript:
+Everything is a **CSS custom property** — no Sass required to consume, no Tailwind
+lock-in, no runtime engine. Theme state lives on `<html>` attributes
+(`data-dm-theme`, `data-dm-density`), so it is SSR-safe and flips without a
+flash. There are four levels of customization, from a one-line accent swap to a
+full custom theme.
 
-```ts
-// Auto (follows prefers-color-scheme)
-provideDmasterUI({ theme: 'auto' });
+### 1. Override a token — the whole family cascades
 
-// Force dark
-document.documentElement.setAttribute('data-dm-theme', 'dark');
-```
-
-Override any token globally:
+Every visual decision is a `--dm-*` token, and each semantic color's family is
+**derived from its base**: the soft fill (`-subtle`) via `color-mix()`, and the
+hover shade (`-hover`) and tinted-text shade (`-text`) via OKLCH relative color
+syntax at a fixed, calibrated lightness. **Changing one base color re-themes
+everything that uses it** — fills, hovers, tint text, rings:
 
 ```scss
 :root {
-  --dm-primary: #7c3aed; // swap the primary color
-  --dm-radius-full: 0.5rem; // rectangular buttons instead of pill
-  --dm-duration-base: 100ms; // faster animations
+  --dm-primary: #7c3aed; /* hover, -subtle, -text and rings all re-derive */
+  --dm-radius-full: 0.5rem; /* rectangular controls instead of pills */
+  --dm-duration-base: 100ms; /* faster animations everywhere */
 }
+```
+
+Because the derived shades sit at a **fixed OKLCH lightness** (and WCAG contrast
+is dominated by lightness), the derived text keeps its ≥4.5:1 ratio over its
+tint for arbitrary brand colors — a mid-tone orange, a teal, a crimson all come
+out AA out of the box.
+
+> Only `-fg` (the label over **solid** fills, usually white) stays explicit: if
+> your brand color is very light, also set `--dm-<color>-fg` to a dark value —
+> or register the palette as a named theme (below).
+
+### 2. Light / dark / auto
+
+```ts
+provideDmasterUI({ theme: 'auto' }); // follows prefers-color-scheme, tracks OS live
+```
+
+```ts
+inject(ThemeService).setTheme('dark'); // or 'light' | 'auto'
+inject(ThemeService).toggle(); // flip the active scheme
+```
+
+### 3. Custom named themes
+
+Register any number of named themes and switch between them at runtime. The name
+is stamped on `<html data-dm-theme="…">`; you author the matching CSS block:
+
+```ts
+provideDmasterUI({
+  themes: {
+    midnight: { scheme: 'dark', label: 'Midnight' },
+    sand: { scheme: 'light', label: 'Sand' },
+  },
+});
+```
+
+```scss
+[data-dm-theme='midnight'] {
+  color-scheme: dark;
+  --dm-bg: #0a0a12;
+  --dm-primary: #8b5cf6;
+  /* …only the tokens you want to change; the rest inherit the dark defaults */
+}
+```
+
+```ts
+const themes = inject(ThemeService);
+themes.setTheme('midnight'); // apply
+themes.themes(); // [{ name, scheme, label }] — build a picker
+themes.scheme(); // 'dark' — the active theme's base scheme
+```
+
+### 4. Restyle a single component or a subtree
+
+Because tokens are plain CSS custom properties, **scoping an override to an
+element or a subtree re-themes only what's inside it** — no global change, no
+component API needed:
+
+```css
+/* every switch in the app turns green — components read the semantic tokens */
+dm-switch {
+  --dm-primary: var(--dm-success);
+}
+
+/* just this section and everything under it */
+.pricing {
+  --dm-primary: #0ea5e9;
+  --dm-radius-lg: 0;
+}
+```
+
+On top of that, **every component exposes its own `--dm-<component>-*` design
+tokens** (~300 across the library) for the decisions the semantic set doesn't
+cover — surface, radius, heights, part-specific knobs:
+
+```css
+/* squarer, taller buttons app-wide — without touching the global radius scale */
+:root {
+  --dm-button-radius: 0.5rem;
+  --dm-button-height: 3rem;
+}
+
+/* or one part of one component */
+.data-panel {
+  --dm-table-header-bg: var(--dm-bg-muted);
+  --dm-switch-track-bg-checked: var(--dm-success);
+}
+```
+
+Each component folder's `README.md` documents its tokens in a **Design tokens**
+table.
+
+> **Overlays** (tooltip, menu, dialog, drawer, toast, select, command) render at
+> the document root via the Angular CDK, so a **global** override or a named
+> theme (both applied on `<html>`) reaches them, but a **subtree** override does
+> not. For a scoped theme inside a dialog or drawer, pass your theme class via
+> `panelClass`:
+>
+> ```ts
+> this.dialog.open(CheckoutComponent, { panelClass: 'brand-theme' });
+> ```
+
+### Density
+
+Three density scales adjust control heights and spacing globally:
+
+```ts
+provideDmasterUI({ density: 'compact' }); // 'compact' | 'comfortable' | 'spacious'
 ```
 
 ---
@@ -259,9 +368,9 @@ Fully tree-shakeable — your app only pays for the components it imports. Measu
 | `DmCardComponent`         | ~1.3 kB  |
 | `DmBadgeComponent`        | ~1.8 kB  |
 | `DmButtonComponent`       | ~3.8 kB  |
-| `DmSelectComponent`       | ~8.1 kB  |
+| `DmSelectComponent`       | ~10.1 kB |
 | `DmTableComponent`        | ~11.8 kB |
-| **Entire library** (45)   | ~94 kB   |
+| **Entire library** (44)   | ~92 kB   |
 | Global CSS (tokens+reset) | ~4.7 kB  |
 
 Reproduce the full per-component table from the repo with `npm run size`.
@@ -288,7 +397,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
 | **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
-| **Component count** | 45                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Component count** | 44                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
 | **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 

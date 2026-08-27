@@ -1,13 +1,19 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance):
-//   --dm-progress-track  track surface, inherits --dm-bg-muted
-//   --dm-progress-color  fill color, mapped from [data-color] below
+//   --dm-progress-track         track surface, inherits --dm-bg-muted
+//   --dm-progress-color         fill color, mapped from [data-color] below
+//   --dm-progress-track-height  track thickness (overrides every size)
+//   --dm-progress-radius        track & fill rounding
+//   --dm-progress-gap           gap between the label row and the track
+//   --dm-progress-label-color   label text color
+//   --dm-progress-value-color   value text color
+//   --dm-progress-font-size     label row text size
 
 :host {
   display: flex;
   flex-direction: column;
-  gap: var(--dm-space-2);
+  gap: var(--dm-progress-gap, var(--dm-space-2));
   width: 100%;
 }
 
@@ -44,20 +50,20 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--dm-space-3);
-  font-size: var(--dm-text-sm);
+  font-size: var(--dm-progress-font-size, var(--dm-text-sm));
   line-height: var(--dm-leading-snug);
 }
 
 .dm-progress__label {
   @include mixins.truncate;
 
-  color: var(--dm-fg);
+  color: var(--dm-progress-label-color, var(--dm-fg));
   font-weight: var(--dm-font-medium);
 }
 
 .dm-progress__value {
   margin-inline-start: auto;
-  color: var(--dm-fg-muted);
+  color: var(--dm-progress-value-color, var(--dm-fg-muted));
   font-variant-numeric: tabular-nums;
 }
 
@@ -66,24 +72,24 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 0.5rem;
-  border-radius: var(--dm-radius-full);
+  height: var(--dm-progress-track-height, 0.5rem);
+  border-radius: var(--dm-progress-radius, var(--dm-radius-full));
   background: var(--dm-progress-track, var(--dm-bg-muted));
 }
 
 :host([data-size='sm']) .dm-progress__track {
-  height: 0.25rem;
+  height: var(--dm-progress-track-height, 0.25rem);
 }
 
 :host([data-size='lg']) .dm-progress__track {
-  height: 0.75rem;
+  height: var(--dm-progress-track-height, 0.75rem);
 }
 
 // Flat solid fill, fully rounded. duration-slow keeps value changes
 // feeling fluid instead of teleporting (zeroed under reduced motion).
 .dm-progress__fill {
   height: 100%;
-  border-radius: var(--dm-radius-full);
+  border-radius: var(--dm-progress-radius, var(--dm-radius-full));
   background: var(--dm-progress-color);
   transition: width var(--dm-duration-slow) var(--dm-ease-out);
 }

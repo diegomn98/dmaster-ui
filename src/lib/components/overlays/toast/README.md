@@ -35,3 +35,14 @@ Global defaults (including `dismissLabel`, the only built-in copy — override p
 - Each toast is `role="status"`: announced without interrupting.
 - Dismiss button with configurable `aria-label` and ≥44px touch target.
 - Entrance animation honors reduced-motion via the duration tokens.
+
+## Design tokens
+
+| Token               | Default                                                | Description                                     |
+| ------------------- | ------------------------------------------------------ | ----------------------------------------------- |
+| `--dm-toast-bg`     | `color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent)` | Toast surface (translucent glass by default). |
+| `--dm-toast-fg`     | `var(--dm-fg)`                                         | Toast text color.                               |
+| `--dm-toast-radius` | `var(--dm-radius-lg)`                                  | Toast corner radius.                            |
+| `--dm-toast-shadow` | `var(--dm-shadow-lg)`                                  | Toast elevation shadow.                         |
+| `--dm-toast-width`  | `min(22rem, calc(100vw - 2rem))`                       | Width of the toast stack.                       |
+| `--dm-toast-gap`    | `var(--dm-space-3)`                                    | Vertical gap between stacked toasts.            |

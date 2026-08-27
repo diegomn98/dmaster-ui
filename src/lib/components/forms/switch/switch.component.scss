@@ -15,7 +15,7 @@
 
   // Flat track: solid neutral fill, no gradient. A whisper-soft inner
   // shadow keeps the thumb reading as raised without any glossiness.
-  background-color: var(--dm-default);
+  background-color: var(--dm-switch-track-bg, var(--dm-default));
   box-shadow: inset 0 1px 2px rgb(0 0 0 / 8%);
   cursor: pointer;
 
@@ -33,16 +33,16 @@
   }
 
   &:hover:not(:disabled, [aria-checked='true']) {
-    background-color: color-mix(in srgb, var(--dm-fg) 18%, var(--dm-default));
+    background-color: var(--dm-switch-track-bg-hover, color-mix(in srgb, var(--dm-fg) 18%, var(--dm-default)));
   }
 
   &[aria-checked='true'] {
     // Brand solid = flat primary, no vertical sheen.
-    background-color: var(--dm-primary);
+    background-color: var(--dm-switch-track-bg-checked, var(--dm-primary));
     box-shadow: inset 0 1px 1px rgb(0 0 0 / 10%);
 
     &:hover:not(:disabled) {
-      background-color: var(--dm-primary-hover);
+      background-color: var(--dm-switch-track-bg-checked-hover, var(--dm-primary-hover));
     }
   }
 
@@ -66,7 +66,7 @@
   border-radius: var(--dm-radius-full);
 
   // White thumb (elevated surface) with a single clean drop shadow.
-  background-color: var(--dm-bg-elevated);
+  background-color: var(--dm-switch-thumb-bg, var(--dm-bg-elevated));
   box-shadow:
     var(--dm-shadow-sm),
     0 1px 3px rgb(0 0 0 / 15%);
@@ -111,7 +111,7 @@
 .dm-switch__label {
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
-  color: var(--dm-fg);
+  color: var(--dm-switch-label-fg, var(--dm-fg));
   cursor: pointer;
 
   &:empty {

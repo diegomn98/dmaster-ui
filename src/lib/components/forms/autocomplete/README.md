@@ -101,3 +101,17 @@ providers: [provideAutocompleteDefaults({ variant: 'bordered', radius: 'md' })];
 - With a visible `label` the input is wired via `aria-labelledby`; without one,
   pass `ariaLabel`. `error` sets `aria-invalid` and links the message with
   `aria-describedby` (the message is `role="alert"`).
+
+## Design tokens
+
+| Token                                 | Default                                                   | Description                                                              |
+| ------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `--dm-autocomplete-bg`                | `var(--dm-bg-muted)`                                      | Field surface background (flat and faded variants).                      |
+| `--dm-autocomplete-bg-hover`          | `color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted))` | Field background on hover.                                               |
+| `--dm-autocomplete-bg-focus`          | `var(--dm-bg-elevated)`                                   | Field background while focused.                                          |
+| `--dm-autocomplete-fg`                | `var(--dm-fg)`                                            | Text color of the field and its input.                                   |
+| `--dm-autocomplete-border`            | `var(--dm-border-strong)` (`var(--dm-border)` in faded)   | Border color of the bordered and faded variants.                         |
+| `--dm-autocomplete-radius`            | `var(--dm-radius-md)`                                     | Corner radius of the field (applies to the default `radius="md"`).       |
+| `--dm-autocomplete-height`            | `2.5rem`                                                  | Field height for the default `size="md"`.                                |
+| `--dm-autocomplete-placeholder-color` | `var(--dm-fg-subtle)`                                     | Placeholder text color.                                                  |
+| `--dm-autocomplete-icon-color`        | `var(--dm-fg-subtle)`                                     | Color of the leading magnifier icon.                                     |

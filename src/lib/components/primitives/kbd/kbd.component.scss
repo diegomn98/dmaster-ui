@@ -1,14 +1,19 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance):
-//   --dm-kbd-bg      key surface, inherits --dm-bg-muted
-//   --dm-kbd-fg      glyph color, inherits --dm-fg-muted
-//   --dm-kbd-border  key border, inherits --dm-border
+//   --dm-kbd-bg         key surface, inherits --dm-bg-muted
+//   --dm-kbd-fg         glyph color, inherits --dm-fg-muted
+//   --dm-kbd-border     key border, inherits --dm-border
+//   --dm-kbd-radius     key corner rounding
+//   --dm-kbd-size       key cap height / min-width
+//   --dm-kbd-padding    key cap inline padding
+//   --dm-kbd-font-size  glyph size
+//   --dm-kbd-gap        gap between key caps
 
 :host {
   display: inline-flex;
   align-items: center;
-  gap: 0.25em;
+  gap: var(--dm-kbd-gap, 0.25em);
   vertical-align: middle;
   line-height: 1;
 }
@@ -18,14 +23,14 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding-inline: 0.4em;
+  padding-inline: var(--dm-kbd-padding, 0.4em);
 
   // A flat, minimal chip — light muted fill, one hairline border,
   // muted glyph. No 3D bevel, no drop shadow; it sits quietly inline with text.
   color: var(--dm-kbd-fg, var(--dm-fg-muted));
   background: var(--dm-kbd-bg, var(--dm-bg-muted));
   border: 1px solid var(--dm-kbd-border, var(--dm-border));
-  border-radius: var(--dm-radius-sm);
+  border-radius: var(--dm-kbd-radius, var(--dm-radius-sm));
   font-family: var(--dm-font-sans);
   font-weight: var(--dm-font-medium);
   line-height: 1;
@@ -40,13 +45,13 @@
 
 // ---- Sizes -----------------------------------------------------------------
 :host([data-size='md']) .dm-kbd__key {
-  min-width: 1.5rem;
-  height: 1.5rem;
-  font-size: var(--dm-text-sm);
+  min-width: var(--dm-kbd-size, 1.5rem);
+  height: var(--dm-kbd-size, 1.5rem);
+  font-size: var(--dm-kbd-font-size, var(--dm-text-sm));
 }
 
 :host([data-size='sm']) .dm-kbd__key {
-  min-width: 1.25rem;
-  height: 1.25rem;
-  font-size: var(--dm-text-xs);
+  min-width: var(--dm-kbd-size, 1.25rem);
+  height: var(--dm-kbd-size, 1.25rem);
+  font-size: var(--dm-kbd-font-size, var(--dm-text-xs));
 }

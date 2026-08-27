@@ -105,19 +105,25 @@
   </svg>
 </div>
 
+<!-- Sin backdrop: el clic fuera cierra vía overlayOutsideClick Y llega a su
+     destino (antes el backdrop transparente se tragaba el primer clic). El
+     scroll de página queda bloqueado mientras está abierto (block strategy).
+     disableClose: el CDK cierra en Escape vía detach ANTES de que nuestro
+     handler corra (y sin mirar defaultPrevented), lo que rompería el Escape en
+     dos fases y dejaría el foco en <body>. Escape lo gestiona onKeydown. -->
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="triggerEl"
   [cdkConnectedOverlayOpen]="open()"
   [cdkConnectedOverlayPositions]="overlayPositions"
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-  [cdkConnectedOverlayHasBackdrop]="true"
-  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
   [cdkConnectedOverlayWidth]="triggerWidth"
-  (backdropClick)="close(false)"
+  [cdkConnectedOverlayDisableClose]="true"
+  (overlayOutsideClick)="close(false)"
+  (attach)="onOverlayAttach()"
   (detach)="close(false)"
 >
-  <div class="dm-select__panel" [attr.data-color]="color()" (mousedown)="$event.preventDefault()">
+  <div class="dm-select__panel" [attr.data-color]="color()">
     @if (filterable()) {
       <div class="dm-select__filter">
         <svg
@@ -147,11 +153,38 @@
           (input)="onFilterInput($event)"
           (keydown)="onKeydown($event)"
         />
+        @if (filterText()) {
+          <!-- Fuera del orden de tabulación: Escape ya limpia desde el input
+               (mismo patrón que dm-search-field). mousedown prevenido para no
+               robarle el foco al input al clicar. -->
+          <button
+            type="button"
+            class="dm-select__filter-clear"
+            tabindex="-1"
+            [attr.aria-label]="filterClearAriaLabel()"
+            (mousedown)="$event.preventDefault()"
+            (click)="onFilterClearClick($event)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        }
       </div>
     }
 
     @if (showSelectAll() && hasResults()) {
-      <div class="dm-select__actions">
+      <!-- mousedown prevenido SOLO aquí y en el listbox: mantiene el foco en el
+           trigger/filtro al clicar opciones sin bloquear el foco del input. -->
+      <div class="dm-select__actions" (mousedown)="$event.preventDefault()">
         @if (selectAllLabel()) {
           <button type="button" class="dm-select__action" (click)="onSelectAll()">
             {{ selectAllLabel() }}
@@ -177,6 +210,8 @@
       [id]="listboxId"
       [attr.aria-multiselectable]="multiple() ? 'true' : null"
       [attr.aria-labelledby]="label() ? labelId : null"
+      [attr.aria-busy]="_loading() ? 'true' : null"
+      (mousedown)="$event.preventDefault()"
     >
       @for (row of visibleRows(); track row.key) {
         @if (row.kind === 'group') {
@@ -220,12 +255,46 @@
           </li>
         }
       }
-      @if (!hasResults() && noResultsLabel()) {
+      @if (showEmpty()) {
         <li class="dm-select__empty" role="presentation">{{ noResultsLabel() }}</li>
       }
+
+      <!-- Modo async: loading + sentinel de scroll infinito. El spinner es
+           decorativo (el texto visible y la live region de raíz anuncian);
+           sin aria-label, que sobre role=presentation lo invalidaría. -->
+      @if (_loading()) {
+        <li class="dm-select__loading" role="presentation">
+          <dm-spinner size="sm" />
+          <span>{{ loadingLabel() }}</span>
+        </li>
+      }
+
+      @if (showInfiniteSentinel()) {
+        <li class="dm-select__sentinel-row" role="presentation" aria-hidden="true">
+          <div #sentinelEl class="dm-select__sentinel"></div>
+        </li>
+      }
     </ul>
+
+    <!-- Load-more FUERA del <ul role=listbox>: un <button> hijo directo del
+         listbox no es un rol permitido (solo option/group). Keyboard: ArrowDown
+         en la última opción pagina (ver onKeydown). -->
+    @if (showLoadMoreButton()) {
+      <div class="dm-select__load-more-row">
+        <button type="button" class="dm-select__load-more" (click)="onLoadMoreClick()">
+          {{ loadMoreLabel() }}
+        </button>
+      </div>
+    }
   </div>
 </ng-template>
+
+<!-- Live region persistente (async): fuera del overlay para que exista SIEMPRE
+     en el DOM — una región montada ya poblada no se anuncia. Anuncia "cargando"
+     y luego el estado vacío/resultados. -->
+@if (isAsync()) {
+  <span class="dm-select__status" role="status" aria-live="polite">{{ asyncStatus() }}</span>
+}
 
 @if (error()) {
   <p class="dm-select__error" [id]="errorId" role="alert">{{ error() }}</p>

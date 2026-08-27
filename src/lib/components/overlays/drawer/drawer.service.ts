@@ -51,7 +51,12 @@ export class DmDrawerService {
       ariaModal: backdrop,
       hasBackdrop: backdrop,
       positionStrategy: this.positionFor(placement),
-      panelClass: ['dm-drawer-panel', `dm-drawer-panel--${placement}`, `dm-drawer-panel--${size}`],
+      panelClass: [
+        'dm-drawer-panel',
+        `dm-drawer-panel--${placement}`,
+        `dm-drawer-panel--${size}`,
+        ...(config.panelClass ? [config.panelClass].flat() : []),
+      ],
       backdropClass: 'dm-drawer-backdrop',
     });
   }

@@ -44,6 +44,16 @@ describe('DmDialogService', () => {
     expect(containerEl().querySelector('.dm-dialog-backdrop')).toBeTruthy();
   });
 
+  it('merges a custom panelClass onto the panel for scoped theming', () => {
+    service.open(TestDialogComponent, { data: { name: 'x' }, panelClass: 'brand-theme' });
+    TestBed.inject(ApplicationRef).tick();
+
+    const pane = containerEl().querySelector('.dm-dialog-panel');
+    expect(pane?.classList.contains('brand-theme')).toBe(true);
+    // The library classes survive alongside the custom one.
+    expect(pane?.classList.contains('dm-dialog-panel--md')).toBe(true);
+  });
+
   it('closes with a result', () => {
     const ref = service.open<string, { name: string }, TestDialogComponent>(TestDialogComponent, {
       data: { name: 'Diego' },

@@ -84,22 +84,6 @@ providers: [provideAccordionDefaults({ variant: 'bordered', selectionMode: 'mult
 
 Or provide `ACCORDION_DEFAULTS` directly.
 
-## Theming
-
-Each item exposes CSS custom properties (all optional — every one falls back to
-a semantic token, so the default look needs no configuration):
-
-| Token                            | Falls back to         | Controls                         |
-| -------------------------------- | --------------------- | -------------------------------- |
-| `--dm-accordion-trigger-hover`   | `--dm-bg-subtle`      | Full-row hover wash.             |
-| `--dm-accordion-expanded-bg`     | `--dm-bg-subtle`      | Open-row tint (framed variants). |
-| `--dm-accordion-chevron-hover`   | `--dm-bg-muted`       | Chevron pill fill on hover.      |
-| `--dm-accordion-chevron-open-bg` | `--dm-primary-subtle` | Chevron pill fill when open.     |
-| `--dm-accordion-chevron-open-fg` | `--dm-primary`        | Chevron glyph color when open.   |
-| `--dm-accordion-icon-open`       | `--dm-fg`             | Leading icon color when open.    |
-| `--dm-accordion-icon-size`       | `1.25rem`             | Leading icon size (`font-size`). |
-| `--dm-accordion-divider`         | `--dm-border`         | Header/body hairline.            |
-
 ## Accessibility
 
 - Each header is a native `<button>` with `aria-expanded` and
@@ -112,3 +96,21 @@ a semantic token, so the default look needs no configuration):
   the first / last enabled header.
 - Focus ring on `:focus-visible` uses the shared `focus-ring` mixin.
 - `prefers-reduced-motion: reduce` disables the open/close animation.
+
+## Design tokens
+
+Public CSS custom properties (all optional — every one falls back to the
+built-in value, so the default look needs no configuration):
+
+| Token                           | Default                                                          | Description                                                    |
+| ------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------- |
+| `--dm-accordion-bg`             | `var(--dm-bg-elevated)`                                          | Surface of framed containers and splitted item cards.          |
+| `--dm-accordion-border`         | `var(--dm-border-strong)` (bordered) / `var(--dm-border)` (splitted) | Border color of the framed container / splitted item cards. |
+| `--dm-accordion-radius`         | `var(--dm-radius-lg)` (bordered/shadow) / `var(--dm-radius-xl)` (splitted) | Corner rounding of the container / splitted item cards. |
+| `--dm-accordion-gap`            | `var(--dm-space-3)`                                              | Gap between splitted item cards.                               |
+| `--dm-accordion-divider`        | `var(--dm-border)`                                               | Hairline between items and between header and body.            |
+| `--dm-accordion-trigger-height` | `3.5rem`                                                         | Minimum height of the header trigger.                          |
+| `--dm-accordion-trigger-padding`| `var(--dm-space-4) var(--dm-space-5)`                            | Padding of the header trigger.                                 |
+| `--dm-accordion-trigger-hover`  | `var(--dm-bg-subtle)`                                            | Full-row hover wash on the header trigger.                     |
+| `--dm-accordion-icon-size`      | `1.25rem`                                                        | Leading icon size (`font-size`).                               |
+| `--dm-accordion-icon-open`      | `var(--dm-primary)`                                              | Leading icon color when the item is open.                      |

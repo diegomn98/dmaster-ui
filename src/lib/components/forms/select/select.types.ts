@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 /** Single item in the select's option list. */
 export interface DmSelectItem<T = unknown> {
   /** Underlying value stored in the model. Any identity-comparable type. */
@@ -33,6 +35,45 @@ export type DmSelectOptionOrGroup<T = unknown> = DmSelectItem<T> | DmSelectGroup
 export function isDmSelectGroup<T>(entry: DmSelectOptionOrGroup<T>): entry is DmSelectGroup<T> {
   return Array.isArray((entry as DmSelectGroup<T>).items);
 }
+
+// ---------------------------------------------------------------------------
+// Server-driven (async) mode — the select loads options in pages via `loadFn`.
+// ---------------------------------------------------------------------------
+
+/** How the async panel loads more items past the initial page. */
+export type DmSelectLoadMoreMode = 'infinite' | 'button';
+
+/**
+ * Result object returned by the `loadFn` on each fetch.
+ * `total` is the full count of matching records across all pages, which
+ * allows the component to derive whether more pages remain.
+ */
+export interface DmSelectLoadResult<T = unknown> {
+  items: DmSelectItem<T>[];
+  total: number;
+}
+
+/**
+ * Signature of the consumer-provided fetch function that switches `dm-select`
+ * into server-driven mode.
+ *
+ * Returns an **Observable** so `rxResource` can subscribe and automatically
+ * cancel any in-flight request whenever the query or page changes — making
+ * search debounce and rapid scrolling inherently race-condition-free.
+ *
+ * With Angular's `HttpClient` there is nothing extra to do:
+ * ```ts
+ * loadFn = ({ page, pageSize, query }) =>
+ *   this.http.get<DmSelectLoadResult<User>>('/api/users', {
+ *     params: { page, pageSize, query },
+ *   });
+ * ```
+ */
+export type DmSelectLoadFn<T = unknown> = (params: {
+  page: number;
+  pageSize: number;
+  query: string;
+}) => Observable<DmSelectLoadResult<T>>;
 
 /** Semantic color, shared with the button/badge palette. */
 export type DmSelectColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';

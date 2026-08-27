@@ -1,8 +1,8 @@
 :host {
   display: block;
-  max-width: 16rem;
-  padding: 0.375rem 0.625rem;
-  border-radius: var(--dm-radius-md);
+  max-width: var(--dm-tooltip-max-width, 16rem);
+  padding: var(--dm-tooltip-padding, 0.375rem 0.625rem);
+  border-radius: var(--dm-tooltip-radius, var(--dm-radius-md));
   background: var(--dm-tooltip-bg, var(--dm-fg));
   color: var(--dm-tooltip-fg, var(--dm-bg));
   font-family: var(--dm-font-sans);
@@ -14,7 +14,7 @@
 
   // Una píldora sólida y redondeada elevada por una única sombra suave
   // y difusa. Sin anillo exterior, sin brillo interior — superficie limpia.
-  box-shadow: var(--dm-shadow-md);
+  box-shadow: var(--dm-tooltip-shadow, var(--dm-shadow-md));
   animation: dm-tooltip-in var(--dm-duration-fast) var(--dm-ease-out);
 }
 

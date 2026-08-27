@@ -53,3 +53,18 @@ providers: [provideDrawerDefaults({ placement: 'left', size: 'lg' })];
 - `role="dialog"`; give the drawer an accessible name — pass `ariaLabel`, or render a heading inside and wire it with `aria-labelledby`.
 - `aria-modal` is set only when a backdrop is present; a `backdrop: false` drawer is non-modal and leaves the rest of the page reachable.
 - The slide-in animation collapses to a plain fade under `prefers-reduced-motion`.
+
+## Design tokens
+
+| Token                      | Default                | Description                                                                     |
+| -------------------------- | ---------------------- | ------------------------------------------------------------------------------- |
+| `--dm-drawer-bg`           | `var(--dm-bg)`         | Background of the drawer panel.                                                 |
+| `--dm-drawer-fg`           | `var(--dm-fg)`         | Text color inside the drawer panel.                                             |
+| `--dm-drawer-radius`       | `var(--dm-radius-lg)`  | Corner radius of the panel's inner edge (the viewport edge stays square).       |
+| `--dm-drawer-padding`      | `var(--dm-space-5)` (`var(--dm-space-6)` from `sm` up) | Inner padding of the drawer panel.              |
+| `--dm-drawer-size-sm`      | `20rem` / `30dvh`      | Panel size for `size: 'sm'` — width on left/right, height on top/bottom.        |
+| `--dm-drawer-size-md`      | `28rem` / `50dvh`      | Panel size for `size: 'md'` — width on left/right, height on top/bottom.        |
+| `--dm-drawer-size-lg`      | `36rem` / `70dvh`      | Panel size for `size: 'lg'` — width on left/right, height on top/bottom.        |
+| `--dm-drawer-backdrop-bg`  | `rgb(0 0 0 / 50%)`     | Backdrop scrim color behind the drawer.                                         |
+
+The panel is attached to the CDK overlay container at the document root, so set these tokens globally (e.g. on `:root`/`html`) or scope them via `panelClass` in `DmDrawerConfig`.

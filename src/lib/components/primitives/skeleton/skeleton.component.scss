@@ -4,11 +4,13 @@
 //   --dm-skeleton-bg         base surface, inherits --dm-bg-muted
 //   --dm-skeleton-highlight  wave gradient highlight, theme-provided
 //   --dm-skeleton-duration   animation cycle length
+//   --dm-skeleton-radius     corner rounding (all variants except circular)
+//   --dm-skeleton-gap        gap between repeated lines/blocks
 
 :host {
   display: flex;
   flex-direction: column;
-  gap: var(--dm-space-2);
+  gap: var(--dm-skeleton-gap, var(--dm-space-2));
   width: 100%;
 }
 
@@ -26,7 +28,7 @@
   // ---- Variants ------------------------------------------------------------
   &[data-variant='text'] {
     height: 1em;
-    border-radius: var(--dm-radius-sm);
+    border-radius: var(--dm-skeleton-radius, var(--dm-radius-sm));
 
     // Multi-line text blocks read more natural with a shorter last line.
     &:last-child:not(:first-child) {
@@ -36,26 +38,26 @@
 
   &[data-variant='rectangular'] {
     height: 6rem;
-    border-radius: 0;
+    border-radius: var(--dm-skeleton-radius, 0);
   }
 
   &[data-variant='rounded'] {
     height: 6rem;
 
     &[data-rounded='sm'] {
-      border-radius: var(--dm-radius-sm);
+      border-radius: var(--dm-skeleton-radius, var(--dm-radius-sm));
     }
 
     &[data-rounded='md'] {
-      border-radius: var(--dm-radius-md);
+      border-radius: var(--dm-skeleton-radius, var(--dm-radius-md));
     }
 
     &[data-rounded='lg'] {
-      border-radius: var(--dm-radius-lg);
+      border-radius: var(--dm-skeleton-radius, var(--dm-radius-lg));
     }
 
     &[data-rounded='full'] {
-      border-radius: var(--dm-radius-full);
+      border-radius: var(--dm-skeleton-radius, var(--dm-radius-full));
     }
   }
 

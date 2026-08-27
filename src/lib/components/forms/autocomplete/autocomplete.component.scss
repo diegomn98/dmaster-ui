@@ -43,9 +43,9 @@
   min-width: 0;
   padding: 0 var(--dm-control-padding-x);
   border: 1px solid transparent;
-  border-radius: var(--dm-radius-md);
-  background-color: var(--dm-bg-muted);
-  color: var(--dm-fg);
+  border-radius: var(--dm-autocomplete-radius, var(--dm-radius-md));
+  background-color: var(--dm-autocomplete-bg, var(--dm-bg-muted));
+  color: var(--dm-autocomplete-fg, var(--dm-fg));
 
   // Focus ring parked at 0 spread → grows out of the field on focus (same as
   // .dm-input): a single box-shadow that animates in width.
@@ -82,11 +82,14 @@
   }
 
   &:hover:not([data-disabled], :focus-within) {
-    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+    background-color: var(
+      --dm-autocomplete-bg-hover,
+      color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted))
+    );
   }
 
   &:focus-within {
-    background-color: var(--dm-bg-elevated);
+    background-color: var(--dm-autocomplete-bg-focus, var(--dm-bg-elevated));
     border-color: var(--dm-ac);
     box-shadow: 0 0 0 3.5px var(--dm-ac-subtle);
   }
@@ -103,7 +106,7 @@
   }
 
   &[data-size='md'] {
-    height: 2.5rem;
+    height: var(--dm-autocomplete-height, 2.5rem);
     font-size: var(--dm-text-sm);
   }
 
@@ -123,7 +126,7 @@
   }
 
   &[data-radius='md'] {
-    border-radius: var(--dm-radius-md);
+    border-radius: var(--dm-autocomplete-radius, var(--dm-radius-md));
   }
 
   &[data-radius='lg'] {
@@ -139,7 +142,7 @@
   // flat: default styles above.
   &[data-variant='bordered'] {
     background-color: transparent;
-    border-color: var(--dm-border-strong);
+    border-color: var(--dm-autocomplete-border, var(--dm-border-strong));
 
     &:hover:not([data-disabled], :focus-within) {
       background-color: transparent;
@@ -152,11 +155,11 @@
   }
 
   &[data-variant='faded'] {
-    background-color: var(--dm-bg-muted);
-    border-color: var(--dm-border);
+    background-color: var(--dm-autocomplete-bg, var(--dm-bg-muted));
+    border-color: var(--dm-autocomplete-border, var(--dm-border));
 
     &:focus-within {
-      background-color: var(--dm-bg-elevated);
+      background-color: var(--dm-autocomplete-bg-focus, var(--dm-bg-elevated));
     }
   }
 
@@ -197,7 +200,7 @@
   flex-shrink: 0;
   width: 1.125rem;
   height: 1.125rem;
-  color: var(--dm-fg-subtle);
+  color: var(--dm-autocomplete-icon-color, var(--dm-fg-subtle));
   transition: color var(--dm-duration-base) var(--dm-ease-out);
 
   .dm-autocomplete__control:focus-within & {
@@ -223,7 +226,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: var(--dm-fg);
+  color: var(--dm-autocomplete-fg, var(--dm-fg));
   caret-color: var(--dm-ac);
   font-family: var(--dm-font-sans);
   font-size: inherit;
@@ -231,7 +234,7 @@
   appearance: none;
 
   &::placeholder {
-    color: var(--dm-fg-subtle);
+    color: var(--dm-autocomplete-placeholder-color, var(--dm-fg-subtle));
     opacity: 1;
     transition: color var(--dm-duration-base) var(--dm-ease-out);
   }

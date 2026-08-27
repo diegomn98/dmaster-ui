@@ -12,16 +12,16 @@
   max-width: var(--dm-popover-max-width, 20rem);
   padding: var(--dm-popover-padding, 1rem);
   border: 1px solid var(--dm-popover-border, var(--dm-border));
-  border-radius: var(--dm-radius-lg);
+  border-radius: var(--dm-popover-radius, var(--dm-radius-lg));
   background: var(--dm-popover-bg, var(--dm-bg));
-  color: var(--dm-fg);
+  color: var(--dm-popover-fg, var(--dm-fg));
   font-family: var(--dm-font-sans);
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-normal);
   outline: none;
 
   // Superficie plana elevada por una única sombra difusa y suave.
-  box-shadow: var(--dm-shadow-lg);
+  box-shadow: var(--dm-popover-shadow, var(--dm-shadow-lg));
 
   // Fade + scale desde el borde que mira al trigger (transform-origin por lado).
   animation: dm-popover-in var(--dm-duration-fast) var(--dm-ease-out);

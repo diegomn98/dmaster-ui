@@ -57,3 +57,18 @@ providers: [provideEmptyStateDefaults({ size: 'lg' })];
 - No live region: an empty state is static content, not an announcement. If
   the emptiness is the result of a user action (a filter with zero matches),
   announce it from the consumer if needed.
+
+## Design tokens
+
+| Token                                    | Default                               | Description                                                          |
+| ---------------------------------------- | ------------------------------------- | -------------------------------------------------------------------- |
+| `--dm-empty-state-icon-bg`               | `var(--dm-bg-muted)`                  | Circle behind the glyph.                                             |
+| `--dm-empty-state-icon-fg`               | `var(--dm-fg-subtle)`                 | Glyph color.                                                         |
+| `--dm-empty-state-padding`               | `var(--dm-space-8) var(--dm-space-4)` | Outer padding.                                                       |
+| `--dm-empty-state-gap`                   | `var(--dm-space-1)` (lg: `space-2`)   | Vertical gap between the text blocks.                                |
+| `--dm-empty-state-icon-size`             | `3.5rem` (md)                         | Icon circle diameter; overrides every `size` (sm `2.5rem`, lg `4.5rem`). |
+| `--dm-empty-state-icon-radius`           | `var(--dm-radius-full)`               | Rounding of the icon circle.                                         |
+| `--dm-empty-state-title-color`           | `var(--dm-fg)`                        | Headline text color.                                                 |
+| `--dm-empty-state-title-weight`          | `var(--dm-font-semibold)`             | Headline font weight.                                                |
+| `--dm-empty-state-description-color`     | `var(--dm-fg-muted)`                  | Supporting copy color.                                               |
+| `--dm-empty-state-description-max-width` | `36ch`                                | Maximum measure of the supporting copy.                              |

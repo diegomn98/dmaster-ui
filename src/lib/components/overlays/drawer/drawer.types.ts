@@ -26,4 +26,11 @@ export interface DmDrawerConfig<D = unknown> {
   disableClose?: boolean;
   /** Accessible name of the drawer. */
   ariaLabel?: string;
+  /**
+   * Extra class(es) added to the drawer panel. Overlays render at the document
+   * root, so a subtree-scoped theme override doesn't reach them — put your
+   * theme class here (or a `[data-dm-theme='<name>']` selector) to re-apply a
+   * scoped theme inside the drawer.
+   */
+  panelClass?: string | readonly string[];
 }

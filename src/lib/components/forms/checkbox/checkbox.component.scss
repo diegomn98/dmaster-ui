@@ -35,15 +35,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: var(--dm-checkbox-size, 1.125rem);
+  height: var(--dm-checkbox-size, 1.125rem);
   flex-shrink: 0;
-  border: 1px solid var(--dm-border-strong);
+  border: 1px solid var(--dm-checkbox-border, var(--dm-border-strong));
 
   // Rounder box — sits closer to a squircle than a sharp tick.
-  border-radius: 0.4375rem;
-  background-color: var(--dm-bg-elevated);
-  color: var(--dm-primary-fg);
+  border-radius: var(--dm-checkbox-radius, 0.4375rem);
+  background-color: var(--dm-checkbox-bg, var(--dm-bg-elevated));
+  color: var(--dm-checkbox-fg, var(--dm-primary-fg));
 
   // The ring layer sits at 0 spread so the hover halo grows instead of pops.
   box-shadow: 0 0 0 0 var(--dm-primary-subtle);
@@ -75,8 +75,8 @@
 
 .dm-checkbox--checked .dm-checkbox__box {
   // Brand solid = flat primary, no gradient or sheen.
-  border-color: var(--dm-primary);
-  background-color: var(--dm-primary);
+  border-color: var(--dm-checkbox-border-checked, var(--dm-primary));
+  background-color: var(--dm-checkbox-bg-checked, var(--dm-primary));
   box-shadow: 0 1px 2px color-mix(in srgb, var(--dm-primary) 35%, transparent);
 
   svg {
@@ -113,7 +113,7 @@
 .dm-checkbox__label {
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
-  color: var(--dm-fg);
+  color: var(--dm-checkbox-label-fg, var(--dm-fg));
 
   &:empty {
     display: none;
@@ -124,9 +124,9 @@
 
 :host([data-size='sm']) {
   .dm-checkbox__box {
-    width: 0.875rem;
-    height: 0.875rem;
-    border-radius: 0.3125rem;
+    width: var(--dm-checkbox-size, 0.875rem);
+    height: var(--dm-checkbox-size, 0.875rem);
+    border-radius: var(--dm-checkbox-radius, 0.3125rem);
 
     svg {
       width: 0.5625rem;

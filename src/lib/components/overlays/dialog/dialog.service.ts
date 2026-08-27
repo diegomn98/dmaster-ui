@@ -38,7 +38,11 @@ export class DmDialogService {
       disableClose: config.disableClose ?? this.defaults.disableClose,
       ariaLabel: config.ariaLabel,
       ariaModal: true,
-      panelClass: ['dm-dialog-panel', `dm-dialog-panel--${config.size ?? this.defaults.size}`],
+      panelClass: [
+        'dm-dialog-panel',
+        `dm-dialog-panel--${config.size ?? this.defaults.size}`,
+        ...(config.panelClass ? [config.panelClass].flat() : []),
+      ],
       backdropClass: 'dm-dialog-backdrop',
     });
   }

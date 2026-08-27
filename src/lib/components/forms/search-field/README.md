@@ -76,3 +76,17 @@ providers: [provideSearchFieldDefaults({ variant: 'bordered', radius: 'md' })];
 - `error` sets `aria-invalid` on the input and links the message with
   `aria-describedby` (the message is `role="alert"`); `description` links the
   same way when there is no error.
+
+## Design tokens
+
+| Token                                 | Default                                                   | Description                                                              |
+| ------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `--dm-search-field-bg`                | `var(--dm-bg-muted)`                                      | Field surface background (flat and faded variants).                      |
+| `--dm-search-field-bg-hover`          | `color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted))` | Field background on hover.                                               |
+| `--dm-search-field-bg-focus`          | `var(--dm-bg-elevated)`                                   | Field background while focused.                                          |
+| `--dm-search-field-fg`                | `var(--dm-fg)`                                            | Text color of the field and its input.                                   |
+| `--dm-search-field-border`            | `var(--dm-border-strong)` (`var(--dm-border)` in faded)   | Border color of the bordered and faded variants.                         |
+| `--dm-search-field-radius`            | `var(--dm-radius-md)`                                     | Corner radius of the field (applies to the default `radius="md"`).       |
+| `--dm-search-field-height`            | `2.5rem`                                                  | Field height for the default `size="md"`.                                |
+| `--dm-search-field-placeholder-color` | `var(--dm-fg-subtle)`                                     | Placeholder text color.                                                  |
+| `--dm-search-field-icon-color`        | `var(--dm-fg-subtle)`                                     | Color of the leading magnifier icon.                                     |

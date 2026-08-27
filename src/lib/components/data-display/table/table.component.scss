@@ -17,9 +17,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--dm-bg);
-  border: 1px solid var(--dm-border);
-  border-radius: var(--dm-radius-lg);
+  background: var(--dm-table-bg, var(--dm-bg));
+  border: 1px solid var(--dm-table-border, var(--dm-border));
+  border-radius: var(--dm-table-radius, var(--dm-radius-lg));
 }
 
 // ---- Toolbar ---------------------------------------------------------------
@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--dm-space-3) var(--dm-space-4);
-  border-bottom: 1px solid var(--dm-border);
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 .dm-table__toolbar-start {
@@ -188,7 +188,7 @@
   width: 100%;
   font-family: var(--dm-font-sans);
   font-feature-settings: var(--dm-numeric);
-  color: var(--dm-fg);
+  color: var(--dm-table-fg, var(--dm-fg));
   text-align: start;
   border-collapse: separate;
   border-spacing: 0;
@@ -203,13 +203,13 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   caption-side: top;
-  border-bottom: 1px solid var(--dm-border);
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 // ---- Header ----------------------------------------------------------------
 
 .dm-table__head {
-  background: var(--dm-bg-subtle);
+  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
 }
 
 .dm-table__th {
@@ -217,13 +217,13 @@
   padding: var(--dm-cell-py) var(--dm-cell-px);
   font-size: var(--dm-text-xs);
   font-weight: var(--dm-font-semibold);
-  color: var(--dm-fg-muted);
+  color: var(--dm-table-header-fg, var(--dm-fg-muted));
   text-align: start;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  background: var(--dm-bg-subtle);
-  border-bottom: 1px solid var(--dm-border);
+  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 
   @include mixins.transition(background-color, color);
 
@@ -279,9 +279,9 @@
 .dm-table__td {
   padding: var(--dm-cell-py) var(--dm-cell-px);
   font-size: var(--dm-text-sm);
-  color: var(--dm-fg);
+  color: var(--dm-table-fg, var(--dm-fg));
   vertical-align: middle;
-  border-bottom: 1px solid var(--dm-border);
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 
   @include mixins.transition(background-color);
 
@@ -320,23 +320,23 @@
   .dm-table__body
   .dm-table__tr:not(.dm-table__tr--skeleton):hover
   .dm-table__td {
-  background: var(--dm-bg-subtle);
+  background: var(--dm-table-row-bg-hover, var(--dm-bg-subtle));
 }
 
 // ---- Variants --------------------------------------------------------------
 
 .dm-table[data-variant='striped'] .dm-table__body .dm-table__tr:nth-child(even) .dm-table__td {
-  background: var(--dm-bg-subtle);
+  background: var(--dm-table-stripe-bg, var(--dm-bg-subtle));
 }
 
 .dm-table[data-variant='striped'][data-hover] .dm-table__body .dm-table__tr:hover .dm-table__td {
-  background: var(--dm-bg-muted);
+  background: var(--dm-table-row-bg-hover, var(--dm-bg-muted));
 }
 
 .dm-table[data-variant='bordered'] {
   .dm-table__th,
   .dm-table__td {
-    border-right: 1px solid var(--dm-border);
+    border-right: 1px solid var(--dm-table-border, var(--dm-border));
   }
 
   .dm-table__th:last-child,
@@ -348,7 +348,7 @@
 // ---- Selected row (wins over hover/striped) --------------------------------
 
 .dm-table__body .dm-table__tr[data-selected] .dm-table__td {
-  background: var(--dm-primary-subtle);
+  background: var(--dm-table-row-bg-selected, var(--dm-primary-subtle));
 }
 
 .dm-table[data-hover] .dm-table__body .dm-table__tr[data-selected]:hover .dm-table__td {
@@ -473,7 +473,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--dm-space-3) var(--dm-space-4);
-  border-top: 1px solid var(--dm-border);
+  border-top: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 .dm-table__footer-info {
@@ -624,13 +624,13 @@
   display: block;
   font-family: var(--dm-font-sans);
   font-feature-settings: var(--dm-numeric);
-  color: var(--dm-fg);
+  color: var(--dm-table-fg, var(--dm-fg));
 }
 
 // The header row sits above the viewport and never scrolls with the body.
 .dm-table__vhead {
-  background: var(--dm-bg-subtle);
-  border-bottom: 1px solid var(--dm-border);
+  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 .dm-table__vrow {
@@ -638,7 +638,7 @@
   grid-template-columns: var(--dm-table-cols);
   align-items: stretch;
   box-sizing: border-box;
-  border-bottom: 1px solid var(--dm-border);
+  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 // Body rows live inside the viewport; the last one keeps its divider so the
@@ -660,7 +660,7 @@
   min-width: 0;
   padding: var(--dm-cell-py) var(--dm-cell-px);
   font-size: var(--dm-text-sm);
-  color: var(--dm-fg);
+  color: var(--dm-table-fg, var(--dm-fg));
 
   @include mixins.transition(background-color);
 
@@ -689,10 +689,10 @@
   position: relative;
   font-size: var(--dm-text-xs);
   font-weight: var(--dm-font-semibold);
-  color: var(--dm-fg-muted);
+  color: var(--dm-table-header-fg, var(--dm-fg-muted));
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: var(--dm-bg-subtle);
+  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
 
   @include mixins.transition(background-color, color);
 
@@ -708,7 +708,7 @@
 
   &[data-sorted] {
     color: var(--dm-fg);
-    background: var(--dm-bg-subtle);
+    background: var(--dm-table-header-bg, var(--dm-bg-subtle));
 
     &::after {
       content: '';
@@ -750,23 +750,23 @@
   cursor: pointer;
 
   &:hover {
-    background: var(--dm-bg-subtle);
+    background: var(--dm-table-row-bg-hover, var(--dm-bg-subtle));
   }
 }
 
 // ---- Variants --------------------------------------------------------------
 
 .dm-table[data-variant='striped'] .dm-table__viewport .dm-table__vrow[data-even] {
-  background: var(--dm-bg-subtle);
+  background: var(--dm-table-stripe-bg, var(--dm-bg-subtle));
 }
 
 .dm-table[data-variant='striped'][data-hover] .dm-table__viewport .dm-table__vrow:hover {
-  background: var(--dm-bg-muted);
+  background: var(--dm-table-row-bg-hover, var(--dm-bg-muted));
 }
 
 .dm-table[data-variant='bordered'] {
   .dm-table__vcell {
-    border-right: 1px solid var(--dm-border);
+    border-right: 1px solid var(--dm-table-border, var(--dm-border));
 
     &:last-child {
       border-right: 0;
@@ -777,7 +777,7 @@
 // ---- Selected row (wins over hover / striped) ------------------------------
 
 .dm-table__vrow[data-selected] {
-  background: var(--dm-primary-subtle);
+  background: var(--dm-table-row-bg-selected, var(--dm-primary-subtle));
 }
 
 .dm-table[data-hover] .dm-table__viewport .dm-table__vrow[data-selected]:hover {

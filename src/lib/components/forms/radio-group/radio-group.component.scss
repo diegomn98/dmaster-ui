@@ -6,7 +6,7 @@
 
 .dm-radio-group {
   display: flex;
-  gap: var(--dm-space-3);
+  gap: var(--dm-radio-group-gap, var(--dm-space-3));
 
   &[data-orientation='vertical'] {
     flex-direction: column;
@@ -16,6 +16,6 @@
   &[data-orientation='horizontal'] {
     flex-flow: row wrap;
     align-items: center;
-    gap: var(--dm-space-4);
+    gap: var(--dm-radio-group-gap, var(--dm-space-4));
   }
 }

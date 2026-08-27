@@ -21,7 +21,7 @@ describe('provideDmasterUI', () => {
   it('falls back to the default config when provideDmasterUI() was not called', () => {
     const config = TestBed.inject(DMASTER_UI_CONFIG);
 
-    expect(config).toEqual({ theme: 'auto', density: 'comfortable' });
+    expect(config).toEqual({ theme: 'auto', density: 'comfortable', themes: {} });
   });
 
   it('exposes the full provided config through DMASTER_UI_CONFIG', () => {
@@ -29,7 +29,11 @@ describe('provideDmasterUI', () => {
       providers: [provideDmasterUI({ theme: 'dark', density: 'compact' })],
     });
 
-    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({ theme: 'dark', density: 'compact' });
+    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({
+      theme: 'dark',
+      density: 'compact',
+      themes: {},
+    });
   });
 
   it('merges a partial config over the defaults', () => {
@@ -37,7 +41,11 @@ describe('provideDmasterUI', () => {
       providers: [provideDmasterUI({ density: 'spacious' })],
     });
 
-    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({ theme: 'auto', density: 'spacious' });
+    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({
+      theme: 'auto',
+      density: 'spacious',
+      themes: {},
+    });
   });
 
   it('keeps the defaults when called without arguments', () => {
@@ -45,7 +53,11 @@ describe('provideDmasterUI', () => {
       providers: [provideDmasterUI()],
     });
 
-    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({ theme: 'auto', density: 'comfortable' });
+    expect(TestBed.inject(DMASTER_UI_CONFIG)).toEqual({
+      theme: 'auto',
+      density: 'comfortable',
+      themes: {},
+    });
   });
 
   it('seeds ThemeService and DensityService with the provided config', () => {

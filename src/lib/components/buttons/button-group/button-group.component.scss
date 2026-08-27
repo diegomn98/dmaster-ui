@@ -2,7 +2,9 @@
 // can reach the inner `.dm-button` of each projected button without leaking.
 //
 // Component tokens (overridable globally or per-instance, with fallback):
-//   --dm-button-group-divider   1px seam between non-bordered segments
+//   --dm-button-group-divider            1px seam between non-bordered segments
+//   --dm-button-group-divider-thickness  seam thickness (default 1px)
+//   --dm-button-group-divider-inset      seam inset from both ends (default 15%)
 
 .dm-button-group {
   display: inline-flex;
@@ -49,9 +51,9 @@
   // ---- Horizontal (default) ------------------------------------------------
   &[data-orientation='horizontal'] {
     > dm-button + dm-button::before {
-      inset-block: 15%;
+      inset-block: var(--dm-button-group-divider-inset, 15%);
       inset-inline-start: 0;
-      width: 1px;
+      width: var(--dm-button-group-divider-thickness, 1px);
     }
 
     // Collapse the 2px shared border between adjacent bordered buttons.
@@ -75,9 +77,9 @@
     flex-direction: column;
 
     > dm-button + dm-button::before {
-      inset-inline: 15%;
+      inset-inline: var(--dm-button-group-divider-inset, 15%);
       inset-block-start: 0;
-      height: 1px;
+      height: var(--dm-button-group-divider-thickness, 1px);
     }
 
     > dm-button + dm-button:has(> .dm-button[data-variant='bordered']) {

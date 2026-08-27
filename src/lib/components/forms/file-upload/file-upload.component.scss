@@ -2,9 +2,14 @@
 
 // Component tokens (overridable globally or per-instance), all with a fallback
 // to a semantic global token so the component works without extra theme wiring:
-//   --dm-file-upload-border   dashed dropzone border   → --dm-border-strong
-//   --dm-file-upload-radius   dropzone/list rounding    → --dm-radius-lg
-//   --dm-file-upload-item-bg  list row surface          → --dm-bg-muted
+//   --dm-file-upload-border         dashed dropzone border    → --dm-border-strong
+//   --dm-file-upload-radius         dropzone/list rounding    → --dm-radius-lg
+//   --dm-file-upload-bg             dropzone surface          → transparent
+//   --dm-file-upload-fg             dropzone text             → --dm-fg-muted
+//   --dm-file-upload-border-active  drag-over border          → --dm-primary
+//   --dm-file-upload-bg-active      drag-over fill            → --dm-primary-subtle
+//   --dm-file-upload-item-bg        list row surface          → --dm-bg-muted
+//   --dm-file-upload-item-radius    list row rounding         → --dm-radius-md
 
 :host {
   display: grid;
@@ -30,8 +35,8 @@
   padding: var(--dm-space-6) var(--dm-space-4);
   border: 1.5px dashed var(--dm-file-upload-border, var(--dm-border-strong));
   border-radius: var(--dm-file-upload-radius, var(--dm-radius-lg));
-  background-color: transparent;
-  color: var(--dm-fg-muted);
+  background-color: var(--dm-file-upload-bg, transparent);
+  color: var(--dm-file-upload-fg, var(--dm-fg-muted));
   font-family: var(--dm-font-sans);
   text-align: center;
   cursor: pointer;
@@ -46,9 +51,9 @@
   // Drag-over / active: primary tint. The text/icon use --dm-primary-text
   // (AA on the subtle tint) rather than the base --dm-primary.
   &[data-dragging] {
-    border-color: var(--dm-primary);
+    border-color: var(--dm-file-upload-border-active, var(--dm-primary));
     border-style: solid;
-    background-color: var(--dm-primary-subtle);
+    background-color: var(--dm-file-upload-bg-active, var(--dm-primary-subtle));
     color: var(--dm-primary-text);
   }
 
@@ -126,7 +131,7 @@
   gap: var(--dm-space-3);
   padding: var(--dm-space-2) var(--dm-space-3);
   border: 1px solid transparent;
-  border-radius: var(--dm-radius-md);
+  border-radius: var(--dm-file-upload-item-radius, var(--dm-radius-md));
   background-color: var(--dm-file-upload-item-bg, var(--dm-bg-muted));
   transition:
     border-color var(--dm-duration-base) var(--dm-ease-out),

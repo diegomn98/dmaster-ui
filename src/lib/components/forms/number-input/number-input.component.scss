@@ -52,9 +52,9 @@
   height: var(--dm-ni-h);
   padding: 0 var(--dm-control-padding-x);
   border: 1px solid transparent;
-  border-radius: var(--dm-radius-md);
-  background-color: var(--dm-bg-muted);
-  color: var(--dm-fg);
+  border-radius: var(--dm-number-input-radius, var(--dm-radius-md));
+  background-color: var(--dm-number-input-bg, var(--dm-bg-muted));
+  color: var(--dm-number-input-fg, var(--dm-fg));
 
   // Focus ring parked at 0 spread → grows out of the field on focus (same as
   // .dm-input): a single box-shadow that animates in width.
@@ -99,7 +99,7 @@
   }
 
   &:focus-within {
-    background-color: var(--dm-bg-elevated);
+    background-color: var(--dm-number-input-bg-focus, var(--dm-bg-elevated));
     border-color: var(--dm-ni);
     box-shadow: 0 0 0 3.5px var(--dm-ni-subtle);
   }
@@ -148,7 +148,7 @@
   }
 
   &[data-radius='md'] {
-    border-radius: var(--dm-radius-md);
+    border-radius: var(--dm-number-input-radius, var(--dm-radius-md));
   }
 
   &[data-radius='lg'] {
@@ -164,7 +164,7 @@
   // flat: default styles above.
   &[data-variant='bordered'] {
     background-color: transparent;
-    border-color: var(--dm-border-strong);
+    border-color: var(--dm-number-input-border, var(--dm-border-strong));
 
     &:hover:not([data-disabled], :focus-within) {
       background-color: transparent;
@@ -177,11 +177,11 @@
   }
 
   &[data-variant='faded'] {
-    background-color: var(--dm-bg-muted);
+    background-color: var(--dm-number-input-bg, var(--dm-bg-muted));
     border-color: var(--dm-border);
 
     &:focus-within {
-      background-color: var(--dm-bg-elevated);
+      background-color: var(--dm-number-input-bg-focus, var(--dm-bg-elevated));
     }
   }
 

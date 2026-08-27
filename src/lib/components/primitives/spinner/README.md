@@ -23,3 +23,11 @@ Global defaults: `provideSpinnerDefaults({...})` / `SPINNER_DEFAULTS`.
 - No `label`: `aria-hidden="true"` (decorative, the context announces loading).
 - With `label`: `role="status"` + `aria-label`.
 - `prefers-reduced-motion: reduce` stops the rotation (static arc).
+
+## Design tokens
+
+| Token                        | Default        | Description                                        |
+| ---------------------------- | -------------- | -------------------------------------------------- |
+| `--dm-spinner-color`         | `currentcolor` | Stroke color of the track and the arc.             |
+| `--dm-spinner-duration`      | `2s`           | One full rotation of the spinner.                  |
+| `--dm-spinner-track-opacity` | `0.16`         | Opacity of the faint background track.             |

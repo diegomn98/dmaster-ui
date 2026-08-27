@@ -36,46 +36,53 @@
   // solid fills, and a soft tint. `default` is the neutral color.
   --dm-default: #e4e4e7;
   --dm-default-fg: #18181b;
-  --dm-default-subtle: rgb(24 24 27 / 6%);
+  --dm-default-subtle: color-mix(in srgb, var(--dm-fg) 6%, transparent);
 
   // A saturated blue as the UI primary. The brand gradient (--dm-gradient-brand)
   // derives from it, so the logo/hero/favicon always match the active theme
   // (light/dark + live palette) instead of a fixed, disconnected hue.
+  // -hover/-text are DERIVED from the base via OKLCH relative color syntax:
+  // a fixed lightness (calibrated so the default render stays within 3/255 of
+  // the previous hand-picked hexes — WCAG ratios preserved to ±0.02) with the
+  // base's own chroma/hue, so overriding --dm-<color> re-derives its whole
+  // family automatically. Fixed L is what keeps the contrast quasi-guaranteed
+  // for arbitrary brand colors: WCAG contrast is dominated by lightness.
   --dm-primary: #006fee;
-  --dm-primary-hover: #005bc4;
+  --dm-primary-hover: oklch(from var(--dm-primary) 49.2% calc(c * 0.859) h); // was #005bc4
   --dm-primary-fg: #fff;
-  --dm-primary-subtle: rgb(0 111 238 / 12%);
+  --dm-primary-subtle: color-mix(in srgb, var(--dm-primary) 12%, transparent);
   --dm-secondary: #7c3aed;
-  --dm-secondary-hover: #6d28d9;
+  --dm-secondary-hover: oklch(from var(--dm-secondary) 49.07% calc(c * 0.978) h); // was #6d28d9
   --dm-secondary-fg: #fff;
-  --dm-secondary-subtle: rgb(124 58 237 / 12%);
+  --dm-secondary-subtle: color-mix(in srgb, var(--dm-secondary) 12%, transparent);
 
   // Status (vivid, saturated). Green/amber take dark foregrounds.
   --dm-success: #17c964;
-  --dm-success-hover: #12a150;
+  --dm-success-hover: oklch(from var(--dm-success) 62.21% calc(c * 0.841) h); // was #12a150
   --dm-success-fg: #03190d;
-  --dm-success-subtle: rgb(23 201 100 / 14%);
+  --dm-success-subtle: color-mix(in srgb, var(--dm-success) 14%, transparent);
   --dm-warning: #f5a524;
-  --dm-warning-hover: #d98e13;
+  --dm-warning-hover: oklch(from var(--dm-warning) 70.64% calc(c * 0.934) calc(h - 1.27)); // was #d98e13
   --dm-warning-fg: #3a2803;
-  --dm-warning-subtle: rgb(245 165 36 / 15%);
+  --dm-warning-subtle: color-mix(in srgb, var(--dm-warning) 15%, transparent);
 
   // Nudged from #f31260 (white text = 4.14:1, below AA) to #e5145c (4.58:1)
   // so solid danger buttons/badges have a legible label. Barely perceptible.
   --dm-danger: #e5145c;
-  --dm-danger-hover: #c00c49;
+  --dm-danger-hover: oklch(from var(--dm-danger) 51.87% calc(c * 0.879) h); // was #c00c49
   --dm-danger-fg: #fff;
-  --dm-danger-subtle: rgb(229 20 92 / 12%);
+  --dm-danger-subtle: color-mix(in srgb, var(--dm-danger) 12%, transparent);
 
   // Accessible text shade for TINTED variants (flat/light/faded/bordered):
   // the base hue read as small text on its own -subtle fill fails AA, so these
-  // are darkened just for text. Fills keep the vivid base color.
+  // sit at a darker fixed OKLCH lightness just for text (>=4.5:1 over their
+  // -subtle fill on bg AND bg-muted). Fills keep the vivid base color.
   --dm-default-text: var(--dm-fg-muted);
-  --dm-primary-text: #005bc4;
-  --dm-secondary-text: #6d28d9;
-  --dm-success-text: #0c6b35;
-  --dm-warning-text: #7a5200;
-  --dm-danger-text: #b30b45;
+  --dm-primary-text: oklch(from var(--dm-primary) 49.2% calc(c * 0.859) h); // was #005bc4
+  --dm-secondary-text: oklch(from var(--dm-secondary) 49.07% calc(c * 0.978) h); // was #6d28d9
+  --dm-success-text: oklch(from var(--dm-success) 46.39% calc(c * 0.612) calc(h + 0.74)); // was #0c6b35
+  --dm-warning-text: oklch(from var(--dm-warning) 47.07% calc(c * 0.623) calc(h + 4.01)); // was #7a5200
+  --dm-danger-text: oklch(from var(--dm-danger) 49.28% calc(c * 0.834) h); // was #b30b45
 
   // Focus ring
   --dm-ring: rgb(0 111 238 / 55%);
@@ -167,57 +174,59 @@
   // 10% white composited over the lighter --dm-bg-elevated (#2b2b32) landed at
   // #404046 — only 4.01:1 against --dm-fg-muted (the flat badge/chip text).
   // Lowered to 6%: ~4.56:1 over elevated, ~5.1:1 over muted.
-  --dm-default-subtle: rgb(250 250 250 / 6%);
+  --dm-default-subtle: color-mix(in srgb, var(--dm-fg) 6%, transparent);
 
   // Nudged darker (#338ef7 → #1a72e0, #9f75ff → #8348f5): the "lifted" hues gave
   // white solid-fill text only 3.3:1 in dark. These keep the blue/purple identity
   // while passing AA for the label. The brand gradient tracks --dm-primary.
+  // -hover/-text derive from the base via OKLCH (see the light block): on dark
+  // the fixed lightness LIFTS instead of darkening — same calibration rules.
   --dm-primary: #1a72e0;
-  --dm-primary-hover: #4a94f5;
+  --dm-primary-hover: oklch(from var(--dm-primary) 66.56% calc(c * 0.875) h); // was #4a94f5
   --dm-primary-fg: #fff;
 
   // 26% composited over --dm-bg-elevated gave only 4.26:1 against --dm-fg-muted
   // (radio-group's selected-option hint text sits on this fill). Lowered to
   // 19%: ~4.58:1 vs fg-muted, ~5.5:1 vs --dm-primary-text.
-  --dm-primary-subtle: rgb(26 114 224 / 19%);
+  --dm-primary-subtle: color-mix(in srgb, var(--dm-primary) 19%, transparent);
   --dm-secondary: #8348f5;
-  --dm-secondary-hover: #a274ff;
+  --dm-secondary-hover: oklch(from var(--dm-secondary) 66.93% calc(c * 0.824) calc(h + 3.13)); // was #a274ff
   --dm-secondary-fg: #fff;
-  --dm-secondary-subtle: rgb(131 72 245 / 24%);
+  --dm-secondary-subtle: color-mix(in srgb, var(--dm-secondary) 24%, transparent);
 
   // Status
   --dm-success: #17c964;
-  --dm-success-hover: #45d483;
+  --dm-success-hover: oklch(from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)); // was #45d483
   --dm-success-fg: #03190d;
-  --dm-success-subtle: rgb(23 201 100 / 20%);
+  --dm-success-subtle: color-mix(in srgb, var(--dm-success) 20%, transparent);
   --dm-warning: #f5a524;
-  --dm-warning-hover: #f7b955;
+  --dm-warning-hover: oklch(from var(--dm-warning) 82.46% calc(c * 0.857) calc(h + 4.39)); // was #f7b955
   --dm-warning-fg: #3a2803;
 
   // 20% composited TWICE (a flat warning button nested in a flat warning
   // alert — the alert's action-slot demo) compounds to #73572d, only 4.34:1
   // against --dm-warning-text. Lowered to 18%: double-stacked ~4.64:1.
-  --dm-warning-subtle: rgb(245 165 36 / 18%);
+  --dm-warning-subtle: color-mix(in srgb, var(--dm-warning) 18%, transparent);
 
   // Nudged from #ff4d6d (white text = 3.21:1, well below AA) to #e11f4b
   // (4.67:1) so solid danger surfaces are readable on dark too.
   --dm-danger: #e11f4b;
-  --dm-danger-hover: #ff6b85;
+  --dm-danger-hover: oklch(from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)); // was #ff6b85
   --dm-danger-fg: #fff;
 
   // 24% composited over --dm-bg-elevated gave only 4.35:1 against
   // --dm-danger-text (flat badge/button fills). Lowered to 19%: ~4.56:1.
-  --dm-danger-subtle: rgb(225 31 75 / 19%);
+  --dm-danger-subtle: color-mix(in srgb, var(--dm-danger) 19%, transparent);
 
-  // Accessible text shade for tinted variants (light-theme counterpart above).
-  // On dark, the lifted base hues already read well on their tints; primary/
-  // secondary/danger use their lighter -hover for extra margin.
+  // Accessible text shade for tinted variants (light-theme counterpart above):
+  // lifted to a fixed OKLCH lightness so any brand base derives a readable
+  // tint text (>=4.5:1 over its -subtle fill on bg AND bg-muted).
   --dm-default-text: var(--dm-fg-muted);
-  --dm-primary-text: #7ab5fa;
-  --dm-secondary-text: #b794ff;
-  --dm-success-text: #45d483;
-  --dm-warning-text: #f9c87e;
-  --dm-danger-text: #ff6b85;
+  --dm-primary-text: oklch(from var(--dm-primary) 76.03% calc(c * 0.632) calc(h - 3.98)); // was #7ab5fa
+  --dm-secondary-text: oklch(from var(--dm-secondary) 74.13% calc(c * 0.637) calc(h + 4.91)); // was #b794ff
+  --dm-success-text: oklch(from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)); // was #45d483
+  --dm-warning-text: oklch(from var(--dm-warning) 86.03% calc(c * 0.678) calc(h + 4.53)); // was #f9c87e
+  --dm-danger-text: oklch(from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)); // was #ff6b85
 
   // Focus ring
   --dm-ring: rgb(102 170 249 / 60%);

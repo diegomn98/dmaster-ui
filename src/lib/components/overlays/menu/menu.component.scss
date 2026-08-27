@@ -22,7 +22,7 @@
   border: 1px solid var(--dm-menu-border, var(--dm-border));
   border-radius: var(--dm-menu-radius, var(--dm-radius-lg));
   background: var(--dm-menu-bg, var(--dm-bg-elevated));
-  color: var(--dm-fg);
+  color: var(--dm-menu-fg, var(--dm-fg));
   box-shadow: var(--dm-menu-shadow, var(--dm-shadow-lg));
   font-family: var(--dm-font-sans);
   font-size: var(--dm-text-sm);

@@ -33,7 +33,7 @@
 
 .dm-dialog-backdrop {
   // A clean, flat dark scrim with a light blur — no vignette gradient.
-  background: rgb(0 0 0 / 50%);
+  background: var(--dm-dialog-backdrop-bg, rgb(0 0 0 / 50%));
   backdrop-filter: blur(4px);
   animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
 }
@@ -44,10 +44,10 @@
   max-height: min(85dvh, calc(100dvh - 2rem));
   overflow: auto;
   overscroll-behavior: contain;
-  padding: var(--dm-space-5);
-  border-radius: var(--dm-radius-xl);
-  background: var(--dm-bg-elevated);
-  color: var(--dm-fg);
+  padding: var(--dm-dialog-padding, var(--dm-space-5));
+  border-radius: var(--dm-dialog-radius, var(--dm-radius-xl));
+  background: var(--dm-dialog-bg, var(--dm-bg-elevated));
+  color: var(--dm-dialog-fg, var(--dm-fg));
 
   // A flat surface lifted by a single wide, soft, diffuse shadow —
   // no hairline border, no inner sheen. In dark mode the shadow token carries
@@ -57,19 +57,19 @@
 
   // Mobile-first: tighter padding at (100vw - 2rem); roomier from `sm` up.
   @include mixins.respond-to(sm) {
-    padding: var(--dm-space-6);
+    padding: var(--dm-dialog-padding, var(--dm-space-6));
   }
 
   &--sm {
-    width: 22rem;
+    width: var(--dm-dialog-width-sm, 22rem);
   }
 
   &--md {
-    width: 30rem;
+    width: var(--dm-dialog-width-md, 30rem);
   }
 
   &--lg {
-    width: 42rem;
+    width: var(--dm-dialog-width-lg, 42rem);
   }
 }
 
@@ -83,6 +83,10 @@
   // Accent used as TEXT (selected/active option label): the AA-safe -text shade.
   --dm-sel-text: var(--dm-primary-text);
 
+  // The CDK pane is `display: flex`, so without an explicit width the panel
+  // collapses to its content and the rest of the pane becomes an invisible
+  // click-blocking strip over the page. Always fill the pane (= trigger width).
+  width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -170,6 +174,35 @@
   }
 }
 
+// × que limpia el texto del filtro (aparece solo con texto; Escape equivale).
+.dm-select__filter-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  color: var(--dm-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-out),
+    color var(--dm-duration-fast) var(--dm-ease-out);
+
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  &:hover {
+    background: var(--dm-default-subtle);
+    color: var(--dm-fg);
+  }
+}
+
 // Select-all / clear-all row (multiple mode).
 .dm-select__actions {
   display: flex;
@@ -237,12 +270,86 @@
   color: var(--dm-fg-muted);
 }
 
-// Empty (no filter results) row.
+// Empty (no results) row — client filter or async query with 0 matches.
 .dm-select__empty {
   padding: var(--dm-space-4) var(--dm-space-3);
   text-align: center;
   color: var(--dm-fg-muted);
   list-style: none;
+}
+
+// Async loading row (spinner + label).
+.dm-select__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  padding: var(--dm-space-3);
+  color: var(--dm-fg-muted);
+  font-size: var(--dm-text-sm);
+  list-style: none;
+}
+
+// Async infinite-scroll sentinel (1px watched by the IntersectionObserver).
+.dm-select__sentinel-row {
+  list-style: none;
+}
+
+.dm-select__sentinel {
+  height: 1px;
+  width: 100%;
+  pointer-events: none;
+}
+
+// Async "Load more" button row (loadMoreMode="button").
+.dm-select__load-more-row {
+  list-style: none;
+  padding: var(--dm-space-1);
+}
+
+.dm-select__load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dm-space-2);
+  width: 100%;
+  padding: var(--dm-space-2) var(--dm-space-3);
+  border: 1px dashed var(--dm-border-strong);
+  border-radius: var(--dm-radius-md);
+  background: transparent;
+  color: var(--dm-fg);
+  font: inherit;
+  font-size: var(--dm-text-xs);
+  font-weight: var(--dm-font-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--dm-duration-fast) var(--dm-ease-out),
+    border-color var(--dm-duration-fast) var(--dm-ease-out);
+
+  &:hover {
+    background: var(--dm-bg-muted);
+    border-color: var(--dm-sel);
+    color: var(--dm-sel-text);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--dm-sel);
+    box-shadow: 0 0 0 3px var(--dm-sel-subtle);
+  }
+}
+
+// Async live region announcing loading state (visually hidden).
+.dm-select__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .dm-select__option {
@@ -310,147 +417,6 @@
     opacity: 0;
     transform: translateY(-4px);
   }
-}
-
-// ============================================================================
-// Paginated select panel — search input + scrollable listbox + loading /
-// empty / load-more affordances. Attached to the CDK overlay container.
-// ============================================================================
-.dm-paginated-select__panel {
-  --dm-sel: var(--dm-primary);
-  --dm-sel-subtle: var(--dm-primary-subtle);
-
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  max-height: 20rem;
-  border-radius: var(--dm-radius-lg);
-  background: var(--dm-bg-elevated);
-  color: var(--dm-fg);
-  box-shadow: var(--dm-shadow-md);
-  font-family: var(--dm-font-sans);
-  font-size: var(--dm-text-sm);
-  animation: dm-select-panel-in var(--dm-duration-fast) var(--dm-ease-out);
-  overflow: hidden;
-
-  &[data-color='default'] {
-    --dm-sel: var(--dm-fg);
-    --dm-sel-subtle: var(--dm-default-subtle);
-  }
-
-  // Cuando el panel encapsula la lista aquí, la lista interna pierde su
-  // sombra/animación propias (ya las lleva el panel) pero conserva scroll y
-  // padding.
-  .dm-paginated-select__listbox {
-    box-shadow: none;
-    animation: none;
-    max-height: none;
-    flex: 1 1 auto;
-    min-height: 4rem;
-  }
-}
-
-.dm-paginated-select__search {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--dm-space-2);
-  padding: var(--dm-space-2) var(--dm-space-3);
-  border-bottom: 1px solid var(--dm-border);
-  background: var(--dm-bg-elevated);
-}
-
-.dm-paginated-select__search-icon {
-  flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-  color: var(--dm-fg-muted);
-}
-
-.dm-paginated-select__search-input {
-  flex: 1;
-  min-width: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--dm-fg);
-  font: inherit;
-  outline: none;
-
-  &::placeholder {
-    color: var(--dm-fg-subtle);
-  }
-}
-
-.dm-paginated-select__empty,
-.dm-paginated-select__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--dm-space-2);
-  padding: var(--dm-space-4) var(--dm-space-3);
-  color: var(--dm-fg-muted);
-  font-size: var(--dm-text-sm);
-  list-style: none;
-}
-
-.dm-paginated-select__loading {
-  padding-block: var(--dm-space-3);
-}
-
-.dm-paginated-select__sentinel {
-  height: 1px;
-  width: 100%;
-  pointer-events: none;
-}
-
-.dm-paginated-select__load-more-row {
-  list-style: none;
-  padding: var(--dm-space-1);
-}
-
-.dm-paginated-select__load-more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--dm-space-2);
-  width: 100%;
-  padding: var(--dm-space-2) var(--dm-space-3);
-  border: 1px dashed var(--dm-border-strong);
-  border-radius: var(--dm-radius-md);
-  background: transparent;
-  color: var(--dm-fg);
-  font: inherit;
-  font-size: var(--dm-text-xs);
-  font-weight: var(--dm-font-medium);
-  cursor: pointer;
-  transition:
-    background-color var(--dm-duration-fast) var(--dm-ease-out),
-    border-color var(--dm-duration-fast) var(--dm-ease-out);
-
-  &:hover {
-    background: var(--dm-bg-muted);
-    border-color: var(--dm-sel);
-    color: var(--dm-sel);
-  }
-
-  &:focus-visible {
-    outline: none;
-    border-color: var(--dm-sel);
-    box-shadow: 0 0 0 3px var(--dm-sel-subtle);
-  }
-}
-
-.dm-paginated-select__status {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
 }
 
 // ============================================================================
@@ -611,7 +577,7 @@
 // ============================================================================
 .dm-drawer-backdrop {
   // The same clean, flat dark scrim with a light blur as the dialog.
-  background: rgb(0 0 0 / 50%);
+  background: var(--dm-drawer-backdrop-bg, rgb(0 0 0 / 50%));
   backdrop-filter: blur(4px);
   animation: dm-overlay-fade-in var(--dm-duration-slow) var(--dm-ease-out);
 }
@@ -621,17 +587,17 @@
   flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--dm-space-5);
+  padding: var(--dm-drawer-padding, var(--dm-space-5));
 
   // Flat surface: page-level bg lifted by a single wide, soft, diffuse
   // shadow — no border, no inner sheen. Rounded only on the inner edge; the
   // edge flush to the viewport stays square.
-  background: var(--dm-bg);
-  color: var(--dm-fg);
+  background: var(--dm-drawer-bg, var(--dm-bg));
+  color: var(--dm-drawer-fg, var(--dm-fg));
   box-shadow: var(--dm-shadow-lg);
 
   @include mixins.respond-to(sm) {
-    padding: var(--dm-space-6);
+    padding: var(--dm-drawer-padding, var(--dm-space-6));
   }
 
   // Left / right: full viewport height, width driven by the size class,
@@ -643,14 +609,14 @@
   }
 
   &--right {
-    border-top-left-radius: var(--dm-radius-lg);
-    border-bottom-left-radius: var(--dm-radius-lg);
+    border-top-left-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
+    border-bottom-left-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
     animation: dm-drawer-in-right var(--dm-duration-slow) var(--dm-ease-out);
   }
 
   &--left {
-    border-top-right-radius: var(--dm-radius-lg);
-    border-bottom-right-radius: var(--dm-radius-lg);
+    border-top-right-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
+    border-bottom-right-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
     animation: dm-drawer-in-left var(--dm-duration-slow) var(--dm-ease-out);
   }
 
@@ -662,31 +628,31 @@
   }
 
   &--top {
-    border-bottom-left-radius: var(--dm-radius-lg);
-    border-bottom-right-radius: var(--dm-radius-lg);
+    border-bottom-left-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
+    border-bottom-right-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
     animation: dm-drawer-in-top var(--dm-duration-slow) var(--dm-ease-out);
   }
 
   &--bottom {
-    border-top-left-radius: var(--dm-radius-lg);
-    border-top-right-radius: var(--dm-radius-lg);
+    border-top-left-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
+    border-top-right-radius: var(--dm-drawer-radius, var(--dm-radius-lg));
     animation: dm-drawer-in-bottom var(--dm-duration-slow) var(--dm-ease-out);
   }
 
   // Sizes — width for left/right, height for top/bottom.
   &--left#{&}--sm,
   &--right#{&}--sm {
-    width: 20rem;
+    width: var(--dm-drawer-size-sm, 20rem);
   }
 
   &--left#{&}--md,
   &--right#{&}--md {
-    width: 28rem;
+    width: var(--dm-drawer-size-md, 28rem);
   }
 
   &--left#{&}--lg,
   &--right#{&}--lg {
-    width: 36rem;
+    width: var(--dm-drawer-size-lg, 36rem);
   }
 
   &--left#{&}--full,
@@ -696,17 +662,17 @@
 
   &--top#{&}--sm,
   &--bottom#{&}--sm {
-    height: 30dvh;
+    height: var(--dm-drawer-size-sm, 30dvh);
   }
 
   &--top#{&}--md,
   &--bottom#{&}--md {
-    height: 50dvh;
+    height: var(--dm-drawer-size-md, 50dvh);
   }
 
   &--top#{&}--lg,
   &--bottom#{&}--lg {
-    height: 70dvh;
+    height: var(--dm-drawer-size-lg, 70dvh);
   }
 
   &--top#{&}--full,

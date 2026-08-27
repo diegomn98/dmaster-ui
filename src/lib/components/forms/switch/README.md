@@ -25,3 +25,14 @@ Global defaults: `provideSwitchDefaults({...})` / `SWITCH_DEFAULTS`.
 - `role="switch"` + `aria-checked`; projected content becomes the label (`aria-labelledby`).
 - Without projected label, pass `ariaLabel`.
 - ≥44px touch target on the control; thumb motion honors reduced-motion via the duration tokens.
+
+## Design tokens
+
+| Token                               | Default                                              | Description                              |
+| ----------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
+| `--dm-switch-track-bg`              | `var(--dm-default)`                                  | Track fill when unchecked.               |
+| `--dm-switch-track-bg-hover`        | `color-mix(in srgb, var(--dm-fg) 18%, var(--dm-default))` | Track fill on hover while unchecked. |
+| `--dm-switch-track-bg-checked`      | `var(--dm-primary)`                                  | Track fill when checked.                 |
+| `--dm-switch-track-bg-checked-hover` | `var(--dm-primary-hover)`                           | Track fill on hover while checked.       |
+| `--dm-switch-thumb-bg`              | `var(--dm-bg-elevated)`                              | Thumb fill.                              |
+| `--dm-switch-label-fg`              | `var(--dm-fg)`                                       | Color of the projected label text.       |

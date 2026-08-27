@@ -35,7 +35,6 @@ export * from './lib/components/forms/error';
 export * from './lib/components/forms/file-upload';
 export * from './lib/components/forms/form-field';
 export * from './lib/components/forms/number-input';
-export * from './lib/components/forms/paginated-select';
 export * from './lib/components/forms/radio-group';
 export * from './lib/components/forms/rating';
 export * from './lib/components/forms/search-field';

@@ -1,8 +1,10 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance):
-//   --dm-divider-color      line color, inherits --dm-border
-//   --dm-divider-thickness  line thickness (default 1px)
+//   --dm-divider-color        line color, inherits --dm-border
+//   --dm-divider-thickness    line thickness (default 1px)
+//   --dm-divider-label-color  label color, inherits --dm-fg-muted
+//   --dm-divider-label-gap    gap between the label and the line halves
 
 :host {
   display: flex;
@@ -21,8 +23,8 @@
 }
 
 .dm-divider__label {
-  margin-inline: var(--dm-space-3);
-  color: var(--dm-fg-muted);
+  margin-inline: var(--dm-divider-label-gap, var(--dm-space-3));
+  color: var(--dm-divider-label-color, var(--dm-fg-muted));
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
   white-space: nowrap;
@@ -54,7 +56,7 @@
   }
 
   .dm-divider__label {
-    margin-block: var(--dm-space-2);
+    margin-block: var(--dm-divider-label-gap, var(--dm-space-2));
     margin-inline: 0;
   }
 }

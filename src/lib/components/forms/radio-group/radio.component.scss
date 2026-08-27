@@ -82,7 +82,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 2px solid var(--dm-border-strong);
+  border: 2px solid var(--dm-radio-border, var(--dm-border-strong));
   border-radius: var(--dm-radius-full);
   background-color: transparent;
 
@@ -93,18 +93,18 @@
 
   // Sizes (16 / 20 / 24 scale).
   :host[data-size='sm'] & {
-    width: 1rem;
-    height: 1rem;
+    width: var(--dm-radio-size, 1rem);
+    height: var(--dm-radio-size, 1rem);
   }
 
   :host[data-size='md'] & {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: var(--dm-radio-size, 1.25rem);
+    height: var(--dm-radio-size, 1.25rem);
   }
 
   :host[data-size='lg'] & {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: var(--dm-radio-size, 1.5rem);
+    height: var(--dm-radio-size, 1.5rem);
   }
 
   // Hover halo when reachable.
@@ -139,18 +139,18 @@
 
   // Inner dot ≈ half the control.
   :host[data-size='sm'] & {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: var(--dm-radio-dot-size, 0.5rem);
+    height: var(--dm-radio-dot-size, 0.5rem);
   }
 
   :host[data-size='md'] & {
-    width: 0.625rem;
-    height: 0.625rem;
+    width: var(--dm-radio-dot-size, 0.625rem);
+    height: var(--dm-radio-dot-size, 0.625rem);
   }
 
   :host[data-size='lg'] & {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: var(--dm-radio-dot-size, 0.75rem);
+    height: var(--dm-radio-dot-size, 0.75rem);
   }
 
   :host[data-checked='true'] & {
@@ -161,7 +161,7 @@
 .dm-radio__label {
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
-  color: var(--dm-fg);
+  color: var(--dm-radio-label-fg, var(--dm-fg));
 
   :host[data-size='sm'] & {
     font-size: var(--dm-text-xs);

@@ -18,17 +18,17 @@
 
 // `bordered`: contenedor único con borde y radio.
 :host([data-variant='bordered']) {
-  border: 1px solid var(--dm-border-strong);
-  border-radius: var(--dm-radius-lg);
+  border: 1px solid var(--dm-accordion-border, var(--dm-border-strong));
+  border-radius: var(--dm-accordion-radius, var(--dm-radius-lg));
   overflow: hidden;
-  background: var(--dm-bg-elevated);
+  background: var(--dm-accordion-bg, var(--dm-bg-elevated));
 }
 
 // `shadow`: como bordered pero elevado con sombra difusa en vez de borde.
 :host([data-variant='shadow']) {
-  border-radius: var(--dm-radius-lg);
+  border-radius: var(--dm-accordion-radius, var(--dm-radius-lg));
   overflow: hidden;
-  background: var(--dm-bg-elevated);
+  background: var(--dm-accordion-bg, var(--dm-bg-elevated));
   box-shadow: var(--dm-shadow-md);
 }
 
@@ -37,7 +37,7 @@
 :host([data-variant='splitted']) {
   display: flex;
   flex-direction: column;
-  gap: var(--dm-space-3);
+  gap: var(--dm-accordion-gap, var(--dm-space-3));
 }
 
 // ---- Disabled --------------------------------------------------------------

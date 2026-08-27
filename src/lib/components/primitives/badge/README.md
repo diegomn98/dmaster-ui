@@ -20,3 +20,15 @@ Status label / chip with a **color × variant** API. No logic, pure theming.
 | `radius`  | `'sm' \| 'md' \| 'lg' \| 'full'`                                              | `'full'`    | Corner rounding. `full` is pill-shaped.   |
 
 Global defaults: `provideBadgeDefaults({...})` / `BADGE_DEFAULTS`.
+
+## Design tokens
+
+Colors come from the semantic `color` × `variant` system (`--dm-primary`, `--dm-success-subtle`, …) — override those to re-color. The structural knobs are public tokens:
+
+| Token                 | Default                                                     | Description                                    |
+| --------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| `--dm-badge-radius`   | per `radius` input (`var(--dm-radius-full)` by default)     | Corner rounding, wins over the `radius` input. |
+| `--dm-badge-padding`  | `0.1875rem 0.5625rem` (md) / `0.0625rem 0.4375rem` (sm)     | Inner padding.                                 |
+| `--dm-badge-font-size`| `var(--dm-text-xs)` (md) / `0.6875rem` (sm)                 | Label font size.                               |
+| `--dm-badge-gap`      | `0.375em`                                                   | Gap between the leading dot and the label.     |
+| `--dm-badge-dot-size` | `0.5em`                                                     | Diameter of the leading dot (`variant="dot"`). |

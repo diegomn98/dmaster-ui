@@ -4,7 +4,7 @@
   display: block;
 
   // Superficie claramente redondeada.
-  border-radius: var(--dm-radius-xl);
+  border-radius: var(--dm-card-radius, var(--dm-radius-xl));
 
   // El contenido de la card puede usar container queries contra ELLA.
   container-type: inline-size;
@@ -15,35 +15,35 @@
 // la dan el color de superficie, el borde y una sombra difusa (nunca hairline).
 
 :host([data-appearance='elevated']) {
-  background: var(--dm-bg-elevated);
+  background: var(--dm-card-bg, var(--dm-bg-elevated));
   box-shadow: var(--dm-shadow-md);
 }
 
 :host([data-appearance='outlined']) {
-  background: var(--dm-bg-elevated);
-  border: 1px solid var(--dm-border-strong);
+  background: var(--dm-card-bg, var(--dm-bg-elevated));
+  border: 1px solid var(--dm-card-border, var(--dm-border-strong));
 }
 
 :host([data-appearance='flat']) {
-  background: var(--dm-bg-muted);
+  background: var(--dm-card-bg, var(--dm-bg-muted));
 }
 
 // ---- Padding ---------------------------------------------------------------
 
 :host([data-padding='none']) {
-  padding: 0;
+  padding: var(--dm-card-padding, 0);
 }
 
 :host([data-padding='sm']) {
-  padding: var(--dm-space-3);
+  padding: var(--dm-card-padding, var(--dm-space-3));
 }
 
 :host([data-padding='md']) {
-  padding: var(--dm-space-5);
+  padding: var(--dm-card-padding, var(--dm-space-5));
 }
 
 :host([data-padding='lg']) {
-  padding: var(--dm-space-8);
+  padding: var(--dm-card-padding, var(--dm-space-8));
 }
 
 // ---- Interactive -----------------------------------------------------------

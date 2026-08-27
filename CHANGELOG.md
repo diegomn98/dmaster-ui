@@ -7,6 +7,125 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-27
+
+### ⚠ BREAKING
+
+- **`dm-paginated-select` merged into `dm-select`.** One combobox component:
+  provide a `loadFn` and `dm-select` becomes server-driven — pages load via
+  `rxResource` (initial fetch on open, infinite scroll or a "Load more"
+  button), the inline filter turns into a debounced server search, and
+  in-flight requests cancel automatically. Async now also works with
+  `multiple`. Migration:
+  - `<dm-paginated-select [loadFn]="…" [searchable]="true" />` →
+    `<dm-select [loadFn]="…" filterable />`
+  - `searchable`/`searchPlaceholder` → `filterable`/`filterPlaceholder`;
+    `emptyLabel` → `noResultsLabel`; `selectedItem` (object) →
+    `selectedItems` (array).
+  - **Default change:** `emptyLabel` used to default to `'No results'` and
+    `searchPlaceholder` to `'Search…'`; the new `noResultsLabel` and
+    `filterPlaceholder` default to `''` (empty ⇒ no row / no placeholder). If
+    you relied on the old visible text, pass `noResultsLabel` /
+    `filterPlaceholder` explicitly. (In async mode `dm-select` also caches
+    every item it has loaded, so a selected value's label survives a new
+    search — `selectedItems` is only needed for a value never loaded at all.)
+  - Types: `DmPaginatedSelectLoadFn` → `DmSelectLoadFn`,
+    `DmPaginatedSelectResult` → `DmSelectLoadResult`,
+    `DmPaginatedSelectItem` → `DmSelectItem`,
+    `DmPaginatedSelectLoadMoreMode` → `DmSelectLoadMoreMode`, and the
+    `DmPaginatedSelect{Color,Variant,Radius}` aliases → `DmSelect{Color,…}`.
+    Defaults now live in `SELECT_DEFAULTS` / `provideSelectDefaults`
+    (`pageSize`, `searchDebounceMs`, `loadMoreMode` included);
+    `providePaginatedSelectDefaults` is gone.
+
+### Added
+
+- **Custom named themes.** Register alternate palettes with
+  `provideDmasterUI({ themes: { midnight: { scheme: 'dark', label: 'Midnight' } } })`,
+  author their tokens under a `[data-dm-theme='<name>']` CSS block, and apply
+  them at runtime with `ThemeService.setTheme('<name>')`. New on
+  `ThemeService`: `scheme()` (the light/dark base of the active theme — drives
+  `toggle()`) and `themes()` (built-in + registered, for building a picker).
+  `DmTheme` widens to `'light' | 'dark' | 'auto' | (string & {})`; new
+  `DmThemeDefinition` type and `themes` field on `DmasterUIConfig`.
+- **Derived color tokens — one override re-themes a whole color family.**
+  `--dm-{color}-subtle` now derives from its base via `color-mix`, and
+  `--dm-{color}-hover` / `--dm-{color}-text` derive via OKLCH relative color
+  syntax at a fixed, calibrated lightness. Overriding `--dm-primary` (or any
+  semantic color) automatically re-derives its hover shade, tinted-text shade
+  and soft fill — with WCAG AA contrast quasi-guaranteed for arbitrary brand
+  colors (fixed OKLCH lightness pins the contrast). Default rendering is
+  visually identical (≤3/255 per channel vs the previous hand-picked hexes;
+  ratios preserved to ±0.02).
+- **Per-component design tokens — every component is now individually
+  restylable.** All 44 components expose public `--dm-<component>-*` CSS
+  custom properties (~300 tokens: surface bg/fg/border, radius, heights,
+  paddings, part-specific knobs like `--dm-switch-track-bg-checked` or
+  `--dm-table-header-bg`), consumed with their previous value as fallback —
+  the default render is pixel-identical, overrides win at any scope (global,
+  theme block, or a single subtree). Each component's `README.md` documents
+  its tokens in a "Design tokens" table.
+- **Scoped theming inside overlays.** `DmDialogConfig` and `DmDrawerConfig`
+  accept `panelClass` (string or array), merged with the library's own panel
+  classes — overlays portal to the document root, so this is the way to carry
+  a subtree theme class into a dialog/drawer.
+- **`dm-select`: clear (×) button in the inline filter.** Appears once there
+  is text; clears and refocuses (in async mode it reloads page 0 with an
+  empty query immediately, skipping the debounce). Escape is now two-stage
+  while filtering — first press clears the text, second closes the panel
+  (same pattern as `dm-search-field`). New `filterClearAriaLabel` input.
+
+### Fixed
+
+- **`dm-select`: the inline filter/search input was unusable.** A panel-level `mousedown` `preventDefault()` blocked click-to-focus
+  on the input, and the open-time autofocus ran in a microtask that always lost
+  the race against zoneless change detection (the overlay wasn't attached yet),
+  so the input could never be focused at all. The `preventDefault` is now scoped
+  to the listbox/actions rows only, and focus happens on the overlay's `attach`
+  event (race-free). Typing while focus is still on the trigger is routed into
+  the filter input.
+- **`dm-select`: invisible click-blocking strip next to the panel.** The CDK pane is `display: flex`, so the panel collapsed to its
+  content width and the leftover pane area (up to the full trigger width)
+  silently swallowed clicks over the page. Panels now always fill the pane.
+- **`dm-select` (async filter): Home/End pressed inside the filter input moved
+  the active option instead of the caret.** No longer intercepted.
+- **`dm-select` (async): a failed page in infinite mode no longer storms the
+  server.** The infinite sentinel is suppressed on error (it would otherwise
+  re-fire on the unchanged list), `loadNextPage` now advances from the last
+  **loaded** page (a failed page is retried, never skipped), and the errored
+  resource is read via `hasValue()`/`error()` instead of `value()` (which
+  threw `ResourceValueError` into the effect). An errored empty panel no longer
+  mislabels itself "no results". In `loadMoreMode="button"` the button stays
+  and a click retries the failed page.
+- **`dm-select` two-stage Escape and focus.** With a filter, the panel now sets
+  `cdkConnectedOverlayDisableClose` — the CDK's own Escape→detach fired before
+  the component handler (ignoring `defaultPrevented`), so a single Escape both
+  cleared the filter and closed the panel, stranding focus on `<body>`. Escape
+  is handled entirely by the component now. Tabbing out of a filterable/async
+  select returns focus to the trigger (was dropping to `<body>` when the
+  overlay pane detached).
+- **`dm-select` (async): no-results / loading is now announced.** A persistent,
+  visually-hidden `role="status"` region lives at component level (it used to
+  mount already-populated inside the overlay, so the first "Loading…" and every
+  empty-result state went unannounced). Removed an invalid `aria-label` on the
+  presentational loading row, dropped a dead `[ariaLabel]` binding on the inner
+  spinner, and moved the load-more `<button>` out of the `role="listbox"` (a
+  button is not an allowed listbox child); keyboard users reach it by pressing
+  ArrowDown on the last loaded option. `aria-activedescendant` is re-clamped
+  when a shrinking server result would leave it pointing past the list.
+- **`dm-select`: duplicate `@for` track keys (NG0955)** when the same group
+  label appeared non-adjacently — group headers are now keyed positionally.
+
+### Changed
+
+- **`dm-select` overlay behavior.** The transparent
+  backdrop is gone: clicking outside now closes the panel **and** reaches its
+  target in one click (before, the first outside click was swallowed — e.g.
+  opening another select needed two clicks). Page scroll is blocked while a
+  panel is open (native-`<select>` behavior) instead of the panel repositioning
+  and ending up floating detached from its trigger; the listbox's own scroll is
+  unaffected.
+
 ## [0.7.0] - 2026-08-21
 
 ### Changed
@@ -308,6 +427,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.8.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.4.2...v0.5.0

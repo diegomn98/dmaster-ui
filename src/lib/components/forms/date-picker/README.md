@@ -140,3 +140,19 @@ providers: [
   }),
 ];
 ```
+
+## Design tokens
+
+| Token                            | Default                        | Description                                                       |
+| -------------------------------- | ------------------------------ | ----------------------------------------------------------------- |
+| `--dm-datepicker-trigger-bg`     | `var(--dm-bg-muted)`           | Trigger surface background (default and `faded` variants).        |
+| `--dm-datepicker-trigger-fg`     | `var(--dm-fg)`                 | Trigger text color.                                               |
+| `--dm-datepicker-trigger-radius` | `var(--dm-radius-md)`          | Trigger corner radius (applies at the default `md` radius).       |
+| `--dm-datepicker-height`         | `2rem` / `2.5rem` / `3rem`     | Trigger height, overriding the `sm` / `md` / `lg` size scale.     |
+| `--dm-datepicker-panel-bg`       | `var(--dm-bg-elevated)`        | Calendar panel background.                                        |
+| `--dm-datepicker-panel-width`    | `17.5rem`                      | Calendar panel width.                                             |
+| `--dm-datepicker-panel-padding`  | `var(--dm-space-3)`            | Calendar panel inner padding.                                     |
+| `--dm-datepicker-panel-border`   | `var(--dm-border)`             | Calendar panel border color.                                      |
+| `--dm-datepicker-panel-radius`   | `var(--dm-radius-lg)`          | Calendar panel corner radius.                                     |
+| `--dm-datepicker-day-size`       | `2.25rem`                      | Width and height of each day cell.                                |
+| `--dm-datepicker-day-radius`     | `var(--dm-radius-full)`        | Corner radius of each day cell.                                   |

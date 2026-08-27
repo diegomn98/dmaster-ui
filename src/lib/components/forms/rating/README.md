@@ -57,12 +57,9 @@ Or provide `RATING_DEFAULTS` directly. Each `dm-rating` reads `max`, `size`, `co
 
 ## Theming
 
-CSS variables (inherit from the global tokens, overridable at any scope):
-
-- `--dm-rating-fill` — filled-star color (defaults to the `color` input, base `--dm-warning`).
-- `--dm-rating-empty-color` — empty-star color (defaults to `--dm-fg-subtle`).
-
-The filled color also follows the `color` input via the internal `--dm-rating-color` variable.
+Every visual knob is exposed as a `--dm-rating-*` CSS variable — see the
+[Design tokens](#design-tokens) table below. The filled color also follows the
+`color` input via the internal `--dm-rating-color` variable.
 
 ## Accessibility
 
@@ -78,3 +75,15 @@ The filled color also follows the `color` input via the internal `--dm-rating-co
 - No per-star tooltips or labels.
 - No RTL-specific handling.
 - No clear button (clicking the current value toggles the rating off instead).
+
+## Design tokens
+
+CSS variables, overridable at any scope (global, theme or a subtree). Each one
+falls back to the default shown, so nothing changes until you set it:
+
+| Token                     | Default              | Description                                    |
+| ------------------------- | -------------------- | ---------------------------------------------- |
+| `--dm-rating-star-size`   | `1.5rem`             | Star glyph size at the default `size="md"`.    |
+| `--dm-rating-star-gap`    | `var(--dm-space-1)`  | Gap between stars.                             |
+| `--dm-rating-fill`        | `var(--dm-warning)`  | Filled-star color base.                        |
+| `--dm-rating-empty-color` | `var(--dm-fg-subtle)`| Empty-star color.                              |

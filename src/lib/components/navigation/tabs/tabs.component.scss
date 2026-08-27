@@ -18,14 +18,14 @@
 .dm-tabs {
   display: flex;
   flex-direction: column;
-  gap: var(--dm-space-4);
+  gap: var(--dm-tabs-gap, var(--dm-space-4));
   min-width: 0;
 
   // Vertical layout: tablist to the start, panels grow.
   &[data-placement='start'] {
     flex-direction: row;
     align-items: flex-start;
-    gap: var(--dm-space-6);
+    gap: var(--dm-tabs-gap, var(--dm-space-6));
   }
 }
 
@@ -155,8 +155,8 @@
   // Solid: pill container. The active tab reads as a lifted pill.
   &[data-variant='solid'] {
     padding: 0.25rem;
-    background: var(--dm-bg-subtle);
-    border: 1px solid var(--dm-border);
+    background: var(--dm-tabs-list-bg, var(--dm-bg-subtle));
+    border: 1px solid var(--dm-tabs-list-border, var(--dm-border));
     border-radius: var(--dm-tab-r, var(--dm-radius-md));
 
     --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-md)) - 0.25rem);
@@ -166,7 +166,7 @@
   &[data-variant='bordered'] {
     padding: 0.25rem;
     background: transparent;
-    border: 1px solid var(--dm-border-strong);
+    border: 1px solid var(--dm-tabs-list-border, var(--dm-border-strong));
     border-radius: var(--dm-tab-r, var(--dm-radius-md));
 
     --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-md)) - 0.25rem);
@@ -197,8 +197,8 @@
   // active tab is lifted with an elevated neutral background (color-agnostic).
   &[data-variant='segment'] {
     padding: 0.25rem;
-    background: var(--dm-bg-subtle);
-    border: 1px solid var(--dm-border);
+    background: var(--dm-tabs-list-bg, var(--dm-bg-subtle));
+    border: 1px solid var(--dm-tabs-list-border, var(--dm-border));
     border-radius: var(--dm-tab-r, var(--dm-radius-full));
 
     --dm-tab-radius: calc(var(--dm-tab-r, var(--dm-radius-full)) - 0.25rem);
@@ -275,18 +275,18 @@
 
 // Variant-specific look of the indicator.
 .dm-tabs__list[data-variant='solid'] .dm-tabs__indicator {
-  background: var(--dm-bg);
+  background: var(--dm-tabs-indicator-bg, var(--dm-bg));
   border-radius: var(--dm-tab-radius, var(--dm-radius-md));
   box-shadow: var(--dm-shadow-sm);
 }
 
 .dm-tabs__list[data-variant='bordered'] .dm-tabs__indicator {
-  background: var(--dm-tab-active, var(--dm-default));
+  background: var(--dm-tabs-indicator-bg, var(--dm-tab-active, var(--dm-default)));
   border-radius: var(--dm-tab-radius, var(--dm-radius-md));
 }
 
 .dm-tabs__list[data-variant='light'] .dm-tabs__indicator {
-  background: var(--dm-tab-subtle, var(--dm-bg-muted));
+  background: var(--dm-tabs-indicator-bg, var(--dm-tab-subtle, var(--dm-bg-muted)));
   border-radius: var(--dm-tab-radius, var(--dm-radius-md));
 }
 
@@ -294,8 +294,8 @@
 .dm-tabs__list[data-variant='underlined'] .dm-tabs__indicator {
   top: auto;
   bottom: 0;
-  height: 2.5px;
-  background: var(--dm-tab-line, var(--dm-fg));
+  height: var(--dm-tabs-indicator-thickness, 2.5px);
+  background: var(--dm-tabs-indicator-bg, var(--dm-tab-line, var(--dm-fg)));
   border-radius: var(--dm-radius-full);
 }
 
@@ -304,13 +304,13 @@
   top: 0;
   bottom: auto;
   inset-inline-end: 0;
-  width: 2px;
+  width: var(--dm-tabs-indicator-thickness, 2px);
   height: var(--dm-tabs-ind-h, 0);
 }
 
 // Segment: neutral elevated pill — same visual as solid but colour-agnostic.
 .dm-tabs__list[data-variant='segment'] .dm-tabs__indicator {
-  background: var(--dm-bg-elevated);
+  background: var(--dm-tabs-indicator-bg, var(--dm-bg-elevated));
   border-radius: var(--dm-tab-radius, var(--dm-radius-full));
   box-shadow: var(--dm-shadow-sm);
 }

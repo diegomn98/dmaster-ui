@@ -7,14 +7,14 @@
 
 // Separator between non-splitted items
 :host-context(dm-accordion:not([data-variant='splitted'])):not(:first-of-type) {
-  border-top: 1px solid var(--dm-border);
+  border-top: 1px solid var(--dm-accordion-divider, var(--dm-border));
 }
 
 // Splitted: each item is its own elevated card
 :host-context(dm-accordion[data-variant='splitted']) {
-  background: var(--dm-bg-elevated);
-  border: 1px solid var(--dm-border);
-  border-radius: var(--dm-radius-xl);
+  background: var(--dm-accordion-bg, var(--dm-bg-elevated));
+  border: 1px solid var(--dm-accordion-border, var(--dm-border));
+  border-radius: var(--dm-accordion-radius, var(--dm-radius-xl));
   overflow: hidden;
   transition-property: box-shadow, border-color;
   transition-duration: var(--dm-duration-base);
@@ -38,8 +38,8 @@
   align-items: center;
   gap: var(--dm-space-3);
   width: 100%;
-  min-height: 3.5rem;
-  padding: var(--dm-space-4) var(--dm-space-5);
+  min-height: var(--dm-accordion-trigger-height, 3.5rem);
+  padding: var(--dm-accordion-trigger-padding, var(--dm-space-4) var(--dm-space-5));
   text-align: left;
   cursor: pointer;
   border-radius: inherit;
@@ -47,7 +47,7 @@
   @include mixins.transition(background-color);
 
   &:hover:not(:disabled) {
-    background: var(--dm-bg-subtle);
+    background: var(--dm-accordion-trigger-hover, var(--dm-bg-subtle));
   }
 
   &:focus-visible {
@@ -94,7 +94,7 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  font-size: 1.25rem;
+  font-size: var(--dm-accordion-icon-size, 1.25rem);
   line-height: 1;
   color: var(--dm-fg-muted);
 
@@ -110,7 +110,7 @@
 }
 
 .dm-accordion-item__trigger[aria-expanded='true'] .dm-accordion-item__icon {
-  color: var(--dm-primary);
+  color: var(--dm-accordion-icon-open, var(--dm-primary));
 }
 
 // ── Chevron indicator — class-driven (avoids :host() cascade issues) ──────────
@@ -154,7 +154,7 @@
   color: var(--dm-fg-muted);
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-relaxed);
-  border-top: 1px solid var(--dm-border);
+  border-top: 1px solid var(--dm-accordion-divider, var(--dm-border));
 }
 
 // ── Reduced motion ────────────────────────────────────────────────────────────

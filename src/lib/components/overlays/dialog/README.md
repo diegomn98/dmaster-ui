@@ -39,3 +39,18 @@ export class SettingsDialogComponent {
 
 - CDK: focus trap, focus restore on close, `role="dialog"` + `aria-modal`.
 - Entrance animations honor reduced-motion via the duration tokens.
+
+## Design tokens
+
+| Token                      | Default                | Description                                                    |
+| -------------------------- | ---------------------- | -------------------------------------------------------------- |
+| `--dm-dialog-bg`           | `var(--dm-bg-elevated)` | Background of the dialog panel.                                |
+| `--dm-dialog-fg`           | `var(--dm-fg)`         | Text color inside the dialog panel.                            |
+| `--dm-dialog-radius`       | `var(--dm-radius-xl)`  | Corner radius of the dialog panel.                             |
+| `--dm-dialog-padding`      | `var(--dm-space-5)` (`var(--dm-space-6)` from `sm` up) | Inner padding of the dialog panel.     |
+| `--dm-dialog-width-sm`     | `22rem`                | Panel width for `size: 'sm'` (viewport-capped).                |
+| `--dm-dialog-width-md`     | `30rem`                | Panel width for `size: 'md'` (viewport-capped).                |
+| `--dm-dialog-width-lg`     | `42rem`                | Panel width for `size: 'lg'` (viewport-capped).                |
+| `--dm-dialog-backdrop-bg`  | `rgb(0 0 0 / 50%)`     | Backdrop scrim color behind the dialog.                        |
+
+The panel is attached to the CDK overlay container at the document root, so set these tokens globally (e.g. on `:root`/`html`) or scope them via `panelClass` in `DmDialogConfig`.

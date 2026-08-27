@@ -54,19 +54,22 @@ providers: [provideKbdDefaults({ size: 'sm' })];
 
 Or provide `KBD_DEFAULTS` directly.
 
-## Theming
-
-CSS variables (inherit from the global tokens, overridable at any scope):
-
-- `--dm-kbd-bg` — key surface (defaults to `--dm-bg-muted`).
-- `--dm-kbd-fg` — glyph color (defaults to `--dm-fg-muted`).
-- `--dm-kbd-border` — key border (defaults to `--dm-border`).
-
-The 2px bottom edge uses `--dm-border-strong` for the physical-key depth.
-
 ## Accessibility
 
 - Each named key is a real `<kbd>` element carrying an `aria-label`
   (`Command`, `Shift`…); its symbol glyph is `aria-hidden`.
 - Projected letters are read verbatim.
 - Non-interactive: no focus ring, no motion.
+
+## Design tokens
+
+| Token                | Default                                         | Description                                    |
+| -------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| `--dm-kbd-bg`        | `var(--dm-bg-muted)`                            | Key cap surface.                               |
+| `--dm-kbd-fg`        | `var(--dm-fg-muted)`                            | Glyph color.                                   |
+| `--dm-kbd-border`    | `var(--dm-border)`                              | Key cap 1px border color.                      |
+| `--dm-kbd-radius`    | `var(--dm-radius-sm)`                           | Key cap corner rounding.                       |
+| `--dm-kbd-size`      | `1.5rem` (md) / `1.25rem` (sm)                  | Key cap height and min-width.                  |
+| `--dm-kbd-padding`   | `0.4em`                                         | Key cap inline padding.                        |
+| `--dm-kbd-font-size` | `var(--dm-text-sm)` (md) / `var(--dm-text-xs)` (sm) | Glyph font size.                          |
+| `--dm-kbd-gap`       | `0.25em`                                        | Gap between key caps.                          |

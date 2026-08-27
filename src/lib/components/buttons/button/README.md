@@ -55,3 +55,16 @@ Or provide `BUTTON_DEFAULTS` directly.
 - The label keeps its space while the indicator shows: the button never resizes (no layout shift).
 - `prefers-reduced-motion: reduce` stops the spinner rotation and makes transitions instant.
 - `sm` buttons keep a ≥44px hit area on coarse pointers.
+
+## Design tokens
+
+Colors come from the semantic `color` × `variant` system (`--dm-primary`, `--dm-success-subtle`, …) — override those to re-color. The structural knobs are public tokens (every one falls back to the built-in value, so the default look needs no configuration):
+
+| Token                       | Default                                                     | Description                                              |
+| --------------------------- | ----------------------------------------------------------- | -------------------------------------------------------- |
+| `--dm-button-radius`        | per `radius` input (`var(--dm-radius-md)` by default)       | Corner rounding, wins over the `radius` input.           |
+| `--dm-button-height`        | `2rem` (sm) / `2.5rem` (md) / `3rem` (lg)                   | Control height, wins over the `size` input.              |
+| `--dm-button-min-width`     | `4rem` (sm) / `5rem` (md) / `6rem` (lg)                     | Minimum width so short labels do not collapse.           |
+| `--dm-button-padding-inline`| `0.75rem` (sm) / `1rem` (md) / `1.5rem` (lg)                | Horizontal padding.                                      |
+| `--dm-button-gap`           | `var(--dm-space-2)`                                         | Gap between projected content (icon + label).            |
+| `--dm-button-font-weight`   | `var(--dm-font-medium)`                                     | Label font weight.                                       |

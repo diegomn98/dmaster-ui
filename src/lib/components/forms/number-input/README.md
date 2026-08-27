@@ -107,3 +107,19 @@ providers: [
 - `error` sets `aria-invalid` and links the message with `aria-describedby`
   (the message is `role="alert"`); `description` links the same way when there
   is no error.
+
+## Design tokens
+
+CSS variables, overridable at any scope (global, theme or a subtree). Each one
+falls back to the default shown, so nothing changes until you set it:
+
+| Token                             | Default                                              | Description                                          |
+| --------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| `--dm-number-input-bg`            | `var(--dm-bg-muted)`                                 | Field surface (flat and faded variants).             |
+| `--dm-number-input-fg`            | `var(--dm-fg)`                                       | Field text color.                                    |
+| `--dm-number-input-border`        | `var(--dm-border-strong)`                            | Border color of the bordered variant.                |
+| `--dm-number-input-radius`        | `var(--dm-radius-md)`                                | Corner rounding at the default `radius="md"`.        |
+| `--dm-number-input-bg-focus`      | `var(--dm-bg-elevated)`                              | Field surface while focused.                         |
+| `--dm-number-input-step-bg`       | `color-mix(in srgb, var(--dm-fg) 8%, transparent)`   | Fill of the −/+ step buttons.                        |
+| `--dm-number-input-step-fg`       | `var(--dm-fg-muted)`                                 | Glyph color of the −/+ step buttons.                 |
+| `--dm-number-input-step-hover-bg` | `color-mix(in srgb, var(--dm-fg) 16%, transparent)`  | Fill of the −/+ step buttons on hover.               |

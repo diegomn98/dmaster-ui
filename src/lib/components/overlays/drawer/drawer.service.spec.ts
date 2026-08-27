@@ -109,6 +109,16 @@ describe('DmDrawerService', () => {
     expect(panel()?.classList.contains('dm-drawer-panel--md')).toBe(true);
   });
 
+  it('merges a custom panelClass onto the panel for scoped theming', () => {
+    setup();
+    service.open(TestDrawerComponent, { data: { name: 'a' }, panelClass: 'brand-theme' });
+    tick();
+
+    expect(panel()?.classList.contains('brand-theme')).toBe(true);
+    // The library classes survive alongside the custom one.
+    expect(panel()?.classList.contains('dm-drawer-panel--right')).toBe(true);
+  });
+
   it('stamps the requested placement and size classes', () => {
     setup();
     service.open(TestDrawerComponent, { data: { name: 'a' }, placement: 'left', size: 'lg' });

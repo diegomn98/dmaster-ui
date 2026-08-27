@@ -1,16 +1,23 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance, all with fallback):
-//   --dm-empty-state-icon-bg   circle behind the glyph
-//   --dm-empty-state-icon-fg   glyph color
-//   --dm-empty-state-padding   outer padding
+//   --dm-empty-state-icon-bg                circle behind the glyph
+//   --dm-empty-state-icon-fg                glyph color
+//   --dm-empty-state-padding                outer padding
+//   --dm-empty-state-gap                    vertical gap between text blocks
+//   --dm-empty-state-icon-size              icon circle diameter (overrides every size)
+//   --dm-empty-state-icon-radius            icon circle rounding
+//   --dm-empty-state-title-color            headline text color
+//   --dm-empty-state-title-weight           headline font weight
+//   --dm-empty-state-description-color      supporting copy color
+//   --dm-empty-state-description-max-width  supporting copy measure
 
 :host {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--dm-space-1);
+  gap: var(--dm-empty-state-gap, var(--dm-space-1));
   padding: var(--dm-empty-state-padding, var(--dm-space-8) var(--dm-space-4));
   text-align: center;
   font-family: var(--dm-font-sans);
@@ -25,7 +32,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: var(--dm-space-2);
-  border-radius: var(--dm-radius-full);
+  border-radius: var(--dm-empty-state-icon-radius, var(--dm-radius-full));
   background: var(--dm-empty-state-icon-bg, var(--dm-bg-muted));
   color: var(--dm-empty-state-icon-fg, var(--dm-fg-subtle));
 }
@@ -41,14 +48,14 @@
 // ---- Text ------------------------------------------------------------------
 .dm-empty-state__title {
   margin: 0;
-  font-weight: var(--dm-font-semibold);
-  color: var(--dm-fg);
+  font-weight: var(--dm-empty-state-title-weight, var(--dm-font-semibold));
+  color: var(--dm-empty-state-title-color, var(--dm-fg));
 }
 
 .dm-empty-state__description {
   margin: 0;
-  max-width: 36ch;
-  color: var(--dm-fg-muted);
+  max-width: var(--dm-empty-state-description-max-width, 36ch);
+  color: var(--dm-empty-state-description-color, var(--dm-fg-muted));
   line-height: var(--dm-leading-snug);
 }
 
@@ -70,8 +77,8 @@
 // ---- Sizes -----------------------------------------------------------------
 :host([data-size='sm']) {
   .dm-empty-state__media {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: var(--dm-empty-state-icon-size, 2.5rem);
+    height: var(--dm-empty-state-icon-size, 2.5rem);
 
     svg {
       width: 1.25rem;
@@ -90,8 +97,8 @@
 
 :host([data-size='md']) {
   .dm-empty-state__media {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: var(--dm-empty-state-icon-size, 3.5rem);
+    height: var(--dm-empty-state-icon-size, 3.5rem);
 
     svg {
       width: 1.75rem;
@@ -109,11 +116,11 @@
 }
 
 :host([data-size='lg']) {
-  gap: var(--dm-space-2);
+  gap: var(--dm-empty-state-gap, var(--dm-space-2));
 
   .dm-empty-state__media {
-    width: 4.5rem;
-    height: 4.5rem;
+    width: var(--dm-empty-state-icon-size, 4.5rem);
+    height: var(--dm-empty-state-icon-size, 4.5rem);
 
     svg {
       width: 2.25rem;

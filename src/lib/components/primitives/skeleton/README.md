@@ -41,16 +41,18 @@ providers: [provideSkeletonDefaults({ animation: 'wave', rounded: 'lg' })];
 
 Or provide `SKELETON_DEFAULTS` directly.
 
-## Theming
-
-CSS variables (inherit from the global tokens, overridable at any scope):
-
-- `--dm-skeleton-bg` — base surface (defaults to `--dm-bg-muted`).
-- `--dm-skeleton-highlight` — wave highlight (theme-aware).
-- `--dm-skeleton-duration` — animation cycle (default `1.6s`).
-
 ## Accessibility
 
 - Host exposes `role="status"`, `aria-busy="true"`, `aria-live="polite"`.
 - `prefers-reduced-motion: reduce` disables both animations (static placeholder).
 - Sizes accept fluid values (`%`, `clamp()`, `vw`) for responsive layouts; with no explicit size it fills its container.
+
+## Design tokens
+
+| Token                     | Default                                     | Description                                          |
+| ------------------------- | ------------------------------------------- | ---------------------------------------------------- |
+| `--dm-skeleton-bg`        | `var(--dm-bg-muted)`                        | Base placeholder surface.                            |
+| `--dm-skeleton-highlight` | theme-provided (`rgb(255 255 255 / 60%)` light) | Wave gradient highlight color.                   |
+| `--dm-skeleton-duration`  | `1.6s`                                      | Animation cycle length (pulse and wave).             |
+| `--dm-skeleton-radius`    | per variant (`var(--dm-radius-sm)` for text) | Corner rounding, wins over the per-variant default. |
+| `--dm-skeleton-gap`       | `var(--dm-space-2)`                         | Gap between repeated lines/blocks (`count > 1`).     |

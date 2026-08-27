@@ -65,12 +65,6 @@ a menu. With the cascade, the color lives on the group:
 | `fullWidth`   | `boolean` (attribute)                      | `false`        | Stretch to fill; buttons share the width. |
 | `ariaLabel`   | `string`                                   | `''`           | Accessible label for the set of actions.  |
 
-## Theming
-
-| Token                       | Fallback          | Purpose                   |
-| --------------------------- | ----------------- | ------------------------- |
-| `--dm-button-group-divider` | `fg` mixed at 15% | 1px seam between segments |
-
 ## Defaults
 
 ```ts
@@ -92,3 +86,13 @@ The component uses `ViewEncapsulation.None` on purpose: it must reach the inner
 `.dm-button` element of each **projected** button to flatten the appropriate
 corners. Every rule is scoped under `.dm-button-group`, so nothing leaks to the
 rest of the app.
+
+## Design tokens
+
+| Token                                 | Default                                              | Description                                        |
+| ------------------------------------- | ---------------------------------------------------- | -------------------------------------------------- |
+| `--dm-button-group-divider`           | `color-mix(in srgb, var(--dm-fg) 15%, transparent)`  | Color of the seam between non-bordered segments.   |
+| `--dm-button-group-divider-thickness` | `1px`                                                | Thickness of the seam.                             |
+| `--dm-button-group-divider-inset`     | `15%`                                                | Seam inset from both ends of the segment edge.     |
+
+The buttons inside the group also honor the `--dm-button-*` tokens (see the button README).

@@ -100,3 +100,12 @@ import { provideIconDefaults } from '@dmaster/ui';
 
 providers: [provideIconDefaults({ size: 'sm', weight: 500 })];
 ```
+
+## Design tokens
+
+| Token                     | Default                     | Description                                        |
+| ------------------------- | --------------------------- | -------------------------------------------------- |
+| `--dm-icon-font`          | `'Material Symbols Outlined'` | Font family used in font (ligature) mode.        |
+| `--dm-icon-font-rounded`  | `'Material Symbols Rounded'`  | Font family for `family="rounded"`.              |
+| `--dm-icon-font-sharp`    | `'Material Symbols Sharp'`    | Font family for `family="sharp"`.                |
+| `--dm-icon-spin-duration` | `1s`                          | One full rotation of the `spin` animation.       |

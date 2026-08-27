@@ -1,9 +1,9 @@
 :host {
   display: inline-flex;
   align-items: center;
-  gap: 0.375em;
+  gap: var(--dm-badge-gap, 0.375em);
   border: 1px solid transparent;
-  border-radius: var(--dm-radius-full);
+  border-radius: var(--dm-badge-radius, var(--dm-radius-full));
   font-weight: var(--dm-font-medium);
   line-height: 1.2;
   letter-spacing: 0.01em;
@@ -13,31 +13,31 @@
 
 // ---- Sizes -----------------------------------------------------------------
 :host([data-size='md']) {
-  padding: 0.1875rem 0.5625rem;
-  font-size: var(--dm-text-xs);
+  padding: var(--dm-badge-padding, 0.1875rem 0.5625rem);
+  font-size: var(--dm-badge-font-size, var(--dm-text-xs));
 }
 
 :host([data-size='sm']) {
-  padding: 0.0625rem 0.4375rem;
-  font-size: 0.6875rem;
+  padding: var(--dm-badge-padding, 0.0625rem 0.4375rem);
+  font-size: var(--dm-badge-font-size, 0.6875rem);
   letter-spacing: 0.02em;
 }
 
 // ---- Radius ----------------------------------------------------------------
 :host([data-radius='sm']) {
-  border-radius: var(--dm-radius-sm);
+  border-radius: var(--dm-badge-radius, var(--dm-radius-sm));
 }
 
 :host([data-radius='md']) {
-  border-radius: var(--dm-radius-md);
+  border-radius: var(--dm-badge-radius, var(--dm-radius-md));
 }
 
 :host([data-radius='lg']) {
-  border-radius: var(--dm-radius-lg);
+  border-radius: var(--dm-badge-radius, var(--dm-radius-lg));
 }
 
 :host([data-radius='full']) {
-  border-radius: var(--dm-radius-full);
+  border-radius: var(--dm-badge-radius, var(--dm-radius-full));
 }
 
 // ---- Colors → generic vars -------------------------------------------------
@@ -130,8 +130,8 @@
 // ---- Leading dot -----------------------------------------------------------
 .dm-badge__dot {
   flex-shrink: 0;
-  width: 0.5em;
-  height: 0.5em;
+  width: var(--dm-badge-dot-size, 0.5em);
+  height: var(--dm-badge-dot-size, 0.5em);
   border-radius: var(--dm-radius-full);
   background: var(--dm-badge-dot);
 }

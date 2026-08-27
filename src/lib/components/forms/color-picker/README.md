@@ -75,3 +75,18 @@ providers: [
   }),
 ];
 ```
+
+## Design tokens
+
+| Token                              | Default                    | Description                                                   |
+| ---------------------------------- | -------------------------- | ------------------------------------------------------------- |
+| `--dm-color-picker-trigger-bg`     | `var(--dm-bg-muted)`       | Trigger surface background (default and `faded` variants).    |
+| `--dm-color-picker-trigger-fg`     | `var(--dm-fg)`             | Trigger text color.                                           |
+| `--dm-color-picker-trigger-radius` | `var(--dm-radius-md)`      | Trigger corner radius (applies at the default `md` radius).   |
+| `--dm-color-picker-height`         | `2rem` / `2.5rem` / `3rem` | Trigger height, overriding the `sm` / `md` / `lg` size scale. |
+| `--dm-color-picker-panel-bg`       | `var(--dm-bg-elevated)`    | Picker panel background.                                      |
+| `--dm-color-picker-panel-width`    | `15rem`                    | Picker panel width.                                           |
+| `--dm-color-picker-panel-padding`  | `var(--dm-space-3)`        | Picker panel inner padding.                                   |
+| `--dm-color-picker-panel-border`   | `var(--dm-border)`         | Picker panel border color.                                    |
+| `--dm-color-picker-panel-radius`   | `var(--dm-radius-lg)`      | Picker panel corner radius.                                   |
+| `--dm-color-picker-sv-height`      | `9rem`                     | Height of the saturation/value plane.                         |

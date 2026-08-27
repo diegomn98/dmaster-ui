@@ -6,7 +6,7 @@
 
 .dm-menu-item__btn {
   // Map the semantic color to local vars so the states below stay color-agnostic.
-  --dm-mi-fg: var(--dm-fg);
+  --dm-mi-fg: var(--dm-menu-item-fg, var(--dm-fg));
   --dm-mi-subtle: var(--dm-menu-item-active-bg, var(--dm-default-subtle));
 
   display: flex;

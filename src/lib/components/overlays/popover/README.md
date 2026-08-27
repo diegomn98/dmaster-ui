@@ -52,12 +52,6 @@ The trigger can be any element — a plain `<button>` or a `<dm-button>`.
 
 Global defaults (placement, showArrow, offset): `providePopoverDefaults({...})` / `POPOVER_DEFAULTS`.
 
-## Theming
-
-`--dm-popover-max-width` (`20rem`), `--dm-popover-padding` (`1rem`),
-`--dm-popover-bg` (`--dm-bg`), `--dm-popover-border` (`--dm-border`) and
-`--dm-popover-arrow-size` (`0.625rem`) — all with fallbacks, theme-aware.
-
 ## Accessibility
 
 - Trigger: `aria-haspopup="dialog"`, `aria-expanded`, `aria-controls` while open.
@@ -65,3 +59,16 @@ Global defaults (placement, showArrow, offset): `providePopoverDefaults({...})` 
 - Escape closes and returns focus to the trigger; outside click closes.
 - `trapFocus` uses the CDK focus trap (`cdkTrapFocus`) for menu-like content.
 - The entrance animation honors reduced-motion via the duration tokens.
+
+## Design tokens
+
+| Token                     | Default               | Description                             |
+| ------------------------- | --------------------- | --------------------------------------- |
+| `--dm-popover-bg`         | `var(--dm-bg)`        | Panel and arrow background surface.     |
+| `--dm-popover-fg`         | `var(--dm-fg)`        | Panel text color.                       |
+| `--dm-popover-border`     | `var(--dm-border)`    | Panel and arrow border color.           |
+| `--dm-popover-radius`     | `var(--dm-radius-lg)` | Panel corner radius.                    |
+| `--dm-popover-shadow`     | `var(--dm-shadow-lg)` | Panel elevation shadow.                 |
+| `--dm-popover-padding`    | `1rem`                | Inner padding of the panel.             |
+| `--dm-popover-max-width`  | `20rem`               | Maximum panel width.                    |
+| `--dm-popover-arrow-size` | `0.625rem`            | Size of the arrow square.               |

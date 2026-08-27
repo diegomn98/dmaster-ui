@@ -15,16 +15,16 @@
   --dm-otp-subtle: var(--dm-primary-subtle);
 
   box-sizing: border-box;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--dm-otp-cell-size, 2.5rem);
+  height: var(--dm-otp-cell-size, 2.5rem);
   padding: 0;
 
   // Hairline on the flat cells too (not just bordered): a 40px fill alone is
   // too small to define the cell edge on close surfaces — light or dark.
-  border: 1px solid var(--dm-border);
-  border-radius: var(--dm-radius-md);
-  background-color: var(--dm-bg-muted);
-  color: var(--dm-fg);
+  border: 1px solid var(--dm-otp-cell-border, var(--dm-border));
+  border-radius: var(--dm-otp-cell-radius, var(--dm-radius-md));
+  background-color: var(--dm-otp-cell-bg, var(--dm-bg-muted));
+  color: var(--dm-otp-cell-fg, var(--dm-fg));
   font-family: inherit;
   font-size: var(--dm-text-lg);
   font-weight: var(--dm-font-medium);
@@ -41,12 +41,12 @@
   }
 
   &:hover:not(:disabled, :focus) {
-    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-otp-cell-bg, var(--dm-bg-muted)));
   }
 
   &:focus {
     outline: none;
-    background-color: var(--dm-bg-elevated);
+    background-color: var(--dm-otp-cell-bg-focus, var(--dm-bg-elevated));
     border-color: var(--dm-otp);
     box-shadow: 0 0 0 3.5px var(--dm-otp-subtle);
   }
@@ -61,11 +61,11 @@
 // flat (default): muted fill, no border — inherited from the base above.
 // bordered: elevated ("white") fill + visible border, like a classic input.
 :host([data-variant='bordered']) .dm-otp__cell {
-  background-color: var(--dm-bg-elevated);
-  border-color: var(--dm-border);
+  background-color: var(--dm-otp-cell-bg, var(--dm-bg-elevated));
+  border-color: var(--dm-otp-cell-border, var(--dm-border));
 
   &:hover:not(:disabled, :focus) {
-    background-color: var(--dm-bg-elevated);
+    background-color: var(--dm-otp-cell-bg, var(--dm-bg-elevated));
     border-color: var(--dm-border-strong, var(--dm-border));
   }
 
@@ -76,7 +76,7 @@
 
 // faded: muted fill + soft border.
 :host([data-variant='faded']) .dm-otp__cell {
-  border-color: var(--dm-border);
+  border-color: var(--dm-otp-cell-border, var(--dm-border));
 }
 
 // underlined: bare cells with a bottom rule only — minimal look.

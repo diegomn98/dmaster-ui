@@ -6,9 +6,9 @@
   justify-content: center;
   gap: var(--dm-space-2);
   padding: 0 var(--dm-space-3);
-  border-radius: calc(var(--dm-radius-md) - 0.1875rem);
+  border-radius: var(--dm-toggle-segment-radius, calc(var(--dm-radius-md) - 0.1875rem));
   background: transparent;
-  color: var(--dm-fg-muted);
+  color: var(--dm-toggle-segment-fg, var(--dm-fg-muted));
   font-size: var(--dm-text-sm);
   font-weight: var(--dm-font-medium);
   line-height: 1;

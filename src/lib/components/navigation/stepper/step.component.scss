@@ -49,10 +49,10 @@
   font-size: var(--dm-stepper-ind-fs, var(--dm-text-sm));
   font-weight: var(--dm-font-semibold);
   line-height: 1;
-  color: var(--dm-fg-muted);
-  background: var(--dm-bg-muted);
-  border: 1px solid var(--dm-border-strong);
-  border-radius: var(--dm-radius-full);
+  color: var(--dm-stepper-indicator-fg, var(--dm-fg-muted));
+  background: var(--dm-stepper-indicator-bg, var(--dm-bg-muted));
+  border: 1px solid var(--dm-stepper-indicator-border, var(--dm-border-strong));
+  border-radius: var(--dm-stepper-indicator-radius, var(--dm-radius-full));
 
   @include mixins.transition(background-color, color, border-color, box-shadow, transform);
 }
@@ -79,7 +79,7 @@
   font-size: var(--dm-text-sm);
   font-weight: var(--dm-font-medium);
   line-height: 1.2;
-  color: var(--dm-fg-muted);
+  color: var(--dm-stepper-label-fg, var(--dm-fg-muted));
 
   @include mixins.truncate;
   @include mixins.transition(color);
@@ -139,12 +139,12 @@
     color: var(--dm-stepper-accent-fg);
     background: var(--dm-stepper-accent);
     border-color: transparent;
-    box-shadow: 0 0 0 0.25rem var(--dm-stepper-accent-soft);
+    box-shadow: var(--dm-stepper-indicator-shadow-active, 0 0 0 0.25rem var(--dm-stepper-accent-soft));
   }
 
   .dm-step__label {
     font-weight: var(--dm-font-semibold);
-    color: var(--dm-fg);
+    color: var(--dm-stepper-label-fg-active, var(--dm-fg));
   }
 }
 

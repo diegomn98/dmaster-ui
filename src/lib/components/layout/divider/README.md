@@ -41,17 +41,19 @@ providers: [provideDividerDefaults({ labelPlacement: 'start' })];
 
 Or provide `DIVIDER_DEFAULTS` directly.
 
-## Theming
-
-CSS variables (inherit from the global tokens, overridable at any scope):
-
-- `--dm-divider-color` — line color (defaults to `--dm-border`).
-- `--dm-divider-thickness` — line thickness (defaults to `1px`).
-
-The label uses `--dm-fg-muted` with the small type scale.
-
 ## Accessibility
 
 - Host exposes `role="separator"` with a reactive `aria-orientation`.
 - The line halves are `aria-hidden`; only the projected label is exposed to assistive technology.
 - Purely decorative and non-focusable: no tab stop, no pointer interaction.
+
+## Design tokens
+
+Public CSS custom properties (all optional — overridable at any scope):
+
+| Token                      | Default                                                        | Description                                     |
+| -------------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
+| `--dm-divider-color`       | `var(--dm-border)`                                             | Line color.                                     |
+| `--dm-divider-thickness`   | `1px`                                                          | Line thickness.                                 |
+| `--dm-divider-label-color` | `var(--dm-fg-muted)`                                           | Projected label color.                          |
+| `--dm-divider-label-gap`   | `var(--dm-space-3)` (horizontal) / `var(--dm-space-2)` (vertical) | Gap between the label and the line halves.   |

@@ -4,9 +4,14 @@
 // so the component works without any extra theme wiring:
 //   --dm-tree-indent        indentation added per level
 //   --dm-tree-row-radius     row corner rounding
+//   --dm-tree-row-height     minimum row height
+//   --dm-tree-fg             base text color
+//   --dm-tree-font-size      base text size
 //   --dm-tree-selected-bg    selected row surface (flat, tinted)
 //   --dm-tree-selected-fg    selected row text (AA on the tinted surface)
 //   --dm-tree-hover-bg       hover / active row surface
+//   --dm-tree-disabled-fg    disabled row text color
+//   --dm-tree-chevron-color  disclosure chevron color
 //   --dm-tree-guide          connector guide-line color
 
 :host {
@@ -22,9 +27,9 @@
   flex-direction: column;
   margin: 0;
   padding: 0;
-  color: var(--dm-fg);
+  color: var(--dm-tree-fg, var(--dm-fg));
   font-family: var(--dm-font-sans);
-  font-size: var(--dm-text-sm);
+  font-size: var(--dm-tree-font-size, var(--dm-text-sm));
   list-style: none;
 }
 
@@ -52,7 +57,7 @@
   display: flex;
   gap: var(--dm-space-2);
   align-items: center;
-  min-block-size: 2.25rem;
+  min-block-size: var(--dm-tree-row-height, 2.25rem);
   padding-block: var(--dm-space-1);
   padding-inline: calc(var(--dm-tree-depth) * var(--dm-tree-indent) + var(--dm-space-2))
     var(--dm-space-3);
@@ -76,7 +81,7 @@
   }
 
   .dm-tree__item[data-disabled] > & {
-    color: var(--dm-fg-subtle);
+    color: var(--dm-tree-disabled-fg, var(--dm-fg-subtle));
     cursor: not-allowed;
 
     &:hover {
@@ -98,7 +103,7 @@
   justify-content: center;
   inline-size: 1.25rem;
   block-size: 1.25rem;
-  color: var(--dm-fg-muted);
+  color: var(--dm-tree-chevron-color, var(--dm-fg-muted));
   border-radius: var(--dm-radius-sm);
 
   @include mixins.transition(transform, color, background-color);

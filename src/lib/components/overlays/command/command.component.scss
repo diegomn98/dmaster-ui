@@ -19,7 +19,7 @@
   border: 1px solid var(--dm-command-border, var(--dm-border));
   border-radius: var(--dm-command-radius, var(--dm-radius-xl));
   background: var(--dm-command-bg, var(--dm-bg-elevated));
-  color: var(--dm-fg);
+  color: var(--dm-command-fg, var(--dm-fg));
   box-shadow: var(--dm-command-shadow, var(--dm-shadow-lg));
   font-family: var(--dm-font-sans);
   outline: none;
@@ -32,7 +32,7 @@
   align-items: center;
   gap: var(--dm-space-3);
   padding: var(--dm-space-3) var(--dm-space-4);
-  border-bottom: 1px solid var(--dm-border);
+  border-bottom: 1px solid var(--dm-command-divider-color, var(--dm-border));
 }
 
 .dm-command__search-icon {
@@ -116,7 +116,7 @@
   justify-content: space-between;
   gap: var(--dm-space-3);
   padding: 0.625rem var(--dm-space-3);
-  border-radius: var(--dm-radius-md);
+  border-radius: var(--dm-command-option-radius, var(--dm-radius-md));
   color: var(--dm-fg);
   cursor: pointer;
   user-select: none;
@@ -163,8 +163,8 @@
   align-items: center;
   gap: var(--dm-space-2) var(--dm-space-5);
   padding: var(--dm-space-3) var(--dm-space-4);
-  border-top: 1px solid var(--dm-border);
-  background: var(--dm-bg-subtle);
+  border-top: 1px solid var(--dm-command-divider-color, var(--dm-border));
+  background: var(--dm-command-footer-bg, var(--dm-bg-subtle));
   color: var(--dm-fg-muted);
   font-size: var(--dm-text-xs);
 }

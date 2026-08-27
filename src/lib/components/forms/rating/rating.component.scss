@@ -4,8 +4,8 @@
 // sets --dm-rating-color once, and the filled layer below consumes it
 // regardless of the active data-color.
 :host {
-  --dm-rating-size: 1.5rem;
-  --dm-rating-gap: var(--dm-space-1);
+  --dm-rating-size: var(--dm-rating-star-size, 1.5rem);
+  --dm-rating-gap: var(--dm-rating-star-gap, var(--dm-space-1));
   --dm-rating-color: var(--dm-rating-fill, var(--dm-warning));
   --dm-rating-empty: var(--dm-rating-empty-color, var(--dm-fg-subtle));
 

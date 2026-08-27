@@ -88,7 +88,7 @@ describe('ThemeService', () => {
 
   it('stamps an explicit light theme from the config on <html>', () => {
     TestBed.overrideProvider(DMASTER_UI_CONFIG, {
-      useValue: { theme: 'light', density: 'comfortable' },
+      useValue: { theme: 'light', density: 'comfortable', themes: {} },
     });
     const service = TestBed.inject(ThemeService);
 
@@ -101,7 +101,7 @@ describe('ThemeService', () => {
 
   it('stamps an explicit dark theme from the config on <html>', () => {
     TestBed.overrideProvider(DMASTER_UI_CONFIG, {
-      useValue: { theme: 'dark', density: 'comfortable' },
+      useValue: { theme: 'dark', density: 'comfortable', themes: {} },
     });
     const service = TestBed.inject(ThemeService);
 
@@ -200,5 +200,63 @@ describe('ThemeService', () => {
     TestBed.resetTestingModule();
 
     expect(media.listeners.length).toBe(0);
+  });
+
+  describe('custom named themes', () => {
+    it('lists built-in themes plus the registered custom ones', () => {
+      TestBed.overrideProvider(DMASTER_UI_CONFIG, {
+        useValue: {
+          theme: 'auto',
+          density: 'comfortable',
+          themes: { midnight: { scheme: 'dark', label: 'Midnight' } },
+        },
+      });
+      const service = TestBed.inject(ThemeService);
+
+      const names = service.themes().map((t) => t.name);
+      expect(names).toContain('light');
+      expect(names).toContain('dark');
+      expect(names).toContain('midnight');
+      expect(service.themes().find((t) => t.name === 'midnight')).toEqual({
+        name: 'midnight',
+        scheme: 'dark',
+        label: 'Midnight',
+      });
+    });
+
+    it('stamps a custom theme name verbatim on <html> and reports its base scheme', () => {
+      TestBed.overrideProvider(DMASTER_UI_CONFIG, {
+        useValue: {
+          theme: 'auto',
+          density: 'comfortable',
+          themes: { midnight: { scheme: 'dark' } },
+        },
+      });
+      const service = TestBed.inject(ThemeService);
+
+      service.setTheme('midnight');
+      TestBed.tick();
+
+      expect(service.resolvedTheme()).toBe('midnight');
+      expect(themeAttribute()).toBe('midnight');
+      // The base scheme drives the toggle and any app-side light/dark logic.
+      expect(service.scheme()).toBe('dark');
+    });
+
+    it('toggle() from a dark-based custom theme lands on light', () => {
+      TestBed.overrideProvider(DMASTER_UI_CONFIG, {
+        useValue: {
+          theme: 'midnight',
+          density: 'comfortable',
+          themes: { midnight: { scheme: 'dark' } },
+        },
+      });
+      const service = TestBed.inject(ThemeService);
+      expect(service.scheme()).toBe('dark');
+
+      service.toggle();
+
+      expect(service.resolvedTheme()).toBe('light');
+    });
   });
 });

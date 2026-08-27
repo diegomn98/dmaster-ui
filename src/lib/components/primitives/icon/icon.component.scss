@@ -46,7 +46,7 @@
 
 // Spin (loaders). Distinct, constant rotation — gated by reduced motion.
 :host([data-spin]) {
-  animation: dm-icon-spin 1s linear infinite;
+  animation: dm-icon-spin var(--dm-icon-spin-duration, 1s) linear infinite;
 }
 
 @keyframes dm-icon-spin {

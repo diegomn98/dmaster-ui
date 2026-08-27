@@ -93,8 +93,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--dm-pg-item);
-  height: var(--dm-pg-item);
+  min-width: var(--dm-pagination-item-size, var(--dm-pg-item));
+  height: var(--dm-pagination-item-size, var(--dm-pg-item));
   padding: 0;
   color: var(--dm-pg-fg);
   font-family: inherit;
@@ -110,7 +110,7 @@
   @include mixins.touch-target;
 
   &:hover:not(:disabled) {
-    color: var(--dm-fg);
+    color: var(--dm-pagination-fg-hover, var(--dm-fg));
     background: var(--dm-pg-hover-bg);
   }
 
@@ -134,14 +134,18 @@
 
   // Active page: solid semantic fill + soft glow of its own color.
   &--active {
-    color: var(--dm-pg-active-fg);
-    background: var(--dm-pg-active);
-    box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--dm-pg-active) 60%, transparent);
+    color: var(--dm-pagination-active-fg, var(--dm-pg-active-fg));
+    background: var(--dm-pagination-active-bg, var(--dm-pg-active));
+    box-shadow: var(
+      --dm-pagination-active-shadow,
+      0 2px 8px -2px
+        color-mix(in srgb, var(--dm-pagination-active-bg, var(--dm-pg-active)) 60%, transparent)
+    );
     cursor: default;
 
     &:hover:not(:disabled) {
-      color: var(--dm-pg-active-fg);
-      background: var(--dm-pg-active);
+      color: var(--dm-pagination-active-fg, var(--dm-pg-active-fg));
+      background: var(--dm-pagination-active-bg, var(--dm-pg-active));
     }
 
     &:active:not(:disabled) {
@@ -158,16 +162,16 @@
 }
 
 .dm-pagination__chevron {
-  width: calc(var(--dm-pg-item) * 0.5);
-  height: calc(var(--dm-pg-item) * 0.5);
+  width: calc(var(--dm-pagination-item-size, var(--dm-pg-item)) * 0.5);
+  height: calc(var(--dm-pagination-item-size, var(--dm-pg-item)) * 0.5);
 }
 
 .dm-pagination__ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: calc(var(--dm-pg-item) * 0.75);
-  height: var(--dm-pg-item);
+  min-width: calc(var(--dm-pagination-item-size, var(--dm-pg-item)) * 0.75);
+  height: var(--dm-pagination-item-size, var(--dm-pg-item));
   color: var(--dm-fg-subtle);
   font-size: var(--dm-pg-fs);
   user-select: none;
