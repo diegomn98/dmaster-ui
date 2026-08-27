@@ -18,7 +18,7 @@ import { DmCopyToClipboardDirective } from './copy-to-clipboard.directive';
  * button.
  *
  * ```html
- * <dm-copy-button value="ng add @dmaster/ui" ariaLabel="Copy install command" />
+ * <dm-copy-button value="dm_a1B2c3D4e5" ariaLabel="Copy API key" />
  *
  * <dm-copy-button value="hello" variant="bordered" copyLabel="Copy" copiedLabel="Copied!" />
  * ```

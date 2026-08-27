@@ -12,13 +12,13 @@ For adding copy behaviour to a button you already have, use the
 
 ```html
 <!-- Component: icon-only, next to a snippet -->
-<dm-copy-button value="ng add @dmaster/ui" ariaLabel="Copy install command" />
+<dm-copy-button value="dm_a1B2c3D4e5" ariaLabel="Copy API key" />
 
 <!-- Component: with a visible label -->
 <dm-copy-button value="hello world" variant="bordered" copyLabel="Copy" copiedLabel="Copied!" />
 
 <!-- Directive: on any element you already style -->
-<button dmCopyToClipboard="ng add @dmaster/ui" #cp="dmCopyToClipboard">
+<button dmCopyToClipboard="dm_a1B2c3D4e5" #cp="dmCopyToClipboard">
   {{ cp.isCopied() ? 'Copied!' : 'Copy' }}
 </button>
 ```

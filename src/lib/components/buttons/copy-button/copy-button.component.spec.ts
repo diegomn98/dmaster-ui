@@ -34,12 +34,12 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
   `,
 })
 class HostComponent {
-  readonly value = signal('ng add @dmaster/ui');
+  readonly value = signal('dm_a1B2c3D4e5');
   readonly color = signal<'default' | 'primary'>('default');
   readonly variant = signal<'flat' | 'bordered'>('flat');
   readonly size = signal<'sm' | 'md'>('md');
   readonly resetDelay = signal(2000);
-  readonly ariaLabel = signal('Copy install command');
+  readonly ariaLabel = signal('Copy API key');
   readonly copyLabel = signal('');
   readonly copiedText = signal<string | null>(null);
   readonly error = signal<unknown>(null);
@@ -80,7 +80,7 @@ describe('DmCopyButtonComponent', () => {
     // Copy glyph shown, no visible text label.
     expect(fixture.nativeElement.querySelector('.dm-copy-button__icon svg')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('.dm-copy-button__text')).toBeNull();
-    expect(button().getAttribute('aria-label')).toBe('Copy install command');
+    expect(button().getAttribute('aria-label')).toBe('Copy API key');
   });
 
   it('forwards color / variant / size to the inner dm-button', async () => {
@@ -101,8 +101,8 @@ describe('DmCopyButtonComponent', () => {
     await flush();
     fixture.detectChanges();
 
-    expect(writeText).toHaveBeenCalledWith('ng add @dmaster/ui');
-    expect(host.copiedText()).toBe('ng add @dmaster/ui');
+    expect(writeText).toHaveBeenCalledWith('dm_a1B2c3D4e5');
+    expect(host.copiedText()).toBe('dm_a1B2c3D4e5');
     // The check path replaces the copy glyph.
     const path = fixture.nativeElement.querySelector('.dm-copy-button__icon svg path');
     expect(path.getAttribute('d')).toContain('M20 6');

@@ -9,7 +9,7 @@ import { writeToClipboard } from './clipboard';
  * copy behaviour without imposing a look.
  *
  * ```html
- * <button dmCopyToClipboard="ng add @dmaster/ui" #cp="dmCopyToClipboard">
+ * <button dmCopyToClipboard="dm_a1B2c3D4e5" #cp="dmCopyToClipboard">
  *   {{ cp.isCopied() ? 'Copied!' : 'Copy' }}
  * </button>
  * ```
