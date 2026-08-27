@@ -21,6 +21,7 @@ export * from './lib/components/layout/divider';
 // Components · buttons
 export * from './lib/components/buttons/button';
 export * from './lib/components/buttons/button-group';
+export * from './lib/components/buttons/copy-button';
 
 // Components · feedback
 export * from './lib/components/feedback/alert';

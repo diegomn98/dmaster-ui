@@ -10,7 +10,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0F6E56?style=flat-square)](https://dmasterui.com)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**44 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 600+ tests**
+**45 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 600+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 
@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 44-component library ~92 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 45-component library ~92 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -117,7 +117,7 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 
 ## Components
 
-44 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+45 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
 
 ### Primitives
 
@@ -151,6 +151,7 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 | ------------------------------------------------------------- | ----------------- | --------------------------------------------------------------------------------- |
 | [Button](https://dmasterui.com/components/button)             | `dm-button`       | 7 variants · 6 colors · idle/loading/success/error states · live region           |
 | [Button Group](https://dmasterui.com/components/button-group) | `dm-button-group` | Attached bar with 1px seams, group-level color/variant/size cascade, split-button |
+| [Copy Button](https://dmasterui.com/components/copy-button)   | `dm-copy-button`  | Copies text with a copy→check flip · `dmCopyToClipboard` directive · SSR-safe     |
 
 ### Forms
 
@@ -370,7 +371,7 @@ Fully tree-shakeable — your app only pays for the components it imports. Measu
 | `DmButtonComponent`       | ~3.8 kB  |
 | `DmSelectComponent`       | ~10.1 kB |
 | `DmTableComponent`        | ~11.8 kB |
-| **Entire library** (44)   | ~92 kB   |
+| **Entire library** (45)   | ~92 kB   |
 | Global CSS (tokens+reset) | ~4.7 kB  |
 
 Reproduce the full per-component table from the repo with `npm run size`.
@@ -397,7 +398,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
 | **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
-| **Component count** | 44                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Component count** | 45                                                               | Comprehensive Material Design set (CDK + Material) | Very large, kitchen-sink surface area        | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
 | **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 

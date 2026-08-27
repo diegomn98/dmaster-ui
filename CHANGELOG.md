@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`dm-copy-button`** + **`dmCopyToClipboard`** directive — copy text to the
+  clipboard with built-in feedback. The component is a thin wrapper over
+  `dm-button` (same `color` × `variant` × `size` × `radius`) whose icon flips
+  from copy to a check for `resetDelay` ms; the directive adds the same
+  behaviour to any button you already have (`[dmCopyToClipboard]="text"`,
+  `exportAs` gives an `isCopied()` signal for feedback). Both emit `(copied)` /
+  `(copyError)` and are SSR-safe — the write goes through the injected
+  `Document` and the async Clipboard API, falling back to `execCommand('copy')`.
+  Ships no built-in copy (`ariaLabel` / `copiedAriaLabel` / `copyLabel` are
+  inputs). Defaults via `COPY_BUTTON_DEFAULTS` / `provideCopyButtonDefaults()`.
+
 ## [0.8.0] - 2026-08-27
 
 ### ⚠ BREAKING

@@ -1,0 +1,19 @@
+@use 'mixins';
+
+// dm-copy-button is a thin wrapper over dm-button: its color × variant × size ×
+// radius (and every --dm-button-* token) drive the look. The only knob of its
+// own is the glyph size; icon and label spacing come from the button's own
+// --dm-button-gap via .dm-button__label.
+
+.dm-copy-button__icon {
+  display: inline-flex;
+
+  svg {
+    width: var(--dm-copy-button-icon-size, 1.125em);
+    height: var(--dm-copy-button-icon-size, 1.125em);
+  }
+}
+
+.dm-copy-button__live {
+  @include mixins.visually-hidden;
+}
