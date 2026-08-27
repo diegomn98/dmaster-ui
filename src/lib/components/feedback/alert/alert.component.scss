@@ -98,13 +98,19 @@
 // Faded = relleno subtle + borde del propio color.
 :host([data-variant='faded']) {
   background: var(--dm-alert-bg, var(--dm-alert-soft));
-  border-color: var(--dm-alert-border-color, color-mix(in srgb, var(--dm-alert-line) 45%, transparent));
+  border-color: var(
+    --dm-alert-border-color,
+    color-mix(in srgb, var(--dm-alert-line) 45%, transparent)
+  );
   color: var(--dm-alert-color, var(--dm-alert-accent));
 }
 
 :host([data-variant='bordered']) {
   background: var(--dm-alert-bg, transparent);
-  border-color: var(--dm-alert-border-color, color-mix(in srgb, var(--dm-alert-line) 45%, transparent));
+  border-color: var(
+    --dm-alert-border-color,
+    color-mix(in srgb, var(--dm-alert-line) 45%, transparent)
+  );
   color: var(--dm-alert-color, var(--dm-alert-accent));
 }
 

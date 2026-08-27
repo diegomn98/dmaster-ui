@@ -62,13 +62,13 @@ Global defaults (placement, showArrow, offset): `providePopoverDefaults({...})` 
 
 ## Design tokens
 
-| Token                     | Default               | Description                             |
-| ------------------------- | --------------------- | --------------------------------------- |
-| `--dm-popover-bg`         | `var(--dm-bg)`        | Panel and arrow background surface.     |
-| `--dm-popover-fg`         | `var(--dm-fg)`        | Panel text color.                       |
-| `--dm-popover-border`     | `var(--dm-border)`    | Panel and arrow border color.           |
-| `--dm-popover-radius`     | `var(--dm-radius-lg)` | Panel corner radius.                    |
-| `--dm-popover-shadow`     | `var(--dm-shadow-lg)` | Panel elevation shadow.                 |
-| `--dm-popover-padding`    | `1rem`                | Inner padding of the panel.             |
-| `--dm-popover-max-width`  | `20rem`               | Maximum panel width.                    |
-| `--dm-popover-arrow-size` | `0.625rem`            | Size of the arrow square.               |
+| Token                     | Default               | Description                         |
+| ------------------------- | --------------------- | ----------------------------------- |
+| `--dm-popover-bg`         | `var(--dm-bg)`        | Panel and arrow background surface. |
+| `--dm-popover-fg`         | `var(--dm-fg)`        | Panel text color.                   |
+| `--dm-popover-border`     | `var(--dm-border)`    | Panel and arrow border color.       |
+| `--dm-popover-radius`     | `var(--dm-radius-lg)` | Panel corner radius.                |
+| `--dm-popover-shadow`     | `var(--dm-shadow-lg)` | Panel elevation shadow.             |
+| `--dm-popover-padding`    | `1rem`                | Inner padding of the panel.         |
+| `--dm-popover-max-width`  | `20rem`               | Maximum panel width.                |
+| `--dm-popover-arrow-size` | `0.625rem`            | Size of the arrow square.           |

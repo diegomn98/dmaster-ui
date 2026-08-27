@@ -63,13 +63,13 @@ Or provide `KBD_DEFAULTS` directly.
 
 ## Design tokens
 
-| Token                | Default                                         | Description                                    |
-| -------------------- | ----------------------------------------------- | ---------------------------------------------- |
-| `--dm-kbd-bg`        | `var(--dm-bg-muted)`                            | Key cap surface.                               |
-| `--dm-kbd-fg`        | `var(--dm-fg-muted)`                            | Glyph color.                                   |
-| `--dm-kbd-border`    | `var(--dm-border)`                              | Key cap 1px border color.                      |
-| `--dm-kbd-radius`    | `var(--dm-radius-sm)`                           | Key cap corner rounding.                       |
-| `--dm-kbd-size`      | `1.5rem` (md) / `1.25rem` (sm)                  | Key cap height and min-width.                  |
-| `--dm-kbd-padding`   | `0.4em`                                         | Key cap inline padding.                        |
-| `--dm-kbd-font-size` | `var(--dm-text-sm)` (md) / `var(--dm-text-xs)` (sm) | Glyph font size.                          |
-| `--dm-kbd-gap`       | `0.25em`                                        | Gap between key caps.                          |
+| Token                | Default                                             | Description                   |
+| -------------------- | --------------------------------------------------- | ----------------------------- |
+| `--dm-kbd-bg`        | `var(--dm-bg-muted)`                                | Key cap surface.              |
+| `--dm-kbd-fg`        | `var(--dm-fg-muted)`                                | Glyph color.                  |
+| `--dm-kbd-border`    | `var(--dm-border)`                                  | Key cap 1px border color.     |
+| `--dm-kbd-radius`    | `var(--dm-radius-sm)`                               | Key cap corner rounding.      |
+| `--dm-kbd-size`      | `1.5rem` (md) / `1.25rem` (sm)                      | Key cap height and min-width. |
+| `--dm-kbd-padding`   | `0.4em`                                             | Key cap inline padding.       |
+| `--dm-kbd-font-size` | `var(--dm-text-sm)` (md) / `var(--dm-text-xs)` (sm) | Glyph font size.              |
+| `--dm-kbd-gap`       | `0.25em`                                            | Gap between key caps.         |

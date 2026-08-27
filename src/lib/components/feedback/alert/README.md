@@ -90,14 +90,14 @@ Colors map to generic local variables (`--dm-alert`, `--dm-alert-fg`, `--dm-aler
 
 ## Design tokens
 
-| Token                     | Default                            | Description                                            |
-| ------------------------- | ---------------------------------- | ------------------------------------------------------ |
-| `--dm-alert-radius`       | `var(--dm-radius-lg)`              | Corner rounding of the alert container.                |
-| `--dm-alert-padding`      | `var(--dm-space-3) var(--dm-space-4)` | Outer padding of the alert container.               |
-| `--dm-alert-gap`          | `var(--dm-space-3)`                | Gap between icon, content, action slot and dismiss.    |
-| `--dm-alert-icon-size`    | `2rem`                             | Width and height of the icon box.                      |
-| `--dm-alert-font-size`    | `var(--dm-text-sm)`                | Font size of the content column.                       |
-| `--dm-alert-title-weight` | `var(--dm-font-semibold)`          | Font weight of the title line.                         |
-| `--dm-alert-bg`           | per variant                        | Surface color; overrides the background of every variant. |
-| `--dm-alert-color`        | per variant                        | Text color; overrides the foreground of every variant. |
-| `--dm-alert-border-color` | 45% mix of the semantic color      | Border color of the `faded` and `bordered` variants.   |
+| Token                     | Default                               | Description                                               |
+| ------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| `--dm-alert-radius`       | `var(--dm-radius-lg)`                 | Corner rounding of the alert container.                   |
+| `--dm-alert-padding`      | `var(--dm-space-3) var(--dm-space-4)` | Outer padding of the alert container.                     |
+| `--dm-alert-gap`          | `var(--dm-space-3)`                   | Gap between icon, content, action slot and dismiss.       |
+| `--dm-alert-icon-size`    | `2rem`                                | Width and height of the icon box.                         |
+| `--dm-alert-font-size`    | `var(--dm-text-sm)`                   | Font size of the content column.                          |
+| `--dm-alert-title-weight` | `var(--dm-font-semibold)`             | Font weight of the title line.                            |
+| `--dm-alert-bg`           | per variant                           | Surface color; overrides the background of every variant. |
+| `--dm-alert-color`        | per variant                           | Text color; overrides the foreground of every variant.    |
+| `--dm-alert-border-color` | 45% mix of the semantic color         | Border color of the `faded` and `bordered` variants.      |

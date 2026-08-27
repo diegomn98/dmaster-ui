@@ -89,10 +89,10 @@ rest of the app.
 
 ## Design tokens
 
-| Token                                 | Default                                              | Description                                        |
-| ------------------------------------- | ---------------------------------------------------- | -------------------------------------------------- |
-| `--dm-button-group-divider`           | `color-mix(in srgb, var(--dm-fg) 15%, transparent)`  | Color of the seam between non-bordered segments.   |
-| `--dm-button-group-divider-thickness` | `1px`                                                | Thickness of the seam.                             |
-| `--dm-button-group-divider-inset`     | `15%`                                                | Seam inset from both ends of the segment edge.     |
+| Token                                 | Default                                             | Description                                      |
+| ------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
+| `--dm-button-group-divider`           | `color-mix(in srgb, var(--dm-fg) 15%, transparent)` | Color of the seam between non-bordered segments. |
+| `--dm-button-group-divider-thickness` | `1px`                                               | Thickness of the seam.                           |
+| `--dm-button-group-divider-inset`     | `15%`                                               | Seam inset from both ends of the segment edge.   |
 
 The buttons inside the group also honor the `--dm-button-*` tokens (see the button README).

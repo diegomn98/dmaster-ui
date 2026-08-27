@@ -100,13 +100,13 @@ text/icon to `--dm-primary-text` (AA contrast on the tint).
 CSS variables, overridable at any scope (global, theme or a subtree). Each one
 falls back to the default shown, so nothing changes until you set it:
 
-| Token                            | Default                   | Description                            |
-| -------------------------------- | ------------------------- | -------------------------------------- |
-| `--dm-file-upload-bg`            | `transparent`             | Dropzone surface at rest.              |
-| `--dm-file-upload-fg`            | `var(--dm-fg-muted)`      | Dropzone base text color.              |
-| `--dm-file-upload-border`        | `var(--dm-border-strong)` | Dashed dropzone border color.          |
-| `--dm-file-upload-radius`        | `var(--dm-radius-lg)`     | Dropzone corner rounding.              |
-| `--dm-file-upload-border-active` | `var(--dm-primary)`       | Dropzone border while dragging over.   |
-| `--dm-file-upload-bg-active`     | `var(--dm-primary-subtle)`| Dropzone fill while dragging over.     |
-| `--dm-file-upload-item-bg`       | `var(--dm-bg-muted)`      | Selected-file list row surface.        |
-| `--dm-file-upload-item-radius`   | `var(--dm-radius-md)`     | Selected-file list row rounding.       |
+| Token                            | Default                    | Description                          |
+| -------------------------------- | -------------------------- | ------------------------------------ |
+| `--dm-file-upload-bg`            | `transparent`              | Dropzone surface at rest.            |
+| `--dm-file-upload-fg`            | `var(--dm-fg-muted)`       | Dropzone base text color.            |
+| `--dm-file-upload-border`        | `var(--dm-border-strong)`  | Dashed dropzone border color.        |
+| `--dm-file-upload-radius`        | `var(--dm-radius-lg)`      | Dropzone corner rounding.            |
+| `--dm-file-upload-border-active` | `var(--dm-primary)`        | Dropzone border while dragging over. |
+| `--dm-file-upload-bg-active`     | `var(--dm-primary-subtle)` | Dropzone fill while dragging over.   |
+| `--dm-file-upload-item-bg`       | `var(--dm-bg-muted)`       | Selected-file list row surface.      |
+| `--dm-file-upload-item-radius`   | `var(--dm-radius-md)`      | Selected-file list row rounding.     |

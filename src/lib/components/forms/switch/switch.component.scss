@@ -33,7 +33,10 @@
   }
 
   &:hover:not(:disabled, [aria-checked='true']) {
-    background-color: var(--dm-switch-track-bg-hover, color-mix(in srgb, var(--dm-fg) 18%, var(--dm-default)));
+    background-color: var(
+      --dm-switch-track-bg-hover,
+      color-mix(in srgb, var(--dm-fg) 18%, var(--dm-default))
+    );
   }
 
   &[aria-checked='true'] {

@@ -142,14 +142,14 @@ Virtual mode needs the CDK **scrolling** structural styles. These ship **inside 
 
 Public CSS custom properties. Set them on `dm-table` (or any ancestor) to re-skin the table; every token falls back to the default shown.
 
-| Token                        | Default                                            | Description                                                    |
-| ---------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
-| `--dm-table-bg`              | `var(--dm-bg)`                                     | Background of the table card wrapper.                          |
-| `--dm-table-fg`              | `var(--dm-fg)`                                     | Body cell text color.                                          |
-| `--dm-table-border`          | `var(--dm-border)`                                 | Outer border and every internal divider (rows, toolbar, footer). |
-| `--dm-table-radius`          | `var(--dm-radius-lg)`                              | Corner radius of the card wrapper.                             |
-| `--dm-table-header-bg`       | `var(--dm-bg-subtle)`                              | Header row background (native and virtual-scroll modes).       |
-| `--dm-table-header-fg`       | `var(--dm-fg-muted)`                               | Header label color.                                            |
-| `--dm-table-row-bg-hover`    | `var(--dm-bg-subtle)` (`var(--dm-bg-muted)` striped) | Row background under the pointer when `hover` is on.           |
-| `--dm-table-stripe-bg`       | `var(--dm-bg-subtle)`                              | Even-row background of the `striped` variant.                  |
-| `--dm-table-row-bg-selected` | `var(--dm-primary-subtle)`                         | Background of selected rows.                                   |
+| Token                        | Default                                              | Description                                                      |
+| ---------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| `--dm-table-bg`              | `var(--dm-bg)`                                       | Background of the table card wrapper.                            |
+| `--dm-table-fg`              | `var(--dm-fg)`                                       | Body cell text color.                                            |
+| `--dm-table-border`          | `var(--dm-border)`                                   | Outer border and every internal divider (rows, toolbar, footer). |
+| `--dm-table-radius`          | `var(--dm-radius-lg)`                                | Corner radius of the card wrapper.                               |
+| `--dm-table-header-bg`       | `var(--dm-bg-subtle)`                                | Header row background (native and virtual-scroll modes).         |
+| `--dm-table-header-fg`       | `var(--dm-fg-muted)`                                 | Header label color.                                              |
+| `--dm-table-row-bg-hover`    | `var(--dm-bg-subtle)` (`var(--dm-bg-muted)` striped) | Row background under the pointer when `hover` is on.             |
+| `--dm-table-stripe-bg`       | `var(--dm-bg-subtle)`                                | Even-row background of the `striped` variant.                    |
+| `--dm-table-row-bg-selected` | `var(--dm-primary-subtle)`                           | Background of selected rows.                                     |

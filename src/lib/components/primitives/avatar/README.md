@@ -27,10 +27,10 @@ Global defaults: `provideAvatarDefaults({...})` / `AVATAR_DEFAULTS`.
 
 ## Design tokens
 
-| Token                    | Default                                             | Description                                          |
-| ------------------------ | --------------------------------------------------- | ---------------------------------------------------- |
-| `--dm-avatar-bg`         | `var(--dm-primary-subtle)`                          | Fallback surface behind initials / generic icon.     |
-| `--dm-avatar-fg`         | `var(--dm-primary-text)`                            | Initials text color.                                 |
-| `--dm-avatar-border`     | `var(--dm-border)`                                  | 1px border color.                                    |
-| `--dm-avatar-radius`     | `var(--dm-radius-full)` / `var(--dm-radius-md)`     | Corner rounding (per `shape`: circle / square).      |
-| `--dm-avatar-icon-color` | `var(--dm-fg-subtle)`                               | Color of the generic fallback icon.                  |
+| Token                    | Default                                         | Description                                      |
+| ------------------------ | ----------------------------------------------- | ------------------------------------------------ |
+| `--dm-avatar-bg`         | `var(--dm-primary-subtle)`                      | Fallback surface behind initials / generic icon. |
+| `--dm-avatar-fg`         | `var(--dm-primary-text)`                        | Initials text color.                             |
+| `--dm-avatar-border`     | `var(--dm-border)`                              | 1px border color.                                |
+| `--dm-avatar-radius`     | `var(--dm-radius-full)` / `var(--dm-radius-md)` | Corner rounding (per `shape`: circle / square).  |
+| `--dm-avatar-icon-color` | `var(--dm-fg-subtle)`                           | Color of the generic fallback icon.              |

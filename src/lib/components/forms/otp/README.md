@@ -69,11 +69,11 @@ providers: [provideOtpDefaults({ length: 4, mode: 'numeric' })];
 CSS variables, overridable at any scope (global, theme or a subtree). Each one
 falls back to the default shown, so nothing changes until you set it:
 
-| Token                    | Default                 | Description                                                    |
-| ------------------------ | ----------------------- | -------------------------------------------------------------- |
-| `--dm-otp-cell-size`     | `2.5rem`                | Cell width/height at the default `size="md"`.                  |
-| `--dm-otp-cell-bg`       | `var(--dm-bg-muted)`    | Cell surface (the bordered variant defaults to `-elevated`).   |
-| `--dm-otp-cell-fg`       | `var(--dm-fg)`          | Cell text color.                                               |
-| `--dm-otp-cell-border`   | `var(--dm-border)`      | Cell border color (flat, bordered and faded variants).         |
-| `--dm-otp-cell-radius`   | `var(--dm-radius-md)`   | Cell corner rounding.                                          |
-| `--dm-otp-cell-bg-focus` | `var(--dm-bg-elevated)` | Cell surface while focused.                                    |
+| Token                    | Default                 | Description                                                  |
+| ------------------------ | ----------------------- | ------------------------------------------------------------ |
+| `--dm-otp-cell-size`     | `2.5rem`                | Cell width/height at the default `size="md"`.                |
+| `--dm-otp-cell-bg`       | `var(--dm-bg-muted)`    | Cell surface (the bordered variant defaults to `-elevated`). |
+| `--dm-otp-cell-fg`       | `var(--dm-fg)`          | Cell text color.                                             |
+| `--dm-otp-cell-border`   | `var(--dm-border)`      | Cell border color (flat, bordered and faded variants).       |
+| `--dm-otp-cell-radius`   | `var(--dm-radius-md)`   | Cell corner rounding.                                        |
+| `--dm-otp-cell-bg-focus` | `var(--dm-bg-elevated)` | Cell surface while focused.                                  |

@@ -62,7 +62,9 @@
   --dm-success-fg: #03190d;
   --dm-success-subtle: color-mix(in srgb, var(--dm-success) 14%, transparent);
   --dm-warning: #f5a524;
-  --dm-warning-hover: oklch(from var(--dm-warning) 70.64% calc(c * 0.934) calc(h - 1.27)); // was #d98e13
+  --dm-warning-hover: oklch(
+    from var(--dm-warning) 70.64% calc(c * 0.934) calc(h - 1.27)
+  ); // was #d98e13
   --dm-warning-fg: #3a2803;
   --dm-warning-subtle: color-mix(in srgb, var(--dm-warning) 15%, transparent);
 
@@ -80,8 +82,12 @@
   --dm-default-text: var(--dm-fg-muted);
   --dm-primary-text: oklch(from var(--dm-primary) 49.2% calc(c * 0.859) h); // was #005bc4
   --dm-secondary-text: oklch(from var(--dm-secondary) 49.07% calc(c * 0.978) h); // was #6d28d9
-  --dm-success-text: oklch(from var(--dm-success) 46.39% calc(c * 0.612) calc(h + 0.74)); // was #0c6b35
-  --dm-warning-text: oklch(from var(--dm-warning) 47.07% calc(c * 0.623) calc(h + 4.01)); // was #7a5200
+  --dm-success-text: oklch(
+    from var(--dm-success) 46.39% calc(c * 0.612) calc(h + 0.74)
+  ); // was #0c6b35
+  --dm-warning-text: oklch(
+    from var(--dm-warning) 47.07% calc(c * 0.623) calc(h + 4.01)
+  ); // was #7a5200
   --dm-danger-text: oklch(from var(--dm-danger) 49.28% calc(c * 0.834) h); // was #b30b45
 
   // Focus ring
@@ -190,17 +196,23 @@
   // 19%: ~4.58:1 vs fg-muted, ~5.5:1 vs --dm-primary-text.
   --dm-primary-subtle: color-mix(in srgb, var(--dm-primary) 19%, transparent);
   --dm-secondary: #8348f5;
-  --dm-secondary-hover: oklch(from var(--dm-secondary) 66.93% calc(c * 0.824) calc(h + 3.13)); // was #a274ff
+  --dm-secondary-hover: oklch(
+    from var(--dm-secondary) 66.93% calc(c * 0.824) calc(h + 3.13)
+  ); // was #a274ff
   --dm-secondary-fg: #fff;
   --dm-secondary-subtle: color-mix(in srgb, var(--dm-secondary) 24%, transparent);
 
   // Status
   --dm-success: #17c964;
-  --dm-success-hover: oklch(from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)); // was #45d483
+  --dm-success-hover: oklch(
+    from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)
+  ); // was #45d483
   --dm-success-fg: #03190d;
   --dm-success-subtle: color-mix(in srgb, var(--dm-success) 20%, transparent);
   --dm-warning: #f5a524;
-  --dm-warning-hover: oklch(from var(--dm-warning) 82.46% calc(c * 0.857) calc(h + 4.39)); // was #f7b955
+  --dm-warning-hover: oklch(
+    from var(--dm-warning) 82.46% calc(c * 0.857) calc(h + 4.39)
+  ); // was #f7b955
   --dm-warning-fg: #3a2803;
 
   // 20% composited TWICE (a flat warning button nested in a flat warning
@@ -211,7 +223,9 @@
   // Nudged from #ff4d6d (white text = 3.21:1, well below AA) to #e11f4b
   // (4.67:1) so solid danger surfaces are readable on dark too.
   --dm-danger: #e11f4b;
-  --dm-danger-hover: oklch(from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)); // was #ff6b85
+  --dm-danger-hover: oklch(
+    from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)
+  ); // was #ff6b85
   --dm-danger-fg: #fff;
 
   // 24% composited over --dm-bg-elevated gave only 4.35:1 against
@@ -222,11 +236,21 @@
   // lifted to a fixed OKLCH lightness so any brand base derives a readable
   // tint text (>=4.5:1 over its -subtle fill on bg AND bg-muted).
   --dm-default-text: var(--dm-fg-muted);
-  --dm-primary-text: oklch(from var(--dm-primary) 76.03% calc(c * 0.632) calc(h - 3.98)); // was #7ab5fa
-  --dm-secondary-text: oklch(from var(--dm-secondary) 74.13% calc(c * 0.637) calc(h + 4.91)); // was #b794ff
-  --dm-success-text: oklch(from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)); // was #45d483
-  --dm-warning-text: oklch(from var(--dm-warning) 86.03% calc(c * 0.678) calc(h + 4.53)); // was #f9c87e
-  --dm-danger-text: oklch(from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)); // was #ff6b85
+  --dm-primary-text: oklch(
+    from var(--dm-primary) 76.03% calc(c * 0.632) calc(h - 3.98)
+  ); // was #7ab5fa
+  --dm-secondary-text: oklch(
+    from var(--dm-secondary) 74.13% calc(c * 0.637) calc(h + 4.91)
+  ); // was #b794ff
+  --dm-success-text: oklch(
+    from var(--dm-success) 77.44% calc(c * 0.869) calc(h + 3.43)
+  ); // was #45d483
+  --dm-warning-text: oklch(
+    from var(--dm-warning) 86.03% calc(c * 0.678) calc(h + 4.53)
+  ); // was #f9c87e
+  --dm-danger-text: oklch(
+    from var(--dm-danger) 71.71% calc(c * 0.818) calc(h - 4.68)
+  ); // was #ff6b85
 
   // Focus ring
   --dm-ring: rgb(102 170 249 / 60%);

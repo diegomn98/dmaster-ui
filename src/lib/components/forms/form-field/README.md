@@ -30,11 +30,11 @@ Composite form field: label + projected native control + hint/error. The `dmInpu
 
 ## Design tokens
 
-| Token                             | Default                                              | Description                              |
-| --------------------------------- | ---------------------------------------------------- | ---------------------------------------- |
-| `--dm-form-field-gap`             | `var(--dm-space-1)`                                  | Vertical gap between label, control and messages. |
-| `--dm-form-field-label-fg`        | `var(--dm-fg)`                                       | Color of the label text.                 |
-| `--dm-form-field-label-font-size` | `var(--dm-text-sm)`                                  | Font size of the label.                  |
-| `--dm-form-field-required-fg`     | `color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg))` | Color of the required `*` marker.    |
-| `--dm-form-field-hint-fg`         | `var(--dm-fg-muted)`                                 | Color of the hint text.                  |
-| `--dm-form-field-error-fg`        | `var(--dm-danger)`                                   | Color of the error text.                 |
+| Token                             | Default                                                  | Description                                       |
+| --------------------------------- | -------------------------------------------------------- | ------------------------------------------------- |
+| `--dm-form-field-gap`             | `var(--dm-space-1)`                                      | Vertical gap between label, control and messages. |
+| `--dm-form-field-label-fg`        | `var(--dm-fg)`                                           | Color of the label text.                          |
+| `--dm-form-field-label-font-size` | `var(--dm-text-sm)`                                      | Font size of the label.                           |
+| `--dm-form-field-required-fg`     | `color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg))` | Color of the required `*` marker.                 |
+| `--dm-form-field-hint-fg`         | `var(--dm-fg-muted)`                                     | Color of the hint text.                           |
+| `--dm-form-field-error-fg`        | `var(--dm-danger)`                                       | Color of the error text.                          |

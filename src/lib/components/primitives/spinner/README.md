@@ -26,8 +26,8 @@ Global defaults: `provideSpinnerDefaults({...})` / `SPINNER_DEFAULTS`.
 
 ## Design tokens
 
-| Token                        | Default        | Description                                        |
-| ---------------------------- | -------------- | -------------------------------------------------- |
-| `--dm-spinner-color`         | `currentcolor` | Stroke color of the track and the arc.             |
-| `--dm-spinner-duration`      | `2s`           | One full rotation of the spinner.                  |
-| `--dm-spinner-track-opacity` | `0.16`         | Opacity of the faint background track.             |
+| Token                        | Default        | Description                            |
+| ---------------------------- | -------------- | -------------------------------------- |
+| `--dm-spinner-color`         | `currentcolor` | Stroke color of the track and the arc. |
+| `--dm-spinner-duration`      | `2s`           | One full rotation of the spinner.      |
+| `--dm-spinner-track-opacity` | `0.16`         | Opacity of the faint background track. |

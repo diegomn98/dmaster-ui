@@ -81,14 +81,14 @@ Overriding any of these at a scope re-skins the tabs without touching the SCSS.
 
 Public CSS custom properties, consumed with local fallbacks — override them at any scope (globally, per theme, or on a subtree) without touching the SCSS. Where a default "varies by variant", overriding the token applies the same value to every variant.
 
-| Token                          | Default                                             | Description                                                        |
-| ------------------------------ | --------------------------------------------------- | ------------------------------------------------------------------ |
-| `--dm-tabs-gap`                | `var(--dm-space-4)` (`--dm-space-6` vertical)       | Gap between the tablist and the panels.                            |
-| `--dm-tabs-list-bg`            | `var(--dm-bg-subtle)`                               | Container fill of the `solid` / `segment` tablist.                 |
-| `--dm-tabs-list-border`        | `var(--dm-border)` (`--dm-border-strong` bordered)  | Container border color of `solid` / `bordered` / `segment`.        |
-| `--dm-tabs-indicator-bg`       | Varies by variant                                   | Fill of the sliding indicator (pill or underline rule).            |
-| `--dm-tabs-indicator-thickness`| `2.5px` (horizontal) / `2px` (vertical)             | Thickness of the `underlined` indicator rule.                      |
-| `--dm-tabs-tab-fg`             | `var(--dm-fg-muted)`                                | Resting (unselected) tab text color.                               |
-| `--dm-tabs-tab-fg-hover`       | `var(--dm-fg)`                                      | Tab text color on hover.                                           |
-| `--dm-tabs-tab-bg-hover`       | `var(--dm-default-subtle)`                          | Hover wash behind a tab (contained variants).                      |
-| `--dm-tabs-tab-fg-selected`    | Varies by variant                                   | Selected tab text color.                                           |
+| Token                           | Default                                            | Description                                                 |
+| ------------------------------- | -------------------------------------------------- | ----------------------------------------------------------- |
+| `--dm-tabs-gap`                 | `var(--dm-space-4)` (`--dm-space-6` vertical)      | Gap between the tablist and the panels.                     |
+| `--dm-tabs-list-bg`             | `var(--dm-bg-subtle)`                              | Container fill of the `solid` / `segment` tablist.          |
+| `--dm-tabs-list-border`         | `var(--dm-border)` (`--dm-border-strong` bordered) | Container border color of `solid` / `bordered` / `segment`. |
+| `--dm-tabs-indicator-bg`        | Varies by variant                                  | Fill of the sliding indicator (pill or underline rule).     |
+| `--dm-tabs-indicator-thickness` | `2.5px` (horizontal) / `2px` (vertical)            | Thickness of the `underlined` indicator rule.               |
+| `--dm-tabs-tab-fg`              | `var(--dm-fg-muted)`                               | Resting (unselected) tab text color.                        |
+| `--dm-tabs-tab-fg-hover`        | `var(--dm-fg)`                                     | Tab text color on hover.                                    |
+| `--dm-tabs-tab-bg-hover`        | `var(--dm-default-subtle)`                         | Hover wash behind a tab (contained variants).               |
+| `--dm-tabs-tab-fg-selected`     | Varies by variant                                  | Selected tab text color.                                    |

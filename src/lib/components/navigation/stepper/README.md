@@ -110,12 +110,12 @@ CSS variables set on the container and consumed by the steps:
 
 Public CSS custom properties, consumed with local fallbacks — override them at any scope (globally, per theme, or on a subtree) without touching the SCSS. Active / completed indicator fills keep following the semantic accent (the `color` input).
 
-| Token                                | Default                                      | Description                                                     |
-| ------------------------------------ | -------------------------------------------- | --------------------------------------------------------------- |
-| `--dm-stepper-indicator-bg`          | `var(--dm-bg-muted)`                         | Fill of an upcoming (resting) step indicator.                   |
-| `--dm-stepper-indicator-fg`          | `var(--dm-fg-muted)`                         | Number / glyph color inside a resting indicator.                |
-| `--dm-stepper-indicator-border`      | `var(--dm-border-strong)`                    | Border color of a resting indicator.                            |
-| `--dm-stepper-indicator-radius`      | `var(--dm-radius-full)`                      | Indicator corner radius (circle by default).                    |
-| `--dm-stepper-indicator-shadow-active` | `0 0 0 0.25rem var(--dm-stepper-accent-soft)` | Halo behind the active indicator (set `none` to remove it).   |
-| `--dm-stepper-label-fg`              | `var(--dm-fg-muted)`                         | Label color of an inactive step.                                |
-| `--dm-stepper-label-fg-active`       | `var(--dm-fg)`                               | Label color of the active step.                                 |
+| Token                                  | Default                                       | Description                                                 |
+| -------------------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `--dm-stepper-indicator-bg`            | `var(--dm-bg-muted)`                          | Fill of an upcoming (resting) step indicator.               |
+| `--dm-stepper-indicator-fg`            | `var(--dm-fg-muted)`                          | Number / glyph color inside a resting indicator.            |
+| `--dm-stepper-indicator-border`        | `var(--dm-border-strong)`                     | Border color of a resting indicator.                        |
+| `--dm-stepper-indicator-radius`        | `var(--dm-radius-full)`                       | Indicator corner radius (circle by default).                |
+| `--dm-stepper-indicator-shadow-active` | `0 0 0 0.25rem var(--dm-stepper-accent-soft)` | Halo behind the active indicator (set `none` to remove it). |
+| `--dm-stepper-label-fg`                | `var(--dm-fg-muted)`                          | Label color of an inactive step.                            |
+| `--dm-stepper-label-fg-active`         | `var(--dm-fg)`                                | Label color of the active step.                             |

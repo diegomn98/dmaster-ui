@@ -88,17 +88,17 @@ Requires the CDK structural styles once per app:
 
 ## Design tokens
 
-| Token                        | Default                                                | Description                                       |
-| ---------------------------- | ------------------------------------------------------ | ------------------------------------------------- |
-| `--dm-command-bg`            | `var(--dm-bg-elevated)`                                | Panel background surface.                         |
-| `--dm-command-fg`            | `var(--dm-fg)`                                         | Panel text color.                                 |
-| `--dm-command-border`        | `var(--dm-border)`                                     | Panel border color.                               |
-| `--dm-command-radius`        | `var(--dm-radius-xl)`                                  | Panel corner radius.                              |
-| `--dm-command-shadow`        | `var(--dm-shadow-lg)`                                  | Panel elevation shadow.                           |
-| `--dm-command-width`         | `min(40rem, 92vw)`                                     | Panel width.                                      |
-| `--dm-command-max-height`    | `min(70dvh, calc(100dvh - 4rem))`                      | Maximum panel height.                             |
-| `--dm-command-active-bg`     | `var(--dm-default-subtle)`                             | Background of the active (highlighted) option.    |
-| `--dm-command-active-fg`     | `var(--dm-fg)`                                         | Text color of the active option.                  |
-| `--dm-command-option-radius` | `var(--dm-radius-md)`                                  | Corner radius of each option row.                 |
-| `--dm-command-divider-color` | `var(--dm-border)`                                     | Color of the header and footer separator lines.   |
-| `--dm-command-footer-bg`     | `var(--dm-bg-subtle)`                                  | Background of the keyboard-hints footer.          |
+| Token                        | Default                           | Description                                     |
+| ---------------------------- | --------------------------------- | ----------------------------------------------- |
+| `--dm-command-bg`            | `var(--dm-bg-elevated)`           | Panel background surface.                       |
+| `--dm-command-fg`            | `var(--dm-fg)`                    | Panel text color.                               |
+| `--dm-command-border`        | `var(--dm-border)`                | Panel border color.                             |
+| `--dm-command-radius`        | `var(--dm-radius-xl)`             | Panel corner radius.                            |
+| `--dm-command-shadow`        | `var(--dm-shadow-lg)`             | Panel elevation shadow.                         |
+| `--dm-command-width`         | `min(40rem, 92vw)`                | Panel width.                                    |
+| `--dm-command-max-height`    | `min(70dvh, calc(100dvh - 4rem))` | Maximum panel height.                           |
+| `--dm-command-active-bg`     | `var(--dm-default-subtle)`        | Background of the active (highlighted) option.  |
+| `--dm-command-active-fg`     | `var(--dm-fg)`                    | Text color of the active option.                |
+| `--dm-command-option-radius` | `var(--dm-radius-md)`             | Corner radius of each option row.               |
+| `--dm-command-divider-color` | `var(--dm-border)`                | Color of the header and footer separator lines. |
+| `--dm-command-footer-bg`     | `var(--dm-bg-subtle)`             | Background of the keyboard-hints footer.        |

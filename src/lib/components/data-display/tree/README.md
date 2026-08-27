@@ -121,16 +121,16 @@ Implements the [WAI-ARIA Tree View pattern](https://www.w3.org/WAI/ARIA/apg/patt
 
 ## Design tokens
 
-| Token                    | Default                  | Description                                     |
-| ------------------------ | ------------------------ | ----------------------------------------------- |
-| `--dm-tree-indent`       | `1.25rem`                | Indentation added per level.                    |
-| `--dm-tree-row-radius`   | `var(--dm-radius-md)`    | Row corner rounding.                            |
-| `--dm-tree-row-height`   | `2.25rem`                | Minimum row height.                             |
-| `--dm-tree-fg`           | `var(--dm-fg)`           | Base text color of the tree.                    |
-| `--dm-tree-font-size`    | `var(--dm-text-sm)`      | Base text size of the tree.                     |
-| `--dm-tree-selected-bg`  | `var(--dm-primary-subtle)` | Selected row surface (flat, tinted).          |
-| `--dm-tree-selected-fg`  | `var(--dm-primary-text)` | Selected row text (AA on the tinted surface).   |
-| `--dm-tree-hover-bg`     | `var(--dm-bg-muted)`     | Hover / active row surface.                     |
-| `--dm-tree-disabled-fg`  | `var(--dm-fg-subtle)`    | Disabled row text color.                        |
-| `--dm-tree-chevron-color` | `var(--dm-fg-muted)`    | Disclosure chevron color (rest state).          |
-| `--dm-tree-guide`        | `var(--dm-border)`       | Connector guide-line color.                     |
+| Token                     | Default                    | Description                                   |
+| ------------------------- | -------------------------- | --------------------------------------------- |
+| `--dm-tree-indent`        | `1.25rem`                  | Indentation added per level.                  |
+| `--dm-tree-row-radius`    | `var(--dm-radius-md)`      | Row corner rounding.                          |
+| `--dm-tree-row-height`    | `2.25rem`                  | Minimum row height.                           |
+| `--dm-tree-fg`            | `var(--dm-fg)`             | Base text color of the tree.                  |
+| `--dm-tree-font-size`     | `var(--dm-text-sm)`        | Base text size of the tree.                   |
+| `--dm-tree-selected-bg`   | `var(--dm-primary-subtle)` | Selected row surface (flat, tinted).          |
+| `--dm-tree-selected-fg`   | `var(--dm-primary-text)`   | Selected row text (AA on the tinted surface). |
+| `--dm-tree-hover-bg`      | `var(--dm-bg-muted)`       | Hover / active row surface.                   |
+| `--dm-tree-disabled-fg`   | `var(--dm-fg-subtle)`      | Disabled row text color.                      |
+| `--dm-tree-chevron-color` | `var(--dm-fg-muted)`       | Disclosure chevron color (rest state).        |
+| `--dm-tree-guide`         | `var(--dm-border)`         | Connector guide-line color.                   |

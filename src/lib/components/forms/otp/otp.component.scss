@@ -41,7 +41,11 @@
   }
 
   &:hover:not(:disabled, :focus) {
-    background-color: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-otp-cell-bg, var(--dm-bg-muted)));
+    background-color: color-mix(
+      in srgb,
+      var(--dm-fg) 6%,
+      var(--dm-otp-cell-bg, var(--dm-bg-muted))
+    );
   }
 
   &:focus {

@@ -55,9 +55,9 @@ providers: [provideErrorDefaults({ size: 'md' })];
 
 ## Design tokens
 
-| Token                   | Default                                        | Description                             |
-| ----------------------- | ---------------------------------------------- | --------------------------------------- |
-| `--dm-error-fg`         | `var(--dm-danger-text)`                        | Text color of the error message.        |
-| `--dm-error-gap`        | `0.3em`                                        | Gap between a projected icon and text.  |
-| `--dm-error-font-size`  | `var(--dm-text-xs)` (`var(--dm-text-sm)` md)   | Font size per size variant.             |
-| `--dm-error-font-weight` | `var(--dm-font-medium)`                       | Font weight of the error message.       |
+| Token                    | Default                                      | Description                            |
+| ------------------------ | -------------------------------------------- | -------------------------------------- |
+| `--dm-error-fg`          | `var(--dm-danger-text)`                      | Text color of the error message.       |
+| `--dm-error-gap`         | `0.3em`                                      | Gap between a projected icon and text. |
+| `--dm-error-font-size`   | `var(--dm-text-xs)` (`var(--dm-text-sm)` md) | Font size per size variant.            |
+| `--dm-error-font-weight` | `var(--dm-font-medium)`                      | Font weight of the error message.      |

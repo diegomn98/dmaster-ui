@@ -112,18 +112,18 @@ Global defaults: `provideMenuDefaults({ placement, closeOnSelect })` / `MENU_DEF
 
 ## Design tokens
 
-| Token                      | Default                           | Description                                 |
-| -------------------------- | --------------------------------- | ------------------------------------------- |
-| `--dm-menu-bg`             | `var(--dm-bg-elevated)`           | Panel background surface.                   |
-| `--dm-menu-fg`             | `var(--dm-fg)`                    | Panel text color.                           |
-| `--dm-menu-border`         | `var(--dm-border)`                | Panel border color.                         |
-| `--dm-menu-radius`         | `var(--dm-radius-lg)`             | Panel corner radius.                        |
-| `--dm-menu-shadow`         | `var(--dm-shadow-lg)`             | Panel elevation shadow.                     |
-| `--dm-menu-padding`        | `var(--dm-space-1)`               | Inner padding of the panel.                 |
-| `--dm-menu-min-width`      | `12rem`                           | Minimum panel width.                        |
-| `--dm-menu-max-width`      | `20rem`                           | Maximum panel width.                        |
-| `--dm-menu-max-height`     | `min(24rem, calc(100dvh - 2rem))` | Maximum panel height before scrolling.      |
-| `--dm-menu-item-fg`        | `var(--dm-fg)`                    | Default item text color.                    |
-| `--dm-menu-item-active-bg` | `var(--dm-default-subtle)`        | Background of the active / hovered item.    |
-| `--dm-menu-item-radius`    | `var(--dm-radius-md)`             | Corner radius of each item row.             |
-| `--dm-menu-divider-color`  | `var(--dm-border)`                | Color of the `dm-menu-divider` rule.        |
+| Token                      | Default                           | Description                              |
+| -------------------------- | --------------------------------- | ---------------------------------------- |
+| `--dm-menu-bg`             | `var(--dm-bg-elevated)`           | Panel background surface.                |
+| `--dm-menu-fg`             | `var(--dm-fg)`                    | Panel text color.                        |
+| `--dm-menu-border`         | `var(--dm-border)`                | Panel border color.                      |
+| `--dm-menu-radius`         | `var(--dm-radius-lg)`             | Panel corner radius.                     |
+| `--dm-menu-shadow`         | `var(--dm-shadow-lg)`             | Panel elevation shadow.                  |
+| `--dm-menu-padding`        | `var(--dm-space-1)`               | Inner padding of the panel.              |
+| `--dm-menu-min-width`      | `12rem`                           | Minimum panel width.                     |
+| `--dm-menu-max-width`      | `20rem`                           | Maximum panel width.                     |
+| `--dm-menu-max-height`     | `min(24rem, calc(100dvh - 2rem))` | Maximum panel height before scrolling.   |
+| `--dm-menu-item-fg`        | `var(--dm-fg)`                    | Default item text color.                 |
+| `--dm-menu-item-active-bg` | `var(--dm-default-subtle)`        | Background of the active / hovered item. |
+| `--dm-menu-item-radius`    | `var(--dm-radius-md)`             | Corner radius of each item row.          |
+| `--dm-menu-divider-color`  | `var(--dm-border)`                | Color of the `dm-menu-divider` rule.     |

@@ -102,15 +102,15 @@ Or provide `ACCORDION_DEFAULTS` directly.
 Public CSS custom properties (all optional — every one falls back to the
 built-in value, so the default look needs no configuration):
 
-| Token                           | Default                                                          | Description                                                    |
-| ------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------- |
-| `--dm-accordion-bg`             | `var(--dm-bg-elevated)`                                          | Surface of framed containers and splitted item cards.          |
-| `--dm-accordion-border`         | `var(--dm-border-strong)` (bordered) / `var(--dm-border)` (splitted) | Border color of the framed container / splitted item cards. |
-| `--dm-accordion-radius`         | `var(--dm-radius-lg)` (bordered/shadow) / `var(--dm-radius-xl)` (splitted) | Corner rounding of the container / splitted item cards. |
-| `--dm-accordion-gap`            | `var(--dm-space-3)`                                              | Gap between splitted item cards.                               |
-| `--dm-accordion-divider`        | `var(--dm-border)`                                               | Hairline between items and between header and body.            |
-| `--dm-accordion-trigger-height` | `3.5rem`                                                         | Minimum height of the header trigger.                          |
-| `--dm-accordion-trigger-padding`| `var(--dm-space-4) var(--dm-space-5)`                            | Padding of the header trigger.                                 |
-| `--dm-accordion-trigger-hover`  | `var(--dm-bg-subtle)`                                            | Full-row hover wash on the header trigger.                     |
-| `--dm-accordion-icon-size`      | `1.25rem`                                                        | Leading icon size (`font-size`).                               |
-| `--dm-accordion-icon-open`      | `var(--dm-primary)`                                              | Leading icon color when the item is open.                      |
+| Token                            | Default                                                                    | Description                                                 |
+| -------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `--dm-accordion-bg`              | `var(--dm-bg-elevated)`                                                    | Surface of framed containers and splitted item cards.       |
+| `--dm-accordion-border`          | `var(--dm-border-strong)` (bordered) / `var(--dm-border)` (splitted)       | Border color of the framed container / splitted item cards. |
+| `--dm-accordion-radius`          | `var(--dm-radius-lg)` (bordered/shadow) / `var(--dm-radius-xl)` (splitted) | Corner rounding of the container / splitted item cards.     |
+| `--dm-accordion-gap`             | `var(--dm-space-3)`                                                        | Gap between splitted item cards.                            |
+| `--dm-accordion-divider`         | `var(--dm-border)`                                                         | Hairline between items and between header and body.         |
+| `--dm-accordion-trigger-height`  | `3.5rem`                                                                   | Minimum height of the header trigger.                       |
+| `--dm-accordion-trigger-padding` | `var(--dm-space-4) var(--dm-space-5)`                                      | Padding of the header trigger.                              |
+| `--dm-accordion-trigger-hover`   | `var(--dm-bg-subtle)`                                                      | Full-row hover wash on the header trigger.                  |
+| `--dm-accordion-icon-size`       | `1.25rem`                                                                  | Leading icon size (`font-size`).                            |
+| `--dm-accordion-icon-open`       | `var(--dm-primary)`                                                        | Leading icon color when the item is open.                   |

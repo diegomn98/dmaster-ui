@@ -139,7 +139,10 @@
     color: var(--dm-stepper-accent-fg);
     background: var(--dm-stepper-accent);
     border-color: transparent;
-    box-shadow: var(--dm-stepper-indicator-shadow-active, 0 0 0 0.25rem var(--dm-stepper-accent-soft));
+    box-shadow: var(
+      --dm-stepper-indicator-shadow-active,
+      0 0 0 0.25rem var(--dm-stepper-accent-soft)
+    );
   }
 
   .dm-step__label {

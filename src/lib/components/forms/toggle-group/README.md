@@ -84,11 +84,11 @@ providers: [provideToggleGroupDefaults({ color: 'primary', size: 'lg' })];
 
 ## Design tokens
 
-| Token                       | Default                                  | Description                                       |
-| --------------------------- | ---------------------------------------- | ------------------------------------------------- |
-| `--dm-toggle-track-bg`      | `var(--dm-bg-muted)`                     | Muted track behind the segments.                  |
-| `--dm-toggle-inset`         | `0.1875rem`                              | Padding between the track and the segments.       |
-| `--dm-toggle-border`        | `var(--dm-border)`                       | Border color of the track.                        |
-| `--dm-toggle-radius`        | `var(--dm-radius-md)`                    | Corner radius of the track.                       |
-| `--dm-toggle-segment-radius` | `calc(var(--dm-radius-md) - 0.1875rem)` | Corner radius of each segment.                    |
-| `--dm-toggle-segment-fg`    | `var(--dm-fg-muted)`                     | Text color of an unselected segment.              |
+| Token                        | Default                                 | Description                                 |
+| ---------------------------- | --------------------------------------- | ------------------------------------------- |
+| `--dm-toggle-track-bg`       | `var(--dm-bg-muted)`                    | Muted track behind the segments.            |
+| `--dm-toggle-inset`          | `0.1875rem`                             | Padding between the track and the segments. |
+| `--dm-toggle-border`         | `var(--dm-border)`                      | Border color of the track.                  |
+| `--dm-toggle-radius`         | `var(--dm-radius-md)`                   | Corner radius of the track.                 |
+| `--dm-toggle-segment-radius` | `calc(var(--dm-radius-md) - 0.1875rem)` | Corner radius of each segment.              |
+| `--dm-toggle-segment-fg`     | `var(--dm-fg-muted)`                    | Text color of an unselected segment.        |

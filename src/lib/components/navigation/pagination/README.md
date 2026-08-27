@@ -77,14 +77,14 @@ Or provide `PAGINATION_DEFAULTS` directly.
 
 Public CSS custom properties, consumed with local fallbacks — override them at any scope (globally, per theme, or on a subtree) without touching the SCSS.
 
-| Token                           | Default                             | Description                                                          |
-| ------------------------------- | ----------------------------------- | -------------------------------------------------------------------- |
-| `--dm-pagination-gap`           | `var(--dm-space-1)`                 | Gap between items.                                                   |
-| `--dm-pagination-radius`        | `var(--dm-radius-lg)`               | Item corner radius (set `var(--dm-radius-full)` for circles).        |
-| `--dm-pagination-item-size`     | Size-scaled (`2 / 2.5 / 3rem`)      | Item footprint (min-width + height; chevrons and ellipses scale with it). |
-| `--dm-pagination-fg`            | `var(--dm-fg-muted)`                | Idle item text / chevron color.                                      |
-| `--dm-pagination-fg-hover`      | `var(--dm-fg)`                      | Item text color on hover.                                            |
-| `--dm-pagination-hover-bg`      | `var(--dm-bg-muted)`                | Hover wash behind an item.                                           |
-| `--dm-pagination-active-bg`     | Semantic color (from `color`)       | Solid fill of the active page.                                       |
-| `--dm-pagination-active-fg`     | Semantic `-fg` (from `color`)       | Text color on the active page fill.                                  |
-| `--dm-pagination-active-shadow` | Soft glow of the active fill        | Box shadow under the active page (set `none` to remove the glow).    |
+| Token                           | Default                        | Description                                                               |
+| ------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `--dm-pagination-gap`           | `var(--dm-space-1)`            | Gap between items.                                                        |
+| `--dm-pagination-radius`        | `var(--dm-radius-lg)`          | Item corner radius (set `var(--dm-radius-full)` for circles).             |
+| `--dm-pagination-item-size`     | Size-scaled (`2 / 2.5 / 3rem`) | Item footprint (min-width + height; chevrons and ellipses scale with it). |
+| `--dm-pagination-fg`            | `var(--dm-fg-muted)`           | Idle item text / chevron color.                                           |
+| `--dm-pagination-fg-hover`      | `var(--dm-fg)`                 | Item text color on hover.                                                 |
+| `--dm-pagination-hover-bg`      | `var(--dm-bg-muted)`           | Hover wash behind an item.                                                |
+| `--dm-pagination-active-bg`     | Semantic color (from `color`)  | Solid fill of the active page.                                            |
+| `--dm-pagination-active-fg`     | Semantic `-fg` (from `color`)  | Text color on the active page fill.                                       |
+| `--dm-pagination-active-shadow` | Soft glow of the active fill   | Box shadow under the active page (set `none` to remove the glow).         |

@@ -216,13 +216,13 @@ Global defaults: `provideSelectDefaults({...})` / `SELECT_DEFAULTS` (`pageSize`,
 
 ## Design tokens
 
-| Token                           | Default                                                   | Description                                                                 |
-| ------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `--dm-select-bg`                | `var(--dm-bg-muted)`                                      | Trigger surface background (flat and faded variants).                       |
-| `--dm-select-bg-hover`          | `color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted))` | Trigger background on hover.                                                |
-| `--dm-select-bg-focus`          | `var(--dm-bg-elevated)`                                   | Trigger background while focused or open.                                   |
-| `--dm-select-border`            | `var(--dm-border-strong)` (`var(--dm-border)` in faded)   | Border color of the bordered and faded variants.                            |
-| `--dm-select-radius`            | `var(--dm-radius-md)`                                     | Corner radius of the trigger (applies to the default `radius="md"`).        |
-| `--dm-select-height`            | `2.5rem`                                                  | Trigger height (min-height in multiple mode) for the default `size="md"`.   |
-| `--dm-select-placeholder-color` | `var(--dm-fg-subtle)`                                     | Placeholder text color while nothing is selected.                           |
-| `--dm-select-chevron-color`     | `var(--dm-fg-muted)`                                      | Color of the trailing chevron icon.                                         |
+| Token                           | Default                                                   | Description                                                               |
+| ------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `--dm-select-bg`                | `var(--dm-bg-muted)`                                      | Trigger surface background (flat and faded variants).                     |
+| `--dm-select-bg-hover`          | `color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted))` | Trigger background on hover.                                              |
+| `--dm-select-bg-focus`          | `var(--dm-bg-elevated)`                                   | Trigger background while focused or open.                                 |
+| `--dm-select-border`            | `var(--dm-border-strong)` (`var(--dm-border)` in faded)   | Border color of the bordered and faded variants.                          |
+| `--dm-select-radius`            | `var(--dm-radius-md)`                                     | Corner radius of the trigger (applies to the default `radius="md"`).      |
+| `--dm-select-height`            | `2.5rem`                                                  | Trigger height (min-height in multiple mode) for the default `size="md"`. |
+| `--dm-select-placeholder-color` | `var(--dm-fg-subtle)`                                     | Placeholder text color while nothing is selected.                         |
+| `--dm-select-chevron-color`     | `var(--dm-fg-muted)`                                      | Color of the trailing chevron icon.                                       |

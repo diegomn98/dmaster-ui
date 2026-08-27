@@ -23,9 +23,9 @@ Global defaults: `provideCardDefaults({...})` / `CARD_DEFAULTS`.
 
 Public CSS custom properties (all optional — every one falls back to the built-in value):
 
-| Token             | Default                                                                    | Description                                        |
-| ----------------- | -------------------------------------------------------------------------- | -------------------------------------------------- |
-| `--dm-card-bg`    | `var(--dm-bg-elevated)` (elevated/outlined) / `var(--dm-bg-muted)` (flat)   | Card surface color.                                |
-| `--dm-card-border`| `var(--dm-border-strong)`                                                   | Border color of the `outlined` appearance.         |
-| `--dm-card-radius`| `var(--dm-radius-xl)`                                                       | Corner rounding.                                   |
-| `--dm-card-padding`| per `padding` input (`0` / `var(--dm-space-3)` / `var(--dm-space-5)` / `var(--dm-space-8)`) | Inner padding, wins over the `padding` input. |
+| Token               | Default                                                                                     | Description                                   |
+| ------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `--dm-card-bg`      | `var(--dm-bg-elevated)` (elevated/outlined) / `var(--dm-bg-muted)` (flat)                   | Card surface color.                           |
+| `--dm-card-border`  | `var(--dm-border-strong)`                                                                   | Border color of the `outlined` appearance.    |
+| `--dm-card-radius`  | `var(--dm-radius-xl)`                                                                       | Corner rounding.                              |
+| `--dm-card-padding` | per `padding` input (`0` / `var(--dm-space-3)` / `var(--dm-space-5)` / `var(--dm-space-8)`) | Inner padding, wins over the `padding` input. |

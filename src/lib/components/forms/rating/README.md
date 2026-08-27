@@ -81,9 +81,9 @@ Every visual knob is exposed as a `--dm-rating-*` CSS variable — see the
 CSS variables, overridable at any scope (global, theme or a subtree). Each one
 falls back to the default shown, so nothing changes until you set it:
 
-| Token                     | Default              | Description                                    |
-| ------------------------- | -------------------- | ---------------------------------------------- |
-| `--dm-rating-star-size`   | `1.5rem`             | Star glyph size at the default `size="md"`.    |
-| `--dm-rating-star-gap`    | `var(--dm-space-1)`  | Gap between stars.                             |
-| `--dm-rating-fill`        | `var(--dm-warning)`  | Filled-star color base.                        |
-| `--dm-rating-empty-color` | `var(--dm-fg-subtle)`| Empty-star color.                              |
+| Token                     | Default               | Description                                 |
+| ------------------------- | --------------------- | ------------------------------------------- |
+| `--dm-rating-star-size`   | `1.5rem`              | Star glyph size at the default `size="md"`. |
+| `--dm-rating-star-gap`    | `var(--dm-space-1)`   | Gap between stars.                          |
+| `--dm-rating-fill`        | `var(--dm-warning)`   | Filled-star color base.                     |
+| `--dm-rating-empty-color` | `var(--dm-fg-subtle)` | Empty-star color.                           |

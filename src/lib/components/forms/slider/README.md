@@ -85,14 +85,14 @@ the `color` input via internal `--dm-slider-color*` variables.
 CSS variables, overridable at any scope (global, theme or a subtree). Each one
 falls back to the default shown, so nothing changes until you set it:
 
-| Token                           | Default                                                        | Description                             |
-| ------------------------------- | -------------------------------------------------------------- | --------------------------------------- |
-| `--dm-slider-track-bg`          | `var(--dm-bg-muted)`                                           | Unfilled track surface.                 |
-| `--dm-slider-track-radius`      | `var(--dm-radius-full)`                                        | Track (and fill) corner rounding.       |
-| `--dm-slider-thumb-bg`          | `var(--dm-bg)`                                                 | Thumb surface.                          |
-| `--dm-slider-thumb-border-width`| `2px`                                                          | Width of the thumb's colored border.    |
-| `--dm-slider-mark-bg`           | `color-mix(in srgb, var(--dm-fg) 28%, transparent)`            | Inactive track mark dot.                |
-| `--dm-slider-mark-bg-active`    | `color-mix(in srgb, var(--dm-slider-color-fg) 85%, transparent)`| Mark dot inside the filled range.      |
-| `--dm-slider-bubble-bg`         | `var(--dm-fg)`                                                 | Value bubble surface.                   |
-| `--dm-slider-bubble-fg`         | `var(--dm-bg)`                                                 | Value bubble text.                      |
-| `--dm-slider-bubble-radius`     | `var(--dm-radius-md)`                                          | Value bubble corner rounding.           |
+| Token                            | Default                                                          | Description                          |
+| -------------------------------- | ---------------------------------------------------------------- | ------------------------------------ |
+| `--dm-slider-track-bg`           | `var(--dm-bg-muted)`                                             | Unfilled track surface.              |
+| `--dm-slider-track-radius`       | `var(--dm-radius-full)`                                          | Track (and fill) corner rounding.    |
+| `--dm-slider-thumb-bg`           | `var(--dm-bg)`                                                   | Thumb surface.                       |
+| `--dm-slider-thumb-border-width` | `2px`                                                            | Width of the thumb's colored border. |
+| `--dm-slider-mark-bg`            | `color-mix(in srgb, var(--dm-fg) 28%, transparent)`              | Inactive track mark dot.             |
+| `--dm-slider-mark-bg-active`     | `color-mix(in srgb, var(--dm-slider-color-fg) 85%, transparent)` | Mark dot inside the filled range.    |
+| `--dm-slider-bubble-bg`          | `var(--dm-fg)`                                                   | Value bubble surface.                |
+| `--dm-slider-bubble-fg`          | `var(--dm-bg)`                                                   | Value bubble text.                   |
+| `--dm-slider-bubble-radius`      | `var(--dm-radius-md)`                                            | Value bubble corner rounding.        |

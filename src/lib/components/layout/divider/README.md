@@ -51,9 +51,9 @@ Or provide `DIVIDER_DEFAULTS` directly.
 
 Public CSS custom properties (all optional — overridable at any scope):
 
-| Token                      | Default                                                        | Description                                     |
-| -------------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
-| `--dm-divider-color`       | `var(--dm-border)`                                             | Line color.                                     |
-| `--dm-divider-thickness`   | `1px`                                                          | Line thickness.                                 |
-| `--dm-divider-label-color` | `var(--dm-fg-muted)`                                           | Projected label color.                          |
-| `--dm-divider-label-gap`   | `var(--dm-space-3)` (horizontal) / `var(--dm-space-2)` (vertical) | Gap between the label and the line halves.   |
+| Token                      | Default                                                           | Description                                |
+| -------------------------- | ----------------------------------------------------------------- | ------------------------------------------ |
+| `--dm-divider-color`       | `var(--dm-border)`                                                | Line color.                                |
+| `--dm-divider-thickness`   | `1px`                                                             | Line thickness.                            |
+| `--dm-divider-label-color` | `var(--dm-fg-muted)`                                              | Projected label color.                     |
+| `--dm-divider-label-gap`   | `var(--dm-space-3)` (horizontal) / `var(--dm-space-2)` (vertical) | Gap between the label and the line halves. |
