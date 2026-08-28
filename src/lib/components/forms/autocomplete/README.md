@@ -65,6 +65,7 @@ Wire it to a form (the control value is the free text):
 | Output           | Payload                | Fires when                   |
 | ---------------- | ---------------------- | ---------------------------- |
 | `optionSelected` | `DmAutocompleteOption` | The user picks a suggestion. |
+| `openChange`     | `boolean`              | The suggestions overlay opens / closes. |
 
 ## Methods
 

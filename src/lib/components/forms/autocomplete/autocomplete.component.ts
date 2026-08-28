@@ -136,6 +136,9 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
   /** Emitted when the user picks a suggestion (carries the full option). */
   readonly optionSelected = output<DmAutocompleteOption>();
 
+  /** Emitted whenever the suggestions overlay opens (`true`) or closes (`false`). */
+  readonly openChange = output<boolean>();
+
   // ---- State ---------------------------------------------------------------
   protected readonly labelId = `${this.uid}-label`;
   protected readonly inputId = `${this.uid}-input`;
@@ -280,12 +283,21 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
     return this.hasResults() || (hasText && !!this.noResultsLabel());
   }
 
+  /** Central open-state setter that emits `openChange` on a real transition. */
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
+    }
+    this.open.set(next);
+    this.openChange.emit(next);
+  }
+
   private syncOpen(): void {
-    this.open.set(this.shouldOpen());
+    this.setOpen(this.shouldOpen());
   }
 
   protected close(): void {
-    this.open.set(false);
+    this.setOpen(false);
   }
 
   // ---- Interaction ---------------------------------------------------------
@@ -331,7 +343,7 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
         // Force-open (openOnFocus semantics) so the user can browse options.
         if (this.hasResults()) {
           event.preventDefault();
-          this.open.set(true);
+          this.setOpen(true);
           this.activeIndex.set(this.firstEnabledIndex());
         }
       }

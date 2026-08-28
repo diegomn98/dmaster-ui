@@ -84,6 +84,7 @@ Day cells expose these state attributes for styling: `data-range-start`,
 | `weekdayFormat`   | `'narrow' \| 'short'`         | `'short'` | Weekday header length.                              |
 | `showTodayButton` | `boolean`                     | `true`    | "Today" quick-jump in the footer.                   |
 | `closeOnSelect`   | `boolean`                     | `true`    | Close after picking (a day, or completing a range). |
+| `openChange`      | `output<boolean>`             | —         | Emitted when the calendar overlay opens / closes.   |
 
 ## Inputs (field family)
 

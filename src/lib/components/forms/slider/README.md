@@ -50,7 +50,7 @@ import { DmSliderComponent } from '@dmaster/ui';
 | `marks`          | `{ value: number; label?: string }[] \| null`                                 | `null`      | Dots on the track (active when `≤ value`), with optional labels below.                  |
 | `ariaLabel`      | `string`                                                                      | `''`        | Accessible label of the slider.                                                         |
 
-Two-way `value` also emits `valueChange` for `[(value)]`.
+Two-way `value` also emits `valueChange` for `[(value)]`. `(changeEnd)` fires on pointer release or after a keyboard step (commit-on-release), carrying the committed value — use it to defer expensive work until the drag ends.
 
 ## Global defaults
 

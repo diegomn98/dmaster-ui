@@ -14,6 +14,8 @@ export interface DmToastOptions {
 export interface DmToastRef {
   id: number;
   dismiss(): void;
+  /** Resolves once the toast is gone (auto-dismiss, manual, or `dismissAll`). */
+  readonly afterDismissed: Promise<void>;
 }
 
 /** Internal representation of an active toast. */

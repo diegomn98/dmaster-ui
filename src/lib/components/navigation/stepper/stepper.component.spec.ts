@@ -1,5 +1,6 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { DmStepComponent } from './step.component';
 import { DmStepperComponent } from './stepper.component';
@@ -12,6 +13,7 @@ import { STEPPER_DEFAULTS } from './stepper.tokens';
       [(activeStep)]="active"
       [orientation]="orientation()"
       [linear]="linear()"
+      (completed)="completedCount = completedCount + 1"
       ariaLabel="Checkout"
     >
       <dm-step label="Account" [completed]="firstDone()">Panel 1</dm-step>
@@ -27,6 +29,7 @@ class HostComponent {
   readonly firstDone = signal(false);
   readonly shippingError = signal(false);
   readonly paymentDisabled = signal(false);
+  completedCount = 0;
 }
 
 describe('DmStepperComponent', () => {
@@ -56,6 +59,23 @@ describe('DmStepperComponent', () => {
     TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
     fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
+  });
+
+  it('emits (completed) when next() runs on the last reachable step', () => {
+    const cmp = fixture.debugElement.query(By.directive(DmStepperComponent))
+      .componentInstance as DmStepperComponent;
+
+    // Advancing from a middle step just moves on — no completion.
+    cmp.next();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.completedCount).toBe(0);
+
+    // On the last step, next() finishes the flow.
+    fixture.componentInstance.active.set(2);
+    fixture.detectChanges();
+    cmp.next();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.completedCount).toBe(1);
   });
 
   it('renders the first step active by default with the right ARIA wiring', () => {

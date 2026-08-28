@@ -93,6 +93,20 @@ describe('DmDatePickerComponent', () => {
     expect(panel()).toBeNull();
   });
 
+  it('emits openChange on open and close', () => {
+    const fixture = create();
+    const events: boolean[] = [];
+    fixture.componentInstance.openChange.subscribe((v) => events.push(v));
+
+    trigger(fixture).click();
+    fixture.detectChanges();
+    expect(events).toEqual([true]);
+
+    trigger(fixture).click();
+    fixture.detectChanges();
+    expect(events).toEqual([true, false]);
+  });
+
   it('renders 42 day cells', () => {
     const fixture = create();
     trigger(fixture).click();

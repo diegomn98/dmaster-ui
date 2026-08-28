@@ -122,6 +122,20 @@ describe('DmSelectComponent', () => {
     expect(trigger(fixture).textContent).toContain('Dog');
   });
 
+  it('emits openChange(true) on open and (false) on close', () => {
+    const fixture = createDirect();
+    const events: boolean[] = [];
+    fixture.componentInstance.openChange.subscribe((v) => events.push(v));
+
+    trigger(fixture).click();
+    tick();
+    expect(events).toEqual([true]);
+
+    trigger(fixture).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    tick();
+    expect(events).toEqual([true, false]);
+  });
+
   it('opens the listbox on click and closes on Escape', () => {
     const fixture = createDirect();
     trigger(fixture).click();

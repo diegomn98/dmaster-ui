@@ -6,6 +6,7 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
 } from '@angular/core';
 
@@ -67,6 +68,12 @@ export class DmStepperComponent {
   /** Accessible label for the step list. */
   readonly ariaLabel = input<string>('');
 
+  /**
+   * Emitted when `next()` is called on the last reachable step — i.e. the user
+   * confirmed the final step and the flow is done (wire a submit here).
+   */
+  readonly completed = output<void>();
+
   /** Registered `<dm-step>` children, in projection (DOM) order. @internal */
   readonly _steps = signal<DmStepComponent[]>([]);
 
@@ -118,7 +125,10 @@ export class DmStepperComponent {
     this.activeStep.set(index);
   }
 
-  /** Advances to the next reachable step, if any. */
+  /**
+   * Advances to the next reachable step. When there is none (already on the
+   * last reachable step), emits `(completed)` instead of doing nothing.
+   */
   next(): void {
     const from = this.activeStep();
     const steps = this._steps();
@@ -128,6 +138,7 @@ export class DmStepperComponent {
         return;
       }
     }
+    this.completed.emit();
   }
 
   /** Returns to the previous enabled step, if any. */

@@ -15,9 +15,10 @@ this.toast.show('Heads up', { variant: 'warning', dismissible: false });
 
 ## API
 
-- `show(message, options?)` → `DmToastRef { id, dismiss() }`
+- `show(message, options?)` → `DmToastRef { id, dismiss(), afterDismissed }`
 - `success | warning | danger(message, options?)` — variant helpers.
 - `dismiss(id)` / `dismissAll()`
+- `ref.afterDismissed` — a `Promise<void>` that resolves when the toast is gone (auto-dismiss, manual, or `dismissAll`).
 - Signal `toasts` (read-only) with the active queue.
 
 ### `DmToastOptions`

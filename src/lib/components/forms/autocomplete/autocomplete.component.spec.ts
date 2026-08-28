@@ -124,6 +124,19 @@ describe('DmAutocompleteComponent', () => {
     expect(options().length).toBe(0); // closed after selection
   });
 
+  it('emits openChange when the suggestions open and close', () => {
+    const fixture = create();
+    const events: boolean[] = [];
+    fixture.componentInstance.openChange.subscribe((v) => events.push(v));
+
+    type(fixture, 'ap'); // matches → opens
+    expect(events).toEqual([true]);
+
+    input(fixture).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    tick();
+    expect(events).toEqual([true, false]);
+  });
+
   it('closes on Escape but keeps the typed text', () => {
     const fixture = create();
     type(fixture, 'ban');

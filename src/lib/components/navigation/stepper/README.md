@@ -61,6 +61,7 @@ Drive progression from your own buttons with `next()` / `previous()`:
 | `color`                 | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`    | Accent of the active / completed indicators.           |
 | `size`                  | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`         | Indicator diameter + type scale.                       |
 | `ariaLabel`             | `string`                                                                      | `''`           | Accessible label for the step list.                    |
+| `completed`             | `output<void>`                                                                | —              | Fires when `next()` runs on the last reachable step.   |
 | `next()` / `previous()` | method                                                                        | —              | Move to the next reachable / previous enabled step.    |
 
 ## API — `dm-step`

@@ -150,6 +150,20 @@ describe('DmSliderComponent', () => {
     expect(fixture.componentInstance.value()).toBe(12);
   });
 
+  it('emits changeEnd on a keyboard step, carrying the committed value', () => {
+    const fixture = create();
+    fixture.componentRef.setInput('value', 20);
+    fixture.detectChanges();
+    const ends: number[] = [];
+    fixture.componentInstance.changeEnd.subscribe((v) => ends.push(v));
+
+    keydown(thumb(fixture), 'ArrowRight');
+    expect(ends).toEqual([21]);
+
+    keydown(thumb(fixture), 'Home');
+    expect(ends).toEqual([21, 0]);
+  });
+
   it('ArrowLeft / ArrowDown decrement by one step', () => {
     const fixture = create();
     fixture.componentRef.setInput('value', 10);
@@ -286,6 +300,24 @@ describe('DmSliderComponent', () => {
 
     expect(fixture.componentInstance.value()).toBe(50);
     expect(host(fixture).getAttribute('data-dragging')).toBe('true');
+  });
+
+  it('emits changeEnd once on pointer release when the value changed', () => {
+    const fixture = create();
+    fixture.componentRef.setInput('value', 0);
+    fixture.detectChanges();
+    mockTrack(fixture, 0, 200);
+    const ends: number[] = [];
+    fixture.componentInstance.changeEnd.subscribe((v) => ends.push(v));
+
+    const z = zone(fixture);
+    z.dispatchEvent(new MouseEvent('pointerdown', { clientX: 100, button: 0, bubbles: true }));
+    fixture.detectChanges();
+    z.dispatchEvent(new MouseEvent('pointerup', { clientX: 100, bubbles: true }));
+    fixture.detectChanges();
+
+    // pointerdown jumped to 50; release commits changeEnd once with the value.
+    expect(ends).toEqual([50]);
   });
 
   it('ignores secondary mouse buttons on pointerdown', () => {

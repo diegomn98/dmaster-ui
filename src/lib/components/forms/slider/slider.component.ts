@@ -8,6 +8,7 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -61,6 +62,14 @@ export class DmSliderComponent implements ControlValueAccessor {
 
   /** Current value. Two-way: `[(value)]`. */
   readonly value = model<number>(0);
+
+  /**
+   * Emitted once the user finishes an adjustment — on pointer release or after
+   * a keyboard step — carrying the committed value. Use it to defer expensive
+   * work (fetch, recompute) until the drag ends, unlike the continuous
+   * `valueChange`.
+   */
+  readonly changeEnd = output<number>();
 
   /** Lower bound of the range. */
   readonly min = input<number>(0);
@@ -127,6 +136,8 @@ export class DmSliderComponent implements ControlValueAccessor {
 
   private onChange: (value: number) => void = () => undefined;
   private onTouched: () => void = () => undefined;
+  /** Value snapshot at pointerdown, so changeEnd only fires on a real change. */
+  private dragStartValue = 0;
 
   // ---- Keyboard ------------------------------------------------------------
   protected onKeydown(event: KeyboardEvent): void {
@@ -160,8 +171,12 @@ export class DmSliderComponent implements ControlValueAccessor {
         return;
     }
     event.preventDefault();
+    const changed = next !== this.value();
     this.commit(next);
     this.onTouched();
+    if (changed) {
+      this.changeEnd.emit(this.value());
+    }
   }
 
   /** ±(max−min)/10, snapped to the step grid; falls back to ±step. */
@@ -182,6 +197,7 @@ export class DmSliderComponent implements ControlValueAccessor {
     }
     // Keep the browser from scrolling/selecting and from moving focus away.
     event.preventDefault();
+    this.dragStartValue = this.value();
     const zone = event.currentTarget as HTMLElement;
     try {
       zone.setPointerCapture?.(event.pointerId);
@@ -212,6 +228,9 @@ export class DmSliderComponent implements ControlValueAccessor {
       // Capture may already be gone (pointercancel, test environments).
     }
     this.onTouched();
+    if (this.value() !== this.dragStartValue) {
+      this.changeEnd.emit(this.value());
+    }
   }
 
   protected onBlur(): void {

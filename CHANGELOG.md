@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **New outputs for reacting to state changes:**
+  - **`dm-accordion` — `(itemToggled)`** emits `{ value, expanded }` on each
+    expand/collapse (previously you had to diff the `expandedValues` model).
+  - **`dm-stepper` — `(completed)`** fires when `next()` is called on the last
+    reachable step, so a wizard can wire its submit there.
+  - **`dm-slider` — `(changeEnd)`** fires on pointer release or after a keyboard
+    step (commit-on-release), carrying the committed value — for deferring
+    expensive work, unlike the continuous `valueChange`.
+  - **`dm-select`, `dm-autocomplete`, `dm-date-picker` — `(openChange)`** emits a
+    boolean when the overlay opens or closes.
+  - **`dm-toast` — `DmToastRef.afterDismissed`** (a `Promise<void>`) resolves
+    when the toast is gone (auto-dismiss, manual, or `dismissAll`).
 - **`dm-select` — `compareWith` input.** Match a value against the options by an
   identity field instead of by reference, so object selections survive a form
   reset or a new-reference `writeValue`

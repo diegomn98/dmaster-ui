@@ -29,6 +29,8 @@ export class DmToastService {
   private overlayRef: OverlayRef | null = null;
   private sequence = 0;
   private readonly timers = new Map<number, ReturnType<typeof setTimeout>>();
+  /** Resolvers for each toast's `afterDismissed` promise. */
+  private readonly dismissResolvers = new Map<number, () => void>();
 
   private readonly _toasts = signal<DmToastData[]>([]);
 
@@ -38,6 +40,8 @@ export class DmToastService {
   constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.timers.forEach((timer) => clearTimeout(timer));
+      this.dismissResolvers.forEach((resolve) => resolve());
+      this.dismissResolvers.clear();
       this.overlayRef?.dispose();
     });
   }
@@ -65,7 +69,11 @@ export class DmToastService {
       );
     }
 
-    return { id, dismiss: () => this.dismiss(id) };
+    let resolve!: () => void;
+    const afterDismissed = new Promise<void>((r) => (resolve = r));
+    this.dismissResolvers.set(id, resolve);
+
+    return { id, dismiss: () => this.dismiss(id), afterDismissed };
   }
 
   success(message: string, options: Omit<DmToastOptions, 'variant'> = {}): DmToastRef {
@@ -84,6 +92,11 @@ export class DmToastService {
     clearTimeout(this.timers.get(id));
     this.timers.delete(id);
     this._toasts.update((toasts) => toasts.filter((toast) => toast.id !== id));
+    const resolve = this.dismissResolvers.get(id);
+    if (resolve) {
+      this.dismissResolvers.delete(id);
+      resolve();
+    }
   }
 
   dismissAll(): void {

@@ -4,7 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DmAccordionComponent } from './accordion.component';
 import { DmAccordionItemComponent } from './accordion-item.component';
 import { ACCORDION_DEFAULTS } from './accordion.tokens';
-import { DmAccordionSelectionMode, DmAccordionVariant } from './accordion.types';
+import {
+  DmAccordionSelectionMode,
+  DmAccordionToggleEvent,
+  DmAccordionVariant,
+} from './accordion.types';
 
 @Component({
   imports: [DmAccordionComponent, DmAccordionItemComponent],
@@ -14,6 +18,7 @@ import { DmAccordionSelectionMode, DmAccordionVariant } from './accordion.types'
       [variant]="variant()"
       [disabled]="disabled()"
       [(expandedValues)]="expanded"
+      (itemToggled)="toggles.push($event)"
     >
       <dm-accordion-item value="a" title="First" subtitle="One">Body A</dm-accordion-item>
       <dm-accordion-item value="b" title="Second">Body B</dm-accordion-item>
@@ -29,6 +34,7 @@ class HostComponent {
   readonly disabled = signal(false);
   readonly thirdDisabled = signal(false);
   readonly expanded = signal<string[]>([]);
+  readonly toggles: DmAccordionToggleEvent[] = [];
 }
 
 describe('DmAccordionComponent', () => {
@@ -55,6 +61,20 @@ describe('DmAccordionComponent', () => {
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection()],
     });
+  });
+
+  it('emits (itemToggled) with value + expanded on expand and collapse', () => {
+    createHost();
+    triggers()[0].click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.toggles).toEqual([{ value: 'a', expanded: true }]);
+
+    triggers()[0].click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.toggles).toEqual([
+      { value: 'a', expanded: true },
+      { value: 'a', expanded: false },
+    ]);
   });
 
   it('renders every item collapsed by default', () => {

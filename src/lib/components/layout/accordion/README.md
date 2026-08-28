@@ -59,6 +59,7 @@ import { DmAccordionComponent, DmAccordionItemComponent } from '@dmaster/ui';
 | `variant`        | `'light' \| 'bordered' \| 'shadow' \| 'splitted'` | `'light'`  | Container surface treatment.                   |
 | `disabled`       | `boolean`                                         | `false`    | Disables every child item.                     |
 | `ariaLabel`      | `string`                                          | `''`       | ARIA label for the accordion region.           |
+| `itemToggled`    | `output<{ value; expanded }>`                     | —          | Emitted on each expand/collapse.               |
 
 ### Methods
 

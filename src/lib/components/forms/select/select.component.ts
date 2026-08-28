@@ -12,6 +12,7 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
   untracked,
   viewChild,
@@ -211,6 +212,9 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
 
   /** ARIA label prefix for per-chip remove buttons (localise in multilingual apps). */
   readonly removeAriaLabel = input<string>('Remove');
+
+  /** Emitted whenever the overlay opens (`true`) or closes (`false`). */
+  readonly openChange = output<boolean>();
 
   // ---- State ---------------------------------------------------------------
   protected readonly triggerId = `${this.uid}-trigger`;
@@ -718,7 +722,7 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
     const options = this.visibleOptions();
     const selectedIdx = options.findIndex((o) => this.isSelectedValue(o.item.value) && !o.disabled);
     this.activeIndex.set(selectedIdx >= 0 ? selectedIdx : this.firstEnabledIndex());
-    this.open.set(true);
+    this.setOpen(true);
     // Focus del filtro: en onOverlayAttach() — aquí el overlay aún no existe
     // (en zoneless la CD que lo monta corre DESPUÉS de cualquier microtask).
   }
@@ -734,11 +738,20 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
     }
   }
 
+  /** Central open-state setter that emits `openChange` on a real transition. */
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
+    }
+    this.open.set(next);
+    this.openChange.emit(next);
+  }
+
   protected close(returnFocus = true): void {
     if (!this.open()) {
       return;
     }
-    this.open.set(false);
+    this.setOpen(false);
     this.activeIndex.set(-1);
     this.onTouched();
     if (returnFocus) {

@@ -10,6 +10,7 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -197,6 +198,9 @@ export class DmDatePickerComponent implements ControlValueAccessor {
 
   /** Localised caption for the "Today" footer button. */
   readonly todayLabel = input<string>('Today');
+
+  /** Emitted whenever the calendar overlay opens (`true`) or closes (`false`). */
+  readonly openChange = output<boolean>();
 
   // ---- ARIA ids ------------------------------------------------------------
   protected readonly triggerId = `${this.uid}-trigger`;
@@ -566,6 +570,15 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     }
   }
 
+  /** Central open-state setter that emits `openChange` on a real transition. */
+  private setOpen(next: boolean): void {
+    if (this.open() === next) {
+      return;
+    }
+    this.open.set(next);
+    this.openChange.emit(next);
+  }
+
   protected openPanel(): void {
     if (this.open() || this.isDisabled()) {
       return;
@@ -578,14 +591,14 @@ export class DmDatePickerComponent implements ControlValueAccessor {
     this.focusedDate.set(base);
     this.focusedMonth.set(base.getMonth());
     this.focusedYear.set(base.getFullYear());
-    this.open.set(true);
+    this.setOpen(true);
   }
 
   protected close(returnFocus = true): void {
     if (!this.open()) {
       return;
     }
-    this.open.set(false);
+    this.setOpen(false);
     this.hoverDate.set(null);
     this.onTouched();
     if (returnFocus) {

@@ -52,6 +52,22 @@ describe('DmToastService', () => {
     expect(service.toasts().length).toBe(0);
   });
 
+  it('resolves afterDismissed on manual dismiss and on auto-dismiss', async () => {
+    const manual = service.show('Sticky', { duration: 0 });
+    let manualDone = false;
+    manual.afterDismissed.then(() => (manualDone = true));
+    manual.dismiss();
+    await Promise.resolve();
+    expect(manualDone).toBe(true);
+
+    const auto = service.show('Bye', { duration: 1000 });
+    let autoDone = false;
+    auto.afterDismissed.then(() => (autoDone = true));
+    vi.advanceTimersByTime(1000);
+    await Promise.resolve();
+    expect(autoDone).toBe(true);
+  });
+
   it('variant helpers stack toasts and dismissAll clears them', () => {
     service.success('a');
     service.warning('b');
