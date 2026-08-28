@@ -101,6 +101,27 @@ describe('DmSelectComponent', () => {
     expect(btn.textContent).toContain('Choose one');
   });
 
+  it('matches object values via compareWith (survives a new reference)', () => {
+    interface Pet {
+      id: string;
+      name: string;
+    }
+    const petItems: DmSelectItem<Pet>[] = [
+      { value: { id: 'cat', name: 'Cat' }, label: 'Cat' },
+      { value: { id: 'dog', name: 'Dog' }, label: 'Dog' },
+    ];
+    const fixture = TestBed.createComponent(DmSelectComponent<Pet>);
+    fixture.componentRef.setInput('items', petItems);
+    fixture.componentRef.setInput('compareWith', (a: Pet, b: Pet) => a.id === b.id);
+    // Brand-new object reference with the same identity as an option.
+    fixture.componentRef.setInput('value', { id: 'dog', name: 'Dog' });
+    fixture.detectChanges();
+
+    // Trigger shows the matched option's label → selection matched by id, not
+    // by reference (which would show the placeholder).
+    expect(trigger(fixture).textContent).toContain('Dog');
+  });
+
   it('opens the listbox on click and closes on Escape', () => {
     const fixture = createDirect();
     trigger(fixture).click();

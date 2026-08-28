@@ -33,6 +33,19 @@ class FormHostComponent {
   readonly control = new FormControl<string | null>(null);
 }
 
+@Component({
+  imports: [DmRadioGroupComponent, DmRadioComponent],
+  template: `
+    <dm-radio-group [(value)]="value" ariaLabel="Plan">
+      <dm-radio value="free">Free</dm-radio>
+      <dm-radio value="pro">Pro</dm-radio>
+    </dm-radio-group>
+  `,
+})
+class NoNameHostComponent {
+  readonly value = signal<string | null>(null);
+}
+
 describe('DmRadioGroupComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -67,6 +80,16 @@ describe('DmRadioGroupComponent', () => {
     expect(items[0].getAttribute('tabindex')).toBe('0');
     expect(items[1].getAttribute('tabindex')).toBe('-1');
     expect(items[2].getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('works without an explicit name (auto-generated) and still selects on click', () => {
+    // `name` used to be required — creating this group with no name would throw.
+    const fixture = TestBed.createComponent(NoNameHostComponent);
+    fixture.detectChanges();
+
+    radios(fixture)[1].click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.value()).toBe('pro');
   });
 
   it('selects a value on click and updates aria-checked + tabindex', () => {

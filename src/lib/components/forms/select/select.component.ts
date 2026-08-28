@@ -144,6 +144,14 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
   /** Two-way values for multiple-select mode. */
   readonly values = model<T[]>([]);
 
+  /**
+   * Equality used to match a value against the options (single and multiple).
+   * Defaults to strict `===`. Provide it to select **objects by an identity
+   * field** so selection survives a form reset or a new-reference `writeValue`
+   * (e.g. `[compareWith]="(a, b) => a.id === b.id"`).
+   */
+  readonly compareWith = input<(a: T, b: T) => boolean>((a, b) => a === b);
+
   /** Shows an inline search box in the panel that filters the options. */
   readonly filterable = input(false, { transform: booleanAttribute });
 
@@ -409,7 +417,7 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
     if (v === null || v === undefined) {
       return null;
     }
-    return this.knownItems().find((item) => item.value === v) ?? null;
+    return this.knownItems().find((item) => this.sameValue(item.value, v)) ?? null;
   });
 
   /** The multi-mode selected items (for the chips), in known-items order. */
@@ -502,8 +510,13 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
     return `${this.uid}-option-${index}`;
   }
 
+  /** Value equality via `compareWith` (default strict `===`). */
+  private sameValue(a: T, b: T): boolean {
+    return this.compareWith()(a, b);
+  }
+
   protected isSelectedValue(value: T): boolean {
-    return this.selectedValues().includes(value);
+    return this.selectedValues().some((v) => this.sameValue(v, value));
   }
 
   // ---- CVA -----------------------------------------------------------------
@@ -750,7 +763,9 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
 
   private toggleValue(value: T): void {
     const current = this.values();
-    const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+    const next = current.some((v) => this.sameValue(v, value))
+      ? current.filter((v) => !this.sameValue(v, value))
+      : [...current, value];
     this.values.set(next);
     this.onChange(next);
   }
@@ -761,22 +776,21 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
     if (this.isDisabled()) {
       return;
     }
-    const next = this.values().filter((v) => v !== value);
+    const next = this.values().filter((v) => !this.sameValue(v, value));
     this.values.set(next);
     this.onChange(next);
     this.onTouched();
   }
 
   protected onSelectAll(): void {
-    const next = new Set(this.values());
+    const next = [...this.values()];
     for (const option of this.visibleOptions()) {
-      if (!option.disabled) {
-        next.add(option.item.value);
+      if (!option.disabled && !next.some((v) => this.sameValue(v, option.item.value))) {
+        next.push(option.item.value);
       }
     }
-    const arr = [...next];
-    this.values.set(arr);
-    this.onChange(arr);
+    this.values.set(next);
+    this.onChange(next);
   }
 
   protected onClearAll(): void {

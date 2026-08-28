@@ -22,7 +22,7 @@ stop; arrows move focus AND selection).
 
 | Input         | Type                                                                          | Default      | Description                                                        |
 | ------------- | ----------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------ |
-| `name`        | `string` (required)                                                           | —            | Attribute `name` of a hidden input, for plain `<form>` submission. |
+| `name`        | `string`                                                                      | auto id      | Attribute `name` of a hidden input for plain `<form>` submission. Optional — defaults to a generated id. |
 | `value`       | `model<unknown>`                                                              | `null`       | Two-way selected value (`[(value)]` / `(valueChange)`).            |
 | `disabled`    | `boolean`                                                                     | `false`      | Disables every radio (combined with the forms `disabled`).         |
 | `color`       | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`  | Semantic color applied to every child radio.                       |

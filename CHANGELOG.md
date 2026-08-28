@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`dm-select` — `compareWith` input.** Match a value against the options by an
+  identity field instead of by reference, so object selections survive a form
+  reset or a new-reference `writeValue`
+  (`[compareWith]="(a, b) => a.id === b.id"`). Defaults to strict `===`.
 - **`color` input on `dm-checkbox`, `dm-switch` and `dm-avatar`.** Brings them
   in line with the other selection controls (radio-group, rating, toggle-group):
   a semantic `color` (`default` | `primary` | `secondary` | `success` |
@@ -26,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shown verbatim instead of being re-filtered by the typed text, which
   previously dropped async results whose label did not contain the query).
   `filterFn` supplies a custom matcher (e.g. match on a description or fuzzy).
+
+### Changed
+
+- **`dm-radio-group` — `name` is now optional.** It defaults to a generated
+  unique id; set it only when you rely on native `<form>` serialization.
+  Backward compatible — groups that already pass `name` are unaffected.
 
 ### Fixed
 
