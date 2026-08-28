@@ -6,15 +6,45 @@
   overflow: hidden;
   flex-shrink: 0;
 
+  // Color × the tinted accent vars (default input value is `primary`, so the
+  // render is unchanged). Tint = `-subtle` fill + `-text` fg = AA by design.
+  --dm-av-bg: var(--dm-primary-subtle);
+  --dm-av-fg: var(--dm-primary-text);
+
   // Relleno PLANO. Un color de marca tenue sostiene las iniciales; sin
   // gradientes ni halos.
-  background: var(--dm-avatar-bg, var(--dm-primary-subtle));
-  color: var(--dm-avatar-fg, var(--dm-primary-text));
+  background: var(--dm-avatar-bg, var(--dm-av-bg));
+  color: var(--dm-avatar-fg, var(--dm-av-fg));
 
   // Borde limpio de 1px + sombra de contacto muy sutil que lo asienta.
   border: 1px solid var(--dm-avatar-border, var(--dm-border));
   box-shadow: var(--dm-shadow-sm);
   user-select: none;
+}
+
+:host([data-color='default']) {
+  --dm-av-bg: var(--dm-default-subtle);
+  --dm-av-fg: var(--dm-default-text);
+}
+:host([data-color='primary']) {
+  --dm-av-bg: var(--dm-primary-subtle);
+  --dm-av-fg: var(--dm-primary-text);
+}
+:host([data-color='secondary']) {
+  --dm-av-bg: var(--dm-secondary-subtle);
+  --dm-av-fg: var(--dm-secondary-text);
+}
+:host([data-color='success']) {
+  --dm-av-bg: var(--dm-success-subtle);
+  --dm-av-fg: var(--dm-success-text);
+}
+:host([data-color='warning']) {
+  --dm-av-bg: var(--dm-warning-subtle);
+  --dm-av-fg: var(--dm-warning-text);
+}
+:host([data-color='danger']) {
+  --dm-av-bg: var(--dm-danger-subtle);
+  --dm-av-fg: var(--dm-danger-text);
 }
 
 :host([data-shape='circle']) {
@@ -37,7 +67,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--dm-avatar-fg, var(--dm-primary-text));
+  color: var(--dm-avatar-fg, var(--dm-av-fg));
 }
 
 // Icono genérico silencioso, en el gris sutil del tema.

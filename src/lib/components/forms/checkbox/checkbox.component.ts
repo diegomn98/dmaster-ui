@@ -12,7 +12,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { CHECKBOX_DEFAULTS } from './checkbox.tokens';
-import { DmCheckboxSize } from './checkbox.types';
+import { DmCheckboxColor, DmCheckboxSize } from './checkbox.types';
 
 /**
  * Checkbox sobre un `<input type="checkbox">` nativo (semántica de
@@ -37,6 +37,7 @@ import { DmCheckboxSize } from './checkbox.types';
     },
   ],
   host: {
+    '[attr.data-color]': 'color()',
     '[attr.data-size]': 'size()',
   },
 })
@@ -45,6 +46,9 @@ export class DmCheckboxComponent implements ControlValueAccessor {
 
   /** Checked state. Two-way: `[(checked)]`. */
   readonly checked = model<boolean>(false);
+
+  /** Semantic color of the checked / indeterminate fill. */
+  readonly color = input<DmCheckboxColor>(this.defaults.color);
 
   /** Visual indeterminate state (shown while not checked). */
   readonly indeterminate = input(false, { transform: booleanAttribute });

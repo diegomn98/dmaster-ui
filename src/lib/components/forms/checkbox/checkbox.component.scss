@@ -2,6 +2,56 @@
 
 :host {
   display: inline-flex;
+
+  // Color × checked map to generic accent vars so the rules below never repeat
+  // per color. Default input value is `primary`, so the render is unchanged;
+  // `--dm-cb-accent-fg` is each color's on-solid text token (AA by design).
+  --dm-cb-accent: var(--dm-primary);
+  --dm-cb-accent-hover: var(--dm-primary-hover);
+  --dm-cb-accent-soft: var(--dm-primary-subtle);
+  --dm-cb-accent-fg: var(--dm-primary-fg);
+
+  &[data-color='default'] {
+    --dm-cb-accent: var(--dm-fg);
+    --dm-cb-accent-hover: var(--dm-fg);
+    --dm-cb-accent-soft: var(--dm-default-subtle);
+    --dm-cb-accent-fg: var(--dm-bg);
+  }
+
+  &[data-color='primary'] {
+    --dm-cb-accent: var(--dm-primary);
+    --dm-cb-accent-hover: var(--dm-primary-hover);
+    --dm-cb-accent-soft: var(--dm-primary-subtle);
+    --dm-cb-accent-fg: var(--dm-primary-fg);
+  }
+
+  &[data-color='secondary'] {
+    --dm-cb-accent: var(--dm-secondary);
+    --dm-cb-accent-hover: var(--dm-secondary-hover);
+    --dm-cb-accent-soft: var(--dm-secondary-subtle);
+    --dm-cb-accent-fg: var(--dm-secondary-fg);
+  }
+
+  &[data-color='success'] {
+    --dm-cb-accent: var(--dm-success);
+    --dm-cb-accent-hover: var(--dm-success-hover);
+    --dm-cb-accent-soft: var(--dm-success-subtle);
+    --dm-cb-accent-fg: var(--dm-success-fg);
+  }
+
+  &[data-color='warning'] {
+    --dm-cb-accent: var(--dm-warning);
+    --dm-cb-accent-hover: var(--dm-warning-hover);
+    --dm-cb-accent-soft: var(--dm-warning-subtle);
+    --dm-cb-accent-fg: var(--dm-warning-fg);
+  }
+
+  &[data-color='danger'] {
+    --dm-cb-accent: var(--dm-danger);
+    --dm-cb-accent-hover: var(--dm-danger-hover);
+    --dm-cb-accent-soft: var(--dm-danger-subtle);
+    --dm-cb-accent-fg: var(--dm-danger-fg);
+  }
 }
 
 .dm-checkbox {
@@ -43,10 +93,10 @@
   // Rounder box — sits closer to a squircle than a sharp tick.
   border-radius: var(--dm-checkbox-radius, 0.4375rem);
   background-color: var(--dm-checkbox-bg, var(--dm-bg-elevated));
-  color: var(--dm-checkbox-fg, var(--dm-primary-fg));
+  color: var(--dm-checkbox-fg, var(--dm-cb-accent-fg));
 
   // The ring layer sits at 0 spread so the hover halo grows instead of pops.
-  box-shadow: 0 0 0 0 var(--dm-primary-subtle);
+  box-shadow: 0 0 0 0 var(--dm-cb-accent-soft);
 
   @include mixins.transition(background-color, border-color, box-shadow, transform);
 
@@ -64,8 +114,8 @@
 }
 
 .dm-checkbox:hover:not(.dm-checkbox--disabled) .dm-checkbox__box {
-  border-color: color-mix(in srgb, var(--dm-primary) 40%, var(--dm-border-strong));
-  box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+  border-color: color-mix(in srgb, var(--dm-cb-accent) 40%, var(--dm-border-strong));
+  box-shadow: 0 0 0 3px var(--dm-cb-accent-soft);
 }
 
 // Bouncy press feedback (same elastic language as the switch thumb).
@@ -75,9 +125,9 @@
 
 .dm-checkbox--checked .dm-checkbox__box {
   // Brand solid = flat primary, no gradient or sheen.
-  border-color: var(--dm-checkbox-border-checked, var(--dm-primary));
-  background-color: var(--dm-checkbox-bg-checked, var(--dm-primary));
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--dm-primary) 35%, transparent);
+  border-color: var(--dm-checkbox-border-checked, var(--dm-cb-accent));
+  background-color: var(--dm-checkbox-bg-checked, var(--dm-cb-accent));
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--dm-cb-accent) 35%, transparent);
 
   svg {
     opacity: 1;
@@ -89,8 +139,8 @@
 // distinct from the fully-checked box; the dash grows in from the center (the
 // element mounts in-state, so it animates via keyframes).
 .dm-checkbox--indeterminate .dm-checkbox__box {
-  border-color: var(--dm-primary);
-  background-color: color-mix(in srgb, var(--dm-primary) 82%, var(--dm-bg-elevated));
+  border-color: var(--dm-cb-accent);
+  background-color: color-mix(in srgb, var(--dm-cb-accent) 82%, var(--dm-bg-elevated));
 
   svg {
     opacity: 1;
@@ -101,9 +151,9 @@
 
 .dm-checkbox--checked:hover:not(.dm-checkbox--disabled) .dm-checkbox__box,
 .dm-checkbox--indeterminate:hover:not(.dm-checkbox--disabled) .dm-checkbox__box {
-  border-color: var(--dm-primary-hover);
-  background-color: var(--dm-primary-hover);
-  box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+  border-color: var(--dm-cb-accent-hover);
+  background-color: var(--dm-cb-accent-hover);
+  box-shadow: 0 0 0 3px var(--dm-cb-accent-soft);
 }
 
 .dm-checkbox__input:focus-visible ~ .dm-checkbox__box {

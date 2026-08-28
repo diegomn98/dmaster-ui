@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`color` input on `dm-checkbox`, `dm-switch` and `dm-avatar`.** Brings them
+  in line with the other selection controls (radio-group, rating, toggle-group):
+  a semantic `color` (`default` | `primary` | `secondary` | `success` |
+  `warning` | `danger`, default `primary`) tints the checked fill / track /
+  initials. Each color uses its on-solid or `-text` token so contrast stays
+  WCAG AA. Overridable per-app via the components' `*_DEFAULTS`.
 - **`dm-button` — boolean `loading` input.** The ergonomic shortcut for the
   common async case: `<dm-button [loading]="saving()">` shows the spinner and
   disables the button, no string state needed. It accepts a bare attribute

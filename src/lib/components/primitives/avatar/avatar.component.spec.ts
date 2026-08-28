@@ -85,11 +85,19 @@ describe('DmAvatarComponent', () => {
 
   it('honors defaults injected via AVATAR_DEFAULTS', () => {
     TestBed.overrideProvider(AVATAR_DEFAULTS, {
-      useValue: { size: 'sm', shape: 'square' },
+      useValue: { size: 'sm', shape: 'square', color: 'success' },
     });
     createComponent();
 
     expect(host().style.width).toBe('2rem');
     expect(host().getAttribute('data-shape')).toBe('square');
+    expect(host().getAttribute('data-color')).toBe('success');
+  });
+
+  it('reflects the color input as data-color', () => {
+    createComponent();
+    fixture.componentRef.setInput('color', 'danger');
+    fixture.detectChanges();
+    expect(host().getAttribute('data-color')).toBe('danger');
   });
 });

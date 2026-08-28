@@ -1,13 +1,15 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmCheckboxSize } from './checkbox.types';
+import { DmCheckboxColor, DmCheckboxSize } from './checkbox.types';
 
 /** Globally overridable defaults for `dm-checkbox`. */
 export interface DmCheckboxDefaults {
+  color: DmCheckboxColor;
   size: DmCheckboxSize;
 }
 
 export const DM_CHECKBOX_FALLBACK_DEFAULTS: DmCheckboxDefaults = {
+  color: 'primary',
   size: 'md',
 };
 

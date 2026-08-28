@@ -1,16 +1,18 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmAvatarShape, DmAvatarSize } from './avatar.types';
+import { DmAvatarColor, DmAvatarShape, DmAvatarSize } from './avatar.types';
 
 /** Globally overridable defaults for `dm-avatar`. */
 export interface DmAvatarDefaults {
   size: DmAvatarSize;
   shape: DmAvatarShape;
+  color: DmAvatarColor;
 }
 
 export const DM_AVATAR_FALLBACK_DEFAULTS: DmAvatarDefaults = {
   size: 'md',
   shape: 'circle',
+  color: 'primary',
 };
 
 /** Injection token holding the defaults every `dm-avatar` starts from. */

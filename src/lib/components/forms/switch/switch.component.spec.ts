@@ -32,6 +32,16 @@ describe('DmSwitchComponent', () => {
     expect(button(fixture).getAttribute('data-size')).toBe('md');
   });
 
+  it('reflects the color input as data-color (default primary)', () => {
+    const fixture = TestBed.createComponent(DmSwitchComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('data-color')).toBe('primary');
+
+    fixture.componentRef.setInput('color', 'warning');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('data-color')).toBe('warning');
+  });
+
   it('toggles on click and emits checkedChange', () => {
     const fixture = TestBed.createComponent(DmSwitchComponent);
     fixture.detectChanges();

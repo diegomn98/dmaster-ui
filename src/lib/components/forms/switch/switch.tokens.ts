@@ -1,13 +1,15 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmSwitchSize } from './switch.types';
+import { DmSwitchColor, DmSwitchSize } from './switch.types';
 
 /** Globally overridable defaults for `dm-switch`. */
 export interface DmSwitchDefaults {
+  color: DmSwitchColor;
   size: DmSwitchSize;
 }
 
 export const DM_SWITCH_FALLBACK_DEFAULTS: DmSwitchDefaults = {
+  color: 'primary',
   size: 'md',
 };
 

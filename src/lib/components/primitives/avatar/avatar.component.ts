@@ -9,7 +9,7 @@ import {
 
 import { toCssSize } from '../../../core/utils/css';
 import { AVATAR_DEFAULTS } from './avatar.tokens';
-import { DmAvatarShape, DmAvatarSize } from './avatar.types';
+import { DmAvatarColor, DmAvatarShape, DmAvatarSize } from './avatar.types';
 
 /**
  * Avatar with automatic fallback chain: image → initials → generic icon.
@@ -28,6 +28,7 @@ import { DmAvatarShape, DmAvatarSize } from './avatar.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.data-shape]': 'shape()',
+    '[attr.data-color]': 'color()',
     // Only expose an `img` role when we can actually name it (alt/initials).
     // A nameless fallback (generic icon) is decorative — no role, no violation.
     '[attr.role]': 'hostLabel() ? "img" : null',
@@ -54,6 +55,9 @@ export class DmAvatarComponent {
 
   /** Shape. */
   readonly shape = input<DmAvatarShape>(this.defaults.shape);
+
+  /** Semantic color of the initials tint. */
+  readonly color = input<DmAvatarColor>(this.defaults.color);
 
   /** Resets automatically whenever `src` changes. */
   protected readonly failed = linkedSignal({

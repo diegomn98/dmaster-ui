@@ -13,7 +13,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { dmUid } from '../../../core/utils/uid';
 import { SWITCH_DEFAULTS } from './switch.tokens';
-import { DmSwitchSize } from './switch.types';
+import { DmSwitchColor, DmSwitchSize } from './switch.types';
 
 /**
  * Toggle switch (`role="switch"`). Works standalone with `[(checked)]` and
@@ -36,6 +36,9 @@ import { DmSwitchSize } from './switch.types';
       multi: true,
     },
   ],
+  host: {
+    '[attr.data-color]': 'color()',
+  },
 })
 export class DmSwitchComponent implements ControlValueAccessor {
   private readonly defaults = inject(SWITCH_DEFAULTS);
@@ -43,6 +46,9 @@ export class DmSwitchComponent implements ControlValueAccessor {
 
   /** Checked state. Two-way: `[(checked)]`. */
   readonly checked = model<boolean>(false);
+
+  /** Semantic color of the checked track. */
+  readonly color = input<DmSwitchColor>(this.defaults.color);
 
   /** Disables the control (combined with the forms `disabled` state). */
   readonly disabled = input(false, { transform: booleanAttribute });

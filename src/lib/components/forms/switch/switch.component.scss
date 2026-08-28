@@ -4,6 +4,36 @@
   display: inline-flex;
   align-items: center;
   gap: var(--dm-space-2);
+
+  // Checked-track color × the accent var (default input value is `primary`, so
+  // the render is unchanged). The thumb stays white on every color.
+  --dm-sw-accent: var(--dm-primary);
+  --dm-sw-accent-hover: var(--dm-primary-hover);
+
+  &[data-color='default'] {
+    --dm-sw-accent: var(--dm-fg);
+    --dm-sw-accent-hover: var(--dm-fg);
+  }
+  &[data-color='primary'] {
+    --dm-sw-accent: var(--dm-primary);
+    --dm-sw-accent-hover: var(--dm-primary-hover);
+  }
+  &[data-color='secondary'] {
+    --dm-sw-accent: var(--dm-secondary);
+    --dm-sw-accent-hover: var(--dm-secondary-hover);
+  }
+  &[data-color='success'] {
+    --dm-sw-accent: var(--dm-success);
+    --dm-sw-accent-hover: var(--dm-success-hover);
+  }
+  &[data-color='warning'] {
+    --dm-sw-accent: var(--dm-warning);
+    --dm-sw-accent-hover: var(--dm-warning-hover);
+  }
+  &[data-color='danger'] {
+    --dm-sw-accent: var(--dm-danger);
+    --dm-sw-accent-hover: var(--dm-danger-hover);
+  }
 }
 
 .dm-switch__control {
@@ -41,11 +71,11 @@
 
   &[aria-checked='true'] {
     // Brand solid = flat primary, no vertical sheen.
-    background-color: var(--dm-switch-track-bg-checked, var(--dm-primary));
+    background-color: var(--dm-switch-track-bg-checked, var(--dm-sw-accent));
     box-shadow: inset 0 1px 1px rgb(0 0 0 / 10%);
 
     &:hover:not(:disabled) {
-      background-color: var(--dm-switch-track-bg-checked-hover, var(--dm-primary-hover));
+      background-color: var(--dm-switch-track-bg-checked-hover, var(--dm-sw-accent-hover));
     }
   }
 
