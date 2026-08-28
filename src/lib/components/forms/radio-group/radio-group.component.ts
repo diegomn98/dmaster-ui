@@ -1,6 +1,8 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -54,6 +56,7 @@ import type { DmRadioComponent } from './radio.component';
 })
 export class DmRadioGroupComponent implements ControlValueAccessor {
   private readonly defaults = inject(RADIO_DEFAULTS);
+  private readonly document = inject(DOCUMENT);
 
   /** Attribute `name` used by the hidden input for plain `<form>` submission. */
   readonly name = input.required<string>();
@@ -62,7 +65,7 @@ export class DmRadioGroupComponent implements ControlValueAccessor {
   readonly value = model<unknown>(null);
 
   /** Disables every radio in the group (combined with the forms `disabled`). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Semantic color applied to every child radio. */
   readonly color = input<DmRadioColor>(this.defaults.color);
@@ -130,7 +133,7 @@ export class DmRadioGroupComponent implements ControlValueAccessor {
       return;
     }
     // Find the radio that currently owns focus; fall back to the selected one.
-    const activeEl = typeof document !== 'undefined' ? document.activeElement : null;
+    const activeEl = this.document.activeElement;
     let currentIdx = radios.findIndex((r) => r.contains(activeEl));
     if (currentIdx === -1) {
       currentIdx = radios.findIndex((r) => r.checked());

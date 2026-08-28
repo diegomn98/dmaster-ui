@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  booleanAttribute,
   computed,
   contentChild,
   effect,
@@ -49,7 +50,7 @@ export class DmFormFieldComponent {
   readonly error = input<string>('');
 
   /** Shows the required marker next to the label. */
-  readonly required = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
 
   protected readonly hintId = `${this.uid}-hint`;
   protected readonly errorId = `${this.uid}-error`;

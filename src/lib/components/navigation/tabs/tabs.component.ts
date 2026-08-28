@@ -5,6 +5,7 @@ import {
   ElementRef,
   afterNextRender,
   afterRenderEffect,
+  booleanAttribute,
   computed,
   inject,
   input,
@@ -68,16 +69,16 @@ export class DmTabsComponent {
   readonly radius = input<DmTabsRadius>(this.defaults.radius);
 
   /** Disables the whole tablist. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Where the tablist sits. `start` renders the tablist vertically. */
   readonly placement = input<DmTabsPlacement>(this.defaults.placement);
 
   /** Stretch tabs to share the full width equally. */
-  readonly fullWidth = input<boolean>(this.defaults.fullWidth);
+  readonly fullWidth = input(this.defaults.fullWidth, { transform: booleanAttribute });
 
   /** Draw a separator rule under the tablist (light / underlined variants). */
-  readonly divider = input<boolean>(this.defaults.divider);
+  readonly divider = input(this.defaults.divider, { transform: booleanAttribute });
 
   /** Accessible label for the tablist. */
   readonly ariaLabel = input<string>('');
@@ -196,8 +197,11 @@ export class DmTabsComponent {
     return this._tabs().find((t) => t.value() === value)?.id ?? null;
   }
 
-  /** Activates the tab with the given value (no-op if it is disabled). */
+  /** Activates the tab with the given value (no-op if it — or the tablist — is disabled). */
   select(value: string): void {
+    if (this.disabled()) {
+      return;
+    }
     const tab = this._tabs().find((t) => t.value() === value);
     if (!tab || tab.disabled()) {
       return;
@@ -236,7 +240,7 @@ export class DmTabsComponent {
   }
 
   private activateAndFocus(tab: DmTabComponent | undefined): void {
-    if (!tab) {
+    if (!tab || this.disabled()) {
       return;
     }
     this.selectedValue.set(tab.value());

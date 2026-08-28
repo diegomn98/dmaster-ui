@@ -6,7 +6,7 @@
   [attr.data-variant]="resolvedVariant()"
   [attr.data-radius]="resolvedRadius()"
   [attr.data-size]="resolvedSize()"
-  [attr.data-state]="state()"
+  [attr.data-state]="resolvedState()"
   [attr.aria-busy]="isLoading()"
   [attr.aria-label]="ariaLabel() || null"
   (click)="onClick($event)"
@@ -15,9 +15,9 @@
     <ng-content />
   </span>
 
-  @if (state() !== 'idle') {
+  @if (resolvedState() !== 'idle') {
     <span class="dm-button__indicator" aria-hidden="true">
-      @switch (state()) {
+      @switch (resolvedState()) {
         @case ('loading') {
           <dm-spinner size="1em" [strokeWidth]="3" />
         }

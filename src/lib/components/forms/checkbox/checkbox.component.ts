@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -46,10 +47,10 @@ export class DmCheckboxComponent implements ControlValueAccessor {
   readonly checked = model<boolean>(false);
 
   /** Visual indeterminate state (shown while not checked). */
-  readonly indeterminate = input<boolean>(false);
+  readonly indeterminate = input(false, { transform: booleanAttribute });
 
   /** Disables the control (combined with the forms `disabled` state). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Size scale. */
   readonly size = input<DmCheckboxSize>(this.defaults.size);

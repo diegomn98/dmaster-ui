@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -71,16 +72,16 @@ export class DmSearchFieldComponent implements ControlValueAccessor {
   readonly error = input<string>('');
 
   /** Disables the field. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Renders the field read-only (no clear button, not editable). */
-  readonly readOnly = input<boolean>(false);
+  readonly readOnly = input(false, { transform: booleanAttribute });
 
   /** Shows the required marker next to the label. */
-  readonly required = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
 
   /** Shows the × button (and enables Escape-to-clear) once there is text. */
-  readonly clearable = input<boolean>(true);
+  readonly clearable = input(true, { transform: booleanAttribute });
 
   /** Semantic color for the focus ring and caret. */
   readonly color = input<DmSearchFieldColor>(this.defaults.color);

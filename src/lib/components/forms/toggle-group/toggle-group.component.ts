@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -71,6 +72,7 @@ import type { DmToggleComponent } from './toggle.component';
 })
 export class DmToggleGroupComponent implements ControlValueAccessor {
   private readonly defaults = inject(TOGGLE_GROUP_DEFAULTS);
+  private readonly document = inject(DOCUMENT);
 
   /** Multi-select mode: independent toggles instead of one exclusive choice. */
   readonly multiple = input(false, { transform: booleanAttribute });
@@ -164,7 +166,7 @@ export class DmToggleGroupComponent implements ControlValueAccessor {
     if (!toggles.length) {
       return;
     }
-    const activeEl = typeof document !== 'undefined' ? document.activeElement : null;
+    const activeEl = this.document.activeElement;
     let currentIdx = toggles.findIndex((t) => t.contains(activeEl));
     if (currentIdx === -1) {
       currentIdx = toggles.findIndex((t) => t.selected());

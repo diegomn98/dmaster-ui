@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 
 import { PROGRESS_DEFAULTS } from './progress.tokens';
 import { DmProgressColor, DmProgressFormatFn, DmProgressSize } from './progress.types';
@@ -55,13 +62,13 @@ export class DmProgressComponent {
   readonly label = input<string>('');
 
   /** Shows the formatted value at the end of the label row. */
-  readonly showValueLabel = input<boolean>(false);
+  readonly showValueLabel = input(false, { transform: booleanAttribute });
 
   /** Formats the value label. Defaults to a rounded percentage (`73%`). */
   readonly formatValue = input<DmProgressFormatFn>(DEFAULT_FORMAT_VALUE);
 
   /** Overlays diagonal stripes on the fill. */
-  readonly striped = input<boolean>(false);
+  readonly striped = input(false, { transform: booleanAttribute });
 
   /** Accessible name. Falls back to `label`. */
   readonly ariaLabel = input<string>('');

@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -37,7 +38,7 @@ export class DmMenuItemComponent {
   private readonly labelRef = viewChild<ElementRef<HTMLElement>>('label');
 
   /** Disables the item: skipped by keyboard navigation and not activatable. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Semantic color. `danger` tints the row and its hover state red. */
   readonly color = input<DmMenuItemColor>('default');

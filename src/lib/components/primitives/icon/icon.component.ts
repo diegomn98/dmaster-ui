@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 
 import { toCssSize } from '../../../core/utils/css';
 import { DmIconRegistry } from './icon.registry';
@@ -56,7 +63,7 @@ export class DmIconComponent {
   readonly color = input<DmIconColor>('');
 
   /** Font mode: filled (`true`) vs outlined (`false`). Maps to the `FILL` axis. */
-  readonly fill = input<boolean>(false);
+  readonly fill = input(false, { transform: booleanAttribute });
 
   /** Font mode: stroke weight (100–700). Maps to the `wght` axis. */
   readonly weight = input<number>(this.defaults.weight);
@@ -65,7 +72,7 @@ export class DmIconComponent {
   readonly family = input<DmIconFamily>(this.defaults.family);
 
   /** Spin the icon continuously — for loaders. Off under `prefers-reduced-motion`. */
-  readonly spin = input<boolean>(false);
+  readonly spin = input(false, { transform: booleanAttribute });
 
   /** Accessible label. Empty → decorative (`aria-hidden="true"`). */
   readonly label = input<string>('');

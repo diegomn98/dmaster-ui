@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -44,7 +45,7 @@ export class DmSwitchComponent implements ControlValueAccessor {
   readonly checked = model<boolean>(false);
 
   /** Disables the control (combined with the forms `disabled` state). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Size scale. */
   readonly size = input<DmSwitchSize>(this.defaults.size);

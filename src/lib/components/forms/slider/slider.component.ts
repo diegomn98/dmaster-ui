@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -77,10 +78,10 @@ export class DmSliderComponent implements ControlValueAccessor {
   readonly color = input<DmSliderColor>(this.defaults.color);
 
   /** Disables the control (combined with the forms `disabled` state). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Shows a value bubble over the thumb while dragging, hovering or focused. */
-  readonly showValueLabel = input<boolean>(this.defaults.showValueLabel);
+  readonly showValueLabel = input(this.defaults.showValueLabel, { transform: booleanAttribute });
 
   /** Formats the value for the bubble and `aria-valuetext`. */
   readonly formatValue = input<DmSliderFormatter>(String);

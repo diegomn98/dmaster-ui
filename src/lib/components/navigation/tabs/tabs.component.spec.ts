@@ -9,7 +9,12 @@ import { TABS_DEFAULTS } from './tabs.tokens';
 @Component({
   imports: [DmTabsComponent, DmTabComponent, DmTabPanelComponent],
   template: `
-    <dm-tabs [(selectedValue)]="active" [placement]="placement()" ariaLabel="Sections">
+    <dm-tabs
+      [(selectedValue)]="active"
+      [placement]="placement()"
+      [disabled]="tabsDisabled()"
+      ariaLabel="Sections"
+    >
       <dm-tab value="one">One</dm-tab>
       <dm-tab value="two">Two</dm-tab>
       <dm-tab value="three" [disabled]="thirdDisabled()">Three</dm-tab>
@@ -23,6 +28,7 @@ import { TABS_DEFAULTS } from './tabs.tokens';
 class HostComponent {
   readonly active = signal<string | undefined>('one');
   readonly thirdDisabled = signal(true);
+  readonly tabsDisabled = signal(false);
   readonly placement = signal<'top' | 'start'>('top');
 }
 
@@ -89,6 +95,21 @@ describe('DmTabsComponent', () => {
     expect(tabs()[1].getAttribute('aria-selected')).toBe('true');
     expect(panels()[0].hasAttribute('hidden')).toBe(true);
     expect(panels()[1].hasAttribute('hidden')).toBe(false);
+  });
+
+  it('ignores click and keyboard activation when the whole tablist is disabled', () => {
+    fixture.componentInstance.tabsDisabled.set(true);
+    fixture.detectChanges();
+
+    // Pointer activation is blocked (guarded in select()).
+    tabs()[1].click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.active()).toBe('one');
+
+    // Keyboard roving/activation is blocked too (guarded in activateAndFocus()).
+    fireKey(tabs()[0], 'ArrowRight');
+    fixture.detectChanges();
+    expect(fixture.componentInstance.active()).toBe('one');
   });
 
   it('reflects external selectedValue changes back into the DOM', () => {

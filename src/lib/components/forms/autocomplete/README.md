@@ -57,6 +57,8 @@ Wire it to a form (the control value is the free text):
 | `clearAriaLabel` | `string`                                                                      | `'Clear'`   | ARIA label for the clear button.                         |
 | `noResultsLabel` | `string`                                                                      | `''`        | Message shown when no option matches (hidden if empty).  |
 | `openOnFocus`    | `boolean`                                                                     | `false`     | Show all options on focus, before any typing.            |
+| `filter`         | `boolean`                                                                     | `true`      | Client-side filtering. `false` shows server-driven `options` verbatim. |
+| `filterFn`       | `((option, query) => boolean) \| null`                                       | `null`      | Custom matcher for the built-in filter (e.g. match a description). |
 
 ## Outputs
 

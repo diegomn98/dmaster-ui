@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -53,7 +54,7 @@ export class DmAccordionComponent {
   readonly variant = input<DmAccordionVariant>(this.defaults.variant);
 
   /** Disables every child item (overrides individual `disabled` inputs). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** ARIA label for the region. */
   readonly ariaLabel = input<string>('');

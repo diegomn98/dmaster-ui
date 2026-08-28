@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -54,10 +55,10 @@ export class DmAlertComponent {
   readonly description = input<string>();
 
   /** Hides the semantic icon. */
-  readonly hideIcon = input<boolean>(false);
+  readonly hideIcon = input(false, { transform: booleanAttribute });
 
   /** Shows the dismiss button; the alert hides itself when pressed. */
-  readonly dismissible = input<boolean>(false);
+  readonly dismissible = input(false, { transform: booleanAttribute });
 
   /** Accessible label of the dismiss button. Defaults from `ALERT_DEFAULTS`. */
   readonly dismissLabel = input<string>(this.defaults.dismissLabel);

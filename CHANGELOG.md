@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`dm-button` — boolean `loading` input.** The ergonomic shortcut for the
+  common async case: `<dm-button [loading]="saving()">` shows the spinner and
+  disables the button, no string state needed. It accepts a bare attribute
+  (`<dm-button loading>`). The full `state`
+  (`idle`/`loading`/`success`/`error`) machine still works, and an explicit
+  non-`idle` `state` takes precedence over `loading`.
+- **`dm-autocomplete` — `filter` and `filterFn` inputs.** `[filter]="false"`
+  turns off client-side filtering for server-driven suggestions (options are
+  shown verbatim instead of being re-filtered by the typed text, which
+  previously dropped async results whose label did not contain the query).
+  `filterFn` supplies a custom matcher (e.g. match on a description or fuzzy).
+
+### Fixed
+
+- **Bare boolean attributes now work consistently across the library.** ~22
+  components (slider, date-picker, color-picker, search-field, checkbox,
+  switch, radio, tabs, pagination, accordion, alert, progress, icon, card,
+  popover, menu, table, …) declared boolean inputs without `booleanAttribute`,
+  so `<dm-slider disabled>` / `<dm-icon spin>` silently resolved to `false`.
+  Every boolean input now coerces a bare attribute.
+- **`dm-tabs` — a disabled tablist no longer activates via the keyboard.**
+  `select()` and roving-focus navigation now honor the container `disabled`
+  (previously only pointer events were blocked).
+- **SSR — `dm-radio-group` / `dm-toggle-group`** now read the focused element
+  through the injected `DOCUMENT` instead of the global `document`.
+
 ## [0.9.0] - 2026-08-27
 
 ### Added

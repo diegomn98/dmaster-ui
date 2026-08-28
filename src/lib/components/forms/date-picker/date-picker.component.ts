@@ -133,10 +133,10 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   readonly error = input<string>('');
 
   /** Disables the trigger. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Shows the required marker next to the label. */
-  readonly required = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
 
   /** Semantic color for focus ring and the selected-day fill. */
   readonly color = input<DmDatePickerColor>(this.defaults.color);
@@ -154,7 +154,7 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   readonly ariaLabel = input<string>('');
 
   /** Shows an × button to clear the selection. Keyboard: Delete / Backspace. */
-  readonly clearable = input<boolean>(false);
+  readonly clearable = input(false, { transform: booleanAttribute });
 
   /** ARIA label for the clear button. */
   readonly clearAriaLabel = input<string>('Clear');
@@ -190,10 +190,10 @@ export class DmDatePickerComponent implements ControlValueAccessor {
   readonly displayFormat = input<Intl.DateTimeFormatOptions>(this.defaults.displayFormat);
 
   /** Shows the "Today" quick-jump button in the panel footer. */
-  readonly showTodayButton = input<boolean>(this.defaults.showTodayButton);
+  readonly showTodayButton = input(this.defaults.showTodayButton, { transform: booleanAttribute });
 
   /** Closes the panel right after a day is picked. */
-  readonly closeOnSelect = input<boolean>(true);
+  readonly closeOnSelect = input(true, { transform: booleanAttribute });
 
   /** Localised caption for the "Today" footer button. */
   readonly todayLabel = input<string>('Today');

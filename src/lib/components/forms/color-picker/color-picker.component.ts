@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -85,10 +86,10 @@ export class DmColorPickerComponent implements ControlValueAccessor {
   readonly error = input<string>('');
 
   /** Disables the trigger. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Shows the required marker next to the label. */
-  readonly required = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
 
   /** Semantic color for the focus ring and the panel accent. */
   readonly color = input<DmColorPickerColor>(this.defaults.color);
@@ -106,14 +107,14 @@ export class DmColorPickerComponent implements ControlValueAccessor {
   readonly ariaLabel = input<string>('');
 
   /** Shows an × button to clear the selection. Keyboard: Delete / Backspace. */
-  readonly clearable = input<boolean>(false);
+  readonly clearable = input(false, { transform: booleanAttribute });
 
   /** ARIA label for the clear button. */
   readonly clearAriaLabel = input<string>('Clear');
 
   // ---- Inputs (color specific) --------------------------------------------
   /** Adds an alpha rail and emits an 8-digit `#rrggbbaa` value. */
-  readonly showAlpha = input<boolean>(this.defaults.showAlpha);
+  readonly showAlpha = input(this.defaults.showAlpha, { transform: booleanAttribute });
 
   /** Preset color chips for the swatch grid (hex strings). */
   readonly swatches = input<string[]>(this.defaults.swatches);

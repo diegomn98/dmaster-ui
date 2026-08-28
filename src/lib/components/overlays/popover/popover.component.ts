@@ -8,6 +8,7 @@ import {
 } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -145,13 +146,13 @@ export class DmPopoverComponent {
   readonly placement = input<DmPopoverPlacement>(this.defaults.placement);
 
   /** Renders the little arrow pointing at the trigger. */
-  readonly showArrow = input<boolean>(this.defaults.showArrow);
+  readonly showArrow = input(this.defaults.showArrow, { transform: booleanAttribute });
 
   /** Gap between the trigger and the panel, in pixels. */
   readonly offset = input<number>(this.defaults.offset);
 
   /** Traps keyboard focus inside the panel while open (for menu-like content). */
-  readonly trapFocus = input<boolean>(false);
+  readonly trapFocus = input(false, { transform: booleanAttribute });
 
   /** Accessible name for the dialog when it has no visible heading. */
   readonly ariaLabel = input<string>();

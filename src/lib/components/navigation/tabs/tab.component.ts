@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -50,7 +51,7 @@ export class DmTabComponent implements OnInit, OnDestroy {
   readonly value = input.required<string>();
 
   /** Disables the tab; keyboard navigation skips it. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** True when this tab is the active one in the parent tablist. */
   readonly isSelected = computed(() => this.parent.effectiveSelectedValue() === this.value());

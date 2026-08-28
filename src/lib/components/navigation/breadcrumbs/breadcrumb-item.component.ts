@@ -4,6 +4,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -49,7 +50,7 @@ export class DmBreadcrumbItemComponent implements OnInit, OnDestroy {
   readonly href = input<string>();
 
   /** Renders the crumb as muted, non-interactive text. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Index of this crumb among its siblings. */
   protected readonly index = computed(() => this.parent.indexOf(this));

@@ -1,6 +1,7 @@
 import { FocusKeyManager, type FocusableOption } from '@angular/cdk/a11y';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -56,7 +57,7 @@ export class DmMenuComponent implements DmMenuPanel {
   readonly placement = input<DmMenuPlacement>(this.defaults.placement);
 
   /** Close the menu when an item is activated. */
-  readonly closeOnSelect = input<boolean>(this.defaults.closeOnSelect);
+  readonly closeOnSelect = input(this.defaults.closeOnSelect, { transform: booleanAttribute });
 
   /** Accessible label for the `role="menu"` surface. */
   readonly ariaLabel = input<string>('');

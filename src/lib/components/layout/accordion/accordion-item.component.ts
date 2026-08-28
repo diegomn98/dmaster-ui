@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -60,7 +61,7 @@ export class DmAccordionItemComponent {
   readonly subtitle = input<string>('');
 
   /** Disables just this item (the parent can also disable everything). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly headerId = `${this.uid}-header`;
   protected readonly panelId = `${this.uid}-panel`;

@@ -16,7 +16,7 @@ import { DmButtonComponent } from '@dmaster/ui';
 <dm-button color="danger" variant="shadow">Shadow</dm-button>
 <dm-button color="success" variant="flat" radius="full">Pill</dm-button>
 
-<dm-button [state]="saving() ? 'loading' : 'idle'" loadingLabel="Saving changes" (clicked)="save()">
+<dm-button [loading]="saving()" loadingLabel="Saving changes" (clicked)="save()">
   Save changes
 </dm-button>
 ```
@@ -29,7 +29,8 @@ import { DmButtonComponent } from '@dmaster/ui';
 | `variant`      | `'solid' \| 'flat' \| 'faded' \| 'bordered' \| 'light' \| 'ghost' \| 'shadow'` | `'solid'`   | Visual variant. `shadow` casts a colored glow.                  |
 | `radius`       | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                     | `'md'`      | Corner rounding. `full` is pill-shaped.                         |
 | `size`         | `'sm' \| 'md' \| 'lg'`                                                         | `'md'`      | 32px / 40px / 48px heights.                                     |
-| `state`        | `'idle' \| 'loading' \| 'success' \| 'error'`                                  | `'idle'`    | `loading` disables the button; `success`/`error` flash an icon. |
+| `loading`      | `boolean`                                                                      | `false`     | Spinner + disabled — the shortcut for a simple async state.     |
+| `state`        | `'idle' \| 'loading' \| 'success' \| 'error'`                                  | `'idle'`    | Full machine; `success`/`error` flash an icon. A non-`idle` value wins over `loading`. |
 | `disabled`     | `boolean`                                                                      | `false`     | Also disabled automatically while loading.                      |
 | `type`         | `'button' \| 'submit' \| 'reset'`                                              | `'button'`  | Native button type.                                             |
 | `loadingLabel` | `string`                                                                       | `''`        | Announced while loading (the library ships no copy of its own). |

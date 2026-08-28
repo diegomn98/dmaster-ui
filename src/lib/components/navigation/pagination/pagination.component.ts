@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 
 import { DmSize } from '../../../core/types/common.types';
 import { PAGINATION_DEFAULTS } from './pagination.tokens';
@@ -45,7 +53,7 @@ export class DmPaginationComponent {
   readonly boundaryCount = input<number>(this.defaults.boundaryCount);
 
   /** Show the previous/next chevron buttons. */
-  readonly showControls = input<boolean>(this.defaults.showControls);
+  readonly showControls = input(this.defaults.showControls, { transform: booleanAttribute });
 
   /** Item size; heights follow the 32/40/48px scale. */
   readonly size = input<DmSize>(this.defaults.size);
@@ -54,7 +62,7 @@ export class DmPaginationComponent {
   readonly color = input<DmPaginationColor>(this.defaults.color);
 
   /** Disables every control. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Accessible name of the `<nav>` landmark. */
   readonly ariaLabel = input<string>(this.defaults.ariaLabel);

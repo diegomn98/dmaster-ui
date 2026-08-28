@@ -117,6 +117,21 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
   /** Show all options as soon as the field is focused, before any typing. */
   readonly openOnFocus = input(false, { transform: booleanAttribute });
 
+  /**
+   * Client-side filtering. Set `false` for server-driven options that are
+   * already filtered upstream — the panel then shows `options` verbatim, so
+   * async/typeahead suggestions whose label doesn't literally contain the typed
+   * text are no longer dropped.
+   */
+  readonly filter = input(true, { transform: booleanAttribute });
+
+  /**
+   * Custom matcher for the built-in client-side filter (e.g. match on a
+   * description field or fuzzy). Ignored when `filter` is `false`. Default
+   * matches the option label, case-insensitive.
+   */
+  readonly filterFn = input<((option: DmAutocompleteOption, query: string) => boolean) | null>(null);
+
   // ---- Outputs -------------------------------------------------------------
   /** Emitted when the user picks a suggestion (carries the full option). */
   readonly optionSelected = output<DmAutocompleteOption>();
@@ -139,11 +154,20 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
 
   /** Options filtered by the current text (case-insensitive, trimmed). */
   protected readonly visibleOptions = computed<DmAutocompleteOption[]>(() => {
-    const text = this.value().trim().toLowerCase();
-    if (!text) {
+    // Server-driven mode: options are already filtered upstream, show verbatim.
+    if (!this.filter()) {
       return this.options();
     }
-    return this.options().filter((o) => o.label.toLowerCase().includes(text));
+    const query = this.value().trim();
+    if (!query) {
+      return this.options();
+    }
+    const match = this.filterFn();
+    if (match) {
+      return this.options().filter((o) => match(o, query));
+    }
+    const lower = query.toLowerCase();
+    return this.options().filter((o) => o.label.toLowerCase().includes(lower));
   });
 
   protected readonly hasResults = computed(() => this.visibleOptions().length > 0);

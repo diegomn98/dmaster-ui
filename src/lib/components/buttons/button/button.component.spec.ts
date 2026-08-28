@@ -60,6 +60,57 @@ describe('DmButtonComponent', () => {
     expect(fixture.nativeElement.querySelector('dm-spinner')).toBeTruthy();
   });
 
+  it('supports the boolean loading shortcut (spinner, disabled, aria-busy, data-state)', () => {
+    createComponent();
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+
+    expect(button().getAttribute('data-state')).toBe('loading');
+    expect(button().disabled).toBe(true);
+    expect(button().getAttribute('aria-busy')).toBe('true');
+    expect(fixture.nativeElement.querySelector('dm-spinner')).toBeTruthy();
+  });
+
+  it('coerces a bare loading attribute to true (booleanAttribute)', () => {
+    createComponent();
+    fixture.componentRef.setInput('loading', '');
+    fixture.detectChanges();
+
+    expect(button().getAttribute('data-state')).toBe('loading');
+    expect(button().disabled).toBe(true);
+  });
+
+  it('does not emit clicked while loading via the boolean shortcut', () => {
+    createComponent();
+    let clicks = 0;
+    fixture.componentInstance.clicked.subscribe(() => clicks++);
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+
+    button().click();
+    expect(clicks).toBe(0);
+  });
+
+  it('lets an explicit non-idle state win over the boolean loading', () => {
+    createComponent();
+    fixture.componentRef.setInput('loading', true);
+    fixture.componentRef.setInput('state', 'success');
+    fixture.detectChanges();
+
+    expect(button().getAttribute('data-state')).toBe('success');
+    expect(fixture.nativeElement.querySelector('dm-spinner')).toBeFalsy();
+    expect(button().disabled).toBe(false);
+  });
+
+  it('announces the loading label via the boolean shortcut', () => {
+    createComponent();
+    fixture.componentRef.setInput('loadingLabel', 'Saving…');
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.dm-button__live').textContent).toContain('Saving…');
+  });
+
   it('emits clicked while interactive and not while loading', () => {
     createComponent();
     let clicks = 0;

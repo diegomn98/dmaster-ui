@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
 import { CARD_DEFAULTS } from './card.tokens';
 import { DmCardAppearance, DmCardPadding } from './card.types';
@@ -34,5 +34,5 @@ export class DmCardComponent {
   readonly padding = input<DmCardPadding>(this.defaults.padding);
 
   /** Hover lift for clickable cards (wrap in `<a>`/`<button>` or handle click outside). */
-  readonly interactive = input<boolean>(false);
+  readonly interactive = input(false, { transform: booleanAttribute });
 }

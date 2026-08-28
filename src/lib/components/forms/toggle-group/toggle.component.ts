@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -55,7 +56,7 @@ export class DmToggleComponent implements OnInit, OnDestroy {
   readonly value = input.required<unknown>();
 
   /** Disables just this segment (combined with the group's `disabled`). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Accessible label — required for icon-only segments. */
   readonly ariaLabel = input<string>('');

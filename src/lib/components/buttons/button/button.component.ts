@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 
 import { DmSize } from '../../../core/types/common.types';
 import { DmSpinnerComponent } from '../../primitives/spinner';
@@ -22,6 +30,10 @@ import {
  *   Save changes
  * </dm-button>
  *
+ * <!-- Common case: a boolean drives the spinner + disabled state. -->
+ * <dm-button [loading]="saving()" (clicked)="save()">Save</dm-button>
+ *
+ * <!-- Advanced: the full idle → loading → success → error machine. -->
  * <dm-button color="danger" variant="flat" [state]="state()">
  *   Delete
  * </dm-button>
@@ -58,11 +70,24 @@ export class DmButtonComponent {
   /** Control size; heights follow the 32/40/48px scale. Unset inside a group → inherits. */
   readonly size = input<DmSize | undefined>(undefined);
 
-  /** Current state. `loading` disables the button and shows the spinner. */
+  /**
+   * Shows the spinner and disables the button while `true`. The ergonomic
+   * shortcut for the common async case — accepts a bare attribute
+   * (`<dm-button loading>`). For the full idle → loading → success → error
+   * flow, use {@link state} instead.
+   */
+  readonly loading = input(false, { transform: booleanAttribute });
+
+  /**
+   * Full state machine: `loading` disables the button and shows the spinner;
+   * `success` / `error` flash an icon. An explicit non-`idle` value takes
+   * precedence over the boolean {@link loading}. For a simple spinner, prefer
+   * `loading`.
+   */
   readonly state = input<DmButtonState>('idle');
 
   /** Disables the button (it is also disabled automatically while loading). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Native button type. */
   readonly type = input<DmButtonType>('button');
@@ -103,13 +128,24 @@ export class DmButtonComponent {
     () => this.size() ?? this.group?.size() ?? this.defaults.size,
   );
 
-  protected readonly isLoading = computed(() => this.state() === 'loading');
+  /**
+   * Effective state driving the view. An explicit non-`idle` `state` wins
+   * (keeps the success/error machine working); otherwise the boolean `loading`
+   * shortcut promotes to `loading`.
+   */
+  protected readonly resolvedState = computed<DmButtonState>(() => {
+    const state = this.state();
+    if (state !== 'idle') return state;
+    return this.loading() ? 'loading' : 'idle';
+  });
+
+  protected readonly isLoading = computed(() => this.resolvedState() === 'loading');
   protected readonly isDisabled = computed(
     () => this.disabled() || this.isLoading() || (this.group?.isDisabled() ?? false),
   );
 
   protected readonly liveMessage = computed(() => {
-    switch (this.state()) {
+    switch (this.resolvedState()) {
       case 'loading':
         return this.loadingLabel();
       case 'success':

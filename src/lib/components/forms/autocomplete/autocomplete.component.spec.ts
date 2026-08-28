@@ -80,6 +80,31 @@ describe('DmAutocompleteComponent', () => {
     expect(options()[0].textContent).toContain('Apricot');
   });
 
+  it('shows options verbatim when [filter]="false" (server-driven mode)', () => {
+    const fixture = create();
+    fixture.componentRef.setInput('filter', false);
+    fixture.detectChanges();
+
+    // "zzz" matches no label, but server-driven options are shown as-is.
+    type(fixture, 'zzz');
+    expect(options().length).toBe(OPTIONS.length);
+  });
+
+  it('uses a custom filterFn (e.g. matching on description)', () => {
+    const fixture = create();
+    fixture.componentRef.setInput(
+      'filterFn',
+      (o: DmAutocompleteOption, q: string) =>
+        (o.description ?? '').toLowerCase().includes(q.toLowerCase()),
+    );
+    fixture.detectChanges();
+
+    // "stone" only matches Apricot's description, not any label.
+    type(fixture, 'stone');
+    expect(options().length).toBe(1);
+    expect(options()[0].textContent).toContain('Apricot');
+  });
+
   it('selects an option with ArrowDown + Enter, sets value and emits optionSelected', () => {
     const fixture = create();
     const selected: DmAutocompleteOption[] = [];

@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  booleanAttribute,
   computed,
   forwardRef,
   inject,
@@ -52,7 +53,7 @@ export class DmRadioComponent implements OnInit, OnDestroy {
   readonly value = input.required<unknown>();
 
   /** Disables just this option (combined with the group's `disabled`). */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Id exposed for external `<label for>` — falls back to a generated one. */
   readonly inputId = input<string>('');

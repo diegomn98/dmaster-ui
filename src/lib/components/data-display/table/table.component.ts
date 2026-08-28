@@ -99,10 +99,10 @@ export class DmTableComponent<T = unknown> {
   readonly variant = input<DmTableVariant>(this.defaults.variant);
 
   /** Highlight the row under the pointer. */
-  readonly hover = input<boolean>(this.defaults.hover);
+  readonly hover = input(this.defaults.hover, { transform: booleanAttribute });
 
   /** Pin the header to the top of the container while scrolling. */
-  readonly sticky = input<boolean>(this.defaults.sticky);
+  readonly sticky = input(this.defaults.sticky, { transform: booleanAttribute });
 
   // ---- Virtual scroll ------------------------------------------------------
   /**
@@ -134,7 +134,7 @@ export class DmTableComponent<T = unknown> {
 
   // ---- Search --------------------------------------------------------------
   /** Show the search box in the toolbar and filter rows by the term. */
-  readonly searchable = input<boolean>(false);
+  readonly searchable = input(false, { transform: booleanAttribute });
 
   /** Placeholder for the search box. */
   readonly searchPlaceholder = input<string>('Search…');
@@ -167,7 +167,7 @@ export class DmTableComponent<T = unknown> {
 
   // ---- States --------------------------------------------------------------
   /** Show a skeleton loading state instead of rows. */
-  readonly loading = input<boolean>(false);
+  readonly loading = input(false, { transform: booleanAttribute });
 
   /** Number of skeleton rows rendered while loading. */
   readonly loadingRows = input<number>(5);
@@ -210,7 +210,7 @@ export class DmTableComponent<T = unknown> {
    * table only emits `searchChange`/`sortChange`/`pageChange` for you to react
    * to. Use `totalItems` to drive the footer counts.
    */
-  readonly manualProcessing = input<boolean>(false);
+  readonly manualProcessing = input(false, { transform: booleanAttribute });
 
   /** Total row count for the footer when `manualProcessing` is on. */
   readonly totalItems = input<number | null>(null);
