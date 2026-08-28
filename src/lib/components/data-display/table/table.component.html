@@ -173,28 +173,35 @@
         <div class="dm-table__vbody" role="rowgroup">
           <div class="dm-table__vrow dm-table__vrow--empty" role="row">
             <div class="dm-table__empty-cell" role="cell">
-              <div class="dm-table__empty">
-                <svg
-                  class="dm-table__empty-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  @if (isFilteredEmpty()) {
-                    <circle cx="11" cy="11" r="7" />
-                    <path d="m20 20-3-3" />
-                  } @else {
-                    <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
-                  }
-                </svg>
-                <p class="dm-table__empty-text">
-                  {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
-                </p>
-              </div>
+              @if (emptyTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="{ filtered: isFilteredEmpty() }"
+                />
+              } @else {
+                <div class="dm-table__empty">
+                  <svg
+                    class="dm-table__empty-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    @if (isFilteredEmpty()) {
+                      <circle cx="11" cy="11" r="7" />
+                      <path d="m20 20-3-3" />
+                    } @else {
+                      <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
+                    }
+                  </svg>
+                  <p class="dm-table__empty-text">
+                    {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
+                  </p>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -244,7 +251,14 @@
                 [attr.data-align]="col.align || 'start'"
                 [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
               >
-                {{ getCellValue(row, col) }}
+                @if (cellTemplateFor(col); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="cellContext(row, idx, col)"
+                  />
+                } @else {
+                  {{ getCellValue(row, col) }}
+                }
               </div>
             }
           </div>
@@ -344,28 +358,35 @@
           } @else if (isEmpty()) {
             <tr>
               <td [attr.colspan]="colspan()" class="dm-table__empty-cell">
-                <div class="dm-table__empty">
-                  <svg
-                    class="dm-table__empty-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    @if (isFilteredEmpty()) {
-                      <circle cx="11" cy="11" r="7" />
-                      <path d="m20 20-3-3" />
-                    } @else {
-                      <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
-                    }
-                  </svg>
-                  <p class="dm-table__empty-text">
-                    {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
-                  </p>
-                </div>
+                @if (emptyTemplate(); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{ filtered: isFilteredEmpty() }"
+                  />
+                } @else {
+                  <div class="dm-table__empty">
+                    <svg
+                      class="dm-table__empty-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      @if (isFilteredEmpty()) {
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3-3" />
+                      } @else {
+                        <path d="M3 3h18v18H3zM3 9h18M9 21V9" />
+                      }
+                    </svg>
+                    <p class="dm-table__empty-text">
+                      {{ isFilteredEmpty() ? noResultsText() : emptyText() }}
+                    </p>
+                  </div>
+                }
               </td>
             </tr>
           } @else {
@@ -391,7 +412,14 @@
                     [attr.data-align]="col.align || 'start'"
                     [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
                   >
-                    {{ getCellValue(row, col) }}
+                    @if (cellTemplateFor(col); as tpl) {
+                      <ng-container
+                        [ngTemplateOutlet]="tpl"
+                        [ngTemplateOutletContext]="cellContext(row, idx, col)"
+                      />
+                    } @else {
+                      {{ getCellValue(row, col) }}
+                    }
                   </td>
                 }
               </tr>

@@ -79,6 +79,45 @@ Copy inputs (the library ships no baked-in text — override for i18n): `searchP
 
 Content projection: place any element with the `dmTableActions` attribute to render it on the right of the toolbar (e.g. an “Export” or “Invite” button).
 
+### Custom cell templates (`dmTableCell`)
+
+A column's `cell` mapper can only return `string | number`. For rich cells —
+badges, avatars, buttons, links — project an `ng-template[dmTableCell]` matched
+by column `key`. Works in both render modes (native `<table>` and
+`virtualScroll`); non-templated columns keep the plain value path.
+
+```html
+<dm-table [columns]="columns" [data]="users()">
+  <ng-template dmTableCell="status" let-row let-i="index" let-col="column">
+    <dm-badge [color]="row.active ? 'success' : 'default'" variant="flat">
+      {{ row.status }}
+    </dm-badge>
+  </ng-template>
+</dm-table>
+```
+
+Context: `$implicit` (the row, `let-row`), `index` and `column`. The template
+controls **rendering only** — search and sort still read the column's
+`cell` / `sortValue` / `key`, so keep those for sortable/searchable templated
+columns.
+
+### Custom empty state (`dmTableEmpty`)
+
+Replace the built-in icon + `emptyText` block, e.g. with `dm-empty-state`. The
+`filtered` context flag is `true` when the emptiness comes from the search
+filtering every row out:
+
+```html
+<dm-table [columns]="columns" [data]="users()">
+  <ng-template dmTableEmpty let-filtered="filtered">
+    <dm-empty-state
+      [title]="filtered ? 'No matches' : 'No users yet'"
+      description="Invite your first teammate to get started."
+    />
+  </ng-template>
+</dm-table>
+```
+
 ### `DmTableColumn<T>`
 
 | Field         | Type                                   | Description                                       |

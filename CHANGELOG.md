@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`dm-table` — custom cell and empty-state templates.** Project
+  `ng-template[dmTableCell]="columnKey"` to render rich cells (badges, avatars,
+  buttons — context: row, `index`, `column`) instead of the `string | number`
+  the `cell` mapper allows, and `ng-template[dmTableEmpty]` (context flag
+  `filtered`) to replace the built-in empty block with e.g. `dm-empty-state`.
+  Both work in the native `<table>` mode **and** `virtualScroll`; search/sort
+  still read `cell` / `sortValue` / `key`.
 - **New outputs for reacting to state changes:**
   - **`dm-accordion` — `(itemToggled)`** emits `{ value, expanded }` on each
     expand/collapse (previously you had to diff the `expandedValues` model).

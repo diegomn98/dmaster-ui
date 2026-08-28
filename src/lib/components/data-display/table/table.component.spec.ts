@@ -1,7 +1,11 @@
-import { provideZonelessChangeDetection } from '@angular/core';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { DmTableComponent } from './table.component';
+import { DmTableCellDirective } from './table-cell.directive';
+import { DmTableEmptyDirective } from './table-empty.directive';
 import { TABLE_DEFAULTS } from './table.tokens';
 import { DmTableColumn, DmTableRowClickEvent, DmTableSortState } from './table.types';
 
@@ -437,5 +441,110 @@ describe('DmTableComponent', () => {
     expect(wrapper().getAttribute('data-density')).toBe('spacious');
     expect(wrapper().getAttribute('data-variant')).toBe('bordered');
     expect(wrapper().hasAttribute('data-hover')).toBe(false);
+  });
+
+  // ---- Content templates ---------------------------------------------------
+
+  describe('content templates', () => {
+    @Component({
+      imports: [DmTableComponent, DmTableCellDirective, DmTableEmptyDirective],
+      template: `
+        <dm-table
+          [columns]="columns"
+          [data]="data()"
+          [rowKey]="byId"
+          [virtualScroll]="virtual()"
+          [pageSize]="virtual() ? 0 : 10"
+          [searchable]="true"
+          [(searchTerm)]="term"
+        >
+          <ng-template dmTableCell="role" let-row let-i="index" let-col="column">
+            <span class="custom-role" [attr.data-index]="i" [attr.data-col]="col.key">
+              ★ {{ row.role }}
+            </span>
+          </ng-template>
+          <ng-template dmTableEmpty let-filtered="filtered">
+            <p class="custom-empty">{{ filtered ? 'no matches' : 'nothing here' }}</p>
+          </ng-template>
+        </dm-table>
+      `,
+    })
+    class TemplatedHostComponent {
+      readonly columns = COLUMNS;
+      readonly data = signal<Row[]>(ROWS);
+      readonly virtual = signal(false);
+      readonly term = signal('');
+      readonly byId = byId;
+    }
+
+    let host: ComponentFixture<TemplatedHostComponent>;
+
+    function createHost(virtual = false): void {
+      host = TestBed.createComponent(TemplatedHostComponent);
+      if (virtual) {
+        // Must be set before the first CD so the viewport initializes measured.
+        host.componentInstance.virtual.set(true);
+      }
+      host.detectChanges();
+    }
+
+    const hostAll = (sel: string): HTMLElement[] =>
+      Array.from(host.nativeElement.querySelectorAll(sel));
+
+    it('renders a dmTableCell template for its column and plain values elsewhere', () => {
+      createHost();
+      const custom = hostAll('.custom-role');
+      expect(custom.length).toBe(ROWS.length);
+      expect(custom[0].textContent).toContain('★ Engineer');
+      // Context: index and column flow into the template.
+      expect(custom[0].getAttribute('data-index')).toBe('0');
+      expect(custom[0].getAttribute('data-col')).toBe('role');
+      // Non-templated columns keep the plain value path.
+      const firstRowCells = hostAll('.dm-table__tr')[0].querySelectorAll(
+        '.dm-table__td:not(.dm-table__td--select)',
+      );
+      expect(firstRowCells[1]?.textContent?.trim()).toBe('Ada');
+    });
+
+    it('keeps search working on a templated column (matches the raw value)', () => {
+      createHost();
+      host.componentInstance.term.set('admiral');
+      host.detectChanges();
+      expect(hostAll('.dm-table__tr').length).toBe(1);
+      expect(hostAll('.custom-role')[0].textContent).toContain('Admiral');
+    });
+
+    it('renders the dmTableCell template in virtual-scroll mode too', async () => {
+      createHost(true);
+      await host.whenStable();
+
+      // The headless viewport measures 0px and renders no rows on its own —
+      // stub a real height and re-measure synchronously (the same
+      // checkViewportSize path the component uses under zoneless).
+      const viewportDe = host.debugElement.query(By.directive(CdkVirtualScrollViewport));
+      Object.defineProperty(viewportDe.nativeElement, 'clientHeight', { value: 400 });
+      const viewport = viewportDe.componentInstance as CdkVirtualScrollViewport;
+      viewport.checkViewportSize();
+      await host.whenStable();
+      host.detectChanges();
+
+      const custom = hostAll('.dm-table__viewport .custom-role');
+      expect(custom.length).toBe(ROWS.length);
+      expect(custom[0].textContent).toContain('★ Engineer');
+    });
+
+    it('replaces the empty block with dmTableEmpty and exposes `filtered`', () => {
+      createHost();
+      host.componentInstance.data.set([]);
+      host.detectChanges();
+      expect(hostAll('.custom-empty')[0]?.textContent?.trim()).toBe('nothing here');
+      expect(host.nativeElement.querySelector('.dm-table__empty')).toBeNull();
+
+      // Search-driven emptiness flips the context flag.
+      host.componentInstance.data.set(ROWS);
+      host.componentInstance.term.set('zzz');
+      host.detectChanges();
+      expect(hostAll('.custom-empty')[0]?.textContent?.trim()).toBe('no matches');
+    });
   });
 });
