@@ -26,22 +26,27 @@
   --dm-av-bg: var(--dm-default-subtle);
   --dm-av-fg: var(--dm-default-text);
 }
+
 :host([data-color='primary']) {
   --dm-av-bg: var(--dm-primary-subtle);
   --dm-av-fg: var(--dm-primary-text);
 }
+
 :host([data-color='secondary']) {
   --dm-av-bg: var(--dm-secondary-subtle);
   --dm-av-fg: var(--dm-secondary-text);
 }
+
 :host([data-color='success']) {
   --dm-av-bg: var(--dm-success-subtle);
   --dm-av-fg: var(--dm-success-text);
 }
+
 :host([data-color='warning']) {
   --dm-av-bg: var(--dm-warning-subtle);
   --dm-av-fg: var(--dm-warning-text);
 }
+
 :host([data-color='danger']) {
   --dm-av-bg: var(--dm-danger-subtle);
   --dm-av-fg: var(--dm-danger-text);

@@ -108,7 +108,9 @@ describe('DmButtonComponent', () => {
     fixture.componentRef.setInput('loading', true);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.dm-button__live').textContent).toContain('Saving…');
+    expect(fixture.nativeElement.querySelector('.dm-button__live').textContent).toContain(
+      'Saving…',
+    );
   });
 
   it('emits clicked while interactive and not while loading', () => {

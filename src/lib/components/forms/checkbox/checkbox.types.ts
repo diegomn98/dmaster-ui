@@ -1,11 +1,6 @@
 /** Semantic color of the checked / indeterminate fill. */
 export type DmCheckboxColor =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'danger';
+  'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Size scale of the checkbox box and label. */
 export type DmCheckboxSize = 'sm' | 'md';

@@ -14,22 +14,27 @@
     --dm-sw-accent: var(--dm-fg);
     --dm-sw-accent-hover: var(--dm-fg);
   }
+
   &[data-color='primary'] {
     --dm-sw-accent: var(--dm-primary);
     --dm-sw-accent-hover: var(--dm-primary-hover);
   }
+
   &[data-color='secondary'] {
     --dm-sw-accent: var(--dm-secondary);
     --dm-sw-accent-hover: var(--dm-secondary-hover);
   }
+
   &[data-color='success'] {
     --dm-sw-accent: var(--dm-success);
     --dm-sw-accent-hover: var(--dm-success-hover);
   }
+
   &[data-color='warning'] {
     --dm-sw-accent: var(--dm-warning);
     --dm-sw-accent-hover: var(--dm-warning-hover);
   }
+
   &[data-color='danger'] {
     --dm-sw-accent: var(--dm-danger);
     --dm-sw-accent-hover: var(--dm-danger-hover);

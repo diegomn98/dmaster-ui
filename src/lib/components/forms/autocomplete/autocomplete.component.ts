@@ -130,7 +130,9 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
    * description field or fuzzy). Ignored when `filter` is `false`. Default
    * matches the option label, case-insensitive.
    */
-  readonly filterFn = input<((option: DmAutocompleteOption, query: string) => boolean) | null>(null);
+  readonly filterFn = input<((option: DmAutocompleteOption, query: string) => boolean) | null>(
+    null,
+  );
 
   // ---- Outputs -------------------------------------------------------------
   /** Emitted when the user picks a suggestion (carries the full option). */

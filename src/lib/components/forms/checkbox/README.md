@@ -9,14 +9,14 @@ Checkbox built on a real native `<input type="checkbox">` (form semantics intact
 
 ## API
 
-| Input           | Type             | Default | Description                                                    |
-| --------------- | ---------------- | ------- | -------------------------------------------------------------- |
-| `checked`       | `model<boolean>` | `false` | Two-way state (`[(checked)]` / `(checkedChange)`).             |
-| `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the checked / indeterminate fill.           |
-| `indeterminate` | `boolean`        | `false` | Visual mixed state while not checked (native `indeterminate`). |
-| `disabled`      | `boolean`        | `false` | Combined with the forms `disabled` state.                      |
-| `inputId`       | `string`         | `''`    | Id of the native input, for external `<label for>`.            |
-| `ariaLabel`     | `string`         | `''`    | Accessible name when no label content is projected.            |
+| Input           | Type                                                                          | Default     | Description                                                    |
+| --------------- | ----------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------- |
+| `checked`       | `model<boolean>`                                                              | `false`     | Two-way state (`[(checked)]` / `(checkedChange)`).             |
+| `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the checked / indeterminate fill.            |
+| `indeterminate` | `boolean`                                                                     | `false`     | Visual mixed state while not checked (native `indeterminate`). |
+| `disabled`      | `boolean`                                                                     | `false`     | Combined with the forms `disabled` state.                      |
+| `inputId`       | `string`                                                                      | `''`        | Id of the native input, for external `<label for>`.            |
+| `ariaLabel`     | `string`                                                                      | `''`        | Accessible name when no label content is projected.            |
 
 ## Accessibility
 

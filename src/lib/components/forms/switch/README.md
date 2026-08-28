@@ -10,14 +10,14 @@ Toggle switch (`role="switch"`). Works standalone with `[(checked)]` and with An
 
 ## API
 
-| Input       | Type             | Default | Description                                            |
-| ----------- | ---------------- | ------- | ------------------------------------------------------ |
-| `checked`   | `model<boolean>` | `false` | Two-way state (`[(checked)]` / `(checkedChange)`).     |
-| `disabled`  | `boolean`        | `false` | Combined with the forms `disabled` state.              |
-| `color`     | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the checked track. |
-| `size`      | `'sm' \| 'md'`   | `'md'`  | Size scale.                                            |
-| `inputId`   | `string`         | `''`    | Id of the internal button, for external `<label for>`. |
-| `ariaLabel` | `string`         | `''`    | Accessible name when no label content is projected.    |
+| Input       | Type                                                                          | Default     | Description                                            |
+| ----------- | ----------------------------------------------------------------------------- | ----------- | ------------------------------------------------------ |
+| `checked`   | `model<boolean>`                                                              | `false`     | Two-way state (`[(checked)]` / `(checkedChange)`).     |
+| `disabled`  | `boolean`                                                                     | `false`     | Combined with the forms `disabled` state.              |
+| `color`     | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the checked track.                   |
+| `size`      | `'sm' \| 'md'`                                                                | `'md'`      | Size scale.                                            |
+| `inputId`   | `string`                                                                      | `''`        | Id of the internal button, for external `<label for>`. |
+| `ariaLabel` | `string`                                                                      | `''`        | Accessible name when no label content is projected.    |
 
 Global defaults: `provideSwitchDefaults({...})` / `SWITCH_DEFAULTS`.
 

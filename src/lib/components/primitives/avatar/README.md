@@ -10,14 +10,14 @@ Avatar with automatic fallback chain: image → initials → generic icon. A fai
 
 ## API
 
-| Input      | Type                                       | Default    | Description                                      |
-| ---------- | ------------------------------------------ | ---------- | ------------------------------------------------ |
-| `src`      | `string \| null`                           | `null`     | Image URL.                                       |
-| `alt`      | `string`                                   | `''`       | Alt for the image / label for the fallback.      |
-| `initials` | `string`                                   | `''`       | Shown when there is no (working) image.          |
-| `size`     | `'sm' \| 'md' \| 'lg' \| number \| string` | `'md'`     | 2rem / 2.5rem / 3rem, px (number) or CSS length. |
-| `shape`    | `'circle' \| 'square'`                     | `'circle'` | Shape.                                           |
-| `color`    | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the initials tint. |
+| Input      | Type                                                                          | Default     | Description                                      |
+| ---------- | ----------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
+| `src`      | `string \| null`                                                              | `null`      | Image URL.                                       |
+| `alt`      | `string`                                                                      | `''`        | Alt for the image / label for the fallback.      |
+| `initials` | `string`                                                                      | `''`        | Shown when there is no (working) image.          |
+| `size`     | `'sm' \| 'md' \| 'lg' \| number \| string`                                    | `'md'`      | 2rem / 2.5rem / 3rem, px (number) or CSS length. |
+| `shape`    | `'circle' \| 'square'`                                                        | `'circle'`  | Shape.                                           |
+| `color`    | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the initials tint.             |
 
 Global defaults: `provideAvatarDefaults({...})` / `AVATAR_DEFAULTS`.
 

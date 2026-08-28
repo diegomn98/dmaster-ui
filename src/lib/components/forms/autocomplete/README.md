@@ -38,33 +38,33 @@ Wire it to a form (the control value is the free text):
 
 ## Inputs
 
-| Input            | Type                                                                          | Default     | Description                                              |
-| ---------------- | ----------------------------------------------------------------------------- | ----------- | -------------------------------------------------------- |
-| `options`        | `DmAutocompleteOption[]`                                                      | `[]`        | Suggestions to filter and render.                        |
-| `value`          | `string` (model)                                                              | `''`        | Two-way free-text value (the CVA value).                 |
-| `label`          | `string`                                                                      | `''`        | Visible label above the field.                           |
-| `placeholder`    | `string`                                                                      | `''`        | Placeholder shown while empty.                           |
-| `description`    | `string`                                                                      | `''`        | Help text below the field (hidden while `error` is set). |
-| `error`          | `string`                                                                      | `''`        | Error text; non-empty activates the invalid state.       |
-| `disabled`       | `boolean`                                                                     | `false`     | Disables the field.                                      |
-| `required`       | `boolean`                                                                     | `false`     | Shows the required marker.                               |
-| `clearable`      | `boolean`                                                                     | `true`      | Shows the × button once there is text.                   |
-| `color`          | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` | Focus ring, caret and active-option color.               |
-| `variant`        | `'flat' \| 'bordered' \| 'faded' \| 'underlined'`                             | `'flat'`    | Visual variant of the surface.                           |
-| `size`           | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Field height scale (32 / 40 / 48px).                     |
-| `radius`         | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                    | `'md'`      | Corner rounding (`full` = pill).                         |
-| `ariaLabel`      | `string`                                                                      | `''`        | ARIA label for fields without a visible `label`.         |
-| `clearAriaLabel` | `string`                                                                      | `'Clear'`   | ARIA label for the clear button.                         |
-| `noResultsLabel` | `string`                                                                      | `''`        | Message shown when no option matches (hidden if empty).  |
-| `openOnFocus`    | `boolean`                                                                     | `false`     | Show all options on focus, before any typing.            |
+| Input            | Type                                                                          | Default     | Description                                                            |
+| ---------------- | ----------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------- |
+| `options`        | `DmAutocompleteOption[]`                                                      | `[]`        | Suggestions to filter and render.                                      |
+| `value`          | `string` (model)                                                              | `''`        | Two-way free-text value (the CVA value).                               |
+| `label`          | `string`                                                                      | `''`        | Visible label above the field.                                         |
+| `placeholder`    | `string`                                                                      | `''`        | Placeholder shown while empty.                                         |
+| `description`    | `string`                                                                      | `''`        | Help text below the field (hidden while `error` is set).               |
+| `error`          | `string`                                                                      | `''`        | Error text; non-empty activates the invalid state.                     |
+| `disabled`       | `boolean`                                                                     | `false`     | Disables the field.                                                    |
+| `required`       | `boolean`                                                                     | `false`     | Shows the required marker.                                             |
+| `clearable`      | `boolean`                                                                     | `true`      | Shows the × button once there is text.                                 |
+| `color`          | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` | Focus ring, caret and active-option color.                             |
+| `variant`        | `'flat' \| 'bordered' \| 'faded' \| 'underlined'`                             | `'flat'`    | Visual variant of the surface.                                         |
+| `size`           | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Field height scale (32 / 40 / 48px).                                   |
+| `radius`         | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                    | `'md'`      | Corner rounding (`full` = pill).                                       |
+| `ariaLabel`      | `string`                                                                      | `''`        | ARIA label for fields without a visible `label`.                       |
+| `clearAriaLabel` | `string`                                                                      | `'Clear'`   | ARIA label for the clear button.                                       |
+| `noResultsLabel` | `string`                                                                      | `''`        | Message shown when no option matches (hidden if empty).                |
+| `openOnFocus`    | `boolean`                                                                     | `false`     | Show all options on focus, before any typing.                          |
 | `filter`         | `boolean`                                                                     | `true`      | Client-side filtering. `false` shows server-driven `options` verbatim. |
-| `filterFn`       | `((option, query) => boolean) \| null`                                       | `null`      | Custom matcher for the built-in filter (e.g. match a description). |
+| `filterFn`       | `((option, query) => boolean) \| null`                                        | `null`      | Custom matcher for the built-in filter (e.g. match a description).     |
 
 ## Outputs
 
-| Output           | Payload                | Fires when                   |
-| ---------------- | ---------------------- | ---------------------------- |
-| `optionSelected` | `DmAutocompleteOption` | The user picks a suggestion. |
+| Output           | Payload                | Fires when                              |
+| ---------------- | ---------------------- | --------------------------------------- |
+| `optionSelected` | `DmAutocompleteOption` | The user picks a suggestion.            |
 | `openChange`     | `boolean`              | The suggestions overlay opens / closes. |
 
 ## Methods

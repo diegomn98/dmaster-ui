@@ -92,10 +92,8 @@ describe('DmAutocompleteComponent', () => {
 
   it('uses a custom filterFn (e.g. matching on description)', () => {
     const fixture = create();
-    fixture.componentRef.setInput(
-      'filterFn',
-      (o: DmAutocompleteOption, q: string) =>
-        (o.description ?? '').toLowerCase().includes(q.toLowerCase()),
+    fixture.componentRef.setInput('filterFn', (o: DmAutocompleteOption, q: string) =>
+      (o.description ?? '').toLowerCase().includes(q.toLowerCase()),
     );
     fixture.detectChanges();
 
