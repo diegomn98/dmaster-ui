@@ -33,6 +33,7 @@ import { DmButtonComponent } from '@dmaster/ui';
 | `state`        | `'idle' \| 'loading' \| 'success' \| 'error'`                                  | `'idle'`    | Full machine; `success`/`error` flash an icon. A non-`idle` value wins over `loading`. |
 | `disabled`     | `boolean`                                                                      | `false`     | Also disabled automatically while loading.                                             |
 | `type`         | `'button' \| 'submit' \| 'reset'`                                              | `'button'`  | Native button type.                                                                    |
+| `iconOnly`     | `boolean`                                                                      | `false`     | Compact square (width = height, no min-width/side padding) for a glyph-only button. Pair with `ariaLabel`. |
 | `loadingLabel` | `string`                                                                       | `''`        | Announced while loading (the library ships no copy of its own).                        |
 | `successLabel` | `string`                                                                       | `''`        | Announced on success.                                                                  |
 | `errorLabel`   | `string`                                                                       | `''`        | Announced on error.                                                                    |

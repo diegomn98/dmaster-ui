@@ -50,6 +50,22 @@ describe('DmButtonComponent', () => {
     expect(button().getAttribute('data-state')).toBe('success');
   });
 
+  it('has no data-icon-only by default and reflects the iconOnly input', () => {
+    createComponent();
+    expect(button().getAttribute('data-icon-only')).toBeNull();
+
+    fixture.componentRef.setInput('iconOnly', true);
+    fixture.detectChanges();
+    expect(button().getAttribute('data-icon-only')).toBe('true');
+  });
+
+  it('coerces a bare iconOnly attribute to true (booleanAttribute)', () => {
+    createComponent();
+    fixture.componentRef.setInput('iconOnly', '');
+    fixture.detectChanges();
+    expect(button().getAttribute('data-icon-only')).toBe('true');
+  });
+
   it('disables the button and sets aria-busy while loading', () => {
     createComponent();
     fixture.componentRef.setInput('state', 'loading');

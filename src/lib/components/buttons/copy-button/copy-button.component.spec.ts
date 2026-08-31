@@ -84,6 +84,20 @@ describe('DmCopyButtonComponent', () => {
     expect(fixture.nativeElement.querySelector('.dm-copy-button__icon svg')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('.dm-copy-button__text')).toBeNull();
     expect(button().getAttribute('aria-label')).toBe('Copy API key');
+    // Icon-only → the inner button renders as a compact square.
+    expect(button().getAttribute('data-icon-only')).toBe('true');
+  });
+
+  it('drops the square icon-only shape once a visible label is set', async () => {
+    await create();
+    expect(button().getAttribute('data-icon-only')).toBe('true');
+
+    host.copyLabel.set('Copy');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.querySelector('.dm-copy-button__text')).toBeTruthy();
+    expect(button().getAttribute('data-icon-only')).toBeNull();
   });
 
   it('forwards color / variant / size to the inner dm-button', async () => {

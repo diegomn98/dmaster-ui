@@ -75,6 +75,17 @@
     letter-spacing: -0.011em;
   }
 
+  // ---- Icon-only (square) --------------------------------------------------
+  // Drops the text min-width + horizontal padding and forces width = height,
+  // so a glyph-only button is a compact square instead of stretching to a
+  // label's pill width. Placed AFTER the sizes so it wins on equal specificity;
+  // `aspect-ratio` keeps it square across sm/md/lg without per-size values.
+  &[data-icon-only] {
+    min-width: var(--dm-button-min-width, 0);
+    padding-inline: var(--dm-button-padding-inline, 0);
+    aspect-ratio: 1;
+  }
+
   // ---- Radius --------------------------------------------------------------
   &[data-radius='none'] {
     border-radius: var(--dm-button-radius, 0);

@@ -98,4 +98,11 @@ export class DmCopyButtonComponent {
 
   /** Whether a custom copied icon was projected (switches the built-in check off). */
   protected readonly hasCopiedIcon = computed(() => this.copiedIcon() !== undefined);
+
+  /**
+   * With no visible label the button is glyph-only, so it renders as a compact
+   * square (via `dm-button`'s `iconOnly`) instead of stretching to a text pill's
+   * width. Adding a `copyLabel`/`copiedLabel` opts back into the pill shape.
+   */
+  protected readonly isIconOnly = computed(() => !this.copyLabel() && !this.copiedLabel());
 }

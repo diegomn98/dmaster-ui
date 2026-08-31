@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`dm-button` — `iconOnly` input (compact square shape).** A glyph-only button
+  no longer stretches to a text button's `min-width`: set `iconOnly` (pair it
+  with `ariaLabel`) and it renders as a compact square (width = height, no
+  horizontal padding) at every size and radius. **`dm-copy-button` applies it
+  automatically** whenever it has no visible `copyLabel`/`copiedLabel`, so
+  icon-only copy buttons are now tidy squares instead of wide pills; adding a
+  label opts back into the pill shape.
 - **`dm-table` — custom cell and empty-state templates.** Project
   `ng-template[dmTableCell]="columnKey"` to render rich cells (badges, avatars,
   buttons — context: row, `index`, `column`) instead of the `string | number`

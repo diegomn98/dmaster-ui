@@ -92,6 +92,14 @@ export class DmButtonComponent {
   /** Native button type. */
   readonly type = input<DmButtonType>('button');
 
+  /**
+   * Renders the button as a compact square (width equals height) instead of a
+   * text pill — it drops the min-width and horizontal padding so an icon-only
+   * button doesn't stretch to a label's width. Pair it with `ariaLabel` for the
+   * accessible name. Use it whenever the button holds only a glyph.
+   */
+  readonly iconOnly = input(false, { transform: booleanAttribute });
+
   /** Announced to screen readers while loading. */
   readonly loadingLabel = input<string>('');
 

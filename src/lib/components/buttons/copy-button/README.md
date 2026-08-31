@@ -32,6 +32,10 @@ The library ships no built-in copy: set `ariaLabel` (required for the icon-only
 form), `copiedAriaLabel` (announced on success) and any visible `copyLabel` /
 `copiedLabel` yourself.
 
+With no visible label the button is glyph-only, so it renders as a **compact
+square** (via `dm-button`'s `iconOnly`) instead of stretching to a text pill's
+width. Add a `copyLabel` / `copiedLabel` to opt back into the labelled pill shape.
+
 ### Custom icons
 
 Replace the built-in copy / check glyphs by projecting elements marked with the
