@@ -46,20 +46,20 @@ The `dmPopoverTrigger` directive wires the click toggle for you. To drive the pa
 
 ### `dm-popover`
 
-| Input       | Type                                                                                                   | Default    | Description                                |
-| ----------- | ------------------------------------------------------------------------------------------------------ | ---------- | ------------------------------------------ |
+| Input       | Type                                                                                                   | Default    | Description                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------- |
 | `open`      | `boolean`                                                                                              | `false`    | Open state of the panel. Two-way (`[(open)]`). |
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right' \| 'top-start' \| 'top-end' \| 'bottom-start' \| 'bottom-end'` | `'bottom'` | Preferred placement (auto-flips).          |
-| `showArrow` | `boolean`                                                                                              | `true`     | Renders the arrow pointing at the trigger. |
-| `offset`    | `number`                                                                                               | `8`        | Gap between trigger and panel, in pixels.  |
-| `trapFocus` | `boolean`                                                                                              | `false`    | Traps focus inside the panel while open.   |
-| `ariaLabel` | `string`                                                                                               | —          | Accessible name when there is no heading.  |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right' \| 'top-start' \| 'top-end' \| 'bottom-start' \| 'bottom-end'` | `'bottom'` | Preferred placement (auto-flips).              |
+| `showArrow` | `boolean`                                                                                              | `true`     | Renders the arrow pointing at the trigger.     |
+| `offset`    | `number`                                                                                               | `8`        | Gap between trigger and panel, in pixels.      |
+| `trapFocus` | `boolean`                                                                                              | `false`    | Traps focus inside the panel while open.       |
+| `ariaLabel` | `string`                                                                                               | —          | Accessible name when there is no heading.      |
 
-| Output       | Description                                          |
-| ------------ | ---------------------------------------------------- |
-| `openChange` | Emitted when the open state changes (`[(open)]`).    |
-| `opened`     | Emitted after the panel opens.                       |
-| `closed`     | Emitted after the panel closes.                      |
+| Output       | Description                                       |
+| ------------ | ------------------------------------------------- |
+| `openChange` | Emitted when the open state changes (`[(open)]`). |
+| `opened`     | Emitted after the panel opens.                    |
+| `closed`     | Emitted after the panel closes.                   |
 
 ### `dmPopoverTrigger`
 

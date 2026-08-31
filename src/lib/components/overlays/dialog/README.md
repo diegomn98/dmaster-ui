@@ -60,16 +60,16 @@ The content component (`DmConfirmDialogComponent`) is exported for reference, bu
 
 ### `DmConfirmOptions`
 
-| Option         | Type                                                                             | Default     | Description                                             |
-| -------------- | -------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------- |
-| `title`        | `string`                                                                          | required    | Heading; doubles as the dialog's accessible name.       |
-| `message`      | `string`                                                                          | —           | Optional supporting text under the title.               |
-| `confirmLabel` | `string`                                                                          | required    | Label of the confirming button (resolves `true`).       |
-| `cancelLabel`  | `string`                                                                          | required    | Label of the cancel button (resolves `false`).          |
-| `color`        | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'`     | `'primary'` | Semantic color of the confirming button.                |
-| `size`         | `'sm' \| 'md' \| 'lg'`                                                            | `'md'`      | Panel width (22rem / 30rem / 42rem, viewport-capped).   |
-| `disableClose` | `boolean`                                                                         | `false`     | Blocks backdrop click and Escape.                       |
-| `panelClass`   | `string \| readonly string[]`                                                     | —           | Extra panel class(es) — same as `DmDialogConfig`.       |
+| Option         | Type                                                                          | Default     | Description                                           |
+| -------------- | ----------------------------------------------------------------------------- | ----------- | ----------------------------------------------------- |
+| `title`        | `string`                                                                      | required    | Heading; doubles as the dialog's accessible name.     |
+| `message`      | `string`                                                                      | —           | Optional supporting text under the title.             |
+| `confirmLabel` | `string`                                                                      | required    | Label of the confirming button (resolves `true`).     |
+| `cancelLabel`  | `string`                                                                      | required    | Label of the cancel button (resolves `false`).        |
+| `color`        | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the confirming button.              |
+| `size`         | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Panel width (22rem / 30rem / 42rem, viewport-capped). |
+| `disableClose` | `boolean`                                                                     | `false`     | Blocks backdrop click and Escape.                     |
+| `panelClass`   | `string \| readonly string[]`                                                 | —           | Extra panel class(es) — same as `DmDialogConfig`.     |
 
 ## `DmDialogConfig`
 

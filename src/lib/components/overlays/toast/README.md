@@ -49,7 +49,7 @@ this.toast.show('Conversation archived', {
 `position` (`'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'bottom-center' | 'top-center'`, default `'bottom-right'`) is a **global default**, not a per-toast option: all toasts share one container, and the value is read once when the first toast creates it.
 
 ```ts
-providers: [provideToastDefaults({ position: 'top-center' })]
+providers: [provideToastDefaults({ position: 'top-center' })];
 ```
 
 ## Accessibility

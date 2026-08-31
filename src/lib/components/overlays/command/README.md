@@ -90,7 +90,7 @@ template only decides what a row looks like inside.
     <dm-icon size="1rem">{{ item.icon }}</dm-icon>
     <span style="flex: 1">{{ item.label }}</span>
     @if (item.shortcut) {
-      <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
+    <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
     }
   </ng-template>
 </dm-command>

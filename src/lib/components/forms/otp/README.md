@@ -56,23 +56,23 @@ read-only without disabling (dimming) the cells.
 
 ## API
 
-| Input         | Type                                              | Default     | Description                                             |
-| ------------- | ------------------------------------------------- | ----------- | ------------------------------------------------------ |
-| `length`      | `number` (attribute)                              | `6`         | Number of cells.                                       |
-| `value`       | `string`                                          | `''`        | The code. Two-way `[(value)]`.                         |
-| `label`       | `string`                                          | `''`        | Visible label above the cells; labels the group.       |
-| `description` | `string`                                          | `''`        | Help text under the cells (hidden while `error` set).  |
-| `error`       | `string`                                          | `''`        | Error text; non-empty activates the invalid state.     |
-| `mode`        | `'numeric' \| 'alphanumeric' \| 'text'`           | `'numeric'` | Accepted characters + mobile keyboard.                 |
-| `variant`     | `'flat' \| 'bordered' \| 'faded' \| 'underlined'` | `'flat'`    | Cell surface (`bordered` = elevated + border).         |
-| `groupSize`   | `number` (attribute)                              | `0`         | Separator after every N cells (`123 – 456`).           |
-| `mask`        | `boolean` (attribute)                             | `false`     | Render filled cells as masked dots.                    |
-| `size`        | `'sm' \| 'md' \| 'lg'`                            | `'md'`      | Cell size.                                             |
-| `color`       | `'default' \| … \| 'danger'`                      | `'default'` | Focus ring color (`default` focuses primary).          |
-| `disabled`    | `boolean` (attribute)                             | `false`     | Disables every cell.                                   |
-| `readonly`    | `boolean` (attribute)                             | `false`     | Code stays visible and focusable, but edits are blocked. |
-| `required`    | `boolean` (attribute)                             | `false`     | Shows the required marker next to the label.           |
-| `autoFocus`   | `boolean` (attribute)                             | `false`     | Focus the first cell on init.                          |
+| Input         | Type                                              | Default     | Description                                                         |
+| ------------- | ------------------------------------------------- | ----------- | ------------------------------------------------------------------- |
+| `length`      | `number` (attribute)                              | `6`         | Number of cells.                                                    |
+| `value`       | `string`                                          | `''`        | The code. Two-way `[(value)]`.                                      |
+| `label`       | `string`                                          | `''`        | Visible label above the cells; labels the group.                    |
+| `description` | `string`                                          | `''`        | Help text under the cells (hidden while `error` set).               |
+| `error`       | `string`                                          | `''`        | Error text; non-empty activates the invalid state.                  |
+| `mode`        | `'numeric' \| 'alphanumeric' \| 'text'`           | `'numeric'` | Accepted characters + mobile keyboard.                              |
+| `variant`     | `'flat' \| 'bordered' \| 'faded' \| 'underlined'` | `'flat'`    | Cell surface (`bordered` = elevated + border).                      |
+| `groupSize`   | `number` (attribute)                              | `0`         | Separator after every N cells (`123 – 456`).                        |
+| `mask`        | `boolean` (attribute)                             | `false`     | Render filled cells as masked dots.                                 |
+| `size`        | `'sm' \| 'md' \| 'lg'`                            | `'md'`      | Cell size.                                                          |
+| `color`       | `'default' \| … \| 'danger'`                      | `'default'` | Focus ring color (`default` focuses primary).                       |
+| `disabled`    | `boolean` (attribute)                             | `false`     | Disables every cell.                                                |
+| `readonly`    | `boolean` (attribute)                             | `false`     | Code stays visible and focusable, but edits are blocked.            |
+| `required`    | `boolean` (attribute)                             | `false`     | Shows the required marker next to the label.                        |
+| `autoFocus`   | `boolean` (attribute)                             | `false`     | Focus the first cell on init.                                       |
 | `ariaLabel`   | `string`                                          | `''`        | Accessible label of the group (no visible `label`) and cell prefix. |
 
 | Output      | Type                | Description                          |

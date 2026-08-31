@@ -35,10 +35,10 @@ means "no color chosen" and renders the placeholder.
 `format` picks how the committed value (the model, the CVA `onChange`, and the
 trigger text) is serialized:
 
-| `format` | Without alpha | With `showAlpha` |
-| -------- | ------------- | ---------------- |
-| `'hex'`  | `#rrggbb`     | `#rrggbbaa`      |
-| `'rgb'`  | `rgb(r g b)`  | `rgb(r g b / a)` |
+| `format` | Without alpha  | With `showAlpha`   |
+| -------- | -------------- | ------------------ |
+| `'hex'`  | `#rrggbb`      | `#rrggbbaa`        |
+| `'rgb'`  | `rgb(r g b)`   | `rgb(r g b / a)`   |
 | `'hsl'`  | `hsl(h s% l%)` | `hsl(h s% l% / a)` |
 
 ```html

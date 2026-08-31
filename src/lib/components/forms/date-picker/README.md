@@ -83,12 +83,11 @@ mode. Without the template the default render is unchanged.
 <dm-date-picker label="Agenda" [(value)]="date">
   <ng-template dmDatePickerDay let-date let-selected="selected">
     <span style="display: inline-grid; justify-items: center; line-height: 1.1">
-      {{ date.getDate() }}
-      @if (hasEvent(date)) {
-        <span
-          style="width: 4px; height: 4px; border-radius: 50%"
-          [style.background]="selected ? 'currentColor' : 'var(--dm-primary)'"
-        ></span>
+      {{ date.getDate() }} @if (hasEvent(date)) {
+      <span
+        style="width: 4px; height: 4px; border-radius: 50%"
+        [style.background]="selected ? 'currentColor' : 'var(--dm-primary)'"
+      ></span>
       }
     </span>
   </ng-template>

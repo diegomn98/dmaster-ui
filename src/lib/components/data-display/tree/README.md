@@ -81,7 +81,7 @@ ARIA/keyboard semantics untouched.
     <dm-icon size="1rem">{{ expanded ? 'folder_open' : (node.icon ?? 'draft') }}</dm-icon>
     <span>{{ node.label }}</span>
     @if (selected) {
-      <dm-badge size="sm" variant="flat">open</dm-badge>
+    <dm-badge size="sm" variant="flat">open</dm-badge>
     }
   </ng-template>
 </dm-tree>

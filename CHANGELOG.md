@@ -147,7 +147,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`{ label, handler }` — a compact button that runs the handler and then
   dismisses that toast; `afterDismissed` resolves as usual). New
   `DmToastDefaults.position` (`'bottom-right' | 'bottom-left' | 'top-right' |
-  'top-left' | 'bottom-center' | 'top-center'`, default `'bottom-right'`) places
+'top-left' | 'bottom-center' | 'top-center'`, default `'bottom-right'`) places
   the toast stack via `provideToastDefaults` — global by design: one container,
   read once when the first toast creates it. Default render is unchanged when
   the new options are not used.

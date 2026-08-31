@@ -39,19 +39,19 @@ Add the bare `lazy` attribute to defer each panel's projected content until its 
 
 ## API — `<dm-tabs>`
 
-| Input           | Type                                                                          | Default        | Description                                                 |
-| --------------- | ----------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------- |
-| `selectedValue` | `string \| undefined`                                                         | first tab      | Value of the active tab. Two-way (`[(selectedValue)]`).     |
-| `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`    | Semantic color.                                             |
-| `variant`       | `'solid' \| 'bordered' \| 'light' \| 'underlined'`                            | `'underlined'` | Visual variant.                                             |
-| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`         | Size scale (32/40/48px tabs).                               |
-| `radius`        | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                    | `'md'`         | Corner rounding. Ignored by the `underlined` variant.       |
-| `placement`     | `'top' \| 'start'`                                                            | `'top'`        | `start` renders the tablist vertically at the inline start. |
-| `fullWidth`     | `boolean`                                                                     | `true`         | Stretch tabs to share the row (horizontal) equally.         |
-| `divider`       | `boolean`                                                                     | `true`         | Separator rule under the tablist (`light` / `underlined`).  |
+| Input           | Type                                                                          | Default        | Description                                                  |
+| --------------- | ----------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| `selectedValue` | `string \| undefined`                                                         | first tab      | Value of the active tab. Two-way (`[(selectedValue)]`).      |
+| `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'`    | Semantic color.                                              |
+| `variant`       | `'solid' \| 'bordered' \| 'light' \| 'underlined'`                            | `'underlined'` | Visual variant.                                              |
+| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`         | Size scale (32/40/48px tabs).                                |
+| `radius`        | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'`                                    | `'md'`         | Corner rounding. Ignored by the `underlined` variant.        |
+| `placement`     | `'top' \| 'start'`                                                            | `'top'`        | `start` renders the tablist vertically at the inline start.  |
+| `fullWidth`     | `boolean`                                                                     | `true`         | Stretch tabs to share the row (horizontal) equally.          |
+| `divider`       | `boolean`                                                                     | `true`         | Separator rule under the tablist (`light` / `underlined`).   |
 | `lazy`          | `boolean`                                                                     | `false`        | Defer each panel's content until its tab is first activated. |
-| `disabled`      | `boolean`                                                                     | `false`        | Disables the whole tablist.                                 |
-| `ariaLabel`     | `string`                                                                      | `''`           | Accessible label for the tablist.                           |
+| `disabled`      | `boolean`                                                                     | `false`        | Disables the whole tablist.                                  |
+| `ariaLabel`     | `string`                                                                      | `''`           | Accessible label for the tablist.                            |
 
 ## API — `<dm-tab>`
 
