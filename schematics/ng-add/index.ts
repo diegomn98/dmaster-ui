@@ -5,6 +5,11 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 export interface NgAddOptions {
   /** Workspace project to configure. Falls back to the first application in angular.json. */
   project?: string;
+  /**
+   * Prebuilt color theme to preload. `default` keeps the built-in blue; `custom`
+   * preloads nothing (scaffold one later with `ng generate @dmaster/ui:theme`).
+   */
+  theme?: string;
 }
 
 type JsonRecord = Record<string, unknown>;
@@ -20,6 +25,20 @@ const OVERLAY_PREBUILT_CSS = 'node_modules/@angular/cdk/overlay-prebuilt.css';
 const PRECOMPILED_CSS = 'node_modules/@dmaster/ui/styles/dmaster-ui.css';
 const STYLES_MARKER = '@dmaster/ui/styles';
 const SCSS_USE_STATEMENT = "@use '@dmaster/ui/styles/index';";
+
+const THEMES_DIR = 'node_modules/@dmaster/ui/themes/';
+/** Prebuilt theme names — mirrors scripts/themes.manifest.mjs and schema.json's enum. */
+const PREBUILT_THEMES = [
+  'ocean',
+  'cobalt',
+  'iris',
+  'grape',
+  'rose',
+  'ember',
+  'sunset',
+  'forest',
+  'slate',
+];
 
 const MANUAL_STYLES_HELP =
   `configure the styles manually: put "${OVERLAY_PREBUILT_CSS}" at the beginning of the ` +
@@ -43,7 +62,7 @@ export function ngAdd(options: NgAddOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
     addAngularCdkDependency(tree, context);
     setupStyles(tree, context, options);
-    logNextSteps(context);
+    logNextSteps(context, options);
     return tree;
   };
 }
@@ -154,9 +173,54 @@ function setupStyles(tree: Tree, context: SchematicContext, options: NgAddOption
   // 2. Library styles (Sass @use, or the precompiled CSS bundle as a fallback).
   workspaceChanged = addLibraryStyles(tree, context, resolved, styles) || workspaceChanged;
 
+  // 3. Prebuilt color theme, loaded LAST so its brand tokens win over the base.
+  workspaceChanged = addPrebuiltTheme(context, resolved, styles, options.theme) || workspaceChanged;
+
   if (workspaceChanged) {
     tree.overwrite(path, stringifyJson(workspace, raw));
   }
+}
+
+/**
+ * Appends the chosen prebuilt theme's CSS to the project's `styles` — last in the
+ * array so it overrides the base tokens. No-op for `default`/`custom`/unset, and
+ * skipped (with a note) if a `@dmaster/ui` theme is already wired. Returns `true`
+ * when the styles array was modified.
+ */
+function addPrebuiltTheme(
+  context: SchematicContext,
+  resolved: ResolvedProject,
+  styles: unknown[],
+  theme: string | undefined,
+): boolean {
+  if (theme === undefined || theme === '' || theme === 'default' || theme === 'custom') {
+    if (theme === 'custom') {
+      context.logger.info(
+        'Scaffold a custom theme any time with: ng generate @dmaster/ui:theme <name>',
+      );
+    }
+    return false;
+  }
+
+  if (!PREBUILT_THEMES.includes(theme)) {
+    context.logger.warn(
+      `Unknown theme "${theme}" — skipping. Valid themes: ${PREBUILT_THEMES.join(', ')}.`,
+    );
+    return false;
+  }
+
+  const alreadyThemed = styles.some((entry) =>
+    (styleEntryPath(entry) ?? '').startsWith(THEMES_DIR),
+  );
+  if (alreadyThemed) {
+    context.logger.info('A @dmaster/ui theme is already configured — leaving it in place.');
+    return false;
+  }
+
+  const entry = `${THEMES_DIR}${theme}.css`;
+  styles.push(entry);
+  context.logger.info(`Added the "${theme}" theme ("${entry}") to project "${resolved.name}".`);
+  return true;
 }
 
 /**
@@ -259,10 +323,20 @@ function findGlobalStylesheet(project: JsonRecord, styles: unknown[]): string | 
 }
 
 /** Prints the optional provider setup and a pointer to the getting-started guide. */
-function logNextSteps(context: SchematicContext): void {
+function logNextSteps(context: SchematicContext, options: NgAddOptions): void {
+  const themedNote =
+    options.theme !== undefined &&
+    options.theme !== '' &&
+    options.theme !== 'default' &&
+    options.theme !== 'custom'
+      ? `The "${options.theme}" theme is preloaded — the light/dark toggle still works on top of it.`
+      : 'Tip: preload a color theme with a prebuilt CSS from @dmaster/ui/themes, or scaffold your own with `ng generate @dmaster/ui:theme <name>`.';
+
   const lines = [
     '',
     '@dmaster/ui has been added to your workspace.',
+    '',
+    themedNote,
     '',
     'Optional next step — configure the global defaults in app.config.ts:',
     '',

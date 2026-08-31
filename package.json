@@ -67,6 +67,10 @@
       "sass": "./styles/*",
       "style": "./styles/*",
       "default": "./styles/*"
+    },
+    "./themes/*": {
+      "style": "./themes/*",
+      "default": "./themes/*"
     }
   },
   "sideEffects": false

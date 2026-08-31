@@ -21,6 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Prebuilt color themes + `ng add` theme picker.** Nine curated brand palettes
+  (Ocean, Cobalt, Iris, Grape, Rose, Ember, Sunset, Forest, Slate) ship as tiny
+  CSS files on the new `@dmaster/ui/themes/*` subpath. Each recolors the app in
+  **both** light and dark (the light/dark toggle keeps working) by overriding
+  only `--dm-primary`; every derived token re-computes through the OKLCH cascade.
+  `ng add @dmaster/ui` now prompts for a theme (or pass `--theme=<name>`) and
+  wires the chosen CSS into `angular.json`. Every palette's label colour is
+  gated at WCAG AA (>= 4.5:1) in both schemes by the build.
 - **`dm-button` — `iconOnly` input (compact square shape).** A glyph-only button
   no longer stretches to a text button's `min-width`: set `iconOnly` (pair it
   with `ariaLabel`) and it renders as a compact square (width = height, no

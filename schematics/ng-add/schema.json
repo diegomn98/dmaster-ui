@@ -11,6 +11,41 @@
       "$default": {
         "$source": "projectName"
       }
+    },
+    "theme": {
+      "type": "string",
+      "description": "Prebuilt color theme to preload. 'default' keeps the built-in blue; 'custom' preloads nothing (scaffold one later with `ng generate @dmaster/ui:theme`). The enum mirrors scripts/themes.manifest.mjs.",
+      "enum": [
+        "default",
+        "ocean",
+        "cobalt",
+        "iris",
+        "grape",
+        "rose",
+        "ember",
+        "sunset",
+        "forest",
+        "slate",
+        "custom"
+      ],
+      "default": "default",
+      "x-prompt": {
+        "message": "Which color theme would you like to preload?",
+        "type": "list",
+        "items": [
+          { "value": "default", "label": "Default        [ blue — the built-in theme ]" },
+          { "value": "ocean", "label": "Ocean          [ cyan ]" },
+          { "value": "cobalt", "label": "Cobalt         [ blue ]" },
+          { "value": "iris", "label": "Iris           [ indigo ]" },
+          { "value": "grape", "label": "Grape          [ purple ]" },
+          { "value": "rose", "label": "Rose           [ pink ]" },
+          { "value": "ember", "label": "Ember          [ red ]" },
+          { "value": "sunset", "label": "Sunset         [ orange ]" },
+          { "value": "forest", "label": "Forest         [ green ]" },
+          { "value": "slate", "label": "Slate          [ neutral ]" },
+          { "value": "custom", "label": "Custom…        [ scaffold with ng generate @dmaster/ui:theme ]" }
+        ]
+      }
     }
   }
 }

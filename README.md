@@ -211,8 +211,33 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 Everything is a **CSS custom property** — no Sass required to consume, no Tailwind
 lock-in, no runtime engine. Theme state lives on `<html>` attributes
 (`data-dm-theme`, `data-dm-density`), so it is SSR-safe and flips without a
-flash. There are four levels of customization, from a one-line accent swap to a
-full custom theme.
+flash. Start from a prebuilt theme, then customize across four levels — from a
+one-line accent swap to a full custom theme.
+
+### Prebuilt themes
+
+Nine curated palettes ship as tiny CSS files. Pick one at install — no code:
+
+```bash
+ng add @dmaster/ui                 # prompts for a theme
+ng add @dmaster/ui --theme=ocean   # or pass it directly
+```
+
+…or add it to `angular.json`, right after the base styles:
+
+```jsonc
+"styles": [
+  "node_modules/@angular/cdk/overlay-prebuilt.css",
+  "node_modules/@dmaster/ui/styles/dmaster-ui.css",
+  "node_modules/@dmaster/ui/themes/ocean.css" // ← recolors the whole app
+]
+```
+
+Available: `ocean` · `cobalt` · `iris` · `grape` · `rose` · `ember` · `sunset` ·
+`forest` · `slate` (plus the built-in blue, which needs no file). Each recolors
+the brand in **both** light and dark — the light/dark toggle keeps working — and
+every label color is gated at WCAG AA. Want your own? Override a token below, or
+register a [custom named theme](#3-custom-named-themes).
 
 ### 1. Override a token — the whole family cascades
 
