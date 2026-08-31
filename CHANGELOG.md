@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ng add @dmaster/ui` now prompts for a theme (or pass `--theme=<name>`) and
   wires the chosen CSS into `angular.json`. Every palette's label colour is
   gated at WCAG AA (>= 4.5:1) in both schemes by the build.
+- **`ng generate @dmaster/ui:theme <name>` — custom theme scaffold.** Generates
+  a plain-CSS theme seeded from a `--primary` color (with every other knob
+  commented in) and wires it into `angular.json` for you. Default is a **global
+  recolor** (`:root` + `[data-dm-theme='dark']`, so light/dark keeps working);
+  `--named` emits a switchable `[data-dm-theme='<name>']` block and prints the
+  `provideDmasterUI` registration. Both schematics now share `schematics/utils.ts`
+  and are covered by `npm run verify:schematics`.
 - **`dm-button` — `iconOnly` input (compact square shape).** A glyph-only button
   no longer stretches to a text button's `min-width`: set `iconOnly` (pair it
   with `ariaLabel`) and it renders as a compact square (width = height, no

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "DmasterUiThemeSchema",
+  "title": "ng generate @dmaster/ui:theme",
+  "description": "Scaffolds a custom @dmaster/ui theme (CSS) and wires it into angular.json.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Theme name — the file name and, in --named mode, the data-dm-theme value.",
+      "$default": { "$source": "argv", "index": 0 },
+      "x-prompt": "What name should the theme have? (e.g. brand, midnight)"
+    },
+    "project": {
+      "type": "string",
+      "description": "Workspace project to add the theme to. Defaults to the first application.",
+      "$default": { "$source": "projectName" }
+    },
+    "primary": {
+      "type": "string",
+      "description": "Seed brand color as a #rrggbb hex. The rest derives from it via the OKLCH cascade.",
+      "default": "#7c3aed"
+    },
+    "named": {
+      "type": "boolean",
+      "description": "Generate a switchable named theme (data-dm-theme) instead of a global recolor.",
+      "default": false
+    },
+    "scheme": {
+      "type": "string",
+      "description": "Base scheme for a named theme (drives color-scheme and the light/dark toggle).",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "path": {
+      "type": "string",
+      "description": "Directory for the generated theme file. Defaults to the project source root.",
+      "format": "path"
+    },
+    "skipImport": {
+      "type": "boolean",
+      "description": "Do not add the generated theme CSS to angular.json.",
+      "default": false
+    }
+  },
+  "required": ["name"]
+}

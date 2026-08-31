@@ -2,9 +2,15 @@
   "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "ng-add": {
-      "description": "Adds @dmaster/ui to an Angular application: installs @angular/cdk, wires the CDK overlay styles into angular.json and loads the library theme styles.",
+      "description": "Adds @dmaster/ui to an Angular application: installs @angular/cdk, wires the CDK overlay styles into angular.json, loads the library theme styles and optionally preloads a prebuilt color theme.",
       "factory": "./ng-add/index#ngAdd",
       "schema": "./ng-add/schema.json"
+    },
+    "theme": {
+      "description": "Scaffolds a custom @dmaster/ui theme (CSS) and wires it into angular.json.",
+      "factory": "./theme/index#theme",
+      "schema": "./theme/schema.json",
+      "aliases": ["t"]
     }
   }
 }

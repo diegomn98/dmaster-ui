@@ -236,8 +236,23 @@ ng add @dmaster/ui --theme=ocean   # or pass it directly
 Available: `ocean` · `cobalt` · `iris` · `grape` · `rose` · `ember` · `sunset` ·
 `forest` · `slate` (plus the built-in blue, which needs no file). Each recolors
 the brand in **both** light and dark — the light/dark toggle keeps working — and
-every label color is gated at WCAG AA. Want your own? Override a token below, or
-register a [custom named theme](#3-custom-named-themes).
+every label color is gated at WCAG AA.
+
+### Custom theme — `ng generate`
+
+Want your own? Scaffold one from a seed color — it writes the CSS (with every
+knob commented in) and wires it into `angular.json`:
+
+```bash
+ng generate @dmaster/ui:theme brand --primary=#e11d48
+# switchable named theme instead of a global recolor:
+ng generate @dmaster/ui:theme midnight --named --scheme=dark
+```
+
+The default is a **global recolor** (`:root` + `[data-dm-theme='dark']`, so
+light/dark keeps working). `--named` emits a `[data-dm-theme='<name>']` block and
+prints the [`provideDmasterUI`](#3-custom-named-themes) line to register it. Or
+just override a token by hand:
 
 ### 1. Override a token — the whole family cascades
 
