@@ -43,7 +43,10 @@
           { "value": "sunset", "label": "Sunset         [ orange ]" },
           { "value": "forest", "label": "Forest         [ green ]" },
           { "value": "slate", "label": "Slate          [ neutral ]" },
-          { "value": "custom", "label": "Custom…        [ scaffold with ng generate @dmaster/ui:theme ]" }
+          {
+            "value": "custom",
+            "label": "Custom…        [ scaffold with ng generate @dmaster/ui:theme ]"
+          }
         ]
       }
     }
