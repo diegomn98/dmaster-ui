@@ -3,6 +3,7 @@
 // Component tokens (overridable globally or per-instance):
 //   --dm-divider-color        line color, inherits --dm-border
 //   --dm-divider-thickness    line thickness (default 1px)
+//   --dm-divider-style        border style of dashed/dotted lines (solid keeps the fill)
 //   --dm-divider-label-color  label color, inherits --dm-fg-muted
 //   --dm-divider-label-gap    gap between the label and the line halves
 
@@ -59,4 +60,45 @@
     margin-block: var(--dm-divider-label-gap, var(--dm-space-2));
     margin-inline: 0;
   }
+}
+
+// ---- Line style ------------------------------------------------------------
+// `solid` (the default) keeps the background fill above untouched. Dashed and
+// dotted lines are drawn as a border instead (a background cannot dash): the
+// box collapses to zero and the fill switches off so only the border paints,
+// reusing the same color and thickness tokens.
+:host([data-line-style='dashed']) .dm-divider__line,
+:host([data-line-style='dotted']) .dm-divider__line {
+  height: 0;
+  border-radius: 0;
+  background: none;
+  border-top-width: var(--dm-divider-thickness, 1px);
+  border-top-color: var(--dm-divider-color, var(--dm-border));
+}
+
+:host([data-line-style='dashed']) .dm-divider__line {
+  border-top-style: var(--dm-divider-style, dashed);
+}
+
+:host([data-line-style='dotted']) .dm-divider__line {
+  border-top-style: var(--dm-divider-style, dotted);
+}
+
+// Vertical dashed/dotted: the stroke moves to the left border so the dash
+// pattern runs along the block axis.
+:host([data-orientation='vertical'][data-line-style='dashed']) .dm-divider__line,
+:host([data-orientation='vertical'][data-line-style='dotted']) .dm-divider__line {
+  width: 0;
+  height: auto;
+  border-top: 0;
+  border-left-width: var(--dm-divider-thickness, 1px);
+  border-left-color: var(--dm-divider-color, var(--dm-border));
+}
+
+:host([data-orientation='vertical'][data-line-style='dashed']) .dm-divider__line {
+  border-left-style: var(--dm-divider-style, dashed);
+}
+
+:host([data-orientation='vertical'][data-line-style='dotted']) .dm-divider__line {
+  border-left-style: var(--dm-divider-style, dotted);
 }

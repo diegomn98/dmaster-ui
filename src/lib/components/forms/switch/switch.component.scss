@@ -67,6 +67,11 @@
     height: 1.25rem;
   }
 
+  &[data-size='lg'] {
+    width: 3rem;
+    height: 1.75rem;
+  }
+
   &:hover:not(:disabled, [aria-checked='true']) {
     background-color: var(
       --dm-switch-track-bg-hover,
@@ -120,12 +125,21 @@
     height: 0.875rem;
   }
 
+  [data-size='lg'] & {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
   [data-size='md'][aria-checked='true'] & {
     transform: translateX(1rem);
   }
 
   [data-size='sm'][aria-checked='true'] & {
     transform: translateX(0.75rem);
+  }
+
+  [data-size='lg'][aria-checked='true'] & {
+    transform: translateX(1.25rem);
   }
 
   // Bouncy press feedback (elastic scale, same language as the checkbox box).
@@ -137,12 +151,20 @@
     transform: scale(0.92);
   }
 
+  [data-size='lg']:active:not(:disabled) & {
+    transform: scale(0.92);
+  }
+
   [data-size='md'][aria-checked='true']:active:not(:disabled) & {
     transform: translateX(1rem) scale(0.92);
   }
 
   [data-size='sm'][aria-checked='true']:active:not(:disabled) & {
     transform: translateX(0.75rem) scale(0.92);
+  }
+
+  [data-size='lg'][aria-checked='true']:active:not(:disabled) & {
+    transform: translateX(1.25rem) scale(0.92);
   }
 }
 

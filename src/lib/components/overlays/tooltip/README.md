@@ -12,12 +12,26 @@ Text tooltip on any element, built on the CDK Overlay. Shows on hover (with dela
 
 ## API
 
-| Input               | Type                                     | Default | Description                        |
-| ------------------- | ---------------------------------------- | ------- | ---------------------------------- |
-| `dmTooltip`         | `string` (required)                      | —       | Tooltip text. Empty → never shown. |
-| `dmTooltipPosition` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Preferred placement (auto-flips).  |
+| Input                | Type                                     | Default | Description                                                    |
+| -------------------- | ---------------------------------------- | ------- | -------------------------------------------------------------- |
+| `dmTooltip`          | `string` (required)                      | —       | Tooltip text. Empty → never shown.                             |
+| `dmTooltipPosition`  | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Preferred placement (auto-flips).                              |
+| `dmTooltipShowDelay` | `number \| null`                         | `null`  | Hover delay before showing, in ms. `null` → global default.    |
+| `dmTooltipHideDelay` | `number \| null`                         | `null`  | Delay before hiding, in ms. `null` → global default.           |
+| `dmTooltipDisabled`  | `boolean`                                | `false` | While `true` it never opens; flipping it closes an open panel. |
 
-Global defaults (position, `showDelay` 300ms, `hideDelay` 100ms): `provideTooltipDefaults({...})` / `TOOLTIP_DEFAULTS`.
+Global defaults (position, `showDelay` 300ms, `hideDelay` 100ms): `provideTooltipDefaults({...})` / `TOOLTIP_DEFAULTS`. The per-instance delay inputs override them per trigger.
+
+### Per-instance delays & disabled
+
+```html
+<!-- Instant tooltip on this trigger only; the rest of the app keeps the defaults -->
+<button dmTooltip="Send" [dmTooltipShowDelay]="0">Send</button>
+
+<!-- Suppressed while the action is unavailable; an open panel closes and
+     aria-describedby is removed -->
+<button dmTooltip="Share this item" [dmTooltipDisabled]="!canShare()">Share</button>
+```
 
 ## Accessibility
 

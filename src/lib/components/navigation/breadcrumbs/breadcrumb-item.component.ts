@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 
 import { DmBreadcrumbsComponent } from './breadcrumbs.component';
+import type { DmBreadcrumbSeparatorContext } from './breadcrumb-separator.directive';
 
 /**
  * A single crumb inside a `<dm-breadcrumbs>`. Projected into the parent, it
@@ -69,6 +70,11 @@ export class DmBreadcrumbItemComponent implements OnInit, OnDestroy {
 
   /** Anchor only when navigable: has an href, is not the current page, not disabled. */
   protected readonly isLink = computed(() => !!this.href() && !this.current() && !this.disabled());
+
+  /** Context handed to a projected `dmBreadcrumbSeparator` template. */
+  protected readonly separatorContext = computed<DmBreadcrumbSeparatorContext>(() => ({
+    $implicit: this.index(),
+  }));
 
   ngOnInit(): void {
     this.parent.registerItem(this);

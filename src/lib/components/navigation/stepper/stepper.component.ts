@@ -3,6 +3,7 @@ import {
   Component,
   booleanAttribute,
   computed,
+  contentChild,
   inject,
   input,
   model,
@@ -10,6 +11,7 @@ import {
   signal,
 } from '@angular/core';
 
+import { DmStepIndicatorDirective } from './step-indicator.directive';
 import { STEPPER_DEFAULTS } from './stepper.tokens';
 import { DmStepperColor, DmStepperOrientation, DmStepperSize } from './stepper.types';
 import type { DmStepComponent } from './step.component';
@@ -76,6 +78,12 @@ export class DmStepperComponent {
 
   /** Registered `<dm-step>` children, in projection (DOM) order. @internal */
   readonly _steps = signal<DmStepComponent[]>([]);
+
+  /**
+   * Optional projected `ng-template[dmStepIndicator]`, declared once and
+   * rendered by every step header in place of the built-in glyphs. @internal
+   */
+  readonly _indicator = contentChild(DmStepIndicatorDirective);
 
   /** Number of registered steps. */
   readonly stepCount = computed(() => this._steps().length);

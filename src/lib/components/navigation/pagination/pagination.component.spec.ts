@@ -17,6 +17,15 @@ describe('DmPaginationComponent', () => {
     fixture.detectChanges();
   }
 
+  /** Like `create`, but only sets the inputs actually passed (no implicit totalPages). */
+  function createWith(overrides: Record<string, unknown> = {}): void {
+    fixture = TestBed.createComponent(DmPaginationComponent);
+    for (const [key, value] of Object.entries(overrides)) {
+      fixture.componentRef.setInput(key, value);
+    }
+    fixture.detectChanges();
+  }
+
   const el = (sel: string): HTMLElement => fixture.nativeElement.querySelector(sel);
   const all = (sel: string): HTMLElement[] =>
     Array.from(fixture.nativeElement.querySelectorAll(sel));
@@ -173,6 +182,53 @@ describe('DmPaginationComponent', () => {
     expect(activePages()).toEqual(['1']);
     expect(prevButton().disabled).toBe(true);
     expect(nextButton().disabled).toBe(true);
+  });
+
+  // ---- Derived page count ----------------------------------------------------
+
+  it('derives the page count from length + pageSize when totalPages is not set', () => {
+    createWith({ length: 23, pageSize: 5, page: 1 });
+    expect(renderedItems()).toEqual(['1', '2', '3', '4', '5']);
+  });
+
+  it('recomputes the derived count when length changes', () => {
+    createWith({ length: 10, pageSize: 5, page: 1 });
+    expect(renderedItems()).toEqual(['1', '2']);
+
+    fixture.componentRef.setInput('length', 25);
+    fixture.detectChanges();
+    expect(renderedItems()).toEqual(['1', '2', '3', '4', '5']);
+  });
+
+  it('never derives fewer than one page', () => {
+    createWith({ length: 0, pageSize: 5 });
+    expect(renderedItems()).toEqual(['1']);
+    expect(prevButton().disabled).toBe(true);
+    expect(nextButton().disabled).toBe(true);
+  });
+
+  it('gives an explicit totalPages precedence over length + pageSize', () => {
+    createWith({ totalPages: 3, length: 100, pageSize: 5, page: 1 });
+    expect(renderedItems()).toEqual(['1', '2', '3']);
+  });
+
+  it('falls back to a single page when neither totalPages nor length/pageSize resolve', () => {
+    createWith({ pageSize: 5 });
+    expect(renderedItems()).toEqual(['1']);
+
+    createWith({ length: 50, pageSize: 0 });
+    expect(renderedItems()).toEqual(['1']);
+  });
+
+  it('clamps rendering and navigation against the derived count', () => {
+    createWith({ length: 23, pageSize: 5, page: 99 });
+    expect(activePages()).toEqual(['5']);
+    expect(nextButton().disabled).toBe(true);
+    expect(fixture.componentInstance.page()).toBe(99);
+
+    pageButton(3).click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.page()).toBe(3);
   });
 
   // ---- Labels ----------------------------------------------------------------

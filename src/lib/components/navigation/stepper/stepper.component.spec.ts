@@ -2,6 +2,7 @@ import { Component, provideZonelessChangeDetection, signal } from '@angular/core
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { DmStepIndicatorDirective } from './step-indicator.directive';
 import { DmStepComponent } from './step.component';
 import { DmStepperComponent } from './stepper.component';
 import { STEPPER_DEFAULTS } from './stepper.tokens';
@@ -237,5 +238,88 @@ describe('DmStepperComponent', () => {
 
     expect(stepper().getAttribute('data-color')).toBe('success');
     expect(stepper().getAttribute('data-size')).toBe('lg');
+  });
+
+  it('renders the built-in number indicators when no dmStepIndicator is projected', () => {
+    // Default-unchanged guard for the custom-indicator API.
+    expect(fixture.nativeElement.querySelectorAll('.dm-step__number').length).toBe(3);
+    expect(fixture.nativeElement.querySelector('.custom-ind')).toBeNull();
+  });
+});
+
+describe('DmStepperComponent with a custom dmStepIndicator template', () => {
+  @Component({
+    imports: [DmStepperComponent, DmStepComponent, DmStepIndicatorDirective],
+    template: `
+      <dm-stepper [(activeStep)]="active" ariaLabel="Wizard">
+        <ng-template
+          dmStepIndicator
+          let-index="index"
+          let-isActive="active"
+          let-completed="completed"
+          let-error="error"
+        >
+          <span
+            class="custom-ind"
+            [attr.data-active]="isActive"
+            [attr.data-completed]="completed"
+            [attr.data-error]="error"
+            >{{ index }}</span
+          >
+        </ng-template>
+        <dm-step label="One" [completed]="firstDone()">Panel 1</dm-step>
+        <dm-step label="Two" [error]="secondError()">Panel 2</dm-step>
+        <dm-step label="Three">Panel 3</dm-step>
+      </dm-stepper>
+    `,
+  })
+  class IndicatorHostComponent {
+    readonly active = signal(0);
+    readonly firstDone = signal(false);
+    readonly secondError = signal(false);
+  }
+
+  let fixture: ComponentFixture<IndicatorHostComponent>;
+
+  function customIndicators(): HTMLElement[] {
+    return Array.from(fixture.nativeElement.querySelectorAll('.custom-ind'));
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    fixture = TestBed.createComponent(IndicatorHostComponent);
+    fixture.detectChanges();
+  });
+
+  it('replaces the indicator content of every step header with the template', () => {
+    const custom = customIndicators();
+    expect(custom.length).toBe(3);
+    expect(custom.map((el) => el.textContent?.trim())).toEqual(['0', '1', '2']);
+
+    // Built-in glyphs are fully switched off…
+    expect(fixture.nativeElement.querySelector('.dm-step__number')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.dm-step__glyph')).toBeNull();
+
+    // …while the indicator circle and the header button semantics stay.
+    const indicators = fixture.nativeElement.querySelectorAll('.dm-step__indicator');
+    expect(indicators.length).toBe(3);
+    expect(custom[0].closest('.dm-step__indicator')).toBe(indicators[0]);
+    const header = fixture.nativeElement.querySelector('.dm-step__header');
+    expect(header.getAttribute('aria-current')).toBe('step');
+  });
+
+  it('exposes index / active / completed / error through the template context', () => {
+    fixture.componentInstance.firstDone.set(true);
+    fixture.componentInstance.secondError.set(true);
+    fixture.componentInstance.active.set(1);
+    fixture.detectChanges();
+
+    const [first, second, third] = customIndicators();
+    expect(first.getAttribute('data-completed')).toBe('true');
+    expect(first.getAttribute('data-active')).toBe('false');
+    expect(second.getAttribute('data-error')).toBe('true');
+    expect(second.getAttribute('data-active')).toBe('true');
+    expect(third.getAttribute('data-active')).toBe('false');
+    expect(third.getAttribute('data-completed')).toBe('false');
   });
 });

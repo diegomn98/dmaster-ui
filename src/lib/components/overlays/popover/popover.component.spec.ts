@@ -263,4 +263,72 @@ describe('DmPopover', () => {
     expect(panel()?.getAttribute('data-placement')).toBe('right');
     expect(panel()?.querySelector('.dm-popover__arrow')).toBeNull();
   });
+
+  describe('two-way [(open)] model', () => {
+    @Component({
+      imports: [DmPopoverComponent, DmPopoverTriggerDirective],
+      template: `
+        <button [dmPopoverTrigger]="pop">Open</button>
+        <dm-popover
+          #pop
+          [(open)]="open"
+          (opened)="openedCount = openedCount + 1"
+          (closed)="closedCount = closedCount + 1"
+        >
+          Content
+        </dm-popover>
+      `,
+    })
+    class OpenModelHost {
+      readonly open = signal(false);
+      openedCount = 0;
+      closedCount = 0;
+    }
+
+    it('opens and closes the overlay when the bound value changes', () => {
+      const fixture = mount(TestBed.createComponent(OpenModelHost));
+      const host = fixture.componentInstance;
+      expect(panel()).toBeNull();
+
+      host.open.set(true);
+      fixture.detectChanges();
+      tick();
+      expect(panel()).not.toBeNull();
+
+      host.open.set(false);
+      fixture.detectChanges();
+      tick();
+      expect(panel()).toBeNull();
+    });
+
+    it('reflects trigger clicks back into the bound value', () => {
+      const fixture = mount(TestBed.createComponent(OpenModelHost));
+      const host = fixture.componentInstance;
+
+      fixture.nativeElement.querySelector('button').click();
+      tick();
+      expect(host.open()).toBe(true);
+
+      fixture.nativeElement.querySelector('button').click();
+      tick();
+      expect(host.open()).toBe(false);
+    });
+
+    it('emits opened/closed once per transition, external drives included', () => {
+      const fixture = mount(TestBed.createComponent(OpenModelHost));
+      const host = fixture.componentInstance;
+
+      host.open.set(true);
+      fixture.detectChanges();
+      tick();
+      expect(host.openedCount).toBe(1);
+      expect(host.closedCount).toBe(0);
+
+      host.open.set(false);
+      fixture.detectChanges();
+      tick();
+      expect(host.openedCount).toBe(1);
+      expect(host.closedCount).toBe(1);
+    });
+  });
 });

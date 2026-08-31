@@ -1,3 +1,4 @@
+export { DmDropzoneContentDirective } from './dropzone-content.directive';
 export { DmFileUploadComponent, formatFileSize } from './file-upload.component';
 export {
   DM_FILE_UPLOAD_FALLBACK_DEFAULTS,

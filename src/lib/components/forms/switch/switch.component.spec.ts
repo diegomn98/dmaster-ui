@@ -32,6 +32,14 @@ describe('DmSwitchComponent', () => {
     expect(button(fixture).getAttribute('data-size')).toBe('md');
   });
 
+  it('reflects the size input as data-size on the control (lg)', () => {
+    const fixture = TestBed.createComponent(DmSwitchComponent);
+    fixture.componentRef.setInput('size', 'lg');
+    fixture.detectChanges();
+
+    expect(button(fixture).getAttribute('data-size')).toBe('lg');
+  });
+
   it('reflects the color input as data-color (default primary)', () => {
     const fixture = TestBed.createComponent(DmSwitchComponent);
     fixture.detectChanges();

@@ -16,7 +16,7 @@ Status label / chip with a **color × variant** API. No logic, pure theming.
 | --------- | ----------------------------------------------------------------------------- | ----------- | ----------------------------------------- |
 | `color`   | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` | Semantic color.                           |
 | `variant` | `'solid' \| 'flat' \| 'bordered' \| 'light' \| 'dot' \| 'shadow'`             | `'flat'`    | Visual variant. `dot` adds a leading dot. |
-| `size`    | `'sm' \| 'md'`                                                                | `'md'`      | Size scale.                               |
+| `size`    | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Size scale.                               |
 | `radius`  | `'sm' \| 'md' \| 'lg' \| 'full'`                                              | `'full'`    | Corner rounding. `full` is pill-shaped.   |
 
 Global defaults: `provideBadgeDefaults({...})` / `BADGE_DEFAULTS`.
@@ -28,7 +28,7 @@ Colors come from the semantic `color` × `variant` system (`--dm-primary`, `--dm
 | Token                  | Default                                                 | Description                                    |
 | ---------------------- | ------------------------------------------------------- | ---------------------------------------------- |
 | `--dm-badge-radius`    | per `radius` input (`var(--dm-radius-full)` by default) | Corner rounding, wins over the `radius` input. |
-| `--dm-badge-padding`   | `0.1875rem 0.5625rem` (md) / `0.0625rem 0.4375rem` (sm) | Inner padding.                                 |
-| `--dm-badge-font-size` | `var(--dm-text-xs)` (md) / `0.6875rem` (sm)             | Label font size.                               |
+| `--dm-badge-padding`   | `0.1875rem 0.5625rem` (md) / `0.0625rem 0.4375rem` (sm) / `0.3125rem 0.6875rem` (lg) | Inner padding.                                 |
+| `--dm-badge-font-size` | `var(--dm-text-xs)` (md) / `0.6875rem` (sm) / `var(--dm-text-sm)` (lg)               | Label font size.                               |
 | `--dm-badge-gap`       | `0.375em`                                               | Gap between the leading dot and the label.     |
 | `--dm-badge-dot-size`  | `0.5em`                                                 | Diameter of the leading dot (`variant="dot"`). |

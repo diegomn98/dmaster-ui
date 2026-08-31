@@ -144,6 +144,86 @@ describe('DmColorPickerComponent', () => {
     expect(fixture.componentInstance.value()).not.toBe('#808080');
   });
 
+  describe('format', () => {
+    it('keeps the default hex serialization when format is not set', () => {
+      const fixture = create();
+      fixture.componentInstance.writeValue('#ff0000');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.format()).toBe('hex');
+      expect(fixture.componentInstance.value()).toBe('#ff0000');
+    });
+
+    it('serializes as rgb(r g b) when format is rgb', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'rgb');
+      fixture.componentInstance.writeValue('#ff0000');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('rgb(255 0 0)');
+      expect(trigger(fixture).textContent).toContain('rgb(255 0 0)');
+    });
+
+    it('serializes rgb with a slash alpha when showAlpha is on', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'rgb');
+      fixture.componentRef.setInput('showAlpha', true);
+      fixture.componentInstance.writeValue('#ff000080');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('rgb(255 0 0 / 0.5)');
+    });
+
+    it('serializes as hsl(h s% l%) when format is hsl', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'hsl');
+      fixture.componentInstance.writeValue('#ff0000');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('hsl(0 100% 50%)');
+    });
+
+    it('serializes hsl with a slash alpha when showAlpha is on', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'hsl');
+      fixture.componentRef.setInput('showAlpha', true);
+      fixture.componentInstance.writeValue('#ff000080');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('hsl(0 100% 50% / 0.5)');
+    });
+
+    it('commits interactions in the configured format', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'rgb');
+      fixture.componentRef.setInput('swatches', ['#17c964']);
+      const changes: (string | null)[] = [];
+      fixture.componentInstance.registerOnChange((v) => changes.push(v));
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+      query<HTMLButtonElement>('.dm-color-picker__swatch')!.click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('rgb(23 201 100)');
+      expect(changes).toEqual(['rgb(23 201 100)']);
+    });
+
+    it('writeValue accepts rgb() and hsl() strings and re-serializes them', () => {
+      const fixture = create();
+      fixture.componentInstance.writeValue('rgb(0 128 255)');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('#0080ff');
+      fixture.componentInstance.writeValue('hsl(0, 100%, 50%)');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.value()).toBe('#ff0000');
+    });
+
+    it('keeps the panel field as hex whatever the format', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('format', 'hsl');
+      fixture.componentInstance.writeValue('#ff0000');
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+      expect(query<HTMLInputElement>('.dm-color-picker__hex-input')!.value).toBe('#ff0000');
+    });
+  });
+
   it('showAlpha adds the alpha rail and emits an 8-digit hex', () => {
     const fixture = create();
     fixture.componentRef.setInput('showAlpha', true);

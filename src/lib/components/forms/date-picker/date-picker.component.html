@@ -173,7 +173,14 @@
                     (click)="selectDate(cell.date)"
                     (mouseenter)="onDayHover(cell.date)"
                   >
-                    {{ cell.label }}
+                    @if (dayTemplate(); as tpl) {
+                      <ng-container
+                        [ngTemplateOutlet]="tpl"
+                        [ngTemplateOutletContext]="dayContext(cell)"
+                      />
+                    } @else {
+                      {{ cell.label }}
+                    }
                   </button>
                 </div>
               }

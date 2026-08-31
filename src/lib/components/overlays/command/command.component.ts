@@ -10,6 +10,7 @@ import {
   ViewContainerRef,
   afterNextRender,
   computed,
+  contentChild,
   effect,
   inject,
   input,
@@ -22,6 +23,7 @@ import {
 
 import { dmUid } from '../../../core/utils/uid';
 import { DmKbdComponent } from '../../primitives/kbd';
+import { DmCommandItemContext, DmCommandItemDirective } from './command-item.directive';
 import { COMMAND_DEFAULTS } from './command.tokens';
 import { DmCommandGroup, DmCommandItem } from './command.types';
 
@@ -94,6 +96,18 @@ export class DmCommandComponent {
   protected readonly navigateHint = this.defaults.navigateHint;
   protected readonly selectHint = this.defaults.selectHint;
   protected readonly closeHint = this.defaults.closeHint;
+
+  // ---- Content templates ---------------------------------------------------
+  /** Optional projected `ng-template[dmCommandItem]` replacing the row content. */
+  private readonly itemDirective = contentChild(DmCommandItemDirective);
+
+  /** The custom row template, or `null` to render the default label + shortcut. */
+  protected readonly itemTemplate = computed(() => this.itemDirective()?.templateRef ?? null);
+
+  /** Context builder for a templated row. */
+  protected itemContext(item: DmCommandItem, index: number): DmCommandItemContext {
+    return { $implicit: item, active: index === this.activeIndex() };
+  }
 
   // ---- State ---------------------------------------------------------------
   protected readonly query = signal('');

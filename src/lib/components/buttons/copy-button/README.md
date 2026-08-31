@@ -32,6 +32,24 @@ The library ships no built-in copy: set `ariaLabel` (required for the icon-only
 form), `copiedAriaLabel` (announced on success) and any visible `copyLabel` /
 `copiedLabel` yourself.
 
+### Custom icons
+
+Replace the built-in copy / check glyphs by projecting elements marked with the
+`dmCopyIcon` and `dmCopiedIcon` directives. The `isCopied()` flip decides which
+one shows; a slot you do not project falls back to its built-in glyph. Projected
+icons are not auto-sized — size them yourself (the built-ins are `1.125em`).
+
+```ts
+import { DmCopyIconDirective, DmCopiedIconDirective } from '@dmaster/ui';
+```
+
+```html
+<dm-copy-button value="npm i @dmaster/ui" ariaLabel="Copy install command">
+  <dm-icon dmCopyIcon size="1.125em">content_paste</dm-icon>
+  <dm-icon dmCopiedIcon size="1.125em">done</dm-icon>
+</dm-copy-button>
+```
+
 ## API — `dm-copy-button`
 
 | Input             | Type                  | Default   | Description                                             |
@@ -41,11 +59,14 @@ form), `copiedAriaLabel` (announced on success) and any visible `copyLabel` /
 | `variant`         | `DmCopyButtonVariant` | `flat`    | Visual variant, forwarded to `dm-button`.               |
 | `radius`          | `DmCopyButtonRadius`  | `md`      | Corner rounding, forwarded to `dm-button`.              |
 | `size`            | `DmSize`              | `md`      | Control size (32/40/48px).                              |
+| `disabled`        | `boolean` (attribute) | `false`   | Disables the button; copying is blocked.                |
 | `resetDelay`      | `number`              | `2000`    | How long the check state lasts, in ms.                  |
 | `copyLabel`       | `string`              | `''`      | Optional visible label. Empty = icon-only.              |
 | `copiedLabel`     | `string`              | `''`      | Visible label while copied (falls back to `copyLabel`). |
 | `ariaLabel`       | `string`              | `''`      | Accessible name. **Required for the icon-only form.**   |
 | `copiedAriaLabel` | `string`              | `''`      | Announced to screen readers on a successful copy.       |
+| `[dmCopyIcon]`    | projected slot        | —         | Custom idle icon, replaces the built-in copy glyph.     |
+| `[dmCopiedIcon]`  | projected slot        | —         | Custom confirmation icon, replaces the built-in check.  |
 
 | Output      | Type      | Description                              |
 | ----------- | --------- | ---------------------------------------- |

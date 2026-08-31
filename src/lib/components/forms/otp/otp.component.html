@@ -1,25 +1,54 @@
-@for (i of slots(); track i) {
-  <input
-    #cell
-    class="dm-otp__cell"
-    [type]="mask() ? 'password' : 'text'"
-    [attr.inputmode]="inputMode()"
-    autocomplete="one-time-code"
-    autocapitalize="off"
-    autocorrect="off"
-    spellcheck="false"
-    maxlength="1"
-    [value]="cellValue(i)"
-    [disabled]="isDisabled()"
-    [attr.data-filled]="cellValue(i) ? 'true' : null"
-    [attr.aria-label]="(ariaLabel() || 'Character') + ' ' + (i + 1) + ' of ' + length()"
-    (input)="onInput(i, $event)"
-    (keydown)="onKeydown(i, $event)"
-    (paste)="onPaste(i, $event)"
-    (focus)="onFocus($event)"
-    (blur)="onBlur()"
-  />
-  @if (showSeparatorAfter(i)) {
-    <span class="dm-otp__sep" aria-hidden="true"></span>
+@if (label()) {
+  <label class="dm-otp__label" [id]="labelId" [attr.for]="uid + '-cell-0'">
+    {{ label() }}
+    @if (required()) {
+      <span class="dm-otp__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div
+  class="dm-otp__cells"
+  role="group"
+  [attr.aria-label]="!label() && ariaLabel() ? ariaLabel() : null"
+  [attr.aria-labelledby]="label() ? labelId : null"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-disabled]="isDisabled() ? 'true' : null"
+>
+  @for (i of slots(); track i) {
+    <input
+      #cell
+      class="dm-otp__cell"
+      [id]="uid + '-cell-' + i"
+      [type]="mask() ? 'password' : 'text'"
+      [attr.inputmode]="inputMode()"
+      autocomplete="one-time-code"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+      maxlength="1"
+      [value]="cellValue(i)"
+      [disabled]="isDisabled()"
+      [readOnly]="readonly()"
+      [attr.data-filled]="cellValue(i) ? 'true' : null"
+      [attr.aria-label]="
+        (ariaLabel() || label() || 'Character') + ' ' + (i + 1) + ' of ' + length()
+      "
+      [attr.aria-invalid]="error() ? 'true' : null"
+      (input)="onInput(i, $event)"
+      (keydown)="onKeydown(i, $event)"
+      (paste)="onPaste(i, $event)"
+      (focus)="onFocus($event)"
+      (blur)="onBlur()"
+    />
+    @if (showSeparatorAfter(i)) {
+      <span class="dm-otp__sep" aria-hidden="true"></span>
+    }
   }
+</div>
+
+@if (error()) {
+  <p class="dm-otp__error" [id]="errorId" role="alert">{{ error() }}</p>
+} @else if (description()) {
+  <p class="dm-otp__hint" [id]="hintId">{{ description() }}</p>
 }

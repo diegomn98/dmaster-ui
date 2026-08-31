@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,7 @@ import {
 } from '@angular/core';
 
 import { dmUid } from '../../../core/utils/uid';
+import { DmStepIndicatorContext } from './step-indicator.directive';
 import { DmStepperComponent } from './stepper.component';
 import { DmStepState } from './stepper.types';
 
@@ -29,6 +31,7 @@ import { DmStepState } from './stepper.types';
  */
 @Component({
   selector: 'dm-step',
+  imports: [NgTemplateOutlet],
   templateUrl: './step.component.html',
   styleUrl: './step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +78,19 @@ export class DmStepComponent implements OnInit, OnDestroy {
 
   /** Locked = not disabled outright, but blocked by linear progression. */
   protected readonly locked = computed(() => !this.disabled() && !this.reachable());
+
+  /** Custom indicator template declared on the parent stepper, or `null` for the built-ins. */
+  protected readonly indicatorTemplate = computed(
+    () => this.parent._indicator()?.templateRef ?? null,
+  );
+
+  /** Context handed to the custom `dmStepIndicator` template. */
+  protected readonly indicatorContext = computed<DmStepIndicatorContext>(() => ({
+    index: this.index(),
+    active: this.isActive(),
+    completed: this.completed(),
+    error: this.error(),
+  }));
 
   /** Visual/interaction state reflected on the host. */
   readonly state = computed<DmStepState>(() => {

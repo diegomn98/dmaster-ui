@@ -3,8 +3,10 @@ import { ApplicationRef, Component, provideZonelessChangeDetection, signal } fro
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
+import { DmDatePickerDayDirective } from './date-picker-day.directive';
 import { DmDatePickerComponent } from './date-picker.component';
 import { DM_DATE_LOCALE, provideDateLocale, provideDatePickerDefaults } from './date-picker.tokens';
+import { DmDateRange } from './date-picker.types';
 
 @Component({
   imports: [DmDatePickerComponent, ReactiveFormsModule],
@@ -12,6 +14,46 @@ import { DM_DATE_LOCALE, provideDateLocale, provideDatePickerDefaults } from './
 })
 class FormHostComponent {
   readonly control = new FormControl<Date | null>(null);
+}
+
+@Component({
+  imports: [DmDatePickerComponent, DmDatePickerDayDirective],
+  template: `
+    <dm-date-picker
+      label="Start"
+      locale="en-US"
+      [range]="range()"
+      [(value)]="value"
+      [(rangeValue)]="rangeValue"
+      [min]="min()"
+      [max]="max()"
+    >
+      <ng-template
+        dmDatePickerDay
+        let-date
+        let-selected="selected"
+        let-disabled="disabled"
+        let-today="today"
+        let-outside="outside"
+      >
+        <span
+          class="custom-day"
+          [class.custom-day--selected]="selected"
+          [class.custom-day--disabled]="disabled"
+          [class.custom-day--today]="today"
+          [class.custom-day--outside]="outside"
+          >{{ date.getDate() }}</span
+        >
+      </ng-template>
+    </dm-date-picker>
+  `,
+})
+class DayTemplateHostComponent {
+  readonly range = signal(false);
+  readonly value = signal<Date | null>(new Date(2026, 7, 17));
+  readonly rangeValue = signal<DmDateRange | null>(null);
+  readonly min = signal<Date | null>(null);
+  readonly max = signal<Date | null>(null);
 }
 
 describe('DmDatePickerComponent', () => {
@@ -462,6 +504,102 @@ describe('DmDatePickerComponent', () => {
       inMonthDays()[5].click();
       fixture.detectChanges();
       expect(fixture.componentInstance.value()).toBeNull();
+    });
+  });
+
+  describe('custom day template (dmDatePickerDay)', () => {
+    function customDays(): HTMLElement[] {
+      return Array.from(overlayContainer.getContainerElement().querySelectorAll('.custom-day'));
+    }
+
+    function openHost(): ComponentFixture<DayTemplateHostComponent> {
+      const fixture = TestBed.createComponent(DayTemplateHostComponent);
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it('renders the projected template in every day cell with context flags', () => {
+      const fixture = TestBed.createComponent(DayTemplateHostComponent);
+      fixture.componentInstance.min.set(new Date(2026, 7, 10));
+      fixture.componentInstance.max.set(new Date(2026, 7, 20));
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+
+      expect(customDays()).toHaveLength(42);
+      const selected = customDays().filter((d) => d.classList.contains('custom-day--selected'));
+      expect(selected).toHaveLength(1);
+      expect(selected[0].textContent?.trim()).toBe('17');
+      // Aug 1–9 / 21+ fall outside min/max → flagged disabled through the context.
+      expect(customDays().some((d) => d.classList.contains('custom-day--disabled'))).toBe(true);
+      // The 42-cell grid always includes adjacent-month filler days.
+      expect(customDays().some((d) => d.classList.contains('custom-day--outside'))).toBe(true);
+    });
+
+    it('marks today through the template context', () => {
+      const fixture = TestBed.createComponent(DayTemplateHostComponent);
+      const now = new Date();
+      fixture.componentInstance.value.set(
+        new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+      );
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+
+      const todayButton = overlayContainer
+        .getContainerElement()
+        .querySelector('.dm-date-picker__day[aria-current="date"]');
+      expect(todayButton?.querySelector('.custom-day--today')).not.toBeNull();
+      expect(customDays().filter((d) => d.classList.contains('custom-day--today'))).toHaveLength(1);
+    });
+
+    it('still selects the day when the projected content is clicked', () => {
+      const fixture = openHost();
+      const target = customDays().find(
+        (d) =>
+          d.textContent?.trim() === '20' &&
+          !d.classList.contains('custom-day--outside') &&
+          !d.classList.contains('custom-day--disabled'),
+      )!;
+      target.click();
+      fixture.detectChanges();
+
+      const v = fixture.componentInstance.value();
+      expect(v).toBeInstanceOf(Date);
+      expect(v!.getDate()).toBe(20);
+      expect(panel()).toBeNull();
+    });
+
+    it('flags range endpoints and the confirmed band as selected', () => {
+      const fixture = TestBed.createComponent(DayTemplateHostComponent);
+      fixture.componentInstance.range.set(true);
+      fixture.componentInstance.value.set(null);
+      fixture.componentInstance.rangeValue.set({
+        start: new Date(2026, 7, 10),
+        end: new Date(2026, 7, 20),
+      });
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+
+      // Aug 10 … Aug 20 inclusive — mirrors the cells' aria-selected.
+      const selected = customDays().filter((d) => d.classList.contains('custom-day--selected'));
+      expect(selected).toHaveLength(11);
+    });
+
+    it('keeps the default plain-number render when no template is projected', () => {
+      const fixture = create();
+      fixture.componentRef.setInput('locale', 'en-US');
+      fixture.detectChanges();
+      trigger(fixture).click();
+      fixture.detectChanges();
+
+      expect(customDays()).toHaveLength(0);
+      // Each day button contains only the Intl-formatted digits, no extra nodes.
+      expect(days().every((d) => d.children.length === 0)).toBe(true);
+      expect(days().every((d) => /^\d{1,2}$/.test(d.textContent?.trim() ?? ''))).toBe(true);
     });
   });
 });

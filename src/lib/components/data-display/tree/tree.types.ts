@@ -10,8 +10,8 @@ export interface DmTreeNode {
   /** Child nodes. A node with a non-empty `children` array is a "parent". */
   children?: DmTreeNode[];
   /**
-   * Optional leading-icon hint. The library renders a decorative marker slot
-   * (it does NOT depend on `dm-icon`); the string is available on the node for
+   * Optional icon hint. NOT rendered by the default row — it is data made
+   * available to a projected `dmTreeNode` template (as `node.icon`) for
    * consumers wiring their own icon system.
    */
   icon?: string;

@@ -26,12 +26,25 @@ import { DmPaginationComponent } from '@dmaster/ui';
 <dm-pagination [totalPages]="8" [showControls]="false" [(page)]="page" />
 ```
 
+### `length` + `pageSize`
+
+Instead of pre-computing the page count, pass the total item count and the page size (Material-paginator style) and the component derives it as `Math.max(1, Math.ceil(length / pageSize))`:
+
+```html
+<!-- 123 items, 10 per page → 13 pages -->
+<dm-pagination [length]="123" [pageSize]="10" [(page)]="page" />
+```
+
+An explicit `totalPages` always wins over the derivation; when neither resolves, the pager renders a single page.
+
 ## API
 
 | Input           | Type                                                                          | Default                      | Description                                                   |
 | --------------- | ----------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------- |
 | `page`          | `model<number>`                                                               | `1`                          | Two-way current page (1-based). Navigation clamps into range. |
-| `totalPages`    | `number`                                                                      | — (required)                 | Total number of pages.                                        |
+| `totalPages`    | `number \| null`                                                              | `null`                       | Total number of pages. Wins over `length`/`pageSize`.         |
+| `length`        | `number \| null`                                                              | `null`                       | Total item count; with `pageSize`, derives the page count.    |
+| `pageSize`      | `number \| null`                                                              | `null`                       | Items per page; with `length`, derives the page count.        |
 | `siblingCount`  | `number`                                                                      | `1`                          | Pages shown on each side of the current page.                 |
 | `boundaryCount` | `number`                                                                      | `1`                          | Pages always shown at the start and end.                      |
 | `showControls`  | `boolean`                                                                     | `true`                       | Previous/next chevron buttons (disabled at the extremes).     |

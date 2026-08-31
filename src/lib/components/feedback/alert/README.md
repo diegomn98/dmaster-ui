@@ -43,10 +43,23 @@ import { DmAlertComponent } from '@dmaster/ui';
 
 - Default `<ng-content>` — free body, rendered inside the content column **after** the `description` input (both render when both are present).
 - `<ng-content select="[dmAlertAction]" />` — action slot aligned to the end (e.g. an "Undo" `dm-button`). The slot collapses when nothing is projected.
+- `<ng-content select="[dmAlertIcon]" />` — custom icon: replaces the built-in tone glyph inside the icon box (requires importing `DmAlertIconDirective`). `hideIcon` still hides the whole box.
 
 ### Icons
 
 The icon is picked by `color`: info circle for `default`/`primary`/`secondary`, check circle for `success`, warning triangle for `warning`, x circle for `danger`. Inline SVG, `currentColor`, 20px, Heroicons-outline style.
+
+### Custom icon (`[dmAlertIcon]`)
+
+Project any element with the `dmAlertIcon` attribute (import `DmAlertIconDirective` alongside the component) to replace the built-in glyph:
+
+```html
+<dm-alert color="success" title="Deployed">
+  <dm-icon dmAlertIcon size="1.25rem">rocket_launch</dm-icon>
+</dm-alert>
+```
+
+The custom icon renders inside the same 2rem icon box (decorative, `aria-hidden` — meaning stays in the text), so the tinted circle of the `flat`/`faded` variants is preserved. Size the projected element yourself (the built-in 1.25rem sizing only applies to the internal SVG). `hideIcon` hides the box, built-in or custom.
 
 ## Dismiss behavior (self-dismissing)
 

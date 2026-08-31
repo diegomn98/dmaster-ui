@@ -1,0 +1,29 @@
+@use 'mixins';
+
+// The panel chrome (background, padding, radius, shadow) comes from the
+// global `.dm-dialog-panel` styles; this component only lays out its content.
+:host {
+  display: grid;
+  gap: var(--dm-space-4);
+}
+
+.dm-confirm-dialog__title {
+  margin: 0;
+  font-size: var(--dm-text-lg);
+  font-weight: var(--dm-font-semibold);
+  letter-spacing: -0.01em;
+}
+
+.dm-confirm-dialog__message {
+  margin: 0;
+  font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-relaxed);
+  color: var(--dm-fg-muted);
+}
+
+.dm-confirm-dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dm-space-2);
+}

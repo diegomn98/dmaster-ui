@@ -1,9 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ApplicationRef, Component, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationRef, Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject, throwError } from 'rxjs';
 
+import { DmSelectOptionDirective } from './select-option.directive';
 import { DmSelectComponent } from './select.component';
 import { DmSelectItem, DmSelectLoadResult, DmSelectOptionOrGroup } from './select.types';
 
@@ -37,6 +38,23 @@ const GROUPED: DmSelectOptionOrGroup<string>[] = [
 class FormHostComponent {
   readonly items = ITEMS;
   readonly control = new FormControl<string | null>(null);
+}
+
+@Component({
+  imports: [DmSelectComponent, DmSelectOptionDirective],
+  template: `
+    <dm-select label="Pet" [items]="items" [(value)]="value">
+      <ng-template dmSelectOption let-item let-index="index" let-selected="selected">
+        <span class="custom-option" [attr.data-index]="index" [attr.data-selected]="selected">
+          {{ item.label.toUpperCase() }}
+        </span>
+      </ng-template>
+    </dm-select>
+  `,
+})
+class OptionTemplateHostComponent {
+  readonly items = ITEMS;
+  readonly value = signal<string | null>('dog');
 }
 
 describe('DmSelectComponent', () => {
@@ -417,6 +435,65 @@ describe('DmSelectComponent', () => {
       tick();
 
       expect(fixture.componentInstance.value()).toBe('dog');
+    });
+  });
+
+  describe('custom option template (dmSelectOption)', () => {
+    function createTemplated(): ComponentFixture<OptionTemplateHostComponent> {
+      const fixture = TestBed.createComponent(OptionTemplateHostComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    it('renders the projected template with $implicit / index / selected context', () => {
+      const fixture = createTemplated();
+      trigger(fixture).click();
+      tick();
+
+      const custom = panelQueryAll('.custom-option');
+      expect(custom.length).toBe(ITEMS.length);
+      expect(custom[0].textContent).toContain('CAT');
+      expect(custom[1].getAttribute('data-index')).toBe('1');
+      // `selected` is true ONLY for the selected option (dog).
+      expect(custom.map((el) => el.getAttribute('data-selected'))).toEqual([
+        'false',
+        'true',
+        'false',
+        'false',
+      ]);
+      // The default label block is replaced…
+      expect(panelQuery('.dm-select__option-label')).toBeNull();
+      // …while aria-selected and the check indicator stay on the option row.
+      const selected = panelOptions()[1];
+      expect(selected.getAttribute('aria-selected')).toBe('true');
+      expect(selected.querySelector('.dm-select__option-check')).not.toBeNull();
+    });
+
+    it('keeps the default label + description markup when no template is projected', () => {
+      const fixture = createDirect();
+      trigger(fixture).click();
+      tick();
+
+      const labels = panelQueryAll('.dm-select__option-label');
+      expect(labels.length).toBe(ITEMS.length);
+      expect(labels[0].textContent).toContain('Cat');
+      expect(panelQuery('.dm-select__option-description')?.textContent).toContain(
+        "Man's best friend",
+      );
+    });
+
+    it('still selects on click through the templated content', () => {
+      const fixture = createTemplated();
+      trigger(fixture).click();
+      tick();
+
+      panelOptions()[0].click(); // Cat
+      tick();
+
+      expect(fixture.componentInstance.value()).toBe('cat');
+      // The trigger keeps showing the plain item label (template is panel-only).
+      expect(trigger(fixture).textContent).toContain('Cat');
+      expect(panelOptions().length).toBe(0); // single mode still closes
     });
   });
 

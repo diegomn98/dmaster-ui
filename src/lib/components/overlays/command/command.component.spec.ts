@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmCommandItemDirective } from './command-item.directive';
 import { DmCommandComponent } from './command.component';
 import { COMMAND_DEFAULTS } from './command.tokens';
 import { DmCommandItem } from './command.types';
@@ -47,6 +48,28 @@ class HostComponent {
 class BareHostComponent {
   readonly items = ITEMS;
   readonly open = signal(false);
+}
+
+// Projects an ng-template[dmCommandItem] replacing the default row content.
+@Component({
+  imports: [DmCommandComponent, DmCommandItemDirective],
+  template: `
+    <dm-command [items]="items" [(open)]="open" (selected)="onSelect($event)">
+      <ng-template dmCommandItem let-item let-active="active">
+        <span class="custom-row" [attr.data-custom-active]="active ? '' : null">
+          {{ item.icon }} · {{ item.label }}
+        </span>
+      </ng-template>
+    </dm-command>
+  `,
+})
+class TemplatedHostComponent {
+  readonly items: DmCommandItem[] = ITEMS.map((item) => ({ ...item, icon: `${item.id}-icon` }));
+  readonly open = signal(false);
+  readonly selectedIds: string[] = [];
+  onSelect(item: DmCommandItem): void {
+    this.selectedIds.push(item.id);
+  }
 }
 
 describe('DmCommandComponent', () => {
@@ -367,5 +390,68 @@ describe('DmCommandComponent', () => {
     type(input()!, 'zzzzz');
     tick();
     expect(container().querySelector('.dm-command__empty')?.textContent).toContain('Nothing here');
+  });
+
+  describe('custom item template (dmCommandItem)', () => {
+    function createTemplated(): ComponentFixture<TemplatedHostComponent> {
+      const fixture = TestBed.createComponent(TemplatedHostComponent);
+      fixture.detectChanges();
+      tick();
+      openPalette(fixture);
+      return fixture;
+    }
+
+    it('renders the projected template with { $implicit, active } for every row', () => {
+      createTemplated();
+      const rows = options().map((o) => o.querySelector('.custom-row'));
+      expect(rows.length).toBe(ITEMS.length);
+      expect(rows.every((r) => r !== null)).toBe(true);
+      expect(rows[0]?.textContent).toContain('new-icon · New File');
+      // `active` reflects the highlighted option (first enabled on open).
+      expect(rows[0]?.hasAttribute('data-custom-active')).toBe(true);
+      expect(rows[1]?.hasAttribute('data-custom-active')).toBe(false);
+    });
+
+    it('replaces the default label + shortcut chip, keeping the option shell', () => {
+      createTemplated();
+      expect(container().querySelector('.dm-command__option-label')).toBeNull();
+      expect(container().querySelector('.dm-command__option-shortcut')).toBeNull();
+      // Mechanics untouched: role, ids, active highlight and aria live on the shell.
+      const active = activeOption()!;
+      expect(active.getAttribute('role')).toBe('option');
+      expect(active.getAttribute('aria-selected')).toBe('true');
+      expect(input()?.getAttribute('aria-activedescendant')).toBe(active.id);
+    });
+
+    it('keeps keyboard navigation and filtering over templated rows', () => {
+      createTemplated();
+      key(input(), 'ArrowDown');
+      tick();
+      expect(activeOption()?.querySelector('.custom-row')?.hasAttribute('data-custom-active')).toBe(
+        true,
+      );
+      type(input()!, 'copy');
+      tick();
+      expect(options().length).toBe(1);
+      expect(options()[0].textContent).toContain('copy-icon · Copy');
+    });
+
+    it('still emits selected and closes when a templated item is activated', () => {
+      const fixture = createTemplated();
+      options()[1].click(); // Open File
+      tick();
+      expect(fixture.componentInstance.selectedIds).toEqual(['open']);
+      expect(panel()).toBeNull();
+      expect(fixture.componentInstance.open()).toBe(false);
+    });
+
+    it('renders the default row markup when no template is projected', () => {
+      const fixture = create();
+      openPalette(fixture);
+      const first = options()[0];
+      expect(first.querySelector('.dm-command__option-label')?.textContent).toContain('New File');
+      expect(first.querySelector('.dm-command__option-shortcut')).not.toBeNull();
+      expect(container().querySelector('.custom-row')).toBeNull();
+    });
   });
 });

@@ -121,15 +121,27 @@ describe('DmSearchFieldComponent', () => {
     fixture.detectChanges();
     expect(clearBtn(fixture)).not.toBeNull();
 
-    fixture.componentRef.setInput('readOnly', true);
+    fixture.componentRef.setInput('readonly', true);
     fixture.detectChanges();
+    expect(input(fixture).readOnly).toBe(true);
     expect(clearBtn(fixture)).toBeNull();
 
-    fixture.componentRef.setInput('readOnly', false);
+    fixture.componentRef.setInput('readonly', false);
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
+    expect(input(fixture).readOnly).toBe(false);
     expect(clearBtn(fixture)).toBeNull();
     expect(input(fixture).disabled).toBe(true);
+  });
+
+  it('reflects the readonly input onto the native input (default not read-only)', () => {
+    const fixture = TestBed.createComponent(DmSearchFieldComponent);
+    fixture.detectChanges();
+    expect(input(fixture).readOnly).toBe(false);
+
+    fixture.componentRef.setInput('readonly', true);
+    fixture.detectChanges();
+    expect(input(fixture).readOnly).toBe(true);
   });
 
   it('honors injected defaults', () => {

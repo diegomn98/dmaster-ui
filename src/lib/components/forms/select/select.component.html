@@ -232,10 +232,21 @@
             (keydown)="onKeydown($event)"
             (mouseenter)="onOptionHover(row.index)"
           >
+            <!-- The custom template replaces ONLY the label + description block;
+                 the wrapper keeps flex sizing so the check stays pinned right. -->
             <span class="dm-select__option-text">
-              <span class="dm-select__option-label">{{ row.option.item.label }}</span>
-              @if (row.option.item.description) {
-                <span class="dm-select__option-description">{{ row.option.item.description }}</span>
+              @if (optionTemplate(); as tpl) {
+                <ng-container
+                  [ngTemplateOutlet]="tpl"
+                  [ngTemplateOutletContext]="optionContext(row.option.item, row.index)"
+                />
+              } @else {
+                <span class="dm-select__option-label">{{ row.option.item.label }}</span>
+                @if (row.option.item.description) {
+                  <span class="dm-select__option-description">{{
+                    row.option.item.description
+                  }}</span>
+                }
               }
             </span>
             @if (isSelectedValue(row.option.item.value)) {

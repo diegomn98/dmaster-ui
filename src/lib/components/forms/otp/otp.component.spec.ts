@@ -30,6 +30,30 @@ class HostComponent {
   }
 }
 
+@Component({
+  imports: [DmOtpComponent],
+  template: `
+    <dm-otp
+      [length]="4"
+      [label]="label()"
+      [description]="description()"
+      [error]="error()"
+      [required]="required()"
+      [readonly]="readonly()"
+      [(value)]="value"
+      ariaLabel="Code"
+    />
+  `,
+})
+class FieldHost {
+  readonly label = signal('');
+  readonly description = signal('');
+  readonly error = signal('');
+  readonly required = signal(false);
+  readonly readonly = signal(false);
+  readonly value = signal('');
+}
+
 describe('DmOtpComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
@@ -59,12 +83,24 @@ describe('DmOtpComponent', () => {
 
   it('renders `length` cells as a labelled group', () => {
     create();
-    const groupEl: HTMLElement = fixture.nativeElement.querySelector('dm-otp');
+    const groupEl: HTMLElement = fixture.nativeElement.querySelector('.dm-otp__cells');
 
     expect(cells().length).toBe(4);
     expect(groupEl.getAttribute('role')).toBe('group');
+    expect(groupEl.getAttribute('aria-label')).toBe('Code');
     expect(cells()[0].getAttribute('aria-label')).toBe('Code 1 of 4');
     expect(cells()[0].getAttribute('inputmode')).toBe('numeric');
+  });
+
+  it('renders no label, hint or error by default', () => {
+    create();
+
+    expect(fixture.nativeElement.querySelector('.dm-otp__label')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.dm-otp__hint')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.dm-otp__error')).toBeNull();
+    const groupEl: HTMLElement = fixture.nativeElement.querySelector('.dm-otp__cells');
+    expect(groupEl.getAttribute('aria-describedby')).toBeNull();
+    expect(cells()[0].getAttribute('aria-invalid')).toBeNull();
   });
 
   it('fills a cell and advances focus', () => {
@@ -259,5 +295,99 @@ describe('DmOtpComponent', () => {
     items[2].dispatchEvent(new Event('input', { bubbles: true }));
     f.detectChanges();
     expect(f.componentInstance.control.value).toBe('995');
+  });
+
+  describe('field-family wiring (label / description / error / readonly)', () => {
+    let f: ComponentFixture<FieldHost>;
+
+    function createField(): void {
+      f = TestBed.createComponent(FieldHost);
+      f.detectChanges();
+    }
+
+    function fieldCells(): HTMLInputElement[] {
+      return Array.from(f.nativeElement.querySelectorAll('.dm-otp__cell'));
+    }
+
+    function group(): HTMLElement {
+      return f.nativeElement.querySelector('.dm-otp__cells');
+    }
+
+    it('renders the label above the cells and labels the group via aria-labelledby', () => {
+      createField();
+      f.componentInstance.label.set('Verification code');
+      f.detectChanges();
+
+      const labelEl: HTMLLabelElement = f.nativeElement.querySelector('.dm-otp__label');
+      expect(labelEl.textContent).toContain('Verification code');
+      expect(group().getAttribute('aria-labelledby')).toBe(labelEl.id);
+      // the visible label wins over ariaLabel on the group…
+      expect(group().getAttribute('aria-label')).toBeNull();
+      // …and the label points at the first cell, so clicking it focuses the code
+      expect(labelEl.getAttribute('for')).toBe(fieldCells()[0].id);
+    });
+
+    it('shows the required marker only when `required` is set', () => {
+      createField();
+      f.componentInstance.label.set('Code');
+      f.detectChanges();
+      expect(f.nativeElement.querySelector('.dm-otp__required')).toBeNull();
+
+      f.componentInstance.required.set(true);
+      f.detectChanges();
+      const marker: HTMLElement = f.nativeElement.querySelector('.dm-otp__required');
+      expect(marker).not.toBeNull();
+      expect(marker.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('describes the group with the description, replaced by the error', () => {
+      createField();
+      f.componentInstance.description.set('The 6-digit code we sent you.');
+      f.detectChanges();
+
+      const hint: HTMLElement = f.nativeElement.querySelector('.dm-otp__hint');
+      expect(hint.textContent).toContain('The 6-digit code we sent you.');
+      expect(group().getAttribute('aria-describedby')).toBe(hint.id);
+
+      f.componentInstance.error.set('That code is not valid.');
+      f.detectChanges();
+      expect(f.nativeElement.querySelector('.dm-otp__hint')).toBeNull();
+      const error: HTMLElement = f.nativeElement.querySelector('.dm-otp__error');
+      expect(error.getAttribute('role')).toBe('alert');
+      expect(group().getAttribute('aria-describedby')).toBe(error.id);
+      expect(f.nativeElement.querySelector('dm-otp').hasAttribute('data-invalid')).toBe(true);
+      expect(fieldCells().every((c) => c.getAttribute('aria-invalid') === 'true')).toBe(true);
+    });
+
+    it('readonly keeps the code visible and focusable but blocks edits', () => {
+      createField();
+      f.componentInstance.value.set('12');
+      f.componentInstance.readonly.set(true);
+      f.detectChanges();
+
+      const items = fieldCells();
+      expect(items.every((c) => c.readOnly)).toBe(true);
+      expect(items.every((c) => !c.disabled)).toBe(true);
+      expect(items[0].value).toBe('1');
+
+      // typing (synthetic input) must not mutate the code
+      items[2].value = '9';
+      items[2].dispatchEvent(new Event('input', { bubbles: true }));
+      f.detectChanges();
+      expect(f.componentInstance.value()).toBe('12');
+
+      // Backspace and Delete are inert
+      items[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
+      items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Delete', bubbles: true }));
+      f.detectChanges();
+      expect(f.componentInstance.value()).toBe('12');
+
+      // paste is inert too
+      const paste = new Event('paste', { bubbles: true }) as ClipboardEvent;
+      Object.defineProperty(paste, 'clipboardData', { value: { getData: () => '9999' } });
+      items[0].dispatchEvent(paste);
+      f.detectChanges();
+      expect(f.componentInstance.value()).toBe('12');
+    });
   });
 });

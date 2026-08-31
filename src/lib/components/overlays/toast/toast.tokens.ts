@@ -1,5 +1,7 @@
 import { InjectionToken, Provider } from '@angular/core';
 
+import { DmToastPosition } from './toast.types';
+
 /** Globally overridable defaults for `DmToastService`. */
 export interface DmToastDefaults {
   /** Auto-dismiss delay in ms. `0` disables auto-dismiss. */
@@ -11,12 +13,19 @@ export interface DmToastDefaults {
    * library — override it per app language.
    */
   dismissLabel: string;
+  /**
+   * Viewport placement of the toast stack. Global: there is a single
+   * container shared by every toast, and the value is read once when the
+   * first toast creates it — later changes have no effect.
+   */
+  position: DmToastPosition;
 }
 
 export const DM_TOAST_FALLBACK_DEFAULTS: DmToastDefaults = {
   duration: 4000,
   dismissible: true,
   dismissLabel: 'Dismiss',
+  position: 'bottom-right',
 };
 
 /** Injection token holding the defaults `DmToastService` starts from. */

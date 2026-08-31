@@ -17,6 +17,10 @@ import { DmDividerComponent } from '@dmaster/ui';
 <dm-divider labelPlacement="start">Billing</dm-divider>
 <dm-divider labelPlacement="end">More</dm-divider>
 
+<!-- Dashed / dotted stroke -->
+<dm-divider lineStyle="dashed" />
+<dm-divider lineStyle="dotted">Drafts</dm-divider>
+
 <!-- Vertical: stretches to the parent's cross size (flex row, set a height) -->
 <div style="display: flex; align-items: center; height: 1.5rem; gap: 1rem">
   <span>Blog</span>
@@ -27,11 +31,12 @@ import { DmDividerComponent } from '@dmaster/ui';
 
 ## API
 
-| Input            | Type                           | Default        | Description                                            |
-| ---------------- | ------------------------------ | -------------- | ------------------------------------------------------ |
-| `orientation`    | `'horizontal' \| 'vertical'`   | `'horizontal'` | Direction of the line. Also drives `aria-orientation`. |
-| `labelPlacement` | `'start' \| 'center' \| 'end'` | `'center'`     | Where the projected label sits along the line.         |
-| `ng-content`     | —                              | —              | Optional label. Without it, a single continuous line.  |
+| Input            | Type                               | Default        | Description                                              |
+| ---------------- | ---------------------------------- | -------------- | -------------------------------------------------------- |
+| `orientation`    | `'horizontal' \| 'vertical'`       | `'horizontal'` | Direction of the line. Also drives `aria-orientation`.   |
+| `labelPlacement` | `'start' \| 'center' \| 'end'`     | `'center'`     | Where the projected label sits along the line.           |
+| `lineStyle`      | `'solid' \| 'dashed' \| 'dotted'`  | `'solid'`      | Stroke style. `dashed`/`dotted` draw the line as border. |
+| `ng-content`     | —                                  | —              | Optional label. Without it, a single continuous line.    |
 
 ## Global defaults
 
@@ -51,9 +56,10 @@ Or provide `DIVIDER_DEFAULTS` directly.
 
 Public CSS custom properties (all optional — overridable at any scope):
 
-| Token                      | Default                                                           | Description                                |
-| -------------------------- | ----------------------------------------------------------------- | ------------------------------------------ |
-| `--dm-divider-color`       | `var(--dm-border)`                                                | Line color.                                |
-| `--dm-divider-thickness`   | `1px`                                                             | Line thickness.                            |
-| `--dm-divider-label-color` | `var(--dm-fg-muted)`                                              | Projected label color.                     |
-| `--dm-divider-label-gap`   | `var(--dm-space-3)` (horizontal) / `var(--dm-space-2)` (vertical) | Gap between the label and the line halves. |
+| Token                      | Default                                                           | Description                                                                                     |
+| -------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `--dm-divider-color`       | `var(--dm-border)`                                                | Line color.                                                                                     |
+| `--dm-divider-thickness`   | `1px`                                                             | Line thickness.                                                                                 |
+| `--dm-divider-style`       | per `lineStyle` input (`dashed` / `dotted`)                       | Border style of the dashed/dotted line, wins over the input. `lineStyle="solid"` keeps the fill. |
+| `--dm-divider-label-color` | `var(--dm-fg-muted)`                                              | Projected label color.                                                                          |
+| `--dm-divider-label-gap`   | `var(--dm-space-3)` (horizontal) / `var(--dm-space-2)` (vertical) | Gap between the label and the line halves.                                                      |

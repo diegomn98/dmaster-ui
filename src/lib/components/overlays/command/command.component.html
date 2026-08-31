@@ -115,11 +115,15 @@
     (keydown)="onKeydown($event)"
     (mouseenter)="onOptionHover(index)"
   >
-    <span class="dm-command__option-label">{{ item.label }}</span>
-    @if (item.shortcut) {
-      <span class="dm-command__option-shortcut">
-        <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
-      </span>
+    @if (itemTemplate(); as tpl) {
+      <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="itemContext(item, index)" />
+    } @else {
+      <span class="dm-command__option-label">{{ item.label }}</span>
+      @if (item.shortcut) {
+        <span class="dm-command__option-shortcut">
+          <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
+        </span>
+      }
     }
   </div>
 </ng-template>

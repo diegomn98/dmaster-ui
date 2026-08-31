@@ -6,6 +6,7 @@ import {
   ElementRef,
   booleanAttribute,
   computed,
+  contentChild,
   effect,
   inject,
   input,
@@ -16,6 +17,7 @@ import {
 } from '@angular/core';
 
 import { dmUid } from '../../../core/utils/uid';
+import { DmDropzoneContentDirective } from './dropzone-content.directive';
 import { FILE_UPLOAD_DEFAULTS } from './file-upload.tokens';
 import { DmFileRejectReason, DmFileRejection, DmFileUploadMessages } from './file-upload.types';
 
@@ -76,6 +78,13 @@ export class DmFileUploadComponent {
   protected readonly uid = dmUid('dm-file-upload');
 
   private readonly inputRef = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
+
+  // ---- Content -------------------------------------------------------------
+  /**
+   * Projected `[dmDropzoneContent]`. When present the built-in icon + `label`
+   * + `hint` block is not rendered (interaction and a11y stay untouched).
+   */
+  protected readonly customContent = contentChild(DmDropzoneContentDirective);
 
   // ---- Model ---------------------------------------------------------------
   /** The currently accepted files. Two-way: `[(files)]`, or `(filesChange)`. */

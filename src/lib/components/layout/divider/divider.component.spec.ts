@@ -35,6 +35,7 @@ describe('DmDividerComponent', () => {
     expect(host().getAttribute('aria-orientation')).toBe('horizontal');
     expect(host().getAttribute('data-orientation')).toBe('horizontal');
     expect(host().getAttribute('data-label-placement')).toBe('center');
+    expect(host().getAttribute('data-line-style')).toBe('solid');
   });
 
   it('renders both line halves as decorative elements', () => {
@@ -70,6 +71,19 @@ describe('DmDividerComponent', () => {
     expect(host().getAttribute('data-label-placement')).toBe('end');
   });
 
+  it('reflects lineStyle changes as a data attribute', () => {
+    createComponent();
+    fixture.componentRef.setInput('lineStyle', 'dashed');
+    fixture.detectChanges();
+
+    expect(host().getAttribute('data-line-style')).toBe('dashed');
+
+    fixture.componentRef.setInput('lineStyle', 'dotted');
+    fixture.detectChanges();
+
+    expect(host().getAttribute('data-line-style')).toBe('dotted');
+  });
+
   it('projects label content into the label element', () => {
     const hostFixture = TestBed.createComponent(LabeledHostComponent);
     hostFixture.detectChanges();
@@ -89,12 +103,13 @@ describe('DmDividerComponent', () => {
 
   it('honors defaults injected via DIVIDER_DEFAULTS', () => {
     TestBed.overrideProvider(DIVIDER_DEFAULTS, {
-      useValue: { orientation: 'vertical', labelPlacement: 'end' },
+      useValue: { orientation: 'vertical', labelPlacement: 'end', lineStyle: 'dashed' },
     });
     createComponent();
 
     expect(host().getAttribute('data-orientation')).toBe('vertical');
     expect(host().getAttribute('aria-orientation')).toBe('vertical');
     expect(host().getAttribute('data-label-placement')).toBe('end');
+    expect(host().getAttribute('data-line-style')).toBe('dashed');
   });
 });

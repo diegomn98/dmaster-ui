@@ -4,10 +4,37 @@
 // rest of the field family (input, select, number). `default` focuses primary.
 
 :host {
+  display: inline-grid;
+  gap: var(--dm-space-1);
+  font-family: var(--dm-font-sans);
+}
+
+// ---- Label / hint / error (field-family scaffold, same as dm-search-field) --
+.dm-otp__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  margin-bottom: 0.125rem;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.006em;
+  color: var(--dm-fg);
+}
+
+.dm-otp__required {
+  font-size: 0.8em;
+  font-weight: var(--dm-font-semibold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--dm-danger) 85%, var(--dm-fg));
+  transform: translateY(-0.1em);
+}
+
+// ---- Cells row (role=group; the host stacks label / cells / hint) ----------
+.dm-otp__cells {
   display: inline-flex;
   align-items: center;
   gap: var(--dm-space-2);
-  font-family: var(--dm-font-sans);
 }
 
 .dm-otp__cell {
@@ -162,4 +189,50 @@
   width: 3rem;
   height: 3rem;
   font-size: var(--dm-text-xl);
+}
+
+// ---- Invalid (non-empty `error`) --------------------------------------------
+// Remaps the focus var to danger and paints the cell edges, exactly like the
+// rest of the field family. Last in the file so it beats the color mapping.
+:host([data-invalid]) .dm-otp__cell {
+  --dm-otp: var(--dm-danger);
+  --dm-otp-subtle: var(--dm-danger-subtle);
+
+  border-color: var(--dm-danger);
+}
+
+:host([data-invalid][data-variant='underlined']) .dm-otp__cell {
+  border-color: transparent;
+  border-bottom-color: var(--dm-danger);
+}
+
+// ---- Hint / error ----------------------------------------------------------
+.dm-otp__hint,
+.dm-otp__error {
+  margin: 0.125rem 0 0;
+  font-size: var(--dm-text-xs);
+  line-height: var(--dm-leading-snug);
+}
+
+.dm-otp__hint {
+  color: var(--dm-fg-muted);
+}
+
+.dm-otp__error {
+  font-weight: var(--dm-font-medium);
+  color: var(--dm-danger);
+  animation: dm-otp-error-in var(--dm-duration-base) var(--dm-ease-out);
+}
+
+@keyframes dm-otp-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.1875rem);
+  }
+}
+
+@include mixins.reduced-motion {
+  .dm-otp__error {
+    animation: none;
+  }
 }

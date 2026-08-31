@@ -1,16 +1,18 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmDividerLabelPlacement, DmDividerOrientation } from './divider.types';
+import { DmDividerLabelPlacement, DmDividerLineStyle, DmDividerOrientation } from './divider.types';
 
 /** Globally overridable defaults for `dm-divider`. */
 export interface DmDividerDefaults {
   orientation: DmDividerOrientation;
   labelPlacement: DmDividerLabelPlacement;
+  lineStyle: DmDividerLineStyle;
 }
 
 export const DM_DIVIDER_FALLBACK_DEFAULTS: DmDividerDefaults = {
   orientation: 'horizontal',
   labelPlacement: 'center',
+  lineStyle: 'solid',
 };
 
 /** Injection token holding the defaults every `dm-divider` starts from. */

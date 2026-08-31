@@ -13,10 +13,13 @@ import {
   Component,
   ElementRef,
   computed,
+  effect,
   inject,
   input,
+  model,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 
@@ -165,9 +168,18 @@ export class DmPopoverComponent {
   readonly closed = output<void>();
 
   // ---- State ---------------------------------------------------------------
-  private readonly _open = signal(false);
-  /** Whether the panel is currently open. */
-  readonly isOpen = this._open.asReadonly();
+  /**
+   * Open state of the panel. Two-way: `[(open)]` — writing it opens/closes the
+   * overlay, and programmatic opens (trigger click, `toggle()`…) are reported
+   * back through the model's implicit `openChange` emitter.
+   */
+  readonly open = model(false);
+
+  /** Whether the panel is currently open (read-only view of `open`). */
+  readonly isOpen = this.open.asReadonly();
+
+  /** Last open state the transition effect handled — guards double emissions. */
+  private wasOpen = false;
 
   /** Trigger element registered by `DmPopoverTriggerDirective`; the overlay origin. */
   readonly triggerRef = signal<ElementRef<HTMLElement> | null>(null);
@@ -183,6 +195,28 @@ export class DmPopoverComponent {
 
   private readonly cdkOverlay = viewChild.required(CdkConnectedOverlay);
 
+  constructor() {
+    // Single owner of the open/close side effects. Runs whether the state was
+    // flipped by a trigger click, an imperative call or an external `[(open)]`
+    // binding, and — guarded by `wasOpen` — fires `opened`/`closed` exactly once
+    // per real transition so they never double-emit.
+    effect(() => {
+      const open = this.open();
+      untracked(() => {
+        if (open === this.wasOpen) {
+          return;
+        }
+        this.wasOpen = open;
+        if (open) {
+          this.resolvedSide.set(sideOf(this.placement()));
+          this.opened.emit();
+        } else {
+          this.closed.emit();
+        }
+      });
+    });
+  }
+
   // ---- Trigger wiring ------------------------------------------------------
   /** Called by the trigger directive to register itself as the overlay origin. */
   registerTrigger(ref: ElementRef<HTMLElement>): void {
@@ -190,21 +224,21 @@ export class DmPopoverComponent {
   }
 
   // ---- Open / close --------------------------------------------------------
+  /** Toggles the panel open ⇄ closed. */
   toggle(): void {
-    if (this._open()) {
-      this.close();
+    if (this.open()) {
+      this.closePopover();
     } else {
-      this.open();
+      this.openPopover();
     }
   }
 
-  open(): void {
-    if (this._open()) {
-      return;
-    }
-    this.resolvedSide.set(sideOf(this.placement()));
-    this._open.set(true);
-    this.opened.emit();
+  /**
+   * Opens the panel imperatively. Prefer the two-way `[(open)]` binding when you
+   * want the open state mirrored back into a component field.
+   */
+  openPopover(): void {
+    this.open.set(true);
   }
 
   /**
@@ -212,13 +246,12 @@ export class DmPopoverComponent {
    * trigger only if focus was inside the panel (so Escape/Tab-out feel right,
    * while an outside click leaves focus where the user clicked).
    */
-  close(returnFocus?: boolean): void {
-    if (!this._open()) {
+  closePopover(returnFocus?: boolean): void {
+    if (!this.open()) {
       return;
     }
     const shouldReturn = returnFocus ?? this.isFocusInsidePanel();
-    this._open.set(false);
-    this.closed.emit();
+    this.open.set(false);
     if (shouldReturn) {
       this.focusTrigger();
     }
@@ -256,13 +289,13 @@ export class DmPopoverComponent {
     if (trigger && target && trigger.contains(target)) {
       return;
     }
-    this.close(false);
+    this.closePopover(false);
   }
 
   protected onOverlayKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape' && !event.defaultPrevented) {
       event.preventDefault();
-      this.close(true);
+      this.closePopover(true);
     }
   }
 

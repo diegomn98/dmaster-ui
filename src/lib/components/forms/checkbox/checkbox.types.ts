@@ -3,7 +3,7 @@ export type DmCheckboxColor =
   'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
 /** Size scale of the checkbox box and label. */
-export type DmCheckboxSize = 'sm' | 'md';
+export type DmCheckboxSize = 'sm' | 'md' | 'lg';
 
 /** Internal checked state used for indeterminate support. */
 export type DmCheckboxState = 'unchecked' | 'checked' | 'indeterminate';

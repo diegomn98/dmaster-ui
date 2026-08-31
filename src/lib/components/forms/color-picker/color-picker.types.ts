@@ -10,3 +10,11 @@ export type DmColorPickerVariant = 'flat' | 'bordered' | 'faded' | 'underlined';
 
 /** Corner rounding of the trigger. `full` is pill-shaped. */
 export type DmColorPickerRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
+
+/**
+ * Serialization of the committed value (model, CVA `onChange`, trigger text):
+ * `hex` = `#rrggbb` / `#rrggbbaa`, `rgb` = `rgb(r g b)` / `rgb(r g b / a)`,
+ * `hsl` = `hsl(h s% l%)` / `hsl(h s% l% / a)` — the alpha part follows
+ * `showAlpha`.
+ */
+export type DmColorPickerFormat = 'hex' | 'rgb' | 'hsl';

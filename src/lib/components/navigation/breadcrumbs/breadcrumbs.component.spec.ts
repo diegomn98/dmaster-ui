@@ -2,6 +2,7 @@ import { Component, provideZonelessChangeDetection, signal } from '@angular/core
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DmBreadcrumbItemComponent } from './breadcrumb-item.component';
+import { DmBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
 import { DmBreadcrumbsComponent } from './breadcrumbs.component';
 import { BREADCRUMBS_DEFAULTS } from './breadcrumbs.tokens';
 import { DmBreadcrumbsSize } from './breadcrumbs.types';
@@ -57,6 +58,23 @@ class HostComponent {
   `,
 })
 class BareHostComponent {}
+
+// A host projecting a custom separator template. The `separator` string is set
+// on purpose: the template must win over it.
+@Component({
+  imports: [DmBreadcrumbsComponent, DmBreadcrumbItemComponent, DmBreadcrumbSeparatorDirective],
+  template: `
+    <dm-breadcrumbs separator="/">
+      <ng-template dmBreadcrumbSeparator let-index>
+        <span class="custom-sep" [attr.data-index]="index">→</span>
+      </ng-template>
+      <dm-breadcrumb-item href="/">Home</dm-breadcrumb-item>
+      <dm-breadcrumb-item href="/library">Library</dm-breadcrumb-item>
+      <dm-breadcrumb-item>Data</dm-breadcrumb-item>
+    </dm-breadcrumbs>
+  `,
+})
+class SeparatorTemplateHostComponent {}
 
 describe('DmBreadcrumbsComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
@@ -156,6 +174,32 @@ describe('DmBreadcrumbsComponent', () => {
     expect(chevrons().length).toBe(0);
     expect(separators().length).toBe(2);
     expect((separators()[0].textContent ?? '').trim()).toBe('/');
+  });
+
+  it('renders a projected separator template instead of the chevron or string', () => {
+    const tplFixture = TestBed.createComponent(SeparatorTemplateHostComponent);
+    tplFixture.detectChanges();
+    const el: HTMLElement = tplFixture.nativeElement;
+
+    const custom = Array.from(el.querySelectorAll<HTMLElement>('.custom-sep'));
+    expect(custom.length).toBe(2); // one per non-last crumb
+    expect((custom[0].textContent ?? '').trim()).toBe('→');
+    // The template wins over both the built-in chevron and the `separator` string.
+    expect(el.querySelector('svg.dm-breadcrumb-item__chevron')).toBeNull();
+    expect(el.textContent).not.toContain('/');
+    // Still rendered inside the decorative, aria-hidden separator wrapper.
+    const wrapper = custom[0].closest('.dm-breadcrumb-item__separator')!;
+    expect(wrapper.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('exposes the preceding crumb index as the implicit separator context', () => {
+    const tplFixture = TestBed.createComponent(SeparatorTemplateHostComponent);
+    tplFixture.detectChanges();
+
+    const indices = Array.from(
+      (tplFixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.custom-sep'),
+    ).map((sep) => sep.getAttribute('data-index'));
+    expect(indices).toEqual(['0', '1']);
   });
 
   it('renders a disabled crumb as a muted, non-interactive span with aria-disabled', () => {

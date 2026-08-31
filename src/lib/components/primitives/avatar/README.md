@@ -1,6 +1,6 @@
 # Avatar (`dm-avatar`)
 
-Avatar with automatic fallback chain: image → initials → generic icon. A failed image load falls back silently; changing `src` retries.
+Avatar with automatic fallback chain: image → initials → custom fallback (`[dmAvatarFallback]`) → generic icon. A failed image load falls back silently; changing `src` retries.
 
 ```html
 <dm-avatar src="/u/diego.png" alt="Diego Maestro" initials="DM" />
@@ -20,6 +20,22 @@ Avatar with automatic fallback chain: image → initials → generic icon. A fai
 | `color`    | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the initials tint.             |
 
 Global defaults: `provideAvatarDefaults({...})` / `AVATAR_DEFAULTS`.
+
+### Content slots
+
+- `<ng-content select="[dmAvatarFallback]" />` — custom fallback: replaces the generic person icon when there is no (working) image and no initials (requires importing `DmAvatarFallbackDirective`).
+
+## Custom fallback (`[dmAvatarFallback]`)
+
+Project any element with the `dmAvatarFallback` attribute (import `DmAvatarFallbackDirective` alongside the component) to replace the generic icon at the end of the chain:
+
+```html
+<dm-avatar alt="Engineering team">
+  <dm-icon dmAvatarFallback size="1.25rem">groups</dm-icon>
+</dm-avatar>
+```
+
+Image and initials still win: the custom fallback only renders when neither is available. Size the projected element yourself (the built-in 55% sizing only applies to the internal SVG).
 
 ## Accessibility
 

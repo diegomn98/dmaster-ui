@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
 import { DIVIDER_DEFAULTS } from './divider.tokens';
-import { DmDividerLabelPlacement, DmDividerOrientation } from './divider.types';
+import { DmDividerLabelPlacement, DmDividerLineStyle, DmDividerOrientation } from './divider.types';
 
 /**
  * Thin rule that separates content, with an optional projected label.
@@ -26,6 +26,7 @@ import { DmDividerLabelPlacement, DmDividerOrientation } from './divider.types';
     '[attr.aria-orientation]': 'orientation()',
     '[attr.data-orientation]': 'orientation()',
     '[attr.data-label-placement]': 'labelPlacement()',
+    '[attr.data-line-style]': 'lineStyle()',
   },
 })
 export class DmDividerComponent {
@@ -36,4 +37,7 @@ export class DmDividerComponent {
 
   /** Where the projected label sits along the line. */
   readonly labelPlacement = input<DmDividerLabelPlacement>(this.defaults.labelPlacement);
+
+  /** Stroke style of the line. `dashed`/`dotted` draw it as a border. */
+  readonly lineStyle = input<DmDividerLineStyle>(this.defaults.lineStyle);
 }

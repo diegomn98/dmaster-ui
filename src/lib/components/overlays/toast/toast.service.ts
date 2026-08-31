@@ -1,4 +1,4 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { GlobalPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 
@@ -57,8 +57,10 @@ export class DmToastService {
       {
         id,
         message,
+        title: options.title,
         variant: options.variant ?? 'neutral',
         dismissible: options.dismissible ?? this.defaults.dismissible,
+        action: options.action,
       },
     ]);
 
@@ -108,9 +110,32 @@ export class DmToastService {
       return;
     }
     this.overlayRef = this.overlay.create({
-      positionStrategy: this.overlay.position().global().bottom('1rem').right('1rem'),
+      positionStrategy: this.buildPositionStrategy(),
       hasBackdrop: false,
     });
     this.overlayRef.attach(new ComponentPortal(DmToastContainerComponent));
+  }
+
+  /**
+   * Builds the global strategy from `defaults.position` (default
+   * `'bottom-right'`). The position is global: one container serves every
+   * toast, and it is read once when the first toast creates it.
+   */
+  private buildPositionStrategy(): GlobalPositionStrategy {
+    const strategy = this.overlay.position().global();
+    const [vertical, horizontal] = this.defaults.position.split('-');
+    if (vertical === 'top') {
+      strategy.top('1rem');
+    } else {
+      strategy.bottom('1rem');
+    }
+    if (horizontal === 'left') {
+      strategy.left('1rem');
+    } else if (horizontal === 'center') {
+      strategy.centerHorizontally();
+    } else {
+      strategy.right('1rem');
+    }
+    return strategy;
   }
 }

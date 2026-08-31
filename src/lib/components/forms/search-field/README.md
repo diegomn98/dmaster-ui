@@ -37,7 +37,7 @@ Two-way binding via `[(value)]`, or wire it to a form:
 | `description`    | `string`                                                                      | `''`             | Help text below the field (hidden while `error` is set).     |
 | `error`          | `string`                                                                      | `''`             | Error text; non-empty activates the invalid state.           |
 | `disabled`       | `boolean`                                                                     | `false`          | Disables the field.                                          |
-| `readOnly`       | `boolean`                                                                     | `false`          | Read-only (no clear button, not editable).                   |
+| `readonly`       | `boolean`                                                                     | `false`          | Read-only (no clear button, not editable).                   |
 | `required`       | `boolean`                                                                     | `false`          | Shows the required marker.                                   |
 | `clearable`      | `boolean`                                                                     | `true`           | Shows the × button (and Escape-to-clear) once there is text. |
 | `color`          | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'`      | Focus ring + caret color.                                    |

@@ -116,12 +116,19 @@
         (keydown)="onKeydown($event)"
         (mouseenter)="onOptionHover(i)"
       >
-        <span class="dm-autocomplete__option-text">
-          <span class="dm-autocomplete__option-label">{{ option.label }}</span>
-          @if (option.description) {
-            <span class="dm-autocomplete__option-description">{{ option.description }}</span>
-          }
-        </span>
+        @if (optionTemplate(); as tpl) {
+          <ng-container
+            [ngTemplateOutlet]="tpl"
+            [ngTemplateOutletContext]="optionContext(option, i)"
+          />
+        } @else {
+          <span class="dm-autocomplete__option-text">
+            <span class="dm-autocomplete__option-label">{{ option.label }}</span>
+            @if (option.description) {
+              <span class="dm-autocomplete__option-description">{{ option.description }}</span>
+            }
+          </span>
+        }
       </li>
     }
     @if (!hasResults() && noResultsLabel()) {

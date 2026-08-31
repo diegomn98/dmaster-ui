@@ -1,0 +1,19 @@
+<h2 class="dm-confirm-dialog__title">{{ options.title }}</h2>
+
+@if (options.message) {
+  <p class="dm-confirm-dialog__message">{{ options.message }}</p>
+}
+
+<div class="dm-confirm-dialog__footer">
+  <dm-button class="dm-confirm-dialog__cancel" variant="light" (clicked)="ref.close(false)">
+    {{ options.cancelLabel }}
+  </dm-button>
+  <dm-button
+    class="dm-confirm-dialog__confirm"
+    variant="solid"
+    [color]="confirmColor"
+    (clicked)="ref.close(true)"
+  >
+    {{ options.confirmLabel }}
+  </dm-button>
+</div>

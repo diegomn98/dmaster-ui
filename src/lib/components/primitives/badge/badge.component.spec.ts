@@ -46,6 +46,14 @@ describe('DmBadgeComponent', () => {
     expect(host().getAttribute('data-radius')).toBe('md');
   });
 
+  it('reflects the lg size step', () => {
+    createComponent();
+    fixture.componentRef.setInput('size', 'lg');
+    fixture.detectChanges();
+
+    expect(host().getAttribute('data-size')).toBe('lg');
+  });
+
   it('shows the leading dot only for the dot variant', () => {
     createComponent();
     expect(host().querySelector('.dm-badge__dot')).toBeNull();

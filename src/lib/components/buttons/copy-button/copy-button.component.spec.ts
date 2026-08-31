@@ -1,6 +1,7 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmCopiedIconDirective, DmCopyIconDirective } from './copy-button-icons.directive';
 import { DmCopyButtonComponent } from './copy-button.component';
 import { COPY_BUTTON_DEFAULTS } from './copy-button.tokens';
 import { DmCopyToClipboardDirective } from './copy-to-clipboard.directive';
@@ -28,6 +29,7 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
       [resetDelay]="resetDelay()"
       [ariaLabel]="ariaLabel()"
       [copyLabel]="copyLabel()"
+      [disabled]="disabled()"
       (copied)="onCopied($event)"
       (copyError)="onError($event)"
     />
@@ -38,6 +40,7 @@ class HostComponent {
   readonly color = signal<'default' | 'primary'>('default');
   readonly variant = signal<'flat' | 'bordered'>('flat');
   readonly size = signal<'sm' | 'md'>('md');
+  readonly disabled = signal(false);
   readonly resetDelay = signal(2000);
   readonly ariaLabel = signal('Copy API key');
   readonly copyLabel = signal('');
@@ -126,6 +129,30 @@ describe('DmCopyButtonComponent', () => {
     expect(fixture.nativeElement.querySelector('.dm-copy-button__icon svg rect')).toBeTruthy();
   });
 
+  it('forwards disabled to the inner dm-button and blocks copying', async () => {
+    await create();
+    host.disabled.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(button().disabled).toBe(true);
+
+    // A click on the disabled native button never reaches the copy directive.
+    button().click();
+    await flush();
+    fixture.detectChanges();
+    expect(writeText).not.toHaveBeenCalled();
+    expect(host.copiedText()).toBeNull();
+
+    // Re-enabling restores the copy behaviour.
+    host.disabled.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    button().click();
+    await flush();
+    expect(writeText).toHaveBeenCalledWith('dm_a1B2c3D4e5');
+  });
+
   it('emits (copyError) when the clipboard write rejects', async () => {
     writeText = mockClipboard(() => Promise.reject(new Error('denied')));
     // No secure-context fallback in the test document.
@@ -163,6 +190,62 @@ describe('DmCopyButtonComponent', () => {
     expect(btn.getAttribute('data-color')).toBe('primary');
     expect(btn.getAttribute('data-variant')).toBe('bordered');
     expect(btn.getAttribute('data-size')).toBe('lg');
+  });
+
+  it('renders projected dmCopyIcon / dmCopiedIcon instead of the built-in glyphs', async () => {
+    @Component({
+      imports: [DmCopyButtonComponent, DmCopyIconDirective, DmCopiedIconDirective],
+      template: `
+        <dm-copy-button value="hello" ariaLabel="Copy" [resetDelay]="2000">
+          <span dmCopyIcon class="my-copy">C</span>
+          <span dmCopiedIcon class="my-copied">✓</span>
+        </dm-copy-button>
+      `,
+    })
+    class IconHost {}
+
+    const icons = TestBed.createComponent(IconHost);
+    icons.detectChanges();
+    await icons.whenStable();
+    const root: HTMLElement = icons.nativeElement;
+
+    // Idle: the custom copy icon shows inside the icon slot, no built-in SVG.
+    expect(root.querySelector('.dm-copy-button__icon .my-copy')).toBeTruthy();
+    expect(root.querySelector('.my-copied')).toBeNull();
+    expect(root.querySelector('.dm-copy-button__icon svg')).toBeNull();
+
+    // After copying, the flip swaps to the custom copied icon.
+    root.querySelector<HTMLButtonElement>('.dm-button')?.click();
+    await flush();
+    icons.detectChanges();
+    expect(root.querySelector('.dm-copy-button__icon .my-copied')).toBeTruthy();
+    expect(root.querySelector('.my-copy')).toBeNull();
+    expect(root.querySelector('.dm-copy-button__icon svg')).toBeNull();
+  });
+
+  it('falls back to the built-in check when only dmCopyIcon is projected', async () => {
+    @Component({
+      imports: [DmCopyButtonComponent, DmCopyIconDirective],
+      template: `
+        <dm-copy-button value="hello" ariaLabel="Copy">
+          <span dmCopyIcon class="my-copy">C</span>
+        </dm-copy-button>
+      `,
+    })
+    class PartialIconHost {}
+
+    const icons = TestBed.createComponent(PartialIconHost);
+    icons.detectChanges();
+    await icons.whenStable();
+    const root: HTMLElement = icons.nativeElement;
+
+    root.querySelector<HTMLButtonElement>('.dm-button')?.click();
+    await flush();
+    icons.detectChanges();
+    // Built-in check path renders while the custom copy icon is detached.
+    const path = root.querySelector('.dm-copy-button__icon svg path');
+    expect(path?.getAttribute('d')).toContain('M20 6');
+    expect(root.querySelector('.my-copy')).toBeNull();
   });
 });
 

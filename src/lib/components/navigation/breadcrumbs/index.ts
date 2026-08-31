@@ -1,4 +1,5 @@
 export * from './breadcrumb-item.component';
+export * from './breadcrumb-separator.directive';
 export * from './breadcrumbs.component';
 export * from './breadcrumbs.tokens';
 export * from './breadcrumbs.types';

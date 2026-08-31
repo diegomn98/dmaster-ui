@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  contentChild,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 
 import type { DmSize } from '../../../core/types/common.types';
 import { DmButtonComponent } from '../button';
+import { DmCopiedIconDirective, DmCopyIconDirective } from './copy-button-icons.directive';
 import { COPY_BUTTON_DEFAULTS } from './copy-button.tokens';
 import type {
   DmCopyButtonColor,
@@ -25,7 +35,8 @@ import { DmCopyToClipboardDirective } from './copy-to-clipboard.directive';
  *
  * Ships no copy of its own: pass `ariaLabel` (required for the icon-only form),
  * `copiedAriaLabel` (announced on success), and any visible `copyLabel` /
- * `copiedLabel`.
+ * `copiedLabel`. The built-in copy / check glyphs can be replaced by projecting
+ * elements marked with `dmCopyIcon` / `dmCopiedIcon`.
  */
 @Component({
   selector: 'dm-copy-button',
@@ -52,6 +63,9 @@ export class DmCopyButtonComponent {
   /** Control size, forwarded to the inner `dm-button`. */
   readonly size = input<DmSize>(this.defaults.size);
 
+  /** Disables the button (copying is blocked while disabled). */
+  readonly disabled = input(false, { transform: booleanAttribute });
+
   /** How long the copied (check) state lasts before reverting, in milliseconds. */
   readonly resetDelay = input<number>(this.defaults.resetDelay);
 
@@ -72,4 +86,16 @@ export class DmCopyButtonComponent {
 
   /** Emitted when the clipboard write fails. */
   readonly copyError = output<unknown>();
+
+  /** Projected `[dmCopyIcon]` element replacing the built-in copy glyph. */
+  private readonly copyIcon = contentChild(DmCopyIconDirective);
+
+  /** Projected `[dmCopiedIcon]` element replacing the built-in check glyph. */
+  private readonly copiedIcon = contentChild(DmCopiedIconDirective);
+
+  /** Whether a custom copy icon was projected (switches the built-in glyph off). */
+  protected readonly hasCopyIcon = computed(() => this.copyIcon() !== undefined);
+
+  /** Whether a custom copied icon was projected (switches the built-in check off). */
+  protected readonly hasCopiedIcon = computed(() => this.copiedIcon() !== undefined);
 }

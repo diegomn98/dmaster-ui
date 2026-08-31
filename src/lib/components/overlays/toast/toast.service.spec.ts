@@ -3,6 +3,7 @@ import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { DmToastService } from './toast.service';
+import { provideToastDefaults } from './toast.tokens';
 
 describe('DmToastService', () => {
   let service: DmToastService;
@@ -66,6 +67,84 @@ describe('DmToastService', () => {
     vi.advanceTimersByTime(1000);
     await Promise.resolve();
     expect(autoDone).toBe(true);
+  });
+
+  it('renders the optional title above the message', () => {
+    service.show('Your draft is safe', { title: 'Saved' });
+    TestBed.inject(ApplicationRef).tick();
+
+    const body = overlayContainer.getContainerElement().querySelector('.dm-toast__body');
+    const title = body?.querySelector('.dm-toast__title');
+    expect(title?.textContent?.trim()).toBe('Saved');
+    expect(body?.firstElementChild).toBe(title);
+    expect(body?.querySelector('.dm-toast__message')?.textContent).toContain('Your draft is safe');
+  });
+
+  it('renders neither title nor action button by default', () => {
+    service.show('Saved');
+    TestBed.inject(ApplicationRef).tick();
+
+    const toast = overlayContainer.getContainerElement().querySelector('.dm-toast');
+    expect(toast?.querySelector('.dm-toast__title')).toBeNull();
+    expect(toast?.querySelector('.dm-toast__action')).toBeNull();
+  });
+
+  it('action button runs the handler, dismisses the toast and resolves afterDismissed', async () => {
+    const handler = vi.fn();
+    const ref = service.show('Conversation archived', {
+      duration: 0,
+      action: { label: 'Undo', handler },
+    });
+    let done = false;
+    ref.afterDismissed.then(() => (done = true));
+    TestBed.inject(ApplicationRef).tick();
+
+    const button = overlayContainer
+      .getContainerElement()
+      .querySelector<HTMLButtonElement>('.dm-toast__action');
+    expect(button?.textContent?.trim()).toBe('Undo');
+
+    button?.click();
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(service.toasts().length).toBe(0);
+
+    await Promise.resolve();
+    expect(done).toBe(true);
+  });
+
+  it('positions the container bottom-right by default', () => {
+    service.show('Saved');
+    TestBed.inject(ApplicationRef).tick();
+
+    const container = overlayContainer.getContainerElement();
+    const wrapper = container.querySelector<HTMLElement>('.cdk-global-overlay-wrapper');
+    const pane = container.querySelector<HTMLElement>('.cdk-overlay-pane');
+    expect(wrapper?.style.justifyContent).toBe('flex-end');
+    expect(wrapper?.style.alignItems).toBe('flex-end');
+    expect(pane?.style.marginBottom).toBe('1rem');
+    expect(pane?.style.marginRight).toBe('1rem');
+  });
+
+  it('honors a non-default position from the injected defaults', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        provideToastDefaults({ position: 'top-center' }),
+      ],
+    });
+    service = TestBed.inject(DmToastService);
+    overlayContainer = TestBed.inject(OverlayContainer);
+
+    service.show('Up here');
+    TestBed.inject(ApplicationRef).tick();
+
+    const container = overlayContainer.getContainerElement();
+    const wrapper = container.querySelector<HTMLElement>('.cdk-global-overlay-wrapper');
+    const pane = container.querySelector<HTMLElement>('.cdk-overlay-pane');
+    expect(wrapper?.style.justifyContent).toBe('center');
+    expect(wrapper?.style.alignItems).toBe('flex-start');
+    expect(pane?.style.marginTop).toBe('1rem');
   });
 
   it('variant helpers stack toasts and dismissAll clears them', () => {

@@ -1,10 +1,12 @@
 import { OverlayModule, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   booleanAttribute,
   computed,
+  contentChild,
   effect,
   forwardRef,
   inject,
@@ -18,6 +20,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DmSize } from '../../../core/types/common.types';
 import { dmUid } from '../../../core/utils/uid';
+import {
+  DmAutocompleteOptionContext,
+  DmAutocompleteOptionDirective,
+} from './autocomplete-option.directive';
 import { AUTOCOMPLETE_DEFAULTS } from './autocomplete.tokens';
 import {
   DmAutocompleteColor,
@@ -48,7 +54,7 @@ import {
  */
 @Component({
   selector: 'dm-autocomplete',
-  imports: [OverlayModule],
+  imports: [NgTemplateOutlet, OverlayModule],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -222,6 +228,21 @@ export class DmAutocompleteComponent implements ControlValueAccessor {
 
   protected optionId(index: number): string {
     return `${this.uid}-option-${index}`;
+  }
+
+  // ---- Content templates ---------------------------------------------------
+  /** Optional projected `ng-template[dmAutocompleteOption]` replacing the option content. */
+  private readonly optionDirective = contentChild(DmAutocompleteOptionDirective);
+
+  /** The custom option template, or `null` to render the default label + description. */
+  protected readonly optionTemplate = computed(() => this.optionDirective()?.templateRef ?? null);
+
+  /** Context builder for a templated option row. */
+  protected optionContext(
+    option: DmAutocompleteOption,
+    index: number,
+  ): DmAutocompleteOptionContext {
+    return { $implicit: option, index, active: index === this.activeIndex() };
   }
 
   // ---- CVA -----------------------------------------------------------------

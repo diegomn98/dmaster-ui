@@ -57,11 +57,11 @@
         <span class="dm-tree__spacer" aria-hidden="true"></span>
       }
 
-      @if (node.icon) {
-        <span class="dm-tree__icon" aria-hidden="true"></span>
+      @if (nodeTemplate(); as tpl) {
+        <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="nodeContext(entry)" />
+      } @else {
+        <span class="dm-tree__label">{{ node.label }}</span>
       }
-
-      <span class="dm-tree__label">{{ node.label }}</span>
     </div>
 
     @if (entry.hasChildren && isExpanded(node.id)) {

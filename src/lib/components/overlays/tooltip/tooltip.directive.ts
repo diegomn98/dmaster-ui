@@ -1,6 +1,14 @@
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DestroyRef, Directive, ElementRef, inject, input } from '@angular/core';
+import {
+  booleanAttribute,
+  DestroyRef,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  input,
+} from '@angular/core';
 
 import { dmUid } from '../../../core/utils/uid';
 import { DmTooltipPanelComponent } from './tooltip-panel.component';
@@ -33,6 +41,7 @@ const POSITIONS: Record<DmTooltipPosition, ConnectedPosition[]> = {
  * ```html
  * <button dmTooltip="Copy to clipboard">…</button>
  * <button dmTooltip="Delete" dmTooltipPosition="right">…</button>
+ * <button dmTooltip="Send" [dmTooltipShowDelay]="0" [dmTooltipDisabled]="sending()">…</button>
  * ```
  */
 @Directive({
@@ -57,11 +66,27 @@ export class DmTooltipDirective {
   /** Preferred placement; flips to the opposite side when there is no room. */
   readonly dmTooltipPosition = input<DmTooltipPosition>(this.defaults.position);
 
+  /** Hover delay before showing, in ms. `null` falls back to the injected defaults. */
+  readonly dmTooltipShowDelay = input<number | null>(null);
+
+  /** Delay before hiding once the pointer leaves, in ms. `null` falls back to the defaults. */
+  readonly dmTooltipHideDelay = input<number | null>(null);
+
+  /** While `true` the tooltip never opens; flipping it while open closes the panel. */
+  readonly dmTooltipDisabled = input(false, { transform: booleanAttribute });
+
   private overlayRef: OverlayRef | null = null;
   private showTimer: ReturnType<typeof setTimeout> | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
+    // Disabling mid-flight closes an open panel (and drops the aria-describedby
+    // wiring) instead of leaving a stale tooltip on screen.
+    effect(() => {
+      if (this.dmTooltipDisabled()) {
+        this.hide();
+      }
+    });
     inject(DestroyRef).onDestroy(() => {
       this.clearTimers();
       this.overlayRef?.dispose();
@@ -70,17 +95,26 @@ export class DmTooltipDirective {
 
   protected scheduleShow(): void {
     this.clearTimers();
-    this.showTimer = setTimeout(() => this.show(), this.defaults.showDelay);
+    if (this.dmTooltipDisabled()) {
+      return;
+    }
+    this.showTimer = setTimeout(
+      () => this.show(),
+      this.dmTooltipShowDelay() ?? this.defaults.showDelay,
+    );
   }
 
   protected scheduleHide(): void {
     this.clearTimers();
-    this.hideTimer = setTimeout(() => this.hide(), this.defaults.hideDelay);
+    this.hideTimer = setTimeout(
+      () => this.hide(),
+      this.dmTooltipHideDelay() ?? this.defaults.hideDelay,
+    );
   }
 
   protected show(): void {
     this.clearTimers();
-    if (!this.dmTooltip() || this.overlayRef?.hasAttached()) {
+    if (this.dmTooltipDisabled() || !this.dmTooltip() || this.overlayRef?.hasAttached()) {
       return;
     }
 

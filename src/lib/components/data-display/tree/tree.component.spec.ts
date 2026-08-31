@@ -1,6 +1,7 @@
-import { provideZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmTreeNodeDirective } from './tree-node.directive';
 import { DmTreeComponent } from './tree.component';
 import { TREE_DEFAULTS } from './tree.tokens';
 import { DmTreeNode } from './tree.types';
@@ -70,6 +71,26 @@ describe('DmTreeComponent', () => {
 
     // Leaf nodes get no aria-expanded.
     expect(itemById('grain').getAttribute('aria-expanded')).toBeNull();
+  });
+
+  it('renders the default row as chevron/spacer + label only (icon is data, not rendered)', () => {
+    const withIcons: DmTreeNode[] = [
+      {
+        id: 'docs',
+        label: 'Docs',
+        icon: 'folder',
+        children: [{ id: 'guide', label: 'guide.md', icon: 'file' }],
+      },
+    ];
+    create({ nodes: withIcons, expandedIds: ['docs'] });
+
+    // `icon` is data for a dmTreeNode template — the default row never renders it.
+    expect(fixture.nativeElement.querySelector('.dm-tree__icon')).toBeNull();
+    expect(rowOf('docs').querySelector('.dm-tree__label')!.textContent!.trim()).toBe('Docs');
+    // Exactly two children: the chevron (parent) / spacer (leaf) plus the label.
+    expect(rowOf('docs').children.length).toBe(2);
+    expect(rowOf('guide').querySelector('.dm-tree__spacer')).not.toBeNull();
+    expect(rowOf('guide').children.length).toBe(2);
   });
 
   it('renders children inside a role="group" with the correct level when expanded', () => {
@@ -232,5 +253,135 @@ describe('DmTreeComponent', () => {
 
     expect(tree().getAttribute('aria-multiselectable')).toBe('true');
     expect(tree().getAttribute('data-guides')).toBe('');
+  });
+});
+
+describe('DmTreeComponent with a custom node template (dmTreeNode)', () => {
+  @Component({
+    imports: [DmTreeComponent, DmTreeNodeDirective],
+    template: `
+      <dm-tree
+        [nodes]="nodes"
+        [(selectedIds)]="selected"
+        [(expandedIds)]="expanded"
+        ariaLabel="Files"
+      >
+        <ng-template
+          dmTreeNode
+          let-node
+          let-level="level"
+          let-expanded="expanded"
+          let-selected="selected"
+        >
+          <span
+            class="custom-node"
+            [attr.data-icon]="node.icon ?? null"
+            [attr.data-level]="level"
+            [attr.data-expanded]="expanded"
+            [attr.data-selected]="selected"
+          >
+            {{ node.label }}
+          </span>
+        </ng-template>
+      </dm-tree>
+    `,
+  })
+  class TemplatedHostComponent {
+    readonly nodes: DmTreeNode[] = [
+      {
+        id: 'fruits',
+        label: 'Fruits',
+        icon: 'basket',
+        children: [
+          { id: 'apple', label: 'Apple', icon: 'apple' },
+          { id: 'banana', label: 'Banana' },
+        ],
+      },
+      { id: 'grain', label: 'Grain' },
+    ];
+    readonly selected = signal<string[]>([]);
+    readonly expanded = signal<string[]>(['fruits']);
+  }
+
+  let host: ComponentFixture<TemplatedHostComponent>;
+
+  const items = (): HTMLElement[] =>
+    Array.from(host.nativeElement.querySelectorAll('[role="treeitem"]'));
+  const itemById = (id: string): HTMLElement =>
+    items().find((el) => el.getAttribute('data-id') === id) as HTMLElement;
+  const rowOf = (id: string): HTMLElement =>
+    itemById(id).querySelector('.dm-tree__row') as HTMLElement;
+  const customIn = (id: string): HTMLElement =>
+    rowOf(id).querySelector('.custom-node') as HTMLElement;
+
+  function key(k: string): void {
+    host.nativeElement
+      .querySelector('[role="tree"]')!
+      .dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true }));
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
+    host = TestBed.createComponent(TemplatedHostComponent);
+    host.detectChanges();
+  });
+
+  it('renders the template for every visible row with node/level/expanded/selected context', () => {
+    // fruits (expanded) + apple + banana + grain.
+    expect(items().length).toBe(4);
+    expect(host.nativeElement.querySelectorAll('.custom-node').length).toBe(4);
+    // The default label markup is fully replaced.
+    expect(host.nativeElement.querySelector('.dm-tree__label')).toBeNull();
+
+    const fruits = customIn('fruits');
+    expect(fruits.textContent!.trim()).toBe('Fruits');
+    expect(fruits.getAttribute('data-icon')).toBe('basket');
+    expect(fruits.getAttribute('data-level')).toBe('1');
+    expect(fruits.getAttribute('data-expanded')).toBe('true');
+    expect(fruits.getAttribute('data-selected')).toBe('false');
+
+    const apple = customIn('apple');
+    expect(apple.getAttribute('data-level')).toBe('2');
+    // Leaf nodes always report expanded: false.
+    expect(apple.getAttribute('data-expanded')).toBe('false');
+  });
+
+  it('keeps the chevron/spacer and the treeitem ARIA around the template', () => {
+    expect(rowOf('fruits').querySelector('.dm-tree__chevron')).not.toBeNull();
+    expect(rowOf('banana').querySelector('.dm-tree__spacer')).not.toBeNull();
+
+    const fruits = itemById('fruits');
+    expect(fruits.getAttribute('aria-level')).toBe('1');
+    expect(fruits.getAttribute('aria-expanded')).toBe('true');
+    expect(fruits.getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('keeps selection and chevron expansion working through a templated row', () => {
+    rowOf('apple').click();
+    host.detectChanges();
+    expect(host.componentInstance.selected()).toEqual(['apple']);
+    expect(itemById('apple').getAttribute('aria-selected')).toBe('true');
+    expect(customIn('apple').getAttribute('data-selected')).toBe('true');
+
+    rowOf('fruits').querySelector<HTMLElement>('.dm-tree__chevron')!.click();
+    host.detectChanges();
+    expect(host.componentInstance.expanded()).toEqual([]);
+    expect(customIn('fruits').getAttribute('data-expanded')).toBe('false');
+  });
+
+  it('keeps the keyboard model working with a templated row', () => {
+    itemById('fruits').focus();
+
+    key('ArrowDown');
+    expect((document.activeElement as HTMLElement).getAttribute('data-id')).toBe('apple');
+
+    key('Enter');
+    host.detectChanges();
+    expect(host.componentInstance.selected()).toEqual(['apple']);
+
+    key('ArrowLeft'); // apple is a leaf -> focus moves to the parent
+    expect((document.activeElement as HTMLElement).getAttribute('data-id')).toBe('fruits');
   });
 });

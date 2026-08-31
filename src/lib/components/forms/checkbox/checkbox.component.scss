@@ -189,6 +189,23 @@
   }
 }
 
+:host([data-size='lg']) {
+  .dm-checkbox__box {
+    width: var(--dm-checkbox-size, 1.375rem);
+    height: var(--dm-checkbox-size, 1.375rem);
+    border-radius: var(--dm-checkbox-radius, 0.5625rem);
+
+    svg {
+      width: 0.9375rem;
+      height: 0.9375rem;
+    }
+  }
+
+  .dm-checkbox__label {
+    font-size: var(--dm-text-base);
+  }
+}
+
 @keyframes dm-checkbox-dash-in {
   from {
     opacity: 0;

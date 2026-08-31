@@ -59,6 +59,29 @@ When the item count exceeds `maxItems`, the middle span collapses into a
 non-interactive `…` (`aria-hidden`). Collapsed items are removed from the DOM,
 not merely hidden.
 
+### Custom separator template (`dmBreadcrumbSeparator`)
+
+For separators beyond a plain string, project an
+`ng-template[dmBreadcrumbSeparator]` (import `DmBreadcrumbSeparatorDirective`)
+— it replaces the built-in chevron, and wins over the `separator` string,
+between every pair of items:
+
+```html
+<dm-breadcrumbs>
+  <ng-template dmBreadcrumbSeparator>
+    <dm-icon name="arrow-right" size="0.9em" />
+  </ng-template>
+  <dm-breadcrumb-item href="/">Home</dm-breadcrumb-item>
+  <dm-breadcrumb-item href="/library">Library</dm-breadcrumb-item>
+  <dm-breadcrumb-item>Data</dm-breadcrumb-item>
+</dm-breadcrumbs>
+```
+
+Context: `$implicit` (`let-index`) is the zero-based index of the crumb the
+separator follows. Separators stay decorative (`aria-hidden` wrapper), so keep
+the template free of interactive or focusable content. The `separator` input
+remains the simple case for plain text.
+
 ## API — `<dm-breadcrumbs>`
 
 | Input                 | Type                   | Default         | Description                                                          |
@@ -69,6 +92,10 @@ not merely hidden.
 | `maxItems`            | `number \| null`       | `null`          | Collapse once the trail has more than this many items. `null` off.   |
 | `itemsBeforeCollapse` | `number`               | `1`             | Items kept at the start when collapsed (min 1).                      |
 | `itemsAfterCollapse`  | `number`               | `2`             | Items kept at the end when collapsed (min 1).                        |
+
+Content projection: an `ng-template[dmBreadcrumbSeparator]` replaces the
+separator entirely (`$implicit` = index of the preceding crumb) — see
+[Custom separator template](#custom-separator-template-dmbreadcrumbseparator).
 
 ## API — `<dm-breadcrumb-item>`
 

@@ -1,7 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationRef, Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmAutocompleteOptionDirective } from './autocomplete-option.directive';
 import { DmAutocompleteComponent } from './autocomplete.component';
 import { DmAutocompleteOption } from './autocomplete.types';
 
@@ -11,6 +12,24 @@ const OPTIONS: DmAutocompleteOption[] = [
   { value: 'avocado', label: 'Avocado', disabled: true },
   { value: 'banana', label: 'Banana' },
 ];
+
+@Component({
+  imports: [DmAutocompleteComponent, DmAutocompleteOptionDirective],
+  template: `
+    <dm-autocomplete [options]="options" [(value)]="value" (optionSelected)="selected.push($event)">
+      <ng-template dmAutocompleteOption let-option let-index="index" let-active="active">
+        <span class="custom-option" [attr.data-index]="index" [attr.data-option-active]="active">
+          {{ option.label.toUpperCase() }}
+        </span>
+      </ng-template>
+    </dm-autocomplete>
+  `,
+})
+class OptionTemplateHostComponent {
+  readonly options = OPTIONS;
+  readonly value = signal('');
+  readonly selected: DmAutocompleteOption[] = [];
+}
 
 describe('DmAutocompleteComponent', () => {
   let overlayContainer: OverlayContainer;
@@ -207,5 +226,74 @@ describe('DmAutocompleteComponent', () => {
     expect(input(fixture).getAttribute('aria-invalid')).toBe('true');
     const err = fixture.nativeElement.querySelector('.dm-autocomplete__error');
     expect(err?.textContent).toContain('Required');
+  });
+
+  describe('custom option template (dmAutocompleteOption)', () => {
+    function createHost(): ComponentFixture<OptionTemplateHostComponent> {
+      const fixture = TestBed.createComponent(OptionTemplateHostComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    function customOptions(): HTMLElement[] {
+      return Array.from(
+        overlayContainer.getContainerElement().querySelectorAll<HTMLElement>('.custom-option'),
+      );
+    }
+
+    it('renders the projected template with option + index context', () => {
+      const fixture = createHost();
+      type(fixture, 'ap');
+
+      const custom = customOptions();
+      expect(custom.length).toBe(2);
+      expect(custom[0].textContent).toContain('APPLE');
+      expect(custom[1].textContent).toContain('APRICOT');
+      expect(custom[1].getAttribute('data-index')).toBe('1');
+      // The default label/description markup is fully replaced.
+      expect(
+        overlayContainer.getContainerElement().querySelector('.dm-autocomplete__option-text'),
+      ).toBeNull();
+    });
+
+    it('exposes an `active` flag that follows keyboard navigation', () => {
+      const fixture = createHost();
+      type(fixture, 'ap'); // active resets to the first enabled option (Apple)
+
+      expect(customOptions()[0].getAttribute('data-option-active')).toBe('true');
+      expect(customOptions()[1].getAttribute('data-option-active')).toBe('false');
+
+      input(fixture).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick();
+
+      expect(customOptions()[0].getAttribute('data-option-active')).toBe('false');
+      expect(customOptions()[1].getAttribute('data-option-active')).toBe('true');
+    });
+
+    it('commits the label and emits optionSelected when picking a templated option', () => {
+      const fixture = createHost();
+      type(fixture, 'ban');
+
+      options()[0].click();
+      tick();
+
+      expect(fixture.componentInstance.value()).toBe('Banana');
+      expect(fixture.componentInstance.selected.length).toBe(1);
+      expect(fixture.componentInstance.selected[0].value).toBe('banana');
+      expect(options().length).toBe(0); // closed after selection
+    });
+
+    it('keeps the default option rendering when no template is projected', () => {
+      const fixture = create();
+      type(fixture, 'apr');
+
+      const panel = overlayContainer.getContainerElement();
+      expect(panel.querySelector('.dm-autocomplete__option-label')?.textContent).toContain(
+        'Apricot',
+      );
+      expect(panel.querySelector('.dm-autocomplete__option-description')?.textContent).toContain(
+        'Stone fruit',
+      );
+    });
   });
 });

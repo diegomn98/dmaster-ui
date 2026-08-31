@@ -84,6 +84,29 @@ Wire it to a form (the control value is the free text):
   and keeps focus in the input. **Free text is always kept** — the user is never
   forced to pick a suggestion.
 
+## Custom option template (`dmAutocompleteOption`)
+
+By default each suggestion row renders the option `label` (+ optional
+`description`). For rich rows — icons, avatars, highlighted matches — project
+an `ng-template[dmAutocompleteOption]` (import `DmAutocompleteOptionDirective`
+alongside the component). The template replaces the row's **inner content**
+only: active highlight, disabled state, `aria-activedescendant` and
+mouse/keyboard selection keep working unchanged, and picking still writes the
+option `label` into the field and emits `optionSelected`.
+
+```html
+<dm-autocomplete [options]="cities" [(value)]="city">
+  <ng-template dmAutocompleteOption let-option let-active="active">
+    <dm-icon size="1rem">location_on</dm-icon>
+    <span>{{ option.label }}</span>
+  </ng-template>
+</dm-autocomplete>
+```
+
+Context: `$implicit` (the option, `let-option`), `index` (within the visible
+list) and `active` (`true` for the highlighted option, following keyboard
+navigation and hover).
+
 ## Defaults
 
 Override every `dm-autocomplete` app- or route-wide:

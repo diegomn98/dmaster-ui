@@ -1,6 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ApplicationRef, Component, inject, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationRef,
+  Component,
+  inject,
+  provideZonelessChangeDetection,
+  TemplateRef,
+  viewChild,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { DmDialogService } from './dialog.service';
@@ -11,6 +18,13 @@ import { DmDialogService } from './dialog.service';
 class TestDialogComponent {
   protected readonly data = inject<{ name: string }>(DIALOG_DATA);
   readonly ref = inject(DialogRef);
+}
+
+@Component({
+  template: '<ng-template #tpl><p class="tpl-content">From template</p></ng-template>',
+})
+class TemplateHostComponent {
+  readonly tpl = viewChild.required<TemplateRef<unknown>>('tpl');
 }
 
 describe('DmDialogService', () => {
@@ -31,6 +45,15 @@ describe('DmDialogService', () => {
 
   function containerEl(): HTMLElement {
     return overlayContainer.getContainerElement();
+  }
+
+  // The CDK overlay keyboard dispatcher listens on document.body and the CDK
+  // dialog matches Escape by keyCode (27), which the KeyboardEvent constructor
+  // does not set from `key` alone.
+  function dispatchEscape(): void {
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+    Object.defineProperty(event, 'keyCode', { get: () => 27 });
+    document.body.dispatchEvent(event);
   }
 
   it('opens the component with data and the library panel classes', () => {
@@ -78,5 +101,101 @@ describe('DmDialogService', () => {
     TestBed.inject(ApplicationRef).tick();
 
     expect(containerEl().querySelectorAll('.content').length).toBe(0);
+  });
+
+  it('opens a TemplateRef', () => {
+    const host = TestBed.createComponent(TemplateHostComponent);
+    host.detectChanges();
+
+    service.open(host.componentInstance.tpl(), { data: {} });
+    TestBed.inject(ApplicationRef).tick();
+
+    expect(containerEl().querySelector('.tpl-content')?.textContent).toContain('From template');
+  });
+
+  describe('confirm', () => {
+    const options = {
+      title: 'Delete this file?',
+      message: 'This action cannot be undone.',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Keep it',
+    };
+
+    function confirmButton(): HTMLButtonElement {
+      return containerEl().querySelector<HTMLButtonElement>('.dm-confirm-dialog__confirm button')!;
+    }
+
+    function cancelButton(): HTMLButtonElement {
+      return containerEl().querySelector<HTMLButtonElement>('.dm-confirm-dialog__cancel button')!;
+    }
+
+    it('renders the provided labels verbatim (the library ships no copy)', () => {
+      void service.confirm(options);
+      TestBed.inject(ApplicationRef).tick();
+
+      const el = containerEl();
+      expect(el.querySelector('.dm-confirm-dialog__title')?.textContent).toBe('Delete this file?');
+      expect(el.querySelector('.dm-confirm-dialog__message')?.textContent).toBe(
+        'This action cannot be undone.',
+      );
+      expect(confirmButton().textContent?.trim()).toBe('Delete');
+      expect(cancelButton().textContent?.trim()).toBe('Keep it');
+      // The title doubles as the dialog's accessible name.
+      expect(el.querySelector('.cdk-dialog-container')?.getAttribute('aria-label')).toBe(
+        'Delete this file?',
+      );
+    });
+
+    it('omits the message paragraph when no message is given', () => {
+      void service.confirm({ title: 't', confirmLabel: 'Yes', cancelLabel: 'No' });
+      TestBed.inject(ApplicationRef).tick();
+
+      expect(containerEl().querySelector('.dm-confirm-dialog__message')).toBeNull();
+    });
+
+    it('resolves true when the confirm button is clicked', async () => {
+      const result = service.confirm(options);
+      TestBed.inject(ApplicationRef).tick();
+
+      confirmButton().click();
+      TestBed.inject(ApplicationRef).tick();
+
+      expect(await result).toBe(true);
+      expect(containerEl().querySelector('.dm-confirm-dialog__title')).toBeNull();
+    });
+
+    it('resolves false when the cancel button is clicked', async () => {
+      const result = service.confirm(options);
+      TestBed.inject(ApplicationRef).tick();
+
+      cancelButton().click();
+      TestBed.inject(ApplicationRef).tick();
+
+      expect(await result).toBe(false);
+    });
+
+    it('resolves false when dismissed with Escape', async () => {
+      const result = service.confirm(options);
+      TestBed.inject(ApplicationRef).tick();
+
+      dispatchEscape();
+      TestBed.inject(ApplicationRef).tick();
+
+      expect(await result).toBe(false);
+    });
+
+    it('paints the confirm button primary by default and with the given color', () => {
+      void service.confirm(options);
+      TestBed.inject(ApplicationRef).tick();
+      expect(confirmButton().getAttribute('data-color')).toBe('primary');
+      expect(cancelButton().getAttribute('data-variant')).toBe('light');
+      service.closeAll();
+      TestBed.inject(ApplicationRef).tick();
+
+      void service.confirm({ ...options, color: 'danger' });
+      TestBed.inject(ApplicationRef).tick();
+      expect(confirmButton().getAttribute('data-color')).toBe('danger');
+      expect(confirmButton().getAttribute('data-variant')).toBe('solid');
+    });
   });
 });

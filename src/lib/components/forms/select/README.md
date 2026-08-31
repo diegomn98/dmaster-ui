@@ -158,6 +158,36 @@ persisted selection shown before the first fetch). A failed page never storms th
 server: infinite mode stops auto-retrying, and `loadMoreMode="button"` keeps the
 button so a click retries the failed page.
 
+## Custom option template
+
+Project an `ng-template[dmSelectOption]` to replace the default label +
+description block of every option row — icons, avatars, status dots, rich
+layouts. Everything else about the row is untouched: the check indicator,
+disabled state, active highlight, `aria-selected` and click / keyboard
+handling keep working exactly as before. The template applies to sync
+(`items`) **and** server-driven (`loadFn`) options alike; the **chips in the
+trigger (`multiple` mode) are NOT affected** — they keep rendering the plain
+item `label`, as does the single-mode trigger text.
+
+```html
+<dm-select label="Status" [items]="statuses" [(value)]="status">
+  <ng-template dmSelectOption let-item let-selected="selected">
+    <span style="display: flex; align-items: center; gap: 0.5rem">
+      <span
+        style="width: 0.5rem; height: 0.5rem; border-radius: 999px"
+        [style.background]="statusColors[item.value]"
+      ></span>
+      {{ item.label }}
+    </span>
+  </ng-template>
+</dm-select>
+```
+
+Context: `$implicit` (the `DmSelectItem<T>`, `let-item`), `index` (position in
+the currently visible, filtered list) and `selected`. The template controls
+the option **body only** — filtering and typeahead still read the item
+`label`, so keep labels meaningful for templated options.
+
 ## API
 
 | Input                  | Type                                                                          | Default     | Description                                                                                                          |
@@ -188,6 +218,7 @@ button so a click retries the failed page.
 | `clearAriaLabel`       | `string`                                                                      | `'Clear'`   | ARIA label for the clear button.                                                                                     |
 | `removeAriaLabel`      | `string`                                                                      | `'Remove'`  | ARIA label prefix for the per-chip remove buttons (multiple mode).                                                   |
 | `filterClearAriaLabel` | `string`                                                                      | `'Clear'`   | ARIA label for the filter's clear (×) button.                                                                        |
+| `dmSelectOption`       | `ng-template` — `DmSelectOptionContext<T>`                                    | —           | Projected template replacing the option body (label + description); check, states and selection stay built-in.       |
 
 ### Server-driven (async) — set `loadFn` to enable
 
@@ -201,7 +232,7 @@ button so a click retries the failed page.
 | `loadingLabel`     | `string`                    | `'Loading…'`  | Label for the loading row and the polite live region.                                                                |
 | `selectedItems`    | `DmSelectItem<T>[]`         | `[]`          | Known items to resolve labels for a value never loaded (e.g. a persisted selection).                                 |
 
-Types: `DmSelectLoadFn<T>`, `DmSelectLoadResult<T>` (`{ items, total }`), `DmSelectLoadMoreMode`.
+Types: `DmSelectLoadFn<T>`, `DmSelectLoadResult<T>` (`{ items, total }`), `DmSelectLoadMoreMode`, `DmSelectOptionDirective<T>`, `DmSelectOptionContext<T>` (`{ $implicit, index, selected }`).
 
 Global defaults: `provideSelectDefaults({...})` / `SELECT_DEFAULTS` (`pageSize`, `searchDebounceMs`, `loadMoreMode` included).
 

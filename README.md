@@ -10,7 +10,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0F6E56?style=flat-square)](https://dmasterui.com)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**45 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 600+ tests**
+**45 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 790+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 

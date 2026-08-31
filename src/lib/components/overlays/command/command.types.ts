@@ -19,8 +19,8 @@ export interface DmCommandItem {
   shortcut?: string;
   /** Individually disabled items are skipped by the keyboard and not selectable. */
   disabled?: boolean;
-  /** Optional icon name. Not rendered by the library in v1 — reserved so a
-   *  consumer can map it in their own item template without an API change. */
+  /** Optional icon name. Not rendered by the default row — map it in a
+   *  projected `ng-template[dmCommandItem]` (see `DmCommandItemDirective`). */
   icon?: string;
 }
 

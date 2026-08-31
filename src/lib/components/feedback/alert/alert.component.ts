@@ -3,18 +3,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   inject,
   input,
   output,
   signal,
 } from '@angular/core';
 
+import { DmAlertIconDirective } from './alert-icon.directive';
 import { ALERT_DEFAULTS } from './alert.tokens';
 import { DmAlertColor, DmAlertVariant } from './alert.types';
 
 /**
  * Contextual feedback banner with a color × variant API, a
  * semantic icon per color, an optional dismiss button and an action slot.
+ * A projected `[dmAlertIcon]` element replaces the built-in glyph.
  *
  * ```html
  * <dm-alert color="success" title="Payment received" description="We emailed the receipt." />
@@ -41,6 +44,9 @@ import { DmAlertColor, DmAlertVariant } from './alert.types';
 })
 export class DmAlertComponent {
   private readonly defaults = inject(ALERT_DEFAULTS);
+
+  /** Projected custom icon (`[dmAlertIcon]`). When present the built-in glyph is not rendered. */
+  protected readonly customIcon = contentChild(DmAlertIconDirective);
 
   /** Semantic color. It also selects the built-in icon. */
   readonly color = input<DmAlertColor>(this.defaults.color);

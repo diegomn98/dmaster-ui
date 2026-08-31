@@ -1,57 +1,61 @@
 @if (!hideIcon()) {
   <span class="dm-alert__icon" aria-hidden="true">
-    @switch (tone()) {
-      @case ('success') {
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="m8.5 12.5 2.4 2.4 4.6-5.3" />
-        </svg>
-      }
-      @case ('warning') {
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M12 3 2 20h20L12 3Z" />
-          <path d="M12 10v4m0 3.5v.01" />
-        </svg>
-      }
-      @case ('danger') {
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="m9.4 9.4 5.2 5.2m0-5.2-5.2 5.2" />
-        </svg>
-      }
-      @default {
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 11v5m0-8v.01" />
-        </svg>
+    <ng-content select="[dmAlertIcon]" />
+
+    @if (!customIcon()) {
+      @switch (tone()) {
+        @case ('success') {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="m8.5 12.5 2.4 2.4 4.6-5.3" />
+          </svg>
+        }
+        @case ('warning') {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 3 2 20h20L12 3Z" />
+            <path d="M12 10v4m0 3.5v.01" />
+          </svg>
+        }
+        @case ('danger') {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="m9.4 9.4 5.2 5.2m0-5.2-5.2 5.2" />
+          </svg>
+        }
+        @default {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v5m0-8v.01" />
+          </svg>
+        }
       }
     }
   </span>

@@ -1,3 +1,5 @@
+import { DmColorPickerFormat } from './color-picker.types';
+
 /**
  * Pure, dependency-free color math for `dm-color-picker`.
  *
@@ -16,6 +18,18 @@ export interface HSVA {
   s: number;
   /** Value (brightness), 0–1. */
   v: number;
+  /** Alpha, 0–1. */
+  a: number;
+}
+
+/** A color in HSL(A): hue 0–360, saturation/lightness/alpha 0–1. */
+export interface HSLA {
+  /** Hue in degrees, 0–360. */
+  h: number;
+  /** Saturation, 0–1. */
+  s: number;
+  /** Lightness, 0–1. */
+  l: number;
   /** Alpha, 0–1. */
   a: number;
 }
@@ -122,6 +136,23 @@ export function rgbaToHsva(rgba: RGBA): HSVA {
   return { h, s, v: max, a };
 }
 
+/** sRGB(A) → HSL(A). */
+export function rgbaToHsla(rgba: RGBA): HSLA {
+  const { h, s, v, a } = rgbaToHsva(rgba);
+  const l = v * (1 - s / 2);
+  const sl = l === 0 || l === 1 ? 0 : (v - l) / Math.min(l, 1 - l);
+  return { h, s: sl, l, a };
+}
+
+/** HSL(A) → sRGB(A). Channels come out as rounded 0–255 integers. */
+export function hslaToRgba(hsla: HSLA): RGBA {
+  const l = Math.max(0, Math.min(1, hsla.l));
+  const s = Math.max(0, Math.min(1, hsla.s));
+  const v = l + s * Math.min(l, 1 - l);
+  const sv = v === 0 ? 0 : 2 * (1 - l / v);
+  return hsvaToRgba({ h: hsla.h, s: sv, v, a: hsla.a });
+}
+
 /** Two-digit lowercase hex for a raw channel. */
 function toHex2(value: number): string {
   return clampChannel(value).toString(16).padStart(2, '0');
@@ -149,15 +180,86 @@ export function formatRgb(hsva: HSVA, includeAlpha: boolean): string {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+/**
+ * Formats an HSV(A) color as modern space-separated `rgb(r g b)`, or
+ * `rgb(r g b / a)` when `includeAlpha` is true.
+ */
+export function formatRgbModern(hsva: HSVA, includeAlpha: boolean): string {
+  const { r, g, b, a } = hsvaToRgba(hsva);
+  if (includeAlpha) {
+    return `rgb(${r} ${g} ${b} / ${Number(a.toFixed(2))})`;
+  }
+  return `rgb(${r} ${g} ${b})`;
+}
+
+/**
+ * Formats an HSV(A) color as `hsl(h s% l%)`, or `hsl(h s% l% / a)` when
+ * `includeAlpha` is true. Hue is rounded to whole degrees, saturation and
+ * lightness to whole percents.
+ */
+export function formatHsl(hsva: HSVA, includeAlpha: boolean): string {
+  const { h, s, l, a } = rgbaToHsla(hsvaToRgba(hsva));
+  const base = `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+  if (includeAlpha) {
+    return `hsl(${base} / ${Number(a.toFixed(2))})`;
+  }
+  return `hsl(${base})`;
+}
+
+/**
+ * Serializes an HSV(A) color in the given `DmColorPickerFormat` — the single
+ * entry point the picker uses to produce its committed value.
+ */
+export function formatColor(
+  hsva: HSVA,
+  format: DmColorPickerFormat,
+  includeAlpha: boolean,
+): string {
+  switch (format) {
+    case 'rgb':
+      return formatRgbModern(hsva, includeAlpha);
+    case 'hsl':
+      return formatHsl(hsva, includeAlpha);
+    default:
+      return formatHex(hsva, includeAlpha);
+  }
+}
+
 /** Expands a single hex nibble (`f`) into a byte (`ff`) and parses it. */
 function nibble(ch: string): number {
   return parseInt(ch + ch, 16);
 }
 
+/** Strict `Number(...)`: `null` on the empty string and non-finite values. */
+function parseNumber(text: string): number | null {
+  if (text === '') {
+    return null;
+  }
+  const n = Number(text);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Parses a percentage-flavored channel (`50%` or bare `50`) into 0–1. */
+function parsePercent(text: string): number | null {
+  const n = parseNumber(text.replace(/%$/, ''));
+  return n === null ? null : n / 100;
+}
+
+/** Parses an alpha channel: bare numbers are 0–1, `%`-suffixed are 0–100. */
+function parseAlphaText(text: string): number | null {
+  if (text.endsWith('%')) {
+    return parsePercent(text);
+  }
+  return parseNumber(text);
+}
+
 /**
  * Parses a color string into HSV(A), or `null` on anything it doesn't
  * understand. Tolerant of surrounding whitespace and case. Accepts:
- * `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(r, g, b)`, `rgba(r, g, b, a)`.
+ * `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, and the `rgb()`/`rgba()`/`hsl()`/
+ * `hsla()` functions in both legacy comma syntax (`rgb(r, g, b)`,
+ * `hsla(h, s%, l%, a)`) and modern space syntax (`rgb(r g b / a)`,
+ * `hsl(h s% l% / a)`).
  */
 export function parseColor(input: string): HSVA | null {
   if (typeof input !== 'string') {
@@ -200,17 +302,51 @@ export function parseColor(input: string): HSVA | null {
     return null;
   }
 
-  const fn = str.match(/^rgba?\(([^)]+)\)$/);
+  const fn = str.match(/^(rgba?|hsla?)\(([^)]+)\)$/);
   if (fn) {
-    const parts = fn[1].split(',').map((p) => p.trim());
-    if (parts.length < 3 || parts.length > 4) {
+    const isHsl = fn[1].startsWith('hsl');
+    let body = fn[2];
+
+    // Modern syntax carries the alpha after a slash: `rgb(r g b / a)`.
+    let alphaText: string | null = null;
+    const slash = body.indexOf('/');
+    if (slash !== -1) {
+      alphaText = body.slice(slash + 1).trim();
+      body = body.slice(0, slash);
+    }
+
+    const parts = body.includes(',')
+      ? body.split(',').map((p) => p.trim())
+      : body.trim().split(/\s+/);
+    if (parts.some((p) => p === '')) {
       return null;
     }
-    const r = Number(parts[0]);
-    const g = Number(parts[1]);
-    const b = Number(parts[2]);
-    const a = parts.length === 4 ? Number(parts[3]) : 1;
-    if ([r, g, b, a].some((n) => !Number.isFinite(n)) || parts.some((p) => p === '')) {
+    if (alphaText === null && parts.length === 4) {
+      // Legacy syntax carries the alpha as a fourth comma part.
+      alphaText = parts.pop()!;
+    }
+    if (parts.length !== 3) {
+      return null;
+    }
+    const a = alphaText === null ? 1 : parseAlphaText(alphaText);
+    if (a === null) {
+      return null;
+    }
+
+    if (isHsl) {
+      const h = parseNumber(parts[0].replace(/deg$/, ''));
+      const s = parsePercent(parts[1]);
+      const l = parsePercent(parts[2]);
+      if (h === null || s === null || l === null) {
+        return null;
+      }
+      return rgbaToHsva(hslaToRgba({ h, s, l, a }));
+    }
+
+    const r = parseNumber(parts[0]);
+    const g = parseNumber(parts[1]);
+    const b = parseNumber(parts[2]);
+    if (r === null || g === null || b === null) {
       return null;
     }
     return rgbaToHsva({ r, g, b, a });

@@ -52,6 +52,12 @@ import { DmFileUploadComponent } from '@dmaster/ui';
 | `messages`    | `DmFileUploadMessages`           | generic English  | Copy for the three rejection reasons.                          |
 | `progress`    | `Record<string, number> \| null` | `null`           | Per-file progress (0–100), keyed by file name.                 |
 
+### Content slots
+
+| Slot                | Selector              | Description                                                                     |
+| ------------------- | --------------------- | ------------------------------------------------------------------------------- |
+| `dmDropzoneContent` | `[dmDropzoneContent]` | Replaces the dropzone's built-in icon + `label` + `hint` block (details below). |
+
 ### Outputs
 
 | Output         | Payload           | When                                             |
@@ -62,6 +68,29 @@ import { DmFileUploadComponent } from '@dmaster/ui';
 | `fileRemoved`  | `File`            | A file was removed via its × button.             |
 
 `DmFileRejection` is `{ file: File; reason: 'type' | 'size' | 'count' }`.
+
+### Custom dropzone content (`dmDropzoneContent`)
+
+Project any element with the `dmDropzoneContent` attribute (import
+`DmDropzoneContentDirective`) to replace the built-in cloud icon + `label` +
+`hint` block. Drag & drop, click-to-browse, keyboard interaction and the focus
+ring are untouched:
+
+```html
+<dm-file-upload [(files)]="files">
+  <span dmDropzoneContent style="display: grid; gap: 0.25rem; justify-items: center">
+    <dm-icon name="image" size="2rem" />
+    <strong>Drop your screenshots here</strong>
+    <small>PNG or JPG · up to 5 MB</small>
+  </span>
+</dm-file-upload>
+```
+
+The projected content lives inside the dropzone `<button>`, so it becomes part
+of the button's accessible name — keep it text-bearing (or set `ariaLabel`),
+and never nest interactive elements in it. The `hint`'s `aria-describedby`
+wiring is dropped along with the default block, so put any essential copy in
+your own content.
 
 ## Global defaults
 

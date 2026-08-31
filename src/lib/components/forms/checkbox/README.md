@@ -15,6 +15,7 @@ Checkbox built on a real native `<input type="checkbox">` (form semantics intact
 | `color`         | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | Semantic color of the checked / indeterminate fill.            |
 | `indeterminate` | `boolean`                                                                     | `false`     | Visual mixed state while not checked (native `indeterminate`). |
 | `disabled`      | `boolean`                                                                     | `false`     | Combined with the forms `disabled` state.                      |
+| `size`          | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Size scale of the box and label.                               |
 | `inputId`       | `string`                                                                      | `''`        | Id of the native input, for external `<label for>`.            |
 | `ariaLabel`     | `string`                                                                      | `''`        | Accessible name when no label content is projected.            |
 
@@ -26,13 +27,13 @@ Checkbox built on a real native `<input type="checkbox">` (form semantics intact
 
 ## Design tokens
 
-| Token                          | Default                      | Description                           |
-| ------------------------------ | ---------------------------- | ------------------------------------- |
-| `--dm-checkbox-size`           | `1.125rem` (`0.875rem` sm)   | Width and height of the checkbox box. |
-| `--dm-checkbox-radius`         | `0.4375rem` (`0.3125rem` sm) | Corner radius of the box.             |
-| `--dm-checkbox-bg`             | `var(--dm-bg-elevated)`      | Background of the unchecked box.      |
-| `--dm-checkbox-border`         | `var(--dm-border-strong)`    | Border color of the unchecked box.    |
-| `--dm-checkbox-fg`             | `var(--dm-primary-fg)`       | Color of the check mark glyph.        |
-| `--dm-checkbox-bg-checked`     | `var(--dm-primary)`          | Background fill of the checked box.   |
-| `--dm-checkbox-border-checked` | `var(--dm-primary)`          | Border color of the checked box.      |
-| `--dm-checkbox-label-fg`       | `var(--dm-fg)`               | Color of the projected label text.    |
+| Token                          | Default                                      | Description                           |
+| ------------------------------ | -------------------------------------------- | ------------------------------------- |
+| `--dm-checkbox-size`           | `1.125rem` (`0.875rem` sm, `1.375rem` lg)    | Width and height of the checkbox box. |
+| `--dm-checkbox-radius`         | `0.4375rem` (`0.3125rem` sm, `0.5625rem` lg) | Corner radius of the box.             |
+| `--dm-checkbox-bg`             | `var(--dm-bg-elevated)`                      | Background of the unchecked box.      |
+| `--dm-checkbox-border`         | `var(--dm-border-strong)`                    | Border color of the unchecked box.    |
+| `--dm-checkbox-fg`             | `var(--dm-primary-fg)`                       | Color of the check mark glyph.        |
+| `--dm-checkbox-bg-checked`     | `var(--dm-primary)`                          | Background fill of the checked box.   |
+| `--dm-checkbox-border-checked` | `var(--dm-primary)`                          | Border color of the checked box.      |
+| `--dm-checkbox-label-fg`       | `var(--dm-fg)`                               | Color of the projected label text.    |

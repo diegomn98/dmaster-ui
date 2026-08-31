@@ -3,7 +3,7 @@
   class="dm-file-upload__dropzone"
   [attr.data-dragging]="dragging() ? '' : null"
   [attr.aria-label]="ariaLabel() || null"
-  [attr.aria-describedby]="hint() ? hintId : null"
+  [attr.aria-describedby]="hint() && !customContent() ? hintId : null"
   [disabled]="disabled()"
   (click)="open()"
   (dragenter)="onDragOver($event)"
@@ -11,25 +11,30 @@
   (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
 >
-  <svg
-    class="dm-file-upload__icon"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.75"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 13v8" />
-    <path d="m8 17 4-4 4 4" />
-    <path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3" />
-  </svg>
+  <!-- A projected [dmDropzoneContent] replaces the icon + label + hint block. -->
+  <ng-content select="[dmDropzoneContent]" />
 
-  <span class="dm-file-upload__label">{{ label() }}</span>
+  @if (!customContent()) {
+    <svg
+      class="dm-file-upload__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 13v8" />
+      <path d="m8 17 4-4 4 4" />
+      <path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3" />
+    </svg>
 
-  @if (hint()) {
-    <span class="dm-file-upload__hint" [id]="hintId">{{ hint() }}</span>
+    <span class="dm-file-upload__label">{{ label() }}</span>
+
+    @if (hint()) {
+      <span class="dm-file-upload__hint" [id]="hintId">{{ hint() }}</span>
+    }
   }
 </button>
 

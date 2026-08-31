@@ -13,7 +13,8 @@ color × variant trigger that reads as a sibling of the rest of the field family
 
 - **Hex in, hex out.** The value is a plain string, so it drops straight into
   reactive forms and templates. Wired as a `ControlValueAccessor`, so
-  `[(ngModel)]` and `[formControl]` both work.
+  `[(ngModel)]` and `[formControl]` both work. `format` switches the emitted
+  string to `rgb()` or `hsl()` if hex is not what your API wants.
 - **No color library.** The HSV↔RGB↔hex math is a small, pure, dependency-free
   module (`color-utils.ts`). Nothing touches `window`/`document`, so it works
   under SSR/prerender.
@@ -25,17 +26,40 @@ color × variant trigger that reads as a sibling of the rest of the field family
 
 ## Value
 
-`value` is a hex string (`#rrggbb`, or `#rrggbbaa` when `showAlpha` is on),
-normalised (lowercase, canonical form) on write. `null` means "no color chosen"
-and renders the placeholder.
+`value` is a string, normalised to the configured `format` on write. By default
+that is a hex string (`#rrggbb`, or `#rrggbbaa` when `showAlpha` is on). `null`
+means "no color chosen" and renders the placeholder.
+
+## Output format
+
+`format` picks how the committed value (the model, the CVA `onChange`, and the
+trigger text) is serialized:
+
+| `format` | Without alpha | With `showAlpha` |
+| -------- | ------------- | ---------------- |
+| `'hex'`  | `#rrggbb`     | `#rrggbbaa`      |
+| `'rgb'`  | `rgb(r g b)`  | `rgb(r g b / a)` |
+| `'hsl'`  | `hsl(h s% l%)` | `hsl(h s% l% / a)` |
+
+```html
+<dm-color-picker label="Fill" [(value)]="fill" format="rgb" />
+<!-- fill() === 'rgb(120 87 255)' -->
+```
+
+`writeValue` (i.e. `[formControl]` / `[(ngModel)]` seeding) accepts **any** of
+the three notations regardless of `format` — hex, `rgb()`/`rgba()` and
+`hsl()`/`hsla()`, in both legacy comma and modern space/slash syntax — and
+re-serializes into the configured `format`. The in-panel hex field always edits
+hex, whatever the output `format`.
 
 ## Inputs (color specific)
 
-| Input       | Type                     | Default          | Notes                                                |
-| ----------- | ------------------------ | ---------------- | ---------------------------------------------------- |
-| `value`     | `string \| null` (model) | `null`           | Two-way hex value.                                   |
-| `showAlpha` | `boolean`                | `false`          | Adds the alpha rail; emits `#rrggbbaa`.              |
-| `swatches`  | `string[]`               | 10-color palette | Preset chips shown in the panel's swatch grid (hex). |
+| Input       | Type                      | Default          | Notes                                                 |
+| ----------- | ------------------------- | ---------------- | ----------------------------------------------------- |
+| `value`     | `string \| null` (model)  | `null`           | Two-way value, serialized in the configured `format`. |
+| `showAlpha` | `boolean`                 | `false`          | Adds the alpha rail; appends the alpha part.          |
+| `format`    | `'hex' \| 'rgb' \| 'hsl'` | `'hex'`          | Committed serialization — see Output format above.    |
+| `swatches`  | `string[]`                | 10-color palette | Preset chips shown in the panel's swatch grid (hex).  |
 
 ## Inputs (field family)
 

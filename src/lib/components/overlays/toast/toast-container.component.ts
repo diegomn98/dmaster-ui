@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { TOAST_DEFAULTS } from './toast.tokens';
 import { DmToastService } from './toast.service';
+import { DmToastData } from './toast.types';
 
 /**
  * Pila de toasts. La instancia `DmToastService` dentro de un overlay global
@@ -16,4 +17,10 @@ import { DmToastService } from './toast.service';
 export class DmToastContainerComponent {
   protected readonly service = inject(DmToastService);
   protected readonly defaults = inject(TOAST_DEFAULTS);
+
+  /** Runs the toast action, then dismisses it (resolving `afterDismissed`). */
+  protected runAction(toast: DmToastData): void {
+    toast.action?.handler();
+    this.service.dismiss(toast.id);
+  }
 }

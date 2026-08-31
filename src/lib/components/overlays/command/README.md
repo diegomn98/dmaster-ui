@@ -61,18 +61,48 @@ run(item: DmCommandItem): void {
 
 ## API
 
-| Input / Output | Type                    | Default              | Notes                                       |
-| -------------- | ----------------------- | -------------------- | ------------------------------------------- |
-| `items`        | `DmCommandItem[]`       | — (required)         | Actions to render.                          |
-| `open`         | `model<boolean>`        | `false`              | Two-way open state.                         |
-| `hotkey`       | `string`                | `'mod+k'`            | Global toggle combo; `''` disables.         |
-| `placeholder`  | `string`                | `'Search…'`          | Search input placeholder.                   |
-| `emptyLabel`   | `string`                | `'No results found'` | Shown when nothing matches.                 |
-| `ariaLabel`    | `string`                | `'Command palette'`  | Accessible name for the dialog.             |
-| `selected`     | `output<DmCommandItem>` | —                    | Emitted on activation; palette then closes. |
+| Input / Output  | Type                         | Default              | Notes                                       |
+| --------------- | ---------------------------- | -------------------- | ------------------------------------------- |
+| `items`         | `DmCommandItem[]`            | — (required)         | Actions to render.                          |
+| `open`          | `model<boolean>`             | `false`              | Two-way open state.                         |
+| `hotkey`        | `string`                     | `'mod+k'`            | Global toggle combo; `''` disables.         |
+| `placeholder`   | `string`                     | `'Search…'`          | Search input placeholder.                   |
+| `emptyLabel`    | `string`                     | `'No results found'` | Shown when nothing matches.                 |
+| `ariaLabel`     | `string`                     | `'Command palette'`  | Accessible name for the dialog.             |
+| `selected`      | `output<DmCommandItem>`      | —                    | Emitted on activation; palette then closes. |
+| `dmCommandItem` | `ng-template[dmCommandItem]` | —                    | Custom row content (see below).             |
 
 `DmCommandItem`: `{ id; label; group?; keywords?; shortcut?; disabled?; icon? }`.
-`icon` is reserved (not rendered in v1).
+`icon` is not rendered by the default row — map it in a `dmCommandItem` template.
+
+## Custom item template
+
+Project an `ng-template[dmCommandItem]` to replace the default row content
+(label + shortcut chip) for **every** result — icons, descriptions, badges…
+The context carries the item as `$implicit` and an `active` flag for the
+highlighted row. The option shell — active highlight, ARIA attributes,
+pointer/keyboard selection — and the filtering stay with the palette; the
+template only decides what a row looks like inside.
+
+```html
+<dm-command [items]="commands" [(open)]="open" (selected)="run($event)">
+  <ng-template dmCommandItem let-item let-active="active">
+    <dm-icon size="1rem">{{ item.icon }}</dm-icon>
+    <span style="flex: 1">{{ item.label }}</span>
+    @if (item.shortcut) {
+      <dm-kbd size="sm">{{ item.shortcut }}</dm-kbd>
+    }
+  </ng-template>
+</dm-command>
+```
+
+The row shell is a flex container (`gap` included), so the projected nodes line
+up as flex children out of the box; the internal `.dm-command__option-*`
+classes are encapsulated and do not apply to projected content.
+
+Import `DmCommandItemDirective` alongside `DmCommandComponent`. Without the
+template, the palette renders its built-in row — byte-identical to before the
+API existed.
 
 Override the copy app-wide:
 

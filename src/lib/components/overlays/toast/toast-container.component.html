@@ -54,7 +54,18 @@
         }
       </span>
 
-      <span class="dm-toast__message">{{ toast.message }}</span>
+      <div class="dm-toast__body">
+        @if (toast.title) {
+          <span class="dm-toast__title">{{ toast.title }}</span>
+        }
+        <span class="dm-toast__message">{{ toast.message }}</span>
+      </div>
+
+      @if (toast.action; as action) {
+        <button type="button" class="dm-toast__action" (click)="runAction(toast)">
+          {{ action.label }}
+        </button>
+      }
 
       @if (toast.dismissible) {
         <button

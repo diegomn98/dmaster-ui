@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   ElementRef,
   inject,
   input,
@@ -12,6 +13,7 @@ import {
   signal,
 } from '@angular/core';
 
+import { DmTreeNodeContext, DmTreeNodeDirective } from './tree-node.directive';
 import { TREE_DEFAULTS } from './tree.tokens';
 import { DmTreeFlatNode, DmTreeNode, DmTreeSelectionMode } from './tree.types';
 
@@ -84,6 +86,23 @@ export class DmTreeComponent {
 
   /** The node id that currently owns the single tab stop (roving tabindex). */
   private readonly activeId = signal<string | null>(null);
+
+  // ---- Content templates ---------------------------------------------------
+  /** Optional projected `ng-template[dmTreeNode]` replacing the default row content. */
+  private readonly nodeDirective = contentChild(DmTreeNodeDirective);
+
+  /** The custom node template, or `null` to render the default label. */
+  protected readonly nodeTemplate = computed(() => this.nodeDirective()?.templateRef ?? null);
+
+  /** Context builder for a templated node row. */
+  protected nodeContext(entry: DmTreeFlatNode): DmTreeNodeContext {
+    return {
+      $implicit: entry.node,
+      level: entry.level,
+      expanded: entry.hasChildren && this.isExpanded(entry.node.id),
+      selected: this.isSelected(entry.node.id),
+    };
+  }
 
   // ---- Derived model -------------------------------------------------------
   /**

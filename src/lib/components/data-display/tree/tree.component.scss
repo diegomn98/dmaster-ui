@@ -131,17 +131,6 @@
   block-size: 1.25rem;
 }
 
-// ---- Leading icon slot (decorative marker, no dm-icon dependency) ----------
-
-.dm-tree__icon {
-  flex-shrink: 0;
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
-  background: currentcolor;
-  border-radius: var(--dm-radius-full);
-  opacity: 0.55;
-}
-
 .dm-tree__label {
   @include mixins.truncate;
 

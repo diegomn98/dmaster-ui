@@ -3,6 +3,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { DmSize } from '../../../core/types/common.types';
 import {
   DmColorPickerColor,
+  DmColorPickerFormat,
   DmColorPickerRadius,
   DmColorPickerVariant,
 } from './color-picker.types';
@@ -15,6 +16,8 @@ export interface DmColorPickerDefaults {
   radius: DmColorPickerRadius;
   /** Whether the alpha rail is shown and the emitted hex carries an alpha byte. */
   showAlpha: boolean;
+  /** Serialization of the committed value (`hex`, `rgb` or `hsl`). */
+  format: DmColorPickerFormat;
   /** Preset color chips shown in the panel's swatch grid (hex strings). */
   swatches: string[];
 }
@@ -39,6 +42,7 @@ export const DM_COLOR_PICKER_FALLBACK_DEFAULTS: DmColorPickerDefaults = {
   size: 'md',
   radius: 'md',
   showAlpha: false,
+  format: 'hex',
   swatches: DM_COLOR_PICKER_DEFAULT_SWATCHES,
 };
 

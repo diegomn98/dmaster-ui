@@ -1,9 +1,21 @@
-import { provideZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmDropzoneContentDirective } from './dropzone-content.directive';
 import { DmFileUploadComponent, formatFileSize } from './file-upload.component';
 import { FILE_UPLOAD_DEFAULTS } from './file-upload.tokens';
 import { DmFileRejection } from './file-upload.types';
+
+// A host projecting a custom dropzone body via [dmDropzoneContent].
+@Component({
+  imports: [DmFileUploadComponent, DmDropzoneContentDirective],
+  template: `
+    <dm-file-upload label="Fallback label" hint="Fallback hint">
+      <span dmDropzoneContent class="custom-zone">Drop your CV here</span>
+    </dm-file-upload>
+  `,
+})
+class CustomContentHostComponent {}
 
 describe('DmFileUploadComponent', () => {
   let fixture: ComponentFixture<DmFileUploadComponent>;
@@ -226,6 +238,48 @@ describe('DmFileUploadComponent', () => {
     pick([txt('a.txt')]);
     expect(fixture.componentInstance.files()).toHaveLength(0);
     expect(added).toHaveLength(0);
+  });
+
+  // ---- Custom dropzone content ---------------------------------------------
+  it('renders the built-in icon + label + hint block when nothing is projected', () => {
+    fixture.componentRef.setInput('hint', 'PNG only');
+    fixture.detectChanges();
+
+    expect(host().querySelector('.dm-file-upload__icon')).not.toBeNull();
+    expect(host().querySelector('.dm-file-upload__label')).not.toBeNull();
+    expect(host().querySelector('.dm-file-upload__hint')).not.toBeNull();
+    expect(dropzone().getAttribute('aria-describedby')).not.toBeNull();
+  });
+
+  it('replaces the icon + label + hint block with projected [dmDropzoneContent]', () => {
+    const local = TestBed.createComponent(CustomContentHostComponent);
+    local.detectChanges();
+    const el: HTMLElement = local.nativeElement;
+
+    // The custom block renders inside the dropzone button…
+    const custom = el.querySelector('.custom-zone');
+    expect(custom).not.toBeNull();
+    expect(custom!.textContent).toContain('Drop your CV here');
+    expect(custom!.closest('.dm-file-upload__dropzone')).not.toBeNull();
+    // …and the default icon / label / hint (and its describedby wiring) are gone.
+    expect(el.querySelector('.dm-file-upload__icon')).toBeNull();
+    expect(el.querySelector('.dm-file-upload__label')).toBeNull();
+    expect(el.querySelector('.dm-file-upload__hint')).toBeNull();
+    const button = el.querySelector('.dm-file-upload__dropzone')!;
+    expect(button.getAttribute('aria-describedby')).toBeNull();
+  });
+
+  it('keeps click-to-browse working with custom dropzone content', () => {
+    const local = TestBed.createComponent(CustomContentHostComponent);
+    local.detectChanges();
+    const el: HTMLElement = local.nativeElement;
+
+    const input = el.querySelector<HTMLInputElement>('.dm-file-upload__native')!;
+    let opened = false;
+    input.addEventListener('click', () => (opened = true));
+
+    el.querySelector<HTMLButtonElement>('.dm-file-upload__dropzone')!.click();
+    expect(opened).toBe(true);
   });
 
   // ---- Defaults ------------------------------------------------------------

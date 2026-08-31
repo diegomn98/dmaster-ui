@@ -1,6 +1,18 @@
 /** Semantic variant of the toast. */
 export type DmToastVariant = 'neutral' | 'success' | 'warning' | 'danger';
 
+/** Viewport placement of the (single, global) toast stack. */
+export type DmToastPosition =
+  'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'bottom-center' | 'top-center';
+
+/** Action button rendered inside a toast. */
+export interface DmToastAction {
+  /** Button label. */
+  label: string;
+  /** Runs on click; the toast is dismissed right after. */
+  handler: () => void;
+}
+
 /** Per-toast options. */
 export interface DmToastOptions {
   variant?: DmToastVariant;
@@ -8,6 +20,10 @@ export interface DmToastOptions {
   duration?: number;
   /** Shows the dismiss button. */
   dismissible?: boolean;
+  /** Bold title rendered above the message. */
+  title?: string;
+  /** Action button; running it also dismisses the toast. */
+  action?: DmToastAction;
 }
 
 /** Handle returned by `show()` and its variant helpers. */
@@ -24,4 +40,6 @@ export interface DmToastData {
   message: string;
   variant: DmToastVariant;
   dismissible: boolean;
+  title?: string;
+  action?: DmToastAction;
 }

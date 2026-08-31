@@ -5,7 +5,7 @@ export type DmBadgeColor = 'default' | 'primary' | 'secondary' | 'success' | 'wa
 export type DmBadgeVariant = 'solid' | 'flat' | 'bordered' | 'light' | 'dot' | 'shadow';
 
 /** Size scale. */
-export type DmBadgeSize = 'sm' | 'md';
+export type DmBadgeSize = 'sm' | 'md' | 'lg';
 
 /** Corner rounding. `full` is pill-shaped. */
 export type DmBadgeRadius = 'sm' | 'md' | 'lg' | 'full';

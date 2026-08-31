@@ -2,18 +2,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   inject,
   input,
   linkedSignal,
 } from '@angular/core';
 
 import { toCssSize } from '../../../core/utils/css';
+import { DmAvatarFallbackDirective } from './avatar-fallback.directive';
 import { AVATAR_DEFAULTS } from './avatar.tokens';
 import { DmAvatarColor, DmAvatarShape, DmAvatarSize } from './avatar.types';
 
 /**
- * Avatar with automatic fallback chain: image → initials → generic icon.
- * A failed image load falls back to initials without flashing.
+ * Avatar with automatic fallback chain: image → initials → custom fallback
+ * (`[dmAvatarFallback]`) → generic icon. A failed image load falls back to
+ * initials without flashing.
  *
  * ```html
  * <dm-avatar src="/u/diego.png" alt="Diego Maestro" initials="DM" />
@@ -40,6 +43,9 @@ import { DmAvatarColor, DmAvatarShape, DmAvatarSize } from './avatar.types';
 })
 export class DmAvatarComponent {
   private readonly defaults = inject(AVATAR_DEFAULTS);
+
+  /** Projected custom fallback (`[dmAvatarFallback]`). When present the generic icon is not rendered. */
+  protected readonly customFallback = contentChild(DmAvatarFallbackDirective);
 
   /** Image URL. Falls back to `initials` (then a generic icon) on error. */
   readonly src = input<string | null>(null);

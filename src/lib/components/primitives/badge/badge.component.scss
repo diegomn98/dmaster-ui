@@ -23,6 +23,11 @@
   letter-spacing: 0.02em;
 }
 
+:host([data-size='lg']) {
+  padding: var(--dm-badge-padding, 0.3125rem 0.6875rem);
+  font-size: var(--dm-badge-font-size, var(--dm-text-sm));
+}
+
 // ---- Radius ----------------------------------------------------------------
 :host([data-radius='sm']) {
   border-radius: var(--dm-badge-radius, var(--dm-radius-sm));

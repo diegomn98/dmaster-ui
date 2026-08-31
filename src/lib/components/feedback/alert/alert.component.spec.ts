@@ -1,6 +1,7 @@
-import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DmAlertIconDirective } from './alert-icon.directive';
 import { DmAlertComponent } from './alert.component';
 import { ALERT_DEFAULTS } from './alert.tokens';
 import { DmAlertColor, DmAlertVariant } from './alert.types';
@@ -15,6 +16,20 @@ import { DmAlertColor, DmAlertVariant } from './alert.types';
   `,
 })
 class ProjectionHostComponent {}
+
+@Component({
+  imports: [DmAlertComponent, DmAlertIconDirective],
+  template: `
+    <dm-alert title="Deploy finished" [hideIcon]="hideIcon()">
+      <svg dmAlertIcon class="custom-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 12h16" />
+      </svg>
+    </dm-alert>
+  `,
+})
+class CustomIconHostComponent {
+  readonly hideIcon = signal(false);
+}
 
 describe('DmAlertComponent', () => {
   let fixture: ComponentFixture<DmAlertComponent>;
@@ -166,6 +181,35 @@ describe('DmAlertComponent', () => {
     fixture.detectChanges();
 
     expect(host().querySelector('.dm-alert__icon')).toBeNull();
+  });
+
+  it('a projected [dmAlertIcon] replaces the built-in tone glyph', () => {
+    const hostFixture = TestBed.createComponent(CustomIconHostComponent);
+    hostFixture.detectChanges();
+
+    const icon: HTMLElement | null = hostFixture.nativeElement.querySelector('.dm-alert__icon');
+    expect(icon).toBeTruthy();
+    const svgs = icon?.querySelectorAll('svg') ?? [];
+    expect(svgs.length).toBe(1);
+    expect(svgs[0].classList.contains('custom-icon')).toBe(true);
+  });
+
+  it('hideIcon also hides a projected custom icon', () => {
+    const hostFixture = TestBed.createComponent(CustomIconHostComponent);
+    hostFixture.componentInstance.hideIcon.set(true);
+    hostFixture.detectChanges();
+
+    expect(hostFixture.nativeElement.querySelector('.dm-alert__icon')).toBeNull();
+    expect(hostFixture.nativeElement.querySelector('.custom-icon')).toBeNull();
+  });
+
+  it('keeps the built-in glyph when nothing is projected into [dmAlertIcon]', () => {
+    const hostFixture = TestBed.createComponent(ProjectionHostComponent);
+    hostFixture.detectChanges();
+
+    // Default color → info circle glyph, untouched by the new slot.
+    const icon = hostFixture.nativeElement.querySelector('.dm-alert__icon');
+    expect(icon?.querySelector('svg circle')).toBeTruthy();
   });
 
   it('shows no dismiss button by default', () => {

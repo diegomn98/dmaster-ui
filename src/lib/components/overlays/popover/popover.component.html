@@ -6,7 +6,7 @@
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
   [cdkConnectedOverlayPush]="true"
   (attach)="onAttached()"
-  (detach)="close()"
+  (detach)="closePopover()"
   (positionChange)="onPositionChange($event)"
   (overlayOutsideClick)="onOutsideClick($event)"
   (overlayKeydown)="onOverlayKeydown($event)"

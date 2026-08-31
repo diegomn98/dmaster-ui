@@ -66,7 +66,7 @@
   }
 }
 
-.dm-toast__message {
+.dm-toast__body {
   flex: 1;
   min-width: 0;
 
@@ -74,7 +74,46 @@
   padding-block-start: calc((1.5rem - var(--dm-leading-snug) * 1em) / 2);
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
+}
+
+.dm-toast__title {
+  display: block;
+  font-weight: var(--dm-toast-title-weight, var(--dm-font-semibold));
   overflow-wrap: break-word;
+}
+
+.dm-toast__message {
+  display: block;
+  overflow-wrap: break-word;
+}
+
+// Compact action button, styled like a `light` dm-button: colored label on
+// transparent, subtle wash on hover.
+.dm-toast__action {
+  position: relative;
+  flex-shrink: 0;
+  align-self: center;
+  padding: 0.25rem 0.625rem;
+  border: none;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  color: var(--dm-toast-action-fg, var(--dm-primary-text));
+  font-family: inherit;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-tight);
+  cursor: pointer;
+
+  @include mixins.transition(background-color, color);
+  @include mixins.touch-target;
+
+  &:hover {
+    background: var(--dm-toast-action-bg-hover, var(--dm-primary-subtle));
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+  }
 }
 
 .dm-toast__dismiss {

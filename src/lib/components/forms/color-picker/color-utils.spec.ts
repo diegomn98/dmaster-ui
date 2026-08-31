@@ -1,11 +1,16 @@
 import {
   HSVA,
   clampChannel,
+  formatColor,
   formatHex,
+  formatHsl,
   formatRgb,
+  formatRgbModern,
+  hslaToRgba,
   hsvaToRgba,
   hueToRgb,
   parseColor,
+  rgbaToHsla,
   rgbaToHsva,
 } from './color-utils';
 
@@ -46,18 +51,44 @@ describe('color-utils', () => {
       expect(hsva!.a).toBeCloseTo(0.5);
     });
 
+    it('parses modern space-separated rgb()', () => {
+      expect(formatHex(parseColor('rgb(0 128 255)')!, false)).toBe('#0080ff');
+      const withAlpha = parseColor('rgb(255 0 0 / 0.5)');
+      expect(formatHex(withAlpha!, false)).toBe('#ff0000');
+      expect(withAlpha!.a).toBeCloseTo(0.5);
+    });
+
+    it('parses legacy hsl() / hsla()', () => {
+      expect(formatHex(parseColor('hsl(0, 100%, 50%)')!, false)).toBe('#ff0000');
+      expect(formatHex(parseColor('hsl(210, 100%, 50%)')!, false)).toBe('#0080ff');
+      expect(parseColor('hsla(120, 100%, 50%, 0.5)')!.a).toBeCloseTo(0.5);
+    });
+
+    it('parses modern hsl() with slash alpha, deg hue and percent alpha', () => {
+      const hsva = parseColor('hsl(120deg 100% 25% / 50%)');
+      expect(formatHex(hsva!, false)).toBe('#008000');
+      expect(hsva!.a).toBeCloseTo(0.5);
+    });
+
+    it('treats bare hsl saturation/lightness numbers as percentages', () => {
+      expect(formatHex(parseColor('hsl(0 100 50)')!, false)).toBe('#ff0000');
+    });
+
     it('is tolerant of whitespace and case', () => {
       expect(formatHex(parseColor('  #FF0000  ')!, false)).toBe('#ff0000');
       expect(formatHex(parseColor('RGB( 255 , 0 , 0 )')!, false)).toBe('#ff0000');
+      expect(formatHex(parseColor('HSL(0, 100%, 50%)')!, false)).toBe('#ff0000');
     });
 
     it('returns null on garbage', () => {
       expect(parseColor('')).toBeNull();
       expect(parseColor('#12')).toBeNull();
       expect(parseColor('#zzzzzz')).toBeNull();
-      expect(parseColor('hsl(0, 100%, 50%)')).toBeNull();
+      expect(parseColor('hsl(0, 100%)')).toBeNull();
+      expect(parseColor('hsl(a, b%, c%)')).toBeNull();
       expect(parseColor('rgb(1, 2)')).toBeNull();
       expect(parseColor('rgb(1, 2, 3, 4, 5)')).toBeNull();
+      expect(parseColor('rgb(1 2 3 / )')).toBeNull();
       expect(parseColor('not a color')).toBeNull();
       expect(parseColor('rgb(a, b, c)')).toBeNull();
     });
@@ -140,6 +171,75 @@ describe('color-utils', () => {
       const hsva = parseColor('#0080ff')!;
       expect(formatRgb(hsva, false)).toBe('rgb(0, 128, 255)');
       expect(formatRgb({ ...hsva, a: 0.5 }, true)).toBe('rgba(0, 128, 255, 0.5)');
+    });
+  });
+
+  describe('rgbaToHsla', () => {
+    it('maps pure red to h0 s1 l0.5', () => {
+      const hsla = rgbaToHsla({ r: 255, g: 0, b: 0, a: 1 });
+      expect(hsla.h).toBeCloseTo(0);
+      expect(hsla.s).toBeCloseTo(1);
+      expect(hsla.l).toBeCloseTo(0.5);
+    });
+
+    it('maps white to l1 and black to l0, both with s0', () => {
+      expect(rgbaToHsla({ r: 255, g: 255, b: 255, a: 1 })).toMatchObject({ s: 0, l: 1 });
+      expect(rgbaToHsla({ r: 0, g: 0, b: 0, a: 1 })).toMatchObject({ s: 0, l: 0 });
+    });
+
+    it('maps mid gray to s0 l~0.5', () => {
+      const hsla = rgbaToHsla({ r: 128, g: 128, b: 128, a: 1 });
+      expect(hsla.s).toBeCloseTo(0);
+      expect(hsla.l).toBeCloseTo(0.5, 2);
+    });
+  });
+
+  describe('hslaToRgba', () => {
+    it('converts primary hues back to sRGB', () => {
+      expect(hslaToRgba({ h: 0, s: 1, l: 0.5, a: 1 })).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+      expect(hslaToRgba({ h: 120, s: 1, l: 0.25, a: 1 })).toEqual({ r: 0, g: 128, b: 0, a: 1 });
+      expect(hslaToRgba({ h: 210, s: 1, l: 0.5, a: 1 })).toEqual({ r: 0, g: 128, b: 255, a: 1 });
+    });
+  });
+
+  describe('formatRgbModern', () => {
+    it('formats space-separated rgb() with optional slash alpha', () => {
+      const hsva = parseColor('#0080ff')!;
+      expect(formatRgbModern(hsva, false)).toBe('rgb(0 128 255)');
+      expect(formatRgbModern({ ...hsva, a: 0.5 }, true)).toBe('rgb(0 128 255 / 0.5)');
+      expect(formatRgbModern(hsva, true)).toBe('rgb(0 128 255 / 1)');
+    });
+  });
+
+  describe('formatHsl', () => {
+    it('formats hsl() with rounded degrees/percents and optional slash alpha', () => {
+      const red = parseColor('#ff0000')!;
+      expect(formatHsl(red, false)).toBe('hsl(0 100% 50%)');
+      expect(formatHsl({ ...red, a: 0.5 }, true)).toBe('hsl(0 100% 50% / 0.5)');
+      expect(formatHsl(parseColor('#0080ff')!, false)).toBe('hsl(210 100% 50%)');
+    });
+  });
+
+  describe('formatColor', () => {
+    const hsva = parseColor('#ff000080')!;
+
+    it('dispatches on the format', () => {
+      expect(formatColor(hsva, 'hex', false)).toBe('#ff0000');
+      expect(formatColor(hsva, 'rgb', false)).toBe('rgb(255 0 0)');
+      expect(formatColor(hsva, 'hsl', false)).toBe('hsl(0 100% 50%)');
+    });
+
+    it('carries alpha through every format', () => {
+      expect(formatColor(hsva, 'hex', true)).toBe('#ff000080');
+      expect(formatColor(hsva, 'rgb', true)).toBe('rgb(255 0 0 / 0.5)');
+      expect(formatColor(hsva, 'hsl', true)).toBe('hsl(0 100% 50% / 0.5)');
+    });
+
+    it('emits values parseColor understands (round-trip)', () => {
+      for (const format of ['hex', 'rgb', 'hsl'] as const) {
+        const out = formatColor(hsva, format, true);
+        expect(formatHex(parseColor(out)!, false)).toBe('#ff0000');
+      }
     });
   });
 

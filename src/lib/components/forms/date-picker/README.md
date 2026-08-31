@@ -69,6 +69,42 @@ Interaction, on a single-month calendar (navigate months between the two clicks)
 Day cells expose these state attributes for styling: `data-range-start`,
 `data-range-end`, `data-in-range`, and `data-in-range-preview`.
 
+## Custom day template
+
+Project an `ng-template[dmDatePickerDay]` to replace the day number **inside**
+each day button — event dots, prices, availability badges. The button itself is
+untouched: it keeps every class, state attribute (`data-selected`,
+`data-in-range`…), ARIA wiring and interaction (click/keyboard selection, range
+preview, roving focus), so the template works identically in single and range
+mode. Without the template the default render is unchanged.
+
+```html
+<!-- A dot under the number on days that have events. -->
+<dm-date-picker label="Agenda" [(value)]="date">
+  <ng-template dmDatePickerDay let-date let-selected="selected">
+    <span style="display: inline-grid; justify-items: center; line-height: 1.1">
+      {{ date.getDate() }}
+      @if (hasEvent(date)) {
+        <span
+          style="width: 4px; height: 4px; border-radius: 50%"
+          [style.background]="selected ? 'currentColor' : 'var(--dm-primary)'"
+        ></span>
+      }
+    </span>
+  </ng-template>
+</dm-date-picker>
+```
+
+Template context (`DmDatePickerDayContext`):
+
+| Property    | Type      | Notes                                                              |
+| ----------- | --------- | ------------------------------------------------------------------ |
+| `$implicit` | `Date`    | The day being rendered, at local midnight (`let-date`).            |
+| `selected`  | `boolean` | Picked day, or a range endpoint / in-range day (as aria-selected). |
+| `disabled`  | `boolean` | Blocked by `min` / `max` / `isDateDisabled`.                       |
+| `today`     | `boolean` | The day is today.                                                  |
+| `outside`   | `boolean` | Belongs to an adjacent month (leading/trailing filler cell).       |
+
 ## Inputs (selection)
 
 | Input             | Type                          | Default   | Notes                                               |
@@ -85,6 +121,7 @@ Day cells expose these state attributes for styling: `data-range-start`,
 | `showTodayButton` | `boolean`                     | `true`    | "Today" quick-jump in the footer.                   |
 | `closeOnSelect`   | `boolean`                     | `true`    | Close after picking (a day, or completing a range). |
 | `openChange`      | `output<boolean>`             | —         | Emitted when the calendar overlay opens / closes.   |
+| `dmDatePickerDay` | `ng-template` (projected)     | —         | Custom day-cell content (see above).                |
 
 ## Inputs (field family)
 

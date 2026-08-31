@@ -1,5 +1,5 @@
 import { OverlayModule, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +7,7 @@ import {
   ElementRef,
   booleanAttribute,
   computed,
+  contentChild,
   effect,
   forwardRef,
   inject,
@@ -24,6 +25,7 @@ import { DmBadgeComponent } from '../../primitives/badge';
 import { DmSpinnerComponent } from '../../primitives/spinner';
 import { DmSize } from '../../../core/types/common.types';
 import { dmUid } from '../../../core/utils/uid';
+import { DmSelectOptionContext, DmSelectOptionDirective } from './select-option.directive';
 import { SELECT_DEFAULTS } from './select.tokens';
 import {
   DmSelectColor,
@@ -84,7 +86,7 @@ type SelectRow<T> =
  */
 @Component({
   selector: 'dm-select',
-  imports: [OverlayModule, DmBadgeComponent, DmSpinnerComponent],
+  imports: [OverlayModule, DmBadgeComponent, DmSpinnerComponent, NgTemplateOutlet],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -509,6 +511,19 @@ export class DmSelectComponent<T = unknown> implements ControlValueAccessor {
   private scrollListenerCleanup: (() => void) | null = null;
   /** Pending infinite-scroll wire-up; cleared on re-run so observers can't leak. */
   private infiniteScrollTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // ---- Content templates ---------------------------------------------------
+  /** Optional projected `ng-template[dmSelectOption]` replacing the option body. */
+  private readonly optionDirective =
+    contentChild<DmSelectOptionDirective<T>>(DmSelectOptionDirective);
+
+  /** The custom option template, or `null` to render the default label block. */
+  protected readonly optionTemplate = computed(() => this.optionDirective()?.templateRef ?? null);
+
+  /** Context builder for a templated option row. */
+  protected optionContext(item: DmSelectItem<T>, index: number): DmSelectOptionContext<T> {
+    return { $implicit: item, index, selected: this.isSelectedValue(item.value) };
+  }
 
   protected optionId(index: number): string {
     return `${this.uid}-option-${index}`;

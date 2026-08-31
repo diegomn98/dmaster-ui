@@ -14,7 +14,7 @@ openSettings(): void {
 }
 ```
 
-Content component:
+Content component (or a `TemplateRef` — `open()` accepts both):
 
 ```ts
 export class SettingsDialogComponent {
@@ -25,6 +25,51 @@ export class SettingsDialogComponent {
   }
 }
 ```
+
+## Templates
+
+`open()` also takes a `TemplateRef`, so a one-off dialog needs no dedicated component:
+
+```html
+<ng-template #preview><img [src]="url()" alt="Preview" /></ng-template>
+```
+
+```ts
+readonly preview = viewChild.required<TemplateRef<unknown>>('preview');
+
+openPreview(): void {
+  this.dialog.open(this.preview(), { size: 'lg', ariaLabel: 'Preview' });
+}
+```
+
+## Confirm helper
+
+`confirm()` opens a ready-made confirmation dialog (title, optional message, cancel + confirm footer) and resolves with the user's choice — `true` on confirm, `false` on cancel, Escape or backdrop click. The library ships no copy of its own, so `title`, `confirmLabel` and `cancelLabel` are required:
+
+```ts
+const confirmed = await this.dialog.confirm({
+  title: 'Delete this file?',
+  message: 'This action cannot be undone.',
+  confirmLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  color: 'danger',
+});
+```
+
+The content component (`DmConfirmDialogComponent`) is exported for reference, but is meant to be opened through `confirm()`.
+
+### `DmConfirmOptions`
+
+| Option         | Type                                                                             | Default     | Description                                             |
+| -------------- | -------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------- |
+| `title`        | `string`                                                                          | required    | Heading; doubles as the dialog's accessible name.       |
+| `message`      | `string`                                                                          | —           | Optional supporting text under the title.               |
+| `confirmLabel` | `string`                                                                          | required    | Label of the confirming button (resolves `true`).       |
+| `cancelLabel`  | `string`                                                                          | required    | Label of the cancel button (resolves `false`).          |
+| `color`        | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'`     | `'primary'` | Semantic color of the confirming button.                |
+| `size`         | `'sm' \| 'md' \| 'lg'`                                                            | `'md'`      | Panel width (22rem / 30rem / 42rem, viewport-capped).   |
+| `disableClose` | `boolean`                                                                         | `false`     | Blocks backdrop click and Escape.                       |
+| `panelClass`   | `string \| readonly string[]`                                                     | —           | Extra panel class(es) — same as `DmDialogConfig`.       |
 
 ## `DmDialogConfig`
 

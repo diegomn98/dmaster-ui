@@ -1,10 +1,12 @@
 import { OverlayModule, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   booleanAttribute,
   computed,
+  contentChild,
   effect,
   forwardRef,
   inject,
@@ -32,6 +34,7 @@ import {
   startOfDay,
   startOfMonth,
 } from './date-utils';
+import { DmDatePickerDayContext, DmDatePickerDayDirective } from './date-picker-day.directive';
 import { DATE_PICKER_DEFAULTS, DM_DATE_LOCALE } from './date-picker.tokens';
 import {
   DmCalendarView,
@@ -82,7 +85,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
  */
 @Component({
   selector: 'dm-date-picker',
-  imports: [OverlayModule],
+  imports: [NgTemplateOutlet, OverlayModule],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -425,6 +428,24 @@ export class DmDatePickerComponent implements ControlValueAccessor {
 
   private readonly triggerRef = viewChild.required<ElementRef<HTMLButtonElement>>('triggerEl');
   private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panelEl');
+
+  // ---- Content templates ---------------------------------------------------
+  /** Optional projected `ng-template[dmDatePickerDay]` replacing each day number. */
+  private readonly dayDirective = contentChild(DmDatePickerDayDirective);
+
+  /** The custom day template, or `null` to render the plain Intl day digits. */
+  protected readonly dayTemplate = computed(() => this.dayDirective()?.templateRef ?? null);
+
+  /** Context builder for a templated day cell. */
+  protected dayContext(cell: DayCell): DmDatePickerDayContext {
+    return {
+      $implicit: cell.date,
+      selected: this.isDaySelected(cell.date),
+      disabled: this.dayDisabled(cell.date),
+      today: this.isToday(cell.date),
+      outside: !cell.inMonth,
+    };
+  }
 
   // ---- CVA -----------------------------------------------------------------
   private onChange: (value: Date | DmDateRange | null) => void = () => undefined;

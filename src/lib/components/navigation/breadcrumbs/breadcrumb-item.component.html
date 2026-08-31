@@ -16,7 +16,12 @@
 
     @if (!lastVisible()) {
       <span class="dm-breadcrumb-item__separator" aria-hidden="true">
-        @if (parent.hasCustomSeparator()) {
+        @if (parent.separatorTemplate(); as separatorTpl) {
+          <ng-container
+            [ngTemplateOutlet]="separatorTpl"
+            [ngTemplateOutletContext]="separatorContext()"
+          />
+        } @else if (parent.hasCustomSeparator()) {
           {{ parent.separator() }}
         } @else {
           <svg
@@ -42,7 +47,12 @@
     <div class="dm-breadcrumb-item dm-breadcrumb-item--ellipsis" aria-hidden="true">
       <span class="dm-breadcrumb-item__ellipsis" aria-hidden="true">…</span>
       <span class="dm-breadcrumb-item__separator" aria-hidden="true">
-        @if (parent.hasCustomSeparator()) {
+        @if (parent.separatorTemplate(); as separatorTpl) {
+          <ng-container
+            [ngTemplateOutlet]="separatorTpl"
+            [ngTemplateOutletContext]="separatorContext()"
+          />
+        } @else if (parent.hasCustomSeparator()) {
           {{ parent.separator() }}
         } @else {
           <svg

@@ -67,6 +67,34 @@ be driven or observed from the outside. Get a template reference and call
 | `expandAll()`   | Expands every parent node. |
 | `collapseAll()` | Collapses every node.      |
 
+### Custom node template (`dmTreeNode`)
+
+The default row renders the node's `label` as plain text. For rich rows —
+icons, badges, counters — project a single `ng-template[dmTreeNode]`: it
+replaces the label of **every** row, while the tree keeps the disclosure
+chevron, per-level indentation, pointer handling and the full treeitem
+ARIA/keyboard semantics untouched.
+
+```html
+<dm-tree [nodes]="nodes" [(selectedIds)]="selected" ariaLabel="Project files">
+  <ng-template dmTreeNode let-node let-expanded="expanded" let-selected="selected">
+    <dm-icon size="1rem">{{ expanded ? 'folder_open' : (node.icon ?? 'draft') }}</dm-icon>
+    <span>{{ node.label }}</span>
+    @if (selected) {
+      <dm-badge size="sm" variant="flat">open</dm-badge>
+    }
+  </ng-template>
+</dm-tree>
+```
+
+Context: `$implicit` (the node, `let-node`), `level` (1-based, matches
+`aria-level`), `expanded` (`false` for leaves) and `selected`. The template
+controls **rendering only** — selection, expansion and keyboard navigation keep
+working through the row. The treeitem's accessible name now comes from the
+projected content, so keep the node's text visible inside the template.
+`DmTreeNode.icon` is exactly this kind of data: the default row never renders
+it; wire it to your own icon system from the template.
+
 ### `DmTreeNode`
 
 ```ts
@@ -74,7 +102,7 @@ interface DmTreeNode {
   id: string;
   label: string;
   children?: DmTreeNode[];
-  icon?: string; // decorative marker slot — the lib renders no dm-icon dependency
+  icon?: string; // data for a dmTreeNode template — not rendered by the default row
   disabled?: boolean; // focusable but never selectable
   data?: unknown; // arbitrary payload carried through to outputs
 }

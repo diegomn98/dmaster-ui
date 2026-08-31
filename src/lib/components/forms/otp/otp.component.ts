@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { dmUid } from '../../../core/utils/uid';
 import { OTP_DEFAULTS } from './otp.tokens';
 import { DmOtpColor, DmOtpMode, DmOtpSize, DmOtpVariant } from './otp.types';
 
@@ -33,11 +34,14 @@ const MODE_CONFIG: Record<DmOtpMode, { pattern: RegExp; inputMode: string }> = {
  * back, arrows/Home/End move between cells and a paste is distributed across
  * them. A `ControlValueAccessor`, so it drops into template- and reactive-driven
  * forms; `[(value)]` for standalone use, and `(completed)` fires once every
- * cell is filled.
+ * cell is filled. Carries the field-family scaffold: `label` above the cells,
+ * `description` under them and `error` (with `role="alert"`) replacing the
+ * description while set.
  *
  * ```html
  * <dm-otp [(value)]="code" [length]="6" (completed)="verify($event)" ariaLabel="Verification code" />
  * <dm-otp [formControl]="pin" [length]="4" mode="numeric" mask />
+ * <dm-otp label="Verification code" description="6 digits" [error]="codeError()" required />
  * ```
  */
 @Component({
@@ -53,16 +57,15 @@ const MODE_CONFIG: Record<DmOtpMode, { pattern: RegExp; inputMode: string }> = {
     },
   ],
   host: {
-    role: 'group',
-    '[attr.aria-label]': 'ariaLabel() || null',
-    '[attr.aria-disabled]': 'isDisabled() ? "true" : null',
     '[attr.data-size]': 'size()',
     '[attr.data-color]': 'color()',
     '[attr.data-variant]': 'variant()',
+    '[attr.data-invalid]': 'error() ? "" : null',
   },
 })
 export class DmOtpComponent implements ControlValueAccessor {
   private readonly defaults = inject(OTP_DEFAULTS);
+  protected readonly uid = dmUid('dm-otp');
 
   /** Number of cells. */
   readonly length = input(this.defaults.length, { transform: numberAttribute });
@@ -73,11 +76,26 @@ export class DmOtpComponent implements ControlValueAccessor {
   /** Current code. Two-way: `[(value)]`. */
   readonly value = model<string>('');
 
+  /** Visible label above the cells; labels the group via `aria-labelledby`. */
+  readonly label = input<string>('');
+
+  /** Help text shown under the cells (hidden while `error` is set). */
+  readonly description = input<string>('');
+
+  /** Error text; non-empty activates the invalid state (danger border + ring). */
+  readonly error = input<string>('');
+
   /** Renders each filled cell as a masked dot (like a password). */
   readonly mask = input(false, { transform: booleanAttribute });
 
   /** Disables every cell (combined with the forms `disabled`). */
   readonly disabled = input(false, { transform: booleanAttribute });
+
+  /** Read-only: the code stays visible and focusable, but edits are blocked. */
+  readonly readonly = input(false, { transform: booleanAttribute });
+
+  /** Shows the required marker next to the label. */
+  readonly required = input(false, { transform: booleanAttribute });
 
   /** Focuses the first cell on init. */
   readonly autoFocus = input(false, { transform: booleanAttribute });
@@ -97,13 +115,31 @@ export class DmOtpComponent implements ControlValueAccessor {
    */
   readonly groupSize = input(0, { transform: numberAttribute });
 
-  /** Accessible label of the whole group. */
+  /**
+   * Accessible label of the group when there is no visible `label`; either one
+   * also prefixes each cell's announcement ("Code 1 of 6").
+   */
   readonly ariaLabel = input<string>('');
 
   /** Emitted once when the last empty cell is filled. */
   readonly completed = output<string>();
 
   private readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('cell');
+
+  protected readonly labelId = `${this.uid}-label`;
+  protected readonly hintId = `${this.uid}-hint`;
+  protected readonly errorId = `${this.uid}-error`;
+
+  /** What the cells group is described by: the error wins over the description. */
+  protected readonly describedBy = computed(() => {
+    if (this.error()) {
+      return this.errorId;
+    }
+    if (this.description()) {
+      return this.hintId;
+    }
+    return null;
+  });
 
   /** Source of truth: one entry per cell (positional, '' when empty). */
   private readonly cells = signal<string[]>([]);
@@ -158,6 +194,12 @@ export class DmOtpComponent implements ControlValueAccessor {
 
   protected onInput(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
+    if (this.readonly()) {
+      // The native `readonly` already blocks typing; this guards synthetic
+      // input events (tests, programmatic dispatch) from mutating the cells.
+      input.value = this.cellValue(index);
+      return;
+    }
     const raw = input.value;
     const filter = MODE_CONFIG[this.mode()].pattern;
 
@@ -187,6 +229,9 @@ export class DmOtpComponent implements ControlValueAccessor {
     switch (event.key) {
       case 'Backspace': {
         event.preventDefault();
+        if (this.readonly()) {
+          break;
+        }
         const next = [...this.cells()];
         if (next[index]) {
           next[index] = '';
@@ -200,6 +245,9 @@ export class DmOtpComponent implements ControlValueAccessor {
       }
       case 'Delete': {
         event.preventDefault();
+        if (this.readonly()) {
+          break;
+        }
         const next = [...this.cells()];
         next[index] = '';
         this.commit(next);
@@ -228,6 +276,9 @@ export class DmOtpComponent implements ControlValueAccessor {
 
   protected onPaste(index: number, event: ClipboardEvent): void {
     event.preventDefault();
+    if (this.readonly()) {
+      return;
+    }
     const text = event.clipboardData?.getData('text') ?? '';
     const filter = MODE_CONFIG[this.mode()].pattern;
     const chars = Array.from(text).filter((ch) => filter.test(ch));

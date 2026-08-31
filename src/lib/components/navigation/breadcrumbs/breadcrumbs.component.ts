@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 
+import { DmBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
 import { BREADCRUMBS_DEFAULTS } from './breadcrumbs.tokens';
 import { DmBreadcrumbsSize } from './breadcrumbs.types';
 import type { DmBreadcrumbItemComponent } from './breadcrumb-item.component';
@@ -52,6 +61,15 @@ export class DmBreadcrumbsComponent {
 
   /** True when a custom separator string was provided. @internal */
   readonly hasCustomSeparator = computed(() => this.separator().length > 0);
+
+  /** Optional projected `ng-template[dmBreadcrumbSeparator]`. */
+  private readonly separatorDirective = contentChild(DmBreadcrumbSeparatorDirective);
+
+  /**
+   * The custom separator template, or `null` for the string / chevron path.
+   * When present it wins over the `separator` string. @internal
+   */
+  readonly separatorTemplate = computed(() => this.separatorDirective()?.templateRef ?? null);
 
   /** Registered items, in DOM order. @internal */
   readonly _items = signal<DmBreadcrumbItemComponent[]>([]);

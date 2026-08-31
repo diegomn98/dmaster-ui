@@ -75,7 +75,7 @@ export class DmSearchFieldComponent implements ControlValueAccessor {
   readonly disabled = input(false, { transform: booleanAttribute });
 
   /** Renders the field read-only (no clear button, not editable). */
-  readonly readOnly = input(false, { transform: booleanAttribute });
+  readonly readonly = input(false, { transform: booleanAttribute });
 
   /** Shows the required marker next to the label. */
   readonly required = input(false, { transform: booleanAttribute });
@@ -123,7 +123,7 @@ export class DmSearchFieldComponent implements ControlValueAccessor {
   protected readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
 
   protected readonly showClearButton = computed(
-    () => this.clearable() && this.value().length > 0 && !this.isDisabled() && !this.readOnly(),
+    () => this.clearable() && this.value().length > 0 && !this.isDisabled() && !this.readonly(),
   );
 
   protected readonly describedBy = computed(() => {
