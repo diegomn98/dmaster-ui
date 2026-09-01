@@ -148,7 +148,7 @@ Load the CDK structural styles once per app (the overlay panel needs them):
 
 ## Global locale (multi-language apps)
 
-The reactive analogue of Material's `MAT_DATE_LOCALE`. Provide `DM_DATE_LOCALE`
+A reactive locale token. Provide `DM_DATE_LOCALE`
 once and every `dm-date-picker` follows it — no per-instance `locale`:
 
 ```ts

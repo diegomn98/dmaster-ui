@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.2] - 2026-09-01
+
+### Changed
+
+- **Support Angular 20, 21, and 22.** Widened the peer range from `^20.0.0`
+  (Angular 20 only) to `^20.0.0 || ^21.0.0 || ^22.0.0` for `@angular/common`,
+  `@angular/core`, `@angular/forms` and `@angular/cdk`. The compiled output
+  links cleanly under Angular 22 — verified by building the package into a fresh
+  Angular 22 app — with no code changes; consumers on Angular 21/22 no longer hit
+  a peer-dependency conflict.
+- Corrected the README bundle-size figures to the current measured values (full
+  tree-shaken library ~102 kB gzip).
+
 ## [0.10.1] - 2026-09-01
 
 ### Changed
@@ -165,7 +178,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   don't project keeps its built-in glyph.
 - **`dm-pagination` — derived page count (`length` + `pageSize`).** `totalPages`
   is now optional (`number | null`): pass the total item count as `length` and
-  the items per page as `pageSize` (Material-paginator style) and the pager
+  the items per page as `pageSize` and the pager
   derives `Math.max(1, Math.ceil(length / pageSize))` itself. An explicit
   `totalPages` still wins, existing `[totalPages]` bindings keep working
   unchanged, and when neither pair resolves the pager renders a single page.
@@ -593,8 +606,7 @@ light **and** dark on every documented example — the following were fixed:
 - Rewrote design-language copy across the README, CHANGELOG, JSDoc comments,
   per-component `README.md` files, SCSS comments and the docs site's en/es/fr
   translations to describe the library's flat, pill-radius, color × variant
-  design language on its own terms, without attributing it to another UI
-  library.
+  design language on its own terms.
 
 ## [0.4.1] - 2026-08-18
 
@@ -613,7 +625,7 @@ light **and** dark on every documented example — the following were fixed:
   MENA), and day digits also render through `Intl` (native numerals for
   `ar`/`fa`). Locale can also be provided app-wide and reactively via the new
   **`DM_DATE_LOCALE`** token (`provideDateLocale`), which accepts a plain
-  string or a `Signal<string>` — the reactive analogue of `MAT_DATE_LOCALE`, so
+  string or a `Signal<string>`, so
   every picker re-renders live on a language switch. `provideDatePickerDefaults`
   also covers `displayFormat` and `weekdayFormat`.
 - **`dm-color-picker`** — a full color picker in the forms family
@@ -621,8 +633,8 @@ light **and** dark on every documented example — the following were fixed:
   area, hue slider, optional alpha slider, editable hex input and quick swatches,
   in a field-family trigger that opens a CDK overlay. Pure `color-utils`
   (hex ⇄ rgb ⇄ hsv) underneath; `role="slider"` areas with `aria-valuetext`.
-- **`dm-error`** — a standalone validation line (the Angular equivalent of
-  `mat-error`): danger color, `role="alert"`, fully projected content. It
+- **`dm-error`** — a standalone validation line: danger color, `role="alert"`,
+  fully projected content. It
   carries **no icon of its own** — project one (e.g. `<dm-icon>`) when you
   want one. `dm-form-field` accepts a projected `<dm-error>` and wires
   `aria-invalid` / `aria-describedby` automatically.
@@ -631,8 +643,8 @@ light **and** dark on every documented example — the following were fixed:
   search semantics (Escape clears, Enter emits `(searchSubmit)`).
   `color` × `variant`, full `ControlValueAccessor` support.
 - **Icon system.** `dm-icon` draws an icon three ways: a **Material Symbols font
-  ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons,
-  like `mat-icon`), a **registered SVG** by `name`, or a **projected `<svg>`**.
+  ligature** from its text content (`<dm-icon>home</dm-icon>`, thousands of icons),
+  a **registered SVG** by `name`, or a **projected `<svg>`**.
   Font mode exposes the variable-font axes via `fill` (outlined ⇄ filled),
   `weight` and `family` (`outlined`/`rounded`/`sharp`). A `color` input takes a
   semantic token (`primary`, `success`, …) or any CSS color; otherwise it inherits
@@ -689,6 +701,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.10.2]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.8.0...v0.9.0

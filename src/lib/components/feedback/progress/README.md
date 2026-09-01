@@ -1,6 +1,6 @@
 # Progress (`dm-progress`)
 
-Linear progress bar with an optional label row, determinate and indeterminate modes, semantic colors and a striped fill. No Angular Material dependency.
+Linear progress bar with an optional label row, determinate and indeterminate modes, semantic colors and a striped fill. No third-party UI dependencies.
 
 ## Usage
 

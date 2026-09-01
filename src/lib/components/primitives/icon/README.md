@@ -3,7 +3,7 @@
 One icon component, three ways to draw an icon — simplest first:
 
 ```html
-<!-- 1. Material Symbols font ligature (thousands of icons, like mat-icon) -->
+<!-- 1. Material Symbols font ligature (thousands of icons) -->
 <dm-icon>home</dm-icon>
 
 <!-- 2. A registered SVG by name (the curated set or your own) -->
@@ -18,7 +18,7 @@ It inherits `currentColor` and scales to any size.
 ## Font mode
 
 Type any [Material Symbols](https://fonts.google.com/icons) name as the content
-and it renders as a font ligature — exactly like Angular Material's `mat-icon`.
+and it renders as a font ligature.
 Load the font once (a single `<link>`, or self-host it):
 
 ```html
@@ -84,7 +84,7 @@ providers: [
 You can also register at runtime via `DmIconRegistry.register(name, svg)`.
 
 > **Security.** Registered SVG strings are rendered with the Angular sanitizer
-> bypassed (the same trust model as Angular Material's icon registry), so only
+> bypassed (only registry strings are ever trusted), so only
 > register **trusted** markup — never SVG from user input or the network.
 
 ## Accessibility

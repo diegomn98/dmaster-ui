@@ -1,6 +1,6 @@
 # Divider (`dm-divider`)
 
-Thin rule that separates content, with an optional projected label. No Angular Material dependency.
+Thin rule that separates content, with an optional projected label. No third-party UI dependencies.
 
 ## Usage
 

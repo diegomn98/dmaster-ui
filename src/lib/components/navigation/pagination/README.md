@@ -28,7 +28,7 @@ import { DmPaginationComponent } from '@dmaster/ui';
 
 ### `length` + `pageSize`
 
-Instead of pre-computing the page count, pass the total item count and the page size (Material-paginator style) and the component derives it as `Math.max(1, Math.ceil(length / pageSize))`:
+Instead of pre-computing the page count, pass the total item count and the page size and the component derives it as `Math.max(1, Math.ceil(length / pageSize))`:
 
 ```html
 <!-- 123 items, 10 per page → 13 pages -->

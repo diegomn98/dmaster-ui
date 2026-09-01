@@ -4,8 +4,8 @@ Displays a chronological sequence of events along a rail: a marker per event
 (dot, glyph or any projected element), a connector to the next one, and a
 title / time / body block. Vertical by default, with an `alternate` zig-zag
 layout and a horizontal mode. Semantically a **list** (`role="list"` /
-`role="listitem"`); markers and connectors are decorative. No Angular Material
-dependency.
+`role="listitem"`); markers and connectors are decorative. No third-party
+UI dependencies.
 
 ## Usage
 

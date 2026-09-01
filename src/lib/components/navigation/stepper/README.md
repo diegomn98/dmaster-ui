@@ -3,7 +3,7 @@
 Guides a user through an ordered sequence of steps, one panel at a time. It is a
 **navigational list of steps** — not a tablist: each header is a `<button>`, the
 active one carries `aria-current="step"`, and each connects to its own panel via
-`aria-controls` / `aria-labelledby`. No Angular Material dependency.
+`aria-controls` / `aria-labelledby`. No third-party UI dependencies.
 
 ## Usage
 

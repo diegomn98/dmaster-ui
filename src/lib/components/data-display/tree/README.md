@@ -2,7 +2,7 @@
 
 Hierarchical, data-driven tree view implementing the full WAI-ARIA Tree View
 pattern — roving tabindex, complete keyboard model and correct ARIA metadata on
-every node. No Angular Material dependency.
+every node. No third-party UI dependencies.
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # Rating (`dm-rating`)
 
-Star rating control. Hover to preview, click to commit, or drive it entirely from the keyboard. Supports half-star precision, a `readonly` display mode that renders fractional averages (e.g. `3.7`), and a custom glyph. Works standalone with `[(value)]` and with Angular forms via `ControlValueAccessor`. No Angular Material dependency.
+Star rating control. Hover to preview, click to commit, or drive it entirely from the keyboard. Supports half-star precision, a `readonly` display mode that renders fractional averages (e.g. `3.7`), and a custom glyph. Works standalone with `[(value)]` and with Angular forms via `ControlValueAccessor`. No third-party UI dependencies.
 
 ## Usage
 

@@ -21,7 +21,7 @@ import { DmPaginationColor, DmPaginationItem } from './pagination.types';
  * ```html
  * <dm-pagination [totalPages]="10" [(page)]="page" />
  *
- * <!-- Material-paginator style: the page count is derived from length / pageSize -->
+ * <!-- the page count is derived from length / pageSize -->
  * <dm-pagination [length]="123" [pageSize]="10" [(page)]="page" />
  *
  * <dm-pagination
@@ -88,7 +88,7 @@ export class DmPaginationComponent {
   // ---- Normalized state ------------------------------------------------------
   /**
    * Page count actually used: an explicit `totalPages` wins; otherwise it is
-   * derived from `length` / `pageSize` (Material-paginator style), falling
+   * derived from `length` / `pageSize`, falling
    * back to a single page when neither resolves.
    */
   private readonly resolvedTotalPages = computed(() => {

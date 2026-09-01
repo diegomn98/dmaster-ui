@@ -1,6 +1,6 @@
 # Alert (`dm-alert`)
 
-Contextual feedback banner with a color × variant API, a semantic icon per color, an optional dismiss button and an action slot. No Angular Material dependency.
+Contextual feedback banner with a color × variant API, a semantic icon per color, an optional dismiss button and an action slot. No third-party UI dependencies.
 
 ## Usage
 

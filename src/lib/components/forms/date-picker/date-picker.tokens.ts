@@ -10,8 +10,8 @@ import {
 } from './date-picker.types';
 
 /**
- * App-wide locale for every `dm-date-picker` — the reactive analogue of
- * Material's `MAT_DATE_LOCALE`. Accepts a plain BCP-47 string or a
+ * App-wide locale for every `dm-date-picker` — a reactive locale token.
+ * Accepts a plain BCP-47 string or a
  * `Signal<string>`; with a signal, every open picker re-renders live when the
  * app language changes (names, digits, trigger text AND week convention).
  *

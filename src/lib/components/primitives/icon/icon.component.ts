@@ -23,8 +23,8 @@ const TOKEN_COLORS = new Set(['primary', 'secondary', 'success', 'warning', 'dan
  * <dm-icon><svg viewBox="0 0 24 24">…</svg></dm-icon>  <!-- project a raw SVG -->
  * ```
  *
- * Font mode (text content) needs the Material Symbols font loaded once, exactly
- * like Angular Material's `mat-icon`; `fill`, `weight` and `family` map to the
+ * Font mode (text content) needs the Material Symbols font loaded once;
+ * `fill`, `weight` and `family` map to the
  * variable-font axes (outlined ⇄ filled, weight, rounded/sharp). Color is a
  * one-liner via `color` (a semantic token or any CSS color); otherwise the icon
  * inherits `currentColor`. Decorative by default — pass `label` to expose it.

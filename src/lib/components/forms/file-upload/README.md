@@ -2,7 +2,7 @@
 
 Drag-and-drop dropzone backed by a hidden native `<input type="file">`, with a
 selected-file list, image thumbnails, optional per-file progress, and built-in
-validation (`accept` / `maxSize` / `maxFiles`). No Angular Material dependency.
+validation (`accept` / `maxSize` / `maxFiles`). No third-party UI dependencies.
 
 It is **controlled**, not a `ControlValueAccessor`: `File` objects don't map
 cleanly onto forms, so the current selection is a two-way `[(files)]` model.

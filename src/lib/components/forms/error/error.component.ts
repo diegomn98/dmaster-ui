@@ -5,7 +5,7 @@ import { DmErrorSize } from './error.types';
 
 /**
  * A validation error message for form fields — the standalone,
- * Angular-native equivalent of `mat-error`.
+ * A projected, accessible validation-error line for form fields.
  *
  * ```html
  * <dm-error>Email is required</dm-error>

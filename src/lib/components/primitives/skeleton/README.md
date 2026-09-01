@@ -1,6 +1,6 @@
 # Skeleton (`dm-skeleton`)
 
-Loading placeholder that mirrors the shape of the content it replaces. No Angular Material dependency.
+Loading placeholder that mirrors the shape of the content it replaces. No third-party UI dependencies.
 
 ## Usage
 

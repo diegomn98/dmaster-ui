@@ -64,8 +64,8 @@ export const ICON_SETS = new InjectionToken<DmIconSet[]>('DM_ICON_SETS');
  * ```
  *
  * Only pass **trusted** SVG markup: registered strings are rendered with the
- * Angular sanitizer bypassed (the same trust model as Angular Material's icon
- * registry). Never register markup that came from user input or the network.
+ * Angular sanitizer bypassed — only strings you register are ever trusted.
+ * Never register markup that came from user input or the network.
  */
 export function provideDmasterIcons(icons: DmIconSet): EnvironmentProviders {
   return makeEnvironmentProviders([{ provide: ICON_SETS, useValue: icons, multi: true }]);

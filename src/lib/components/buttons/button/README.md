@@ -1,6 +1,6 @@
 # Button (`dm-button`)
 
-Button with a **color × variant** API and built-in loading / success / error states. Stable width (no layout shift), integrated spinner, disabled while loading and screen-reader announcements via a polite live region. No Angular Material dependency.
+Button with a **color × variant** API and built-in loading / success / error states. Stable width (no layout shift), integrated spinner, disabled while loading and screen-reader announcements via a polite live region. No third-party UI dependencies.
 
 ## Usage
 

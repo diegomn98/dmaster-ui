@@ -1,6 +1,6 @@
 # Slider (`dm-slider`)
 
-Single-value range slider with an elastic thumb. Drag it, click anywhere on the track to jump, or drive it entirely from the keyboard. Works standalone with `[(value)]` and with Angular forms via `ControlValueAccessor`. No Angular Material dependency.
+Single-value range slider with an elastic thumb. Drag it, click anywhere on the track to jump, or drive it entirely from the keyboard. Works standalone with `[(value)]` and with Angular forms via `ControlValueAccessor`. No third-party UI dependencies.
 
 ## Usage
 
