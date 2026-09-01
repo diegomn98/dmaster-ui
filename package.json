@@ -1,10 +1,10 @@
 {
   "name": "@dmaster/ui",
-  "version": "0.10.2",
-  "description": "Modern, premium Angular UI components. Standalone, signals-based, themeable via CSS variables.",
+  "version": "0.10.3",
+  "description": "Modern Angular UI components. Standalone, signals-based, themeable via CSS variables.",
   "license": "MIT",
   "author": {
-    "name": "Diego Maestro",
+    "name": "Diego Maestro Navarro",
     "email": "diegomaestro192@gmail.com",
     "url": "https://github.com/diegomn98"
   },
