@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~3.8 kB gzip, a card ~1.3 kB, the entire 45-component library ~92 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 45-component library ~102 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -406,13 +406,13 @@ Fully tree-shakeable — your app only pays for the components it imports. Measu
 
 | Import                    | Gzip     |
 | ------------------------- | -------- |
-| `DmCardComponent`         | ~1.3 kB  |
-| `DmBadgeComponent`        | ~1.8 kB  |
-| `DmButtonComponent`       | ~3.8 kB  |
-| `DmSelectComponent`       | ~10.1 kB |
-| `DmTableComponent`        | ~11.8 kB |
-| **Entire library** (45)   | ~92 kB   |
-| Global CSS (tokens+reset) | ~4.7 kB  |
+| `DmCardComponent`         | ~1.4 kB  |
+| `DmBadgeComponent`        | ~1.9 kB  |
+| `DmButtonComponent`       | ~4.0 kB  |
+| `DmSelectComponent`       | ~10.9 kB |
+| `DmTableComponent`        | ~12.8 kB |
+| **Entire library** (45)   | ~102 kB  |
+| Global CSS (tokens+reset) | ~4.9 kB  |
 
 Reproduce the full per-component table from the repo with `npm run size`.
 
