@@ -1,0 +1,76 @@
+# Signed npm publish for @dmaster/ui.
+#
+# This file lives in the LIBRARY SOURCE and is mirrored to the public library
+# repo (github.com/diegomn98/dmaster-ui) by the workspace release's `subtree
+# push`. GitHub only reads workflows from a repo's ROOT `.github/`, so in the
+# ngx-dmaster-ui monorepo (where this sits under projects/…) it is INERT; it is
+# ACTIVE only in dmaster-ui, where the mirror places it at .github/workflows/.
+#
+# Why the publish runs here and not in the monorepo: npm provenance validates
+# that the published package's `repository.url` matches the repository whose
+# OIDC identity ran `npm publish`. Running it in dmaster-ui is what lets
+# @dmaster/ui declare `repository.url = dmaster-ui` while keeping a signed,
+# transparent Sigstore attestation. To avoid duplicating the (workspace-coupled)
+# build, it checks out the monorepo at the release tag and runs the very same
+# `npm run build` the monorepo uses — the artifact published is byte-for-byte
+# what the monorepo produces.
+#
+# Triggered by a repository_dispatch from the monorepo's release.yml, which
+# passes the tag as client_payload.ref.
+name: Publish to npm
+
+on:
+  repository_dispatch:
+    types: [publish]
+  # Manual fallback: on the very first release the repository_dispatch can race
+  # the arrival of this file on dmaster-ui's default branch, and any publish can
+  # be safely re-run. Trigger from the Actions tab with the release tag.
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Release tag to build and publish (e.g. v0.10.1)'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write # npm provenance (Sigstore attestation) needs OIDC
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      # The release tag, from whichever trigger fired.
+      REF: ${{ github.event.client_payload.ref || inputs.ref }}
+    steps:
+      # Build from the monorepo source at the exact release tag.
+      - name: Check out the workspace at the release tag
+        uses: actions/checkout@v5
+        with:
+          repository: diegomn98/dmaster-ui-workspace
+          ref: ${{ github.event.client_payload.ref || inputs.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+          registry-url: 'https://registry.npmjs.org'
+
+      # Defense in depth: the dispatched tag must match the library version.
+      - name: Verify the dispatched tag matches the library version
+        run: |
+          TAG_VERSION="${REF#v}"
+          PKG_VERSION="$(node -p "require('./projects/ngx-dmaster-ui/package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Dispatched ref $REF does not match @dmaster/ui version $PKG_VERSION"
+            exit 1
+          fi
+
+      - run: npm ci
+      - run: npm run build
+      - run: npx publint dist/dmaster-ui
+
+      - name: Publish to npm (with signed provenance)
+        run: cd dist/dmaster-ui && npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

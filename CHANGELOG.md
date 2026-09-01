@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-09-01
+
+### Changed
+
+- **npm `repository` now points at the public library repo `dmaster-ui`** instead
+  of the `dmaster-ui-workspace` monorepo. The old flow was forced to point at the
+  monorepo because npm provenance validates `repository.url` against the repo
+  whose OIDC identity runs `npm publish`. The signed publish now runs from
+  `dmaster-ui` itself — it checks out the monorepo at the release tag and
+  publishes the byte-for-byte same build — so the package links to the library's
+  own repository while keeping its signed, transparent provenance attestation. No
+  API, runtime, or packaging change.
+
 ## [0.10.0] - 2026-08-31
 
 ### ⚠ BREAKING
@@ -676,6 +689,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.10.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.7.0...v0.8.0
