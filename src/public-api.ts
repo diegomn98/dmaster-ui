@@ -8,6 +8,7 @@ export * from './lib/core';
 // Components · primitives
 export * from './lib/components/primitives/avatar';
 export * from './lib/components/primitives/badge';
+export * from './lib/components/primitives/chip';
 export * from './lib/components/primitives/icon';
 export * from './lib/components/primitives/kbd';
 export * from './lib/components/primitives/skeleton';

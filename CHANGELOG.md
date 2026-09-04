@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`dm-chip` + `dm-chip-set`** — interactive chips (the interactive sibling of
+  `dm-badge`). One `dm-chip` covers input/tag (`removable`, with `Delete`/
+  `Backspace` removal), filter/choice (`selectable` + `[(selected)]`) and
+  action (`clickable` + `(chipClick)`) chips, across the full `color` ×
+  `variant` × `size` × `radius` system, with per-variant hover, elastic press
+  and a focus ring that follows the pill. Motion with intent: chips added to a
+  live set grow in, removed chips fold their width so neighbours slide (the
+  initial render never animates; all off under reduced motion). `dm-chip-set`
+  groups them with wrapping layout, roving-tabindex keyboard and optional
+  `single`/`multiple` selection (CVA). Fully token-pure and WCAG-2.1-AA
+  accessible (`role="group"` + `aria-pressed`, no nested buttons).
+
 ## [0.10.3] - 2026-09-01
 
 ### Changed

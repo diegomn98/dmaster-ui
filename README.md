@@ -10,7 +10,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0F6E56?style=flat-square)](https://dmasterui.com)
 [![docs](https://img.shields.io/badge/docs-dmasterui.com-7c3aed?style=flat-square)](https://dmasterui.com)
 
-**45 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 790+ tests**
+**46 components · 3 languages (EN/ES/FR) in the docs · 0 third-party UI dependencies · 810+ tests**
 
 **[→ Browse every component live at dmasterui.com/components](https://dmasterui.com/components)** — each tile is the real, interactive component, not a screenshot.
 
@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 45-component library ~102 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 46-component library ~102 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -117,7 +117,7 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 
 ## Components
 
-45 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+46 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
 
 ### Primitives
 
@@ -125,7 +125,8 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 | ------------------------------------------------------ | ------------- | -------------------------------------------------------------------------- |
 | [Skeleton](https://dmasterui.com/components/skeleton)  | `dm-skeleton` | Shimmer placeholder, wave animation                                        |
 | [Spinner](https://dmasterui.com/components/spinner)    | `dm-spinner`  | Animated indicator, 3 sizes                                                |
-| [Badge / Chip](https://dmasterui.com/components/badge) | `dm-badge`    | 7 variants · 6 colors · dot, shadow, bordered                              |
+| [Badge](https://dmasterui.com/components/badge)        | `dm-badge`    | Static status label — 6 variants · 6 colors · dot, shadow, bordered        |
+| [Chip](https://dmasterui.com/components/chip)          | `dm-chip`     | Interactive: removable, filter/choice, action · `dm-chip-set` with keyboard |
 | [Avatar](https://dmasterui.com/components/avatar)      | `dm-avatar`   | Image + fallback initials, 5 sizes                                         |
 | [Keyboard Key](https://dmasterui.com/components/kbd)   | `dm-kbd`      | Named keys resolve to their symbol (⌘, ⇧…), content projection             |
 | [Icon](https://dmasterui.com/components/icon)          | `dm-icon`     | Font ligature, registered SVG, or projected `<svg>` — 3 modes, 1 primitive |

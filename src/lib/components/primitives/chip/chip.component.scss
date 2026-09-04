@@ -1,0 +1,421 @@
+@use 'mixins';
+
+// =============================================================================
+// Host — the chip surface. Fill, edge, shadow and the type scale live here;
+// the body/remove are transparent layers inside, so a selectable + removable
+// chip has two real buttons without nesting one inside the other.
+// =============================================================================
+:host {
+  // per-size structural tokens (public, fallback-verbatim)
+  --dm-chip-pad-x: var(--dm-chip-padding-x, 0.625rem);
+  --dm-chip-h: var(--dm-chip-height, 1.75rem);
+  --dm-chip-fz: var(--dm-chip-font-size, 0.8125rem);
+  --dm-chip-gap-x: var(--dm-chip-gap, 0.375rem);
+  --dm-chip-rm: var(--dm-chip-remove-size, 1.25rem);
+
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: var(--dm-chip-h);
+  border: 1px solid transparent;
+  border-radius: var(--dm-chip-radius, var(--dm-radius-full));
+
+  // Type scale on the host so every em-sized glyph (check, ✕, leading slot)
+  // follows the chip size.
+  font-size: var(--dm-chip-fz);
+  font-weight: var(--dm-font-medium);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition:
+    background-color var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    border-color var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    color var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    box-shadow var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    transform var(--dm-duration-fast, 150ms) var(--dm-ease-snappy, ease);
+}
+
+:host([data-size='sm']) {
+  --dm-chip-pad-x: var(--dm-chip-padding-x, 0.5rem);
+  --dm-chip-h: var(--dm-chip-height, 1.5rem);
+  --dm-chip-fz: var(--dm-chip-font-size, 0.75rem);
+  --dm-chip-gap-x: var(--dm-chip-gap, 0.3125rem);
+  --dm-chip-rm: var(--dm-chip-remove-size, 1.125rem);
+}
+
+:host([data-size='lg']) {
+  --dm-chip-pad-x: var(--dm-chip-padding-x, 0.75rem);
+  --dm-chip-h: var(--dm-chip-height, 2rem);
+  --dm-chip-fz: var(--dm-chip-font-size, 0.875rem);
+  --dm-chip-gap-x: var(--dm-chip-gap, 0.4375rem);
+  --dm-chip-rm: var(--dm-chip-remove-size, 1.5rem);
+}
+
+// ---- Radius ----------------------------------------------------------------
+:host([data-radius='sm']) {
+  border-radius: var(--dm-chip-radius, var(--dm-radius-sm));
+}
+
+:host([data-radius='md']) {
+  border-radius: var(--dm-chip-radius, var(--dm-radius-md));
+}
+
+:host([data-radius='lg']) {
+  border-radius: var(--dm-chip-radius, var(--dm-radius-lg));
+}
+
+:host([data-radius='full']) {
+  border-radius: var(--dm-chip-radius, var(--dm-radius-full));
+}
+
+// ---- Colors → internal mapping vars ----------------------------------------
+:host([data-color='default']) {
+  --dm-chip-surface: var(--dm-default);
+  --dm-chip-hover: color-mix(in srgb, var(--dm-default) 86%, var(--dm-fg));
+  --dm-chip-fg: var(--dm-default-fg);
+  --dm-chip-soft: var(--dm-default-subtle);
+  --dm-chip-accent: var(--dm-fg);
+  --dm-chip-line: var(--dm-border-strong);
+}
+
+:host([data-color='primary']) {
+  --dm-chip-surface: var(--dm-primary);
+  --dm-chip-hover: var(--dm-primary-hover);
+  --dm-chip-fg: var(--dm-primary-fg);
+  --dm-chip-soft: var(--dm-primary-subtle);
+  --dm-chip-accent: var(--dm-primary-text);
+  --dm-chip-line: var(--dm-primary);
+}
+
+:host([data-color='secondary']) {
+  --dm-chip-surface: var(--dm-secondary);
+  --dm-chip-hover: var(--dm-secondary-hover);
+  --dm-chip-fg: var(--dm-secondary-fg);
+  --dm-chip-soft: var(--dm-secondary-subtle);
+  --dm-chip-accent: var(--dm-secondary-text);
+  --dm-chip-line: var(--dm-secondary);
+}
+
+:host([data-color='success']) {
+  --dm-chip-surface: var(--dm-success);
+  --dm-chip-hover: var(--dm-success-hover);
+  --dm-chip-fg: var(--dm-success-fg);
+  --dm-chip-soft: var(--dm-success-subtle);
+  --dm-chip-accent: var(--dm-success-text);
+  --dm-chip-line: var(--dm-success);
+}
+
+:host([data-color='warning']) {
+  --dm-chip-surface: var(--dm-warning);
+  --dm-chip-hover: var(--dm-warning-hover);
+  --dm-chip-fg: var(--dm-warning-fg);
+  --dm-chip-soft: var(--dm-warning-subtle);
+  --dm-chip-accent: var(--dm-warning-text);
+  --dm-chip-line: var(--dm-warning);
+}
+
+:host([data-color='danger']) {
+  --dm-chip-surface: var(--dm-danger);
+  --dm-chip-hover: var(--dm-danger-hover);
+  --dm-chip-fg: var(--dm-danger-fg);
+  --dm-chip-soft: var(--dm-danger-subtle);
+  --dm-chip-accent: var(--dm-danger-text);
+  --dm-chip-line: var(--dm-danger);
+}
+
+// ---- Variants (unselected surface) -----------------------------------------
+:host([data-variant='solid']) {
+  background: var(--dm-chip-surface);
+  color: var(--dm-chip-fg);
+}
+
+:host([data-variant='flat']) {
+  background: var(--dm-chip-soft);
+  color: var(--dm-chip-accent);
+}
+
+:host([data-variant='bordered']) {
+  border-color: color-mix(in srgb, var(--dm-chip-line) 45%, transparent);
+  color: var(--dm-chip-accent);
+}
+
+:host([data-variant='light']) {
+  color: var(--dm-chip-accent);
+}
+
+:host([data-variant='shadow']) {
+  background: var(--dm-chip-surface);
+  color: var(--dm-chip-fg);
+  box-shadow: 0 3px 10px -3px color-mix(in srgb, var(--dm-chip-surface) 55%, transparent);
+}
+
+// ---- Hover — designed per variant, on the whole surface (so a selectable +
+// removable chip never shows a two-tone hover between body and ✕) -----------
+:host([data-interactive][data-variant='solid']:not([data-disabled], [data-selected]):hover),
+:host([data-interactive][data-variant='shadow']:not([data-disabled], [data-selected]):hover) {
+  background: var(--dm-chip-hover);
+}
+
+:host([data-interactive][data-variant='flat']:not([data-disabled], [data-selected]):hover) {
+  background: color-mix(in srgb, var(--dm-chip-accent) 10%, var(--dm-chip-soft));
+}
+
+:host([data-interactive][data-variant='bordered']:not([data-disabled], [data-selected]):hover),
+:host([data-interactive][data-variant='light']:not([data-disabled], [data-selected]):hover) {
+  background: var(--dm-chip-soft);
+}
+
+// ---- Selected (filter/choice) — solid accent regardless of variant ---------
+:host([data-selected]) {
+  background: var(--dm-chip-surface);
+  border-color: transparent;
+  color: var(--dm-chip-fg);
+}
+
+:host([data-selected]:not([data-disabled]):hover) {
+  background: var(--dm-chip-hover);
+}
+
+// ---- Pressed — elastic press on the whole interactive chip -----------------
+:host([data-interactive]:not([data-disabled]):active) {
+  transform: scale(0.96);
+}
+
+// ---- Focus — the ring wraps the pill, not the inner button -----------------
+// Fallback ring on the button itself; when `:has()` is available the ring
+// moves to the host so it follows the chip's radius (and a removable chip
+// isn't cut between label and ✕).
+button.dm-chip__body:focus-visible {
+  @include mixins.focus-ring;
+}
+
+@supports selector(:has(a)) {
+  button.dm-chip__body:focus-visible {
+    outline: none;
+  }
+
+  :host(:has(.dm-chip__body:focus-visible)) {
+    @include mixins.focus-ring;
+  }
+}
+
+// ---- Disabled --------------------------------------------------------------
+:host([data-disabled]) {
+  opacity: 0.55;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+// =============================================================================
+// Body — the label + leading slot (a <button> when interactive, else a <span>).
+// Transparent: the host paints the surface.
+// =============================================================================
+.dm-chip__body {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  gap: var(--dm-chip-gap-x);
+  max-width: 100%;
+  padding-inline: var(--dm-chip-pad-x);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+button.dm-chip__body {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.dm-chip__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Leading slot (icon / avatar) hugs the rounded end instead of floating with
+// the full text inset; collapses when empty so there is no stray gap.
+.dm-chip__leading {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: calc(var(--dm-chip-pad-x) * -0.4);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// Selected check — pops in with a small overshoot.
+.dm-chip__check {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  margin-inline-start: -0.125em;
+  animation: dm-chip-check-in var(--dm-duration-base, 200ms) var(--dm-ease-out, ease-out);
+}
+
+// When a leading slot is present in a selected chip, hide it in favour of the
+// check (Material-style avatar → check swap).
+:host([data-selected]) .dm-chip__leading {
+  display: none;
+}
+
+// =============================================================================
+// Remove button — trailing ✕. Small visible circle, chip-height hit area.
+// =============================================================================
+.dm-chip__remove {
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--dm-chip-rm);
+  height: var(--dm-chip-rm);
+
+  // Optical balance: the glyph ends up as far from the pill edge as the label
+  // starts from the other side.
+  margin-inline-end: calc(var(--dm-chip-pad-x) - 0.25rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dm-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition:
+    background-color var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    opacity var(--dm-duration-fast, 150ms) var(--dm-ease-out, ease),
+    transform var(--dm-duration-fast, 150ms) var(--dm-ease-snappy, ease);
+
+  // Hit area = full chip height while the visible circle stays small.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: max(100%, var(--dm-chip-h));
+    height: max(100%, var(--dm-chip-h));
+    transform: translate(-50%, -50%);
+  }
+
+  &:not(:disabled):hover {
+    background: color-mix(in srgb, currentcolor 14%, transparent);
+    opacity: 1;
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.85);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring;
+
+    outline-offset: 0;
+    opacity: 1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// The label keeps a little breathing room from the ✕.
+:host([data-removable]) .dm-chip__body {
+  padding-inline-end: calc(var(--dm-chip-pad-x) * 0.4);
+}
+
+.dm-chip__remove-icon {
+  width: 0.8em;
+  height: 0.8em;
+}
+
+// =============================================================================
+// Motion — both animations communicate a change to the set, not decoration:
+//  · enter: only a chip ADDED to a live set grows in from where it was inserted
+//    (the initial render never pops — the component gates `data-entering`);
+//  · collapse: a removed chip fades, then its width folds to zero and it gives
+//    back the set gap, so the neighbours slide instead of jumping. The chip's
+//    measured width arrives as `--dm-chip-w` (set inline by the component).
+// =============================================================================
+:host([data-entering]) {
+  transform-origin: left center;
+  animation: dm-chip-in var(--dm-duration-base, 200ms) var(--dm-ease-out, ease-out) both;
+}
+
+:host([data-removing]) {
+  min-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  animation: dm-chip-collapse var(--dm-duration-base, 200ms) var(--dm-ease-in-out, ease-in) forwards;
+}
+
+@keyframes dm-chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes dm-chip-collapse {
+  0% {
+    max-width: var(--dm-chip-w, 12rem);
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  45% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    max-width: 0;
+    margin-inline-end: calc(var(--dm-chip-set-gap, 0.5rem) * -1);
+    border-width: 0;
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes dm-chip-check-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+// =============================================================================
+// Reduced motion — no enter/press/collapse/check motion (removal still works:
+// the component takes the immediate-emit path).
+// =============================================================================
+@include mixins.reduced-motion {
+  :host([data-entering]),
+  :host([data-removing]),
+  .dm-chip__check {
+    animation: none;
+  }
+
+  :host,
+  .dm-chip__remove,
+  :host([data-interactive]:active) {
+    transition: none;
+    transform: none;
+  }
+}
