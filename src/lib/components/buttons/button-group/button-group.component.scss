@@ -5,6 +5,8 @@
 //   --dm-button-group-divider            1px seam between non-bordered segments
 //   --dm-button-group-divider-thickness  seam thickness (default 1px)
 //   --dm-button-group-divider-inset      seam inset from both ends (default 15%)
+//   --dm-button-group-ring               focus ring of a segment (default currentColor)
+//   --dm-button-group-press-scale        label dip while a segment is pressed (0.94)
 
 .dm-button-group {
   display: inline-flex;
@@ -13,7 +15,7 @@
   isolation: isolate;
 
   // Each projected button host: relative so the hovered/focused one can rise
-  // above its neighbours (its border/focus ring is never clipped by the next),
+  // above its neighbours (a bordered segment shows its full collapsed border),
   // and so the seam pseudo-element can anchor to it.
   > dm-button {
     position: relative;
@@ -24,11 +26,85 @@
     z-index: 1;
   }
 
-  // The bar is rigid: the elastic per-button press would deform the group, so
-  // it is disabled here — feedback stays via the button's own hover/active
-  // color shifts.
-  .dm-button:active:not(:disabled) {
+  // ---- Segment states ------------------------------------------------------
+  // The bar is rigid. The standalone button answers with an opacity dim and an
+  // elastic scale; inside the bar the dim barely reads on a flat fill and the
+  // scale would deform the group. A segment answers with its FILL instead:
+  // hover deepens it one step, press deepens it one more and dips only the
+  // label — the silhouette never moves.
+  //
+  // Every state rule is anchored as `> dm-button > .dm-button` on purpose: it
+  // must out-rank the button's own encapsulated `.dm-button[_ngcontent]:state`
+  // rules (same class+pseudo count) regardless of style insertion order.
+  > dm-button > .dm-button:hover:not(:disabled) {
+    opacity: 1;
+  }
+
+  > dm-button > .dm-button[data-variant='solid']:hover:not(:disabled),
+  > dm-button > .dm-button[data-variant='shadow']:hover:not(:disabled) {
+    background: var(--dm-btn-hover);
+  }
+
+  > dm-button > .dm-button[data-variant='flat']:hover:not(:disabled),
+  > dm-button > .dm-button[data-variant='faded']:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dm-btn-soft), var(--dm-btn) 12%);
+  }
+
+  > dm-button > .dm-button[data-variant='bordered']:hover:not(:disabled),
+  > dm-button > .dm-button[data-variant='light']:hover:not(:disabled) {
+    background: var(--dm-btn-soft);
+  }
+
+  > dm-button > .dm-button:active:not(:disabled) {
     transform: none;
+  }
+
+  > dm-button > .dm-button[data-variant='solid']:active:not(:disabled),
+  > dm-button > .dm-button[data-variant='shadow']:active:not(:disabled),
+  > dm-button > .dm-button[data-variant='ghost']:active:not(:disabled) {
+    background: color-mix(in srgb, var(--dm-btn-hover) 86%, var(--dm-fg));
+  }
+
+  > dm-button > .dm-button[data-variant='flat']:active:not(:disabled),
+  > dm-button > .dm-button[data-variant='faded']:active:not(:disabled) {
+    background: color-mix(in srgb, var(--dm-btn-soft), var(--dm-btn) 24%);
+  }
+
+  > dm-button > .dm-button[data-variant='bordered']:active:not(:disabled),
+  > dm-button > .dm-button[data-variant='light']:active:not(:disabled) {
+    background: color-mix(in srgb, var(--dm-btn-soft), var(--dm-btn) 10%);
+  }
+
+  // Press dip on the label only: fast in, springs back on the label's own
+  // (snappy) transition on release.
+  > dm-button > .dm-button:active:not(:disabled) .dm-button__label {
+    transform: scale(var(--dm-button-group-press-scale, 0.94));
+    transition-duration: var(--dm-duration-fast);
+  }
+
+  // Focus ring drawn INSIDE the segment: an outer ring would overlap the
+  // neighbours on both sides and read as two bars. `currentColor` contrasts
+  // with every fill by construction (it is the label color).
+  > dm-button > .dm-button:focus-visible {
+    outline: 2px solid var(--dm-button-group-ring, currentColor);
+    outline-offset: -3px;
+  }
+
+  // Bordered segments carry a 2px border: park the ring a full 2px inside it
+  // so the two lines read as border + ring, not as one smeared edge.
+  > dm-button > .dm-button[data-variant='bordered']:focus-visible {
+    outline-offset: -4px;
+  }
+
+  // ---- Split-button caret --------------------------------------------------
+  // A lone icon in a segment that opens a menu flips while the menu is open,
+  // so the caret reports the state instead of just sitting there.
+  > dm-button .dm-button__label > dm-icon:only-child {
+    transition: transform var(--dm-duration-base) var(--dm-ease-snappy);
+  }
+
+  > dm-button[data-menu-open] .dm-button__label > dm-icon:only-child {
+    transform: rotate(180deg);
   }
 
   // ---- Seam between segments ----------------------------------------------

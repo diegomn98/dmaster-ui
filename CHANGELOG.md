@@ -21,6 +21,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `single`/`multiple` selection (CVA). Fully token-pure and WCAG-2.1-AA
   accessible (`role="group"` + `aria-pressed`, no nested buttons).
 
+### Changed
+
+- **`dm-button-group`** — segment states designed for a rigid bar. Inside a
+  group the standalone button's opacity dim (near-invisible on flat fills) and
+  elastic scale (would deform the bar) are replaced by fill-based feedback:
+  hover deepens the segment one step per variant, press deepens it one more and
+  dips only the label (`--dm-button-group-press-scale`), springing back on
+  release. The focus ring is now drawn _inside_ the focused segment
+  (`--dm-button-group-ring`, `currentColor`) instead of an outer ring that
+  overlapped both neighbours. A lone `dm-icon` in a `dmMenuTrigger` segment
+  (the split-button caret) rotates while its menu is open. All on the motion
+  tokens, so reduced motion collapses it to an instant change. Docs page
+  reworked: glyph-only segments use `iconOnly`, and every demo now does
+  something (bounded pager, live zoom, `loading → success` split button, a
+  photo-editor composition with rotate / zoom / flip).
+
 ## [0.10.3] - 2026-09-01
 
 ### Changed
