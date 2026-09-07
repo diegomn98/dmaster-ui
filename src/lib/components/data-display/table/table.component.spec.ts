@@ -3,6 +3,7 @@ import { Component, provideZonelessChangeDetection, signal } from '@angular/core
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
 import { DmTableComponent } from './table.component';
 import { DmTableCellDirective } from './table-cell.directive';
 import { DmTableEmptyDirective } from './table-empty.directive';
@@ -84,7 +85,23 @@ describe('DmTableComponent', () => {
     });
   });
 
+  // jsdom has no AnimationEvent; the component only reads `animationName`.
+  const animationEnd = (animationName: string): Event =>
+    Object.assign(new Event('animationend', { bubbles: true }), { animationName });
+
   // ---- Rendering -----------------------------------------------------------
+
+  it('keeps nowrap columns on one line via data-nowrap', () => {
+    create({
+      columns: [
+        ...COLUMNS,
+        { key: 'joined', header: 'Joined', nowrap: true, cell: (r: Row) => r.role },
+      ],
+    });
+    const cells = tds(0);
+    expect(cells[2].hasAttribute('data-nowrap')).toBe(false);
+    expect(cells[3].hasAttribute('data-nowrap')).toBe(true);
+  });
 
   it('renders one <th scope="col"> per column and one row per data entry', () => {
     create();
@@ -332,6 +349,46 @@ describe('DmTableComponent', () => {
     expect(all('.dm-table__tr--skeleton').length).toBe(4);
     expect(tableEl().getAttribute('aria-busy')).toBe('true');
     expect(fixture.nativeElement.querySelector('.dm-table__empty')).toBeNull();
+  });
+
+  // ---- Reveal after loading ------------------------------------------------
+
+  it('reveals rows only after a loading → data transition, then clears on the last row', () => {
+    create();
+    // Initial render: still.
+    expect(el('.dm-table__body').hasAttribute('data-revealing')).toBe(false);
+
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+    fixture.componentRef.setInput('loading', false);
+    fixture.detectChanges();
+    const body = el('.dm-table__body');
+    expect(body.hasAttribute('data-revealing')).toBe(true);
+    expect(bodyRows()[1].style.getPropertyValue('--dm-table-row-i')).toBe('1');
+
+    // Ending on a middle row (or an unrelated animation) keeps the flag on.
+    bodyRows()[0].dispatchEvent(animationEnd('_ngcontent-ng-c1_dm-table-row-in'));
+    bodyRows()[2].dispatchEvent(animationEnd('_ngcontent-ng-c1_dm-table-pop'));
+    fixture.detectChanges();
+    expect(body.hasAttribute('data-revealing')).toBe(true);
+
+    bodyRows()[2].dispatchEvent(animationEnd('_ngcontent-ng-c1_dm-table-row-in'));
+    fixture.detectChanges();
+    expect(body.hasAttribute('data-revealing')).toBe(false);
+  });
+
+  it('never reveals under reduced motion', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: ReducedMotionService, useValue: { reducedMotion: () => true } },
+      ],
+    });
+    create({ loading: true });
+    fixture.componentRef.setInput('loading', false);
+    fixture.detectChanges();
+    expect(el('.dm-table__body').hasAttribute('data-revealing')).toBe(false);
   });
 
   // ---- Appearance / defaults ----------------------------------------------

@@ -53,6 +53,8 @@ export interface DmTableColumn<T = unknown> {
   align?: DmTableColumnAlign;
   /** Optional column width — any CSS length (`'120px'`, `'20%'`, …). */
   width?: string;
+  /** Keep this column's cells on one line (dates, ids, amounts) instead of wrapping. */
+  nowrap?: boolean;
   /** Skip rendering this column entirely (both header and cells). */
   hidden?: boolean;
 }

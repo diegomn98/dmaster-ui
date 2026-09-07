@@ -12,11 +12,13 @@ import {
   input,
   model,
   output,
+  signal,
   TemplateRef,
   untracked,
   viewChild,
 } from '@angular/core';
 
+import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
 import { DmCheckboxComponent } from '../../forms/checkbox';
 import { DmSkeletonComponent } from '../../primitives/skeleton';
 import { DmTableCellContext, DmTableCellDirective } from './table-cell.directive';
@@ -69,6 +71,7 @@ let nextCaptionId = 0;
 })
 export class DmTableComponent<T = unknown> {
   private readonly defaults = inject(TABLE_DEFAULTS);
+  private readonly reducedMotion = inject(ReducedMotionService);
 
   /** The CDK viewport instance (present only in virtual-scroll mode). */
   private readonly viewport = viewChild(CdkVirtualScrollViewport);
@@ -241,6 +244,14 @@ export class DmTableComponent<T = unknown> {
   /** Two-way bound sort state. `null` means unsorted. */
   readonly sortState = model<DmTableSortState | null>(null);
 
+  /**
+   * True right after a `loading` → data transition: the rows rise in with a
+   * short stagger to mark that content arrived. The initial render and every
+   * later re-render (paging, sorting, searching) stay still.
+   */
+  protected readonly revealing = signal(false);
+  private lastLoading = false;
+
   constructor() {
     // Searching resets to the first page — otherwise you can land on an empty
     // page. Only reacts to term changes, never clobbers an initial `[page]`.
@@ -253,6 +264,23 @@ export class DmTableComponent<T = unknown> {
       }
       untracked(() => this.page.set(1));
     });
+
+    effect(() => {
+      const loading = this.loading();
+      const wasLoading = this.lastLoading;
+      this.lastLoading = loading;
+      if (wasLoading && !loading && !this.reducedMotion.reducedMotion()) {
+        untracked(() => this.revealing.set(true));
+      }
+    });
+  }
+
+  /** Clears the reveal once the LAST row's entrance finished (rows are staggered). */
+  protected onRowsAnimationEnd(event: AnimationEvent): void {
+    // Emulated encapsulation prefixes keyframe names — match the tail.
+    if (!this.revealing() || !event.animationName.endsWith('dm-table-row-in')) return;
+    const rows = (event.currentTarget as Element).querySelectorAll('[data-row]');
+    if (event.target === rows[rows.length - 1]) this.revealing.set(false);
   }
 
   // ---- Content templates ---------------------------------------------------

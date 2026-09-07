@@ -36,6 +36,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reworked: glyph-only segments use `iconOnly`, and every demo now does
   something (bounded pager, live zoom, `loading → success` split button, a
   photo-editor composition with rotate / zoom / flip).
+- **`dm-table`** — design pass with motion. The caption now reads as the
+  table's title (sentence case, semibold, `--dm-table-caption-fg`) instead of
+  a second uppercase header band. The sort indicator is a single arrow that
+  previews ascending on hover, turns solid when the column is sorted and flips
+  over for descending; the sorted header's accent underline grows from the
+  centre and shrinks back when another column takes over. Rows that replace
+  the loading skeleton rise in with a short stagger (only on a
+  `loading → data` transition — never on the initial render, paging, sorting
+  or searching; skipped under reduced motion). The selection chip and the
+  search clear button pop in; the empty state fades in. New column option
+  `nowrap` keeps dates / ids / amounts on one line. Docs page: sticky-header
+  demo, a `Reload` that shows the reveal, and a toolbar `Invite` that answers.
+
+### Fixed
+
+- **`dm-table`** — `sticky` never engaged: the scroll wrapper inherited
+  `max-height: none`, so it grew with the table and never scrolled. Sticky mode
+  now bounds the body to `--dm-table-max-height` (`28rem` by default) and
+  scrolls inside it.
+- **`dm-table`** — the selection chip wrapped under the search box even with a
+  full row of free space (the search's percentage width resolved cyclically
+  inside an auto-sized flex item). The toolbar's start group now takes the
+  available width.
 
 ## [0.10.3] - 2026-09-01
 

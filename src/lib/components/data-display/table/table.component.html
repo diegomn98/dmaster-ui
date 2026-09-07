@@ -1,3 +1,22 @@
+<!-- One arrow: points up for asc, rotates to point down for desc (see SCSS). -->
+<ng-template #sortIcon>
+  <svg
+    class="dm-table__sort-icon"
+    viewBox="0 0 16 16"
+    width="14"
+    height="14"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M8 13V3M4.5 6.5 8 3l3.5 3.5" />
+  </svg>
+</ng-template>
+
 <div
   class="dm-table"
   [attr.data-density]="density()"
@@ -122,23 +141,7 @@
                   (click)="onSort(col)"
                 >
                   <span class="dm-table__sort-label">{{ col.header }}</span>
-                  <svg
-                    class="dm-table__sort-icon"
-                    viewBox="0 0 8 12"
-                    width="8"
-                    height="12"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path
-                      class="dm-table__sort-arrow dm-table__sort-arrow--up"
-                      d="M4 0 L8 4 L0 4 Z"
-                    />
-                    <path
-                      class="dm-table__sort-arrow dm-table__sort-arrow--down"
-                      d="M4 12 L0 8 L8 8 Z"
-                    />
-                  </svg>
+                  <ng-container [ngTemplateOutlet]="sortIcon" />
                 </button>
               } @else {
                 <span class="dm-table__label">{{ col.header }}</span>
@@ -211,7 +214,9 @@
           role="rowgroup"
           [itemSize]="rowHeight()"
           [style.height]="viewportHeight()"
+          [attr.data-revealing]="revealing() ? '' : null"
           (scroll)="onViewportScroll()"
+          (animationend)="onRowsAnimationEnd($event)"
         >
           <!-- Row click is a mouse convenience mirroring the native <tr (click)> path
                (this is role="table", a static table — not an interactive role="grid").
@@ -222,7 +227,9 @@
             *cdkVirtualFor="let row of pagedRows(); let idx = index; trackBy: vTrackBy"
             class="dm-table__vrow"
             role="row"
+            data-row
             [style.height.px]="rowHeight()"
+            [style.--dm-table-row-i]="idx"
             [attr.data-even]="idx % 2 === 1 ? '' : null"
             [attr.data-selected]="isSelected(row, idx) ? '' : null"
             [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
@@ -250,6 +257,7 @@
                 role="cell"
                 [attr.data-align]="col.align || 'start'"
                 [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+                [attr.data-nowrap]="col.nowrap ? '' : null"
               >
                 @if (cellTemplateFor(col); as tpl) {
                   <ng-container
@@ -313,23 +321,7 @@
                     (click)="onSort(col)"
                   >
                     <span class="dm-table__sort-label">{{ col.header }}</span>
-                    <svg
-                      class="dm-table__sort-icon"
-                      viewBox="0 0 8 12"
-                      width="8"
-                      height="12"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path
-                        class="dm-table__sort-arrow dm-table__sort-arrow--up"
-                        d="M4 0 L8 4 L0 4 Z"
-                      />
-                      <path
-                        class="dm-table__sort-arrow dm-table__sort-arrow--down"
-                        d="M4 12 L0 8 L8 8 Z"
-                      />
-                    </svg>
+                    <ng-container [ngTemplateOutlet]="sortIcon" />
                   </button>
                 } @else {
                   <span class="dm-table__label">{{ col.header }}</span>
@@ -339,7 +331,11 @@
           </tr>
         </thead>
 
-        <tbody class="dm-table__body">
+        <tbody
+          class="dm-table__body"
+          [attr.data-revealing]="revealing() ? '' : null"
+          (animationend)="onRowsAnimationEnd($event)"
+        >
           @if (loading()) {
             @for (r of skeletonRows(); track r) {
               <tr class="dm-table__tr dm-table__tr--skeleton">
@@ -393,6 +389,8 @@
             @for (row of pagedRows(); track trackFn(row, $index); let idx = $index) {
               <tr
                 class="dm-table__tr"
+                data-row
+                [style.--dm-table-row-i]="idx"
                 [attr.data-selected]="isSelected(row, idx) ? '' : null"
                 [attr.aria-selected]="hasSelection() ? isSelected(row, idx) : null"
                 (click)="onRowClick(row, idx)"
@@ -411,6 +409,7 @@
                     class="dm-table__td"
                     [attr.data-align]="col.align || 'start'"
                     [attr.data-sorted]="sortState()?.column === col.key ? '' : null"
+                    [attr.data-nowrap]="col.nowrap ? '' : null"
                   >
                     @if (cellTemplateFor(col); as tpl) {
                       <ng-container

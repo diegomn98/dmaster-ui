@@ -41,31 +41,31 @@ readonly columns: DmTableColumn<User>[] = [
 
 ## API
 
-| Input              | Type                                       | Default         | Description                                              |
-| ------------------ | ------------------------------------------ | --------------- | -------------------------------------------------------- |
-| `columns`          | `DmTableColumn<T>[]` _(required)_          | —               | Column definitions.                                      |
-| `data`             | `T[]` _(required)_                         | —               | The **full** dataset — the table derives visible rows.   |
-| `rowKey`           | `(row: T, i: number) => string \| number`  | `index`         | Row identity for `trackBy` and selection.                |
-| `searchable`       | `boolean`                                  | `false`         | Show the search box and filter rows by the term.         |
-| `searchTerm`       | `model<string>`                            | `''`            | Two-way search term.                                     |
-| `selectionMode`    | `'none' \| 'single' \| 'multiple'`         | `'none'`        | Row-selection behaviour.                                 |
-| `selectedKeys`     | `model<(string \| number)[]>`              | `[]`            | Two-way array of selected row keys.                      |
-| `pageSize`         | `model<number>`                            | `0`             | Rows per page; `0` disables pagination.                  |
-| `page`             | `model<number>`                            | `1`             | 1-indexed current page (two-way).                        |
-| `pageSizeOptions`  | `number[]`                                 | `[10, 25, 50]`  | Options for the rows-per-page selector.                  |
-| `loading`          | `boolean`                                  | `false`         | Show a skeleton loading state.                           |
-| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Cell padding scale.                                      |
-| `variant`          | `'default' \| 'striped' \| 'bordered'`     | `'default'`     | Visual variant.                                          |
-| `hover`            | `boolean`                                  | `true`          | Highlight the row under the pointer.                     |
-| `sticky`           | `boolean`                                  | `false`         | Pin the header while the body scrolls.                   |
-| `virtualScroll`    | `boolean`                                  | `false`         | Virtualize rows (see [Virtual scroll](#virtual-scroll)). |
-| `rowHeight`        | `number`                                   | `44`            | Fixed row height (px) used as the viewport `itemSize`.   |
-| `viewportHeight`   | `string`                                   | `'24rem'`       | CSS height of the scroll viewport in virtual mode.       |
-| `caption`          | `string`                                   | `''`            | Rendered as `<caption>`.                                 |
-| `ariaLabel`        | `string`                                   | `''`            | Applied to the `<table>`.                                |
-| `sortState`        | `model<DmTableSortState \| null>`          | `null`          | Two-way sort state.                                      |
-| `manualProcessing` | `boolean`                                  | `false`         | Disable internal filter/sort/paginate (server-side).     |
-| `totalItems`       | `number \| null`                           | `null`          | Total count for the footer in manual mode.               |
+| Input              | Type                                       | Default         | Description                                                      |
+| ------------------ | ------------------------------------------ | --------------- | ---------------------------------------------------------------- |
+| `columns`          | `DmTableColumn<T>[]` _(required)_          | —               | Column definitions.                                              |
+| `data`             | `T[]` _(required)_                         | —               | The **full** dataset — the table derives visible rows.           |
+| `rowKey`           | `(row: T, i: number) => string \| number`  | `index`         | Row identity for `trackBy` and selection.                        |
+| `searchable`       | `boolean`                                  | `false`         | Show the search box and filter rows by the term.                 |
+| `searchTerm`       | `model<string>`                            | `''`            | Two-way search term.                                             |
+| `selectionMode`    | `'none' \| 'single' \| 'multiple'`         | `'none'`        | Row-selection behaviour.                                         |
+| `selectedKeys`     | `model<(string \| number)[]>`              | `[]`            | Two-way array of selected row keys.                              |
+| `pageSize`         | `model<number>`                            | `0`             | Rows per page; `0` disables pagination.                          |
+| `page`             | `model<number>`                            | `1`             | 1-indexed current page (two-way).                                |
+| `pageSizeOptions`  | `number[]`                                 | `[10, 25, 50]`  | Options for the rows-per-page selector.                          |
+| `loading`          | `boolean`                                  | `false`         | Show a skeleton loading state.                                   |
+| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Cell padding scale.                                              |
+| `variant`          | `'default' \| 'striped' \| 'bordered'`     | `'default'`     | Visual variant.                                                  |
+| `hover`            | `boolean`                                  | `true`          | Highlight the row under the pointer.                             |
+| `sticky`           | `boolean`                                  | `false`         | Pin the header; the body scrolls inside `--dm-table-max-height`. |
+| `virtualScroll`    | `boolean`                                  | `false`         | Virtualize rows (see [Virtual scroll](#virtual-scroll)).         |
+| `rowHeight`        | `number`                                   | `44`            | Fixed row height (px) used as the viewport `itemSize`.           |
+| `viewportHeight`   | `string`                                   | `'24rem'`       | CSS height of the scroll viewport in virtual mode.               |
+| `caption`          | `string`                                   | `''`            | Rendered as `<caption>`.                                         |
+| `ariaLabel`        | `string`                                   | `''`            | Applied to the `<table>`.                                        |
+| `sortState`        | `model<DmTableSortState \| null>`          | `null`          | Two-way sort state.                                              |
+| `manualProcessing` | `boolean`                                  | `false`         | Disable internal filter/sort/paginate (server-side).             |
+| `totalItems`       | `number \| null`                           | `null`          | Total count for the footer in manual mode.                       |
 
 Copy inputs (the library ships no baked-in text — override for i18n): `searchPlaceholder`, `emptyText`, `noResultsText`, `rangeLabel`, `pageLabel`, `selectedLabel`, `rowsPerPageLabel`, `clearSelectionLabel`, `selectRowLabel`, `selectAllLabel`, `firstPageLabel`, `prevPageLabel`, `nextPageLabel`, `lastPageLabel`.
 
@@ -130,6 +130,7 @@ filtering every row out:
 | `searchable?` | `boolean`                              | Set `false` to exclude the column from search.    |
 | `align?`      | `'start' \| 'center' \| 'end'`         | Alignment for both header and body cells.         |
 | `width?`      | `string`                               | Column width — any CSS length.                    |
+| `nowrap?`     | `boolean`                              | Keep cells on one line (dates, ids, amounts).     |
 | `hidden?`     | `boolean`                              | Skip rendering the column entirely.               |
 
 ## Global defaults
@@ -141,6 +142,28 @@ providers: [
 ```
 
 Or provide `TABLE_DEFAULTS` directly.
+
+## Sticky header
+
+`sticky` pins the header row while the body scrolls. A pinned header needs a scroll container of **bounded height**, so in sticky mode the table body is capped at `--dm-table-max-height` (`28rem` by default) and scrolls inside it. Set the token per instance to fit the layout, and turn pagination off (`[pageSize]="0"`) so the whole dataset scrolls under the header:
+
+```html
+<dm-table
+  sticky
+  [pageSize]="0"
+  style="--dm-table-max-height: 32rem"
+  [columns]="columns"
+  [data]="rows()"
+/>
+```
+
+## Motion
+
+Every animation is timed by the `--dm-duration-*` / `--dm-ease-*` tokens, so under `prefers-reduced-motion` it all collapses to a cut — and the row reveal is skipped entirely.
+
+- **Sort**: one arrow per sortable header, reserved in the layout so nothing shifts. It appears on hover (previewing ascending), turns solid when the column is the active sort and flips over for descending; a 2px accent underline grows from the centre of the sorted header and shrinks back when another column takes over.
+- **Reveal after loading**: rows that replace the skeleton rise in with a short stagger (capped at 8 rows, 30 ms apart). The initial render, paging, sorting and searching never animate — only a `loading → data` transition does.
+- **Selection chip** and the search **clear** button pop in when they appear; the empty state fades in.
 
 ## Virtual scroll
 
@@ -187,6 +210,8 @@ Public CSS custom properties. Set them on `dm-table` (or any ancestor) to re-ski
 | `--dm-table-fg`              | `var(--dm-fg)`                                       | Body cell text color.                                            |
 | `--dm-table-border`          | `var(--dm-border)`                                   | Outer border and every internal divider (rows, toolbar, footer). |
 | `--dm-table-radius`          | `var(--dm-radius-lg)`                                | Corner radius of the card wrapper.                               |
+| `--dm-table-max-height`      | `28rem`                                              | Height of the scroll container in `sticky` mode.                 |
+| `--dm-table-caption-fg`      | `var(--dm-fg)`                                       | Caption (table title) color.                                     |
 | `--dm-table-header-bg`       | `var(--dm-bg-subtle)`                                | Header row background (native and virtual-scroll modes).         |
 | `--dm-table-header-fg`       | `var(--dm-fg-muted)`                                 | Header label color.                                              |
 | `--dm-table-row-bg-hover`    | `var(--dm-bg-subtle)` (`var(--dm-bg-muted)` striped) | Row background under the pointer when `hover` is on.             |
