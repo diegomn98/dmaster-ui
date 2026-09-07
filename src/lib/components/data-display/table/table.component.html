@@ -24,9 +24,14 @@
   [attr.data-hover]="hover() ? '' : null"
 >
   <!-- ---- Toolbar ---------------------------------------------------------- -->
-  @if (searchable() || selectedCount() > 0) {
+  @if (searchable() || selectedCount() > 0 || caption()) {
     <div class="dm-table__toolbar">
       <div class="dm-table__toolbar-start">
+        <!-- Presentational: the <caption> below is the accessible name. -->
+        @if (caption()) {
+          <span class="dm-table__title" aria-hidden="true">{{ caption() }}</span>
+        }
+
         @if (searchable()) {
           <div class="dm-table__search" [class.dm-table__search--filled]="searchTerm().length > 0">
             <svg
@@ -77,8 +82,23 @@
         @if (selectedCount() > 0) {
           <div class="dm-table__selection" role="status">
             <span class="dm-table__selection-count">{{ selectedLabel()(selectedCount()) }}</span>
-            <button type="button" class="dm-table__selection-clear" (click)="clearSelection()">
-              {{ clearSelectionLabel() }}
+            <button
+              type="button"
+              class="dm-table__selection-clear"
+              [attr.aria-label]="clearSelectionLabel()"
+              (click)="clearSelection()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
             </button>
           </div>
         }
@@ -265,7 +285,8 @@
                     [ngTemplateOutletContext]="cellContext(row, idx, col)"
                   />
                 } @else {
-                  {{ getCellValue(row, col) }}
+                  <!-- Ellipsis needs a block: bare text in a flex cell never truncates. -->
+                  <span class="dm-table__vcell-text">{{ getCellValue(row, col) }}</span>
                 }
               </div>
             }
@@ -467,64 +488,16 @@
           </label>
         }
 
-        <nav class="dm-table__pager" [attr.aria-label]="pageLabel()(safePage(), pageCount())">
-          <button
-            type="button"
-            class="dm-table__pager-arrow"
-            [attr.aria-label]="prevPageLabel()"
-            [disabled]="safePage() <= 1"
-            (click)="prevPage()"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-
-          @for (item of pageItems(); track item.kind === 'page' ? 'p' + item.page : item.id) {
-            @if (item.kind === 'page') {
-              <button
-                type="button"
-                class="dm-table__page"
-                [class.dm-table__page--active]="item.page === safePage()"
-                [attr.aria-current]="item.page === safePage() ? 'page' : null"
-                [attr.aria-label]="'Page ' + item.page"
-                (click)="setPage(item.page)"
-              >
-                {{ item.page }}
-              </button>
-            } @else {
-              <span class="dm-table__page-gap" aria-hidden="true">…</span>
-            }
-          }
-
-          <button
-            type="button"
-            class="dm-table__pager-arrow"
-            [attr.aria-label]="nextPageLabel()"
-            [disabled]="safePage() >= pageCount()"
-            (click)="nextPage()"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
-        </nav>
+        <dm-pagination
+          class="dm-table__pager"
+          size="sm"
+          [totalPages]="pageCount()"
+          [page]="safePage()"
+          [ariaLabel]="pageLabel()(safePage(), pageCount())"
+          [prevLabel]="prevPageLabel()"
+          [nextLabel]="nextPageLabel()"
+          (pageChange)="setPage($event)"
+        />
       </div>
     </div>
   }

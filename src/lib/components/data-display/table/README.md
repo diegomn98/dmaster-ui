@@ -61,7 +61,7 @@ readonly columns: DmTableColumn<User>[] = [
 | `virtualScroll`    | `boolean`                                  | `false`         | Virtualize rows (see [Virtual scroll](#virtual-scroll)).         |
 | `rowHeight`        | `number`                                   | `44`            | Fixed row height (px) used as the viewport `itemSize`.           |
 | `viewportHeight`   | `string`                                   | `'24rem'`       | CSS height of the scroll viewport in virtual mode.               |
-| `caption`          | `string`                                   | `''`            | Rendered as `<caption>`.                                         |
+| `caption`          | `string`                                   | `''`            | Table title: shown in the toolbar, exposed as the `<caption>`.   |
 | `ariaLabel`        | `string`                                   | `''`            | Applied to the `<table>`.                                        |
 | `sortState`        | `model<DmTableSortState \| null>`          | `null`          | Two-way sort state.                                              |
 | `manualProcessing` | `boolean`                                  | `false`         | Disable internal filter/sort/paginate (server-side).             |
@@ -143,6 +143,25 @@ providers: [
 
 Or provide `TABLE_DEFAULTS` directly.
 
+## Layout
+
+The table is one quiet card: an optional **toolbar** (title · search · selection chip on the left, projected `dmTableActions` on the right), the scrollable table, and a **footer** (range summary, rows-per-page field, `dm-pagination`). Rows sit on a fixed rhythm — **44px** comfortable, **36px** compact, **52px** spacious — so a plain text row and a row holding a 24px avatar or a badge land on the same line; only taller content grows a row. Cells get 12px of inner padding and 16px at the outer edges, matching the toolbar and footer. Column headers are sentence case, medium weight and muted: told apart from the body by tone, not by a band.
+
+The search box and the rows-per-page field follow the library's field contract (flat muted surface, elevates with a primary ring on focus, 32px tall), and the pager _is_ `dm-pagination` (size `sm`), so `providePaginationDefaults()` localizes its page-button labels app-wide.
+
+To embed the table flush inside another card — one that already has a header and a frame — drop the table's own frame and radius:
+
+```html
+<dm-card padding="none">
+  <div class="card-header">…</div>
+  <dm-table
+    style="--dm-table-frame-border: 0; --dm-table-radius: 0"
+    [columns]="columns"
+    [data]="rows()"
+  />
+</dm-card>
+```
+
 ## Sticky header
 
 `sticky` pins the header row while the body scrolls. A pinned header needs a scroll container of **bounded height**, so in sticky mode the table body is capped at `--dm-table-max-height` (`28rem` by default) and scrolls inside it. Set the token per instance to fit the layout, and turn pagination off (`[pageSize]="0"`) so the whole dataset scrolls under the header:
@@ -163,7 +182,7 @@ Every animation is timed by the `--dm-duration-*` / `--dm-ease-*` tokens, so und
 
 - **Sort**: one arrow per sortable header, reserved in the layout so nothing shifts. It appears on hover (previewing ascending), turns solid when the column is the active sort and flips over for descending; a 2px accent underline grows from the centre of the sorted header and shrinks back when another column takes over.
 - **Reveal after loading**: rows that replace the skeleton rise in with a short stagger (capped at 8 rows, 30 ms apart). The initial render, paging, sorting and searching never animate — only a `loading → data` transition does.
-- **Selection chip** and the search **clear** button pop in when they appear; the empty state fades in.
+- **Selection chip** (a dismissible pill; its × carries `clearSelectionLabel`) and the search **clear** button pop in when they appear; the empty state fades in.
 
 ## Virtual scroll
 
@@ -195,7 +214,7 @@ Virtual mode needs the CDK **scrolling** structural styles. These ship **inside 
 
 ## Accessibility
 
-- Native `<table>` / `<thead>` / `<tbody>` markup (`role="table"` div-grid in `virtualScroll` mode), `<th scope="col">` for column headers, `<caption>` announced first.
+- Native `<table>` / `<thead>` / `<tbody>` markup (`role="table"` div-grid in `virtualScroll` mode), `<th scope="col">` for column headers. The `<caption>` is the table's accessible name; it is visually hidden and its text is drawn as the toolbar title instead.
 - Sortable columns expose `aria-sort`; selected rows expose `aria-selected`; the table sets `aria-busy` while loading.
 - The search box is a real `<input type="search">`; selection checkboxes and pager buttons carry descriptive, overridable ARIA labels.
 - All controls are real `<button>` / `<input>` elements — keyboard-activatable with focus rings.
@@ -204,16 +223,19 @@ Virtual mode needs the CDK **scrolling** structural styles. These ship **inside 
 
 Public CSS custom properties. Set them on `dm-table` (or any ancestor) to re-skin the table; every token falls back to the default shown.
 
-| Token                        | Default                                              | Description                                                      |
-| ---------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
-| `--dm-table-bg`              | `var(--dm-bg)`                                       | Background of the table card wrapper.                            |
-| `--dm-table-fg`              | `var(--dm-fg)`                                       | Body cell text color.                                            |
-| `--dm-table-border`          | `var(--dm-border)`                                   | Outer border and every internal divider (rows, toolbar, footer). |
-| `--dm-table-radius`          | `var(--dm-radius-lg)`                                | Corner radius of the card wrapper.                               |
-| `--dm-table-max-height`      | `28rem`                                              | Height of the scroll container in `sticky` mode.                 |
-| `--dm-table-caption-fg`      | `var(--dm-fg)`                                       | Caption (table title) color.                                     |
-| `--dm-table-header-bg`       | `var(--dm-bg-subtle)`                                | Header row background (native and virtual-scroll modes).         |
-| `--dm-table-header-fg`       | `var(--dm-fg-muted)`                                 | Header label color.                                              |
-| `--dm-table-row-bg-hover`    | `var(--dm-bg-subtle)` (`var(--dm-bg-muted)` striped) | Row background under the pointer when `hover` is on.             |
-| `--dm-table-stripe-bg`       | `var(--dm-bg-subtle)`                                | Even-row background of the `striped` variant.                    |
-| `--dm-table-row-bg-selected` | `var(--dm-primary-subtle)`                           | Background of selected rows.                                     |
+| Token                        | Default                                              | Description                                                       |
+| ---------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
+| `--dm-table-bg`              | `var(--dm-bg)`                                       | Background of the table card wrapper.                             |
+| `--dm-table-fg`              | `var(--dm-fg)`                                       | Body cell text color.                                             |
+| `--dm-table-border`          | `var(--dm-border)`                                   | Every internal divider (rows, toolbar, footer) and the frame.     |
+| `--dm-table-frame-border`    | `1px solid var(--dm-table-border)`                   | The outer frame. Set `0` to embed the table flush in a card.      |
+| `--dm-table-radius`          | `var(--dm-radius-lg)`                                | Corner radius of the card wrapper.                                |
+| `--dm-table-row-height`      | `2.75rem` (`2.25rem` compact, `3.25rem` spacious)    | Minimum body row height; taller content grows the row.            |
+| `--dm-table-header-height`   | `2.5rem` (`2rem` compact, `3rem` spacious)           | Header row height.                                                |
+| `--dm-table-max-height`      | `28rem`                                              | Height of the scroll container in `sticky` mode.                  |
+| `--dm-table-caption-fg`      | `var(--dm-fg)`                                       | Toolbar title color.                                              |
+| `--dm-table-header-bg`       | `transparent` (`--dm-table-bg` when `sticky`)        | Header row background (native and virtual-scroll modes).          |
+| `--dm-table-header-fg`       | `var(--dm-fg-muted)`                                 | Header label color.                                               |
+| `--dm-table-row-bg-hover`    | `color-mix(in srgb, var(--dm-fg) 4%, transparent)`   | Row background under the pointer when `hover` is on (6% striped). |
+| `--dm-table-stripe-bg`       | `color-mix(in srgb, var(--dm-fg) 2.5%, transparent)` | Even-row background of the `striped` variant.                     |
+| `--dm-table-row-bg-selected` | `var(--dm-primary-subtle)`                           | Background of selected rows.                                      |

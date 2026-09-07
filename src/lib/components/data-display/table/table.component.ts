@@ -20,6 +20,7 @@ import {
 
 import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
 import { DmCheckboxComponent } from '../../forms/checkbox';
+import { DmPaginationComponent } from '../../navigation/pagination';
 import { DmSkeletonComponent } from '../../primitives/skeleton';
 import { DmTableCellContext, DmTableCellDirective } from './table-cell.directive';
 import { DmTableEmptyDirective } from './table-empty.directive';
@@ -64,7 +65,13 @@ let nextCaptionId = 0;
 
 @Component({
   selector: 'dm-table',
-  imports: [DmCheckboxComponent, DmSkeletonComponent, NgTemplateOutlet, ScrollingModule],
+  imports: [
+    DmCheckboxComponent,
+    DmPaginationComponent,
+    DmSkeletonComponent,
+    NgTemplateOutlet,
+    ScrollingModule,
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -393,31 +400,6 @@ export class DmTableComponent<T = unknown> {
   protected readonly rangeEnd = computed(() => {
     if (this.pageSize() <= 0) return this.totalRows();
     return Math.min(this.safePage() * this.pageSize(), this.totalRows());
-  });
-
-  /**
-   * Windowed page list for the numbered pager: first, last, the current page
-   * ±1, and `…` gaps in between. Collapses to a plain sequence at ≤7 pages.
-   */
-  protected readonly pageItems = computed<
-    ({ kind: 'page'; page: number } | { kind: 'gap'; id: string })[]
-  >(() => {
-    const count = this.pageCount();
-    const current = this.safePage();
-    const items: ({ kind: 'page'; page: number } | { kind: 'gap'; id: string })[] = [];
-    const page = (p: number) => items.push({ kind: 'page', page: p });
-    if (count <= 7) {
-      for (let p = 1; p <= count; p++) page(p);
-      return items;
-    }
-    page(1);
-    const left = Math.max(2, current - 1);
-    const right = Math.min(count - 1, current + 1);
-    if (left > 2) items.push({ kind: 'gap', id: 'gap-left' });
-    for (let p = left; p <= right; p++) page(p);
-    if (right < count - 1) items.push({ kind: 'gap', id: 'gap-right' });
-    page(count);
-    return items;
   });
 
   // ---- Selection state -----------------------------------------------------

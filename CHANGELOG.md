@@ -36,18 +36,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reworked: glyph-only segments use `iconOnly`, and every demo now does
   something (bounded pager, live zoom, `loading → success` split button, a
   photo-editor composition with rotate / zoom / flip).
-- **`dm-table`** — design pass with motion. The caption now reads as the
-  table's title (sentence case, semibold, `--dm-table-caption-fg`) instead of
-  a second uppercase header band. The sort indicator is a single arrow that
-  previews ascending on hover, turns solid when the column is sorted and flips
-  over for descending; the sorted header's accent underline grows from the
-  centre and shrinks back when another column takes over. Rows that replace
-  the loading skeleton rise in with a short stagger (only on a
-  `loading → data` transition — never on the initial render, paging, sorting
-  or searching; skipped under reduced motion). The selection chip and the
-  search clear button pop in; the empty state fades in. New column option
-  `nowrap` keeps dates / ids / amounts on one line. Docs page: sticky-header
-  demo, a `Reload` that shows the reveal, and a toolbar `Invite` that answers.
+- **`dm-table`** — redesigned as one quiet card instead of three stacked
+  bands. The caption is drawn as the **toolbar title** (the `<caption>` stays
+  in the DOM, visually hidden, as the accessible name); column headers are
+  sentence case, medium weight and muted with no fill (`--dm-table-header-bg`
+  now defaults to `transparent`; sticky headers stay opaque); rows sit on a
+  fixed rhythm — 44px comfortable / 36 compact / 52 spacious
+  (`--dm-table-row-height`, `--dm-table-header-height`) — with 12px inner and
+  16px edge cell padding, so text rows and rows holding avatars or badges
+  align. Hover and zebra fills are ink washes (`color-mix` of `--dm-fg`) that
+  read in light _and_ dark; the old `--dm-bg-subtle` was invisible on white.
+  The toolbar search and the rows-per-page field follow the field-family
+  contract (flat muted surface, elevate + primary ring on focus, 32px); the
+  selection chip is a dismissible pill (its × carries `clearSelectionLabel`);
+  the footer pager **is `dm-pagination`** (size `sm`) instead of a private
+  copy. Motion with intent: one sort arrow that previews ascending on hover,
+  turns solid when sorted and flips for descending, with an accent underline
+  that grows from the centre and moves between columns; rows that replace the
+  loading skeleton rise in with a short stagger (only on a `loading → data`
+  transition — never on the initial render, paging, sorting or searching;
+  skipped under reduced motion); the chip and the clear button pop in, the
+  empty state fades in. New: `--dm-table-frame-border` (set `0` to embed the
+  table flush inside a card) and the column option `nowrap` for dates / ids.
+  Docs page: sticky-header demo, a `Reload` that shows the reveal, a toolbar
+  `Invite` that answers, and a single-frame admin-panel composition with rich
+  cells and a bulk `Remove` in the toolbar.
 
 ### Fixed
 

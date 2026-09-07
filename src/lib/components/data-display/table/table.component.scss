@@ -7,34 +7,44 @@
 
 // ---- Card wrapper ----------------------------------------------------------
 // Toolbar + scrollable table + footer live inside one rounded, bordered card.
+// The frame is a token so the table can sit flush inside another card
+// (`--dm-table-frame-border: 0`).
 
 .dm-table {
-  // Cell padding — shared by <th>, <td> and the sort button so density stays
-  // consistent even when the button fills the header cell.
-  --dm-cell-py: var(--dm-space-3);
-  --dm-cell-px: var(--dm-space-4);
+  // Cell rhythm. Inner cells share --dm-cell-px; the outermost cells use
+  // --dm-cell-edge so content aligns with the toolbar and footer padding.
+  // Rows have a fixed minimum height (44px comfortable / 36 compact / 52
+  // spacious) so a plain text row and a row with a 24px avatar or a badge
+  // land on the same line; only taller content grows a row.
+  --dm-row-h: var(--dm-table-row-height, 2.75rem);
+  --dm-head-h: var(--dm-table-header-height, 2.5rem);
+  --dm-cell-py: var(--dm-space-2);
+  --dm-cell-px: var(--dm-space-3);
+  --dm-cell-edge: var(--dm-space-4);
 
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--dm-table-bg, var(--dm-bg));
-  border: 1px solid var(--dm-table-border, var(--dm-border));
+  border: var(--dm-table-frame-border, 1px solid var(--dm-table-border, var(--dm-border)));
   border-radius: var(--dm-table-radius, var(--dm-radius-lg));
 }
 
 // ---- Toolbar ---------------------------------------------------------------
+// Title · search · selection on the left, projected actions on the right.
+// 32px controls inside 8px padding = a 48px bar, same as the footer.
 
 .dm-table__toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--dm-space-3);
+  gap: var(--dm-space-2) var(--dm-space-3);
   align-items: center;
-  justify-content: space-between;
-  padding: var(--dm-space-3) var(--dm-space-4);
+  min-height: 3rem;
+  padding: var(--dm-space-2) var(--dm-cell-edge);
   border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
-// `flex: 1` is load-bearing: the search box is `min(20rem, 100%)` wide, and a
+// `flex: 1` is load-bearing: the search box is `min(18rem, 100%)` wide, and a
 // percentage inside an auto-sized flex item resolves cyclically — the item
 // shrink-wraps to a narrower intrinsic width and the selection chip wraps
 // under the search even with a whole row of free space.
@@ -42,7 +52,7 @@
   display: flex;
   flex: 1 1 auto;
   flex-wrap: wrap;
-  gap: var(--dm-space-3);
+  gap: var(--dm-space-2) var(--dm-space-3);
   align-items: center;
   min-width: 0;
 }
@@ -54,27 +64,45 @@
   margin-inline-start: auto;
 }
 
+// The visible title. The `<caption>` stays in the table for assistive tech
+// (visually hidden below), so this span is presentational.
+.dm-table__title {
+  margin-inline-end: var(--dm-space-1);
+  font-size: var(--dm-text-base);
+  font-weight: var(--dm-font-semibold);
+  line-height: var(--dm-leading-snug);
+  letter-spacing: -0.011em;
+  color: var(--dm-table-caption-fg, var(--dm-fg));
+}
+
 // ---- Search ----------------------------------------------------------------
+// Field-family contract, `sm` size: flat muted surface, no border at rest,
+// elevates with a primary ring on focus — identical to dm-search-field.
 
 .dm-table__search {
   display: inline-flex;
-  align-items: center;
   gap: var(--dm-space-2);
-  width: min(20rem, 100%);
-  height: 2.25rem;
-  padding-inline: var(--dm-space-3);
+  align-items: center;
+  width: min(18rem, 100%);
+  height: 2rem;
+  padding-inline: var(--dm-space-3) var(--dm-space-2);
   color: var(--dm-fg-muted);
-  background: var(--dm-bg-subtle);
-  border: 1px solid var(--dm-border);
+  background: var(--dm-bg-muted);
+  border: 1px solid transparent;
   border-radius: var(--dm-radius-md);
+  box-shadow: 0 0 0 0 var(--dm-primary-subtle);
 
-  @include mixins.transition(border-color, box-shadow, background-color);
+  @include mixins.transition(background-color, border-color, box-shadow, color);
+
+  &:hover:not(:focus-within) {
+    background: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
+  }
 
   &:focus-within {
     color: var(--dm-fg);
-    background: var(--dm-bg);
+    background: var(--dm-bg-elevated);
     border-color: var(--dm-primary);
-    box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+    box-shadow: 0 0 0 3.5px var(--dm-primary-subtle);
   }
 }
 
@@ -87,6 +115,7 @@
 .dm-table__search-input {
   flex: 1;
   min-width: 0;
+  height: 100%;
   color: var(--dm-fg);
   font-family: var(--dm-font-sans);
   font-size: var(--dm-text-sm);
@@ -128,7 +157,7 @@
 
   &:hover {
     color: var(--dm-fg);
-    background: var(--dm-bg-muted);
+    background: color-mix(in srgb, var(--dm-fg) 8%, transparent);
   }
 
   &:focus-visible {
@@ -137,18 +166,19 @@
 }
 
 // ---- Selection summary chip ------------------------------------------------
-// Pops in when the first row is selected: a state entered, not a redraw.
+// A dismissible pill (same language as a removable dm-chip). Pops in when the
+// first row is selected: a state entered, not a redraw.
 
 .dm-table__selection {
   display: inline-flex;
+  gap: var(--dm-space-1);
   align-items: center;
-  gap: var(--dm-space-3);
-  height: 2.25rem;
-  padding-inline: var(--dm-space-3);
+  height: 2rem;
+  padding-inline: var(--dm-space-3) var(--dm-space-1);
   font-size: var(--dm-text-sm);
   color: var(--dm-primary-text);
   background: var(--dm-primary-subtle);
-  border-radius: var(--dm-radius-md);
+  border-radius: var(--dm-radius-full);
   animation: dm-table-pop var(--dm-duration-base) var(--dm-ease-out) both;
 }
 
@@ -158,27 +188,37 @@
 }
 
 .dm-table__selection-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
   padding: 0;
+  margin-inline-start: var(--dm-space-1);
   color: inherit;
-  font: inherit;
-  font-weight: var(--dm-font-medium);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
   cursor: pointer;
   background: transparent;
   border: 0;
+  border-radius: var(--dm-radius-full);
 
-  @include mixins.transition(text-decoration-color);
+  @include mixins.transition(background-color, transform);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
 
   &:hover {
-    text-decoration-color: currentcolor;
+    background: color-mix(in srgb, var(--dm-primary) 16%, transparent);
+  }
+
+  &:active {
+    transform: scale(0.9);
+    transition-duration: var(--dm-duration-fast);
   }
 
   &:focus-visible {
     @include mixins.focus-ring;
-
-    border-radius: var(--dm-radius-sm);
   }
 }
 
@@ -207,39 +247,45 @@
   border-spacing: 0;
 }
 
-// The caption is the table's title: sentence case and body weight, so it
-// reads as a heading band above the (uppercase, muted) column headers instead
-// of as a second header row.
+// The caption names the table for assistive tech; its text is rendered as the
+// toolbar title, so it never draws a second band above the header.
 .dm-table__caption {
-  padding: var(--dm-space-3) var(--dm-space-4);
-  font-size: var(--dm-text-sm);
-  font-weight: var(--dm-font-semibold);
-  color: var(--dm-table-caption-fg, var(--dm-fg));
-  text-align: start;
-  caption-side: top;
-  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
+  @include mixins.visually-hidden;
 }
 
 // ---- Header ----------------------------------------------------------------
+// Quiet: sentence case, medium weight, muted color, no fill. The header is
+// told apart from the body by tone, not by a band.
 
 .dm-table__head {
-  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
+  background: var(--dm-table-header-bg, transparent);
 }
 
 .dm-table__th {
   position: relative;
-  padding: var(--dm-cell-py) var(--dm-cell-px);
-  font-size: var(--dm-text-xs);
-  font-weight: var(--dm-font-semibold);
+  box-sizing: border-box;
+  height: var(--dm-head-h);
+  padding-block: 0;
+  padding-inline: var(--dm-cell-ps, var(--dm-cell-px)) var(--dm-cell-pe, var(--dm-cell-px));
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  line-height: var(--dm-leading-normal);
   color: var(--dm-table-header-fg, var(--dm-fg-muted));
   text-align: start;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  vertical-align: middle;
   white-space: nowrap;
-  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
+  background: var(--dm-table-header-bg, transparent);
   border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 
   @include mixins.transition(background-color, color);
+
+  &:first-child {
+    --dm-cell-ps: var(--dm-cell-edge);
+  }
+
+  &:last-child {
+    --dm-cell-pe: var(--dm-cell-edge);
+  }
 
   &[data-align='center'] {
     text-align: center;
@@ -250,14 +296,14 @@
   }
 
   // Sortable header: the button fills the cell so the whole header is a target;
-  // a hover wash hints at interactivity.
+  // a faint wash hints at interactivity.
   &[data-sortable] {
     padding: 0;
     cursor: pointer;
 
     &:hover {
-      background: var(--dm-bg-muted);
       color: var(--dm-fg);
+      background: color-mix(in srgb, var(--dm-fg) 4%, transparent);
     }
 
     // The accent underline is always there, collapsed; it grows from the
@@ -284,10 +330,12 @@
   }
 }
 
+// Selection column: hugs its checkbox, tight on the inner side.
 .dm-table__th--select,
 .dm-table__td--select {
+  --dm-cell-pe: var(--dm-space-2);
+
   width: 1%;
-  padding-inline: var(--dm-space-4);
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -299,13 +347,25 @@
 // ---- Body ------------------------------------------------------------------
 
 .dm-table__td {
-  padding: var(--dm-cell-py) var(--dm-cell-px);
+  box-sizing: border-box;
+  height: var(--dm-row-h);
+  padding-block: var(--dm-cell-py);
+  padding-inline: var(--dm-cell-ps, var(--dm-cell-px)) var(--dm-cell-pe, var(--dm-cell-px));
   font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-normal);
   color: var(--dm-table-fg, var(--dm-fg));
   vertical-align: middle;
   border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
 
   @include mixins.transition(background-color);
+
+  &:first-child {
+    --dm-cell-ps: var(--dm-cell-edge);
+  }
+
+  &:last-child {
+    --dm-cell-pe: var(--dm-cell-edge);
+  }
 
   &[data-align='center'] {
     text-align: center;
@@ -317,11 +377,6 @@
 
   &[data-nowrap] {
     white-space: nowrap;
-  }
-
-  // Faint tint down the active sort column (below hover/selected specificity).
-  &[data-sorted] {
-    background: color-mix(in srgb, var(--dm-primary) 4%, transparent);
   }
 }
 
@@ -340,6 +395,8 @@
 }
 
 // ---- Hover -----------------------------------------------------------------
+// A 4% ink wash reads on white and on near-black alike; the old `bg-subtle`
+// was invisible in light.
 
 .dm-table[data-hover] .dm-table__body .dm-table__tr:not(.dm-table__tr--skeleton) {
   cursor: pointer;
@@ -349,17 +406,17 @@
   .dm-table__body
   .dm-table__tr:not(.dm-table__tr--skeleton):hover
   .dm-table__td {
-  background: var(--dm-table-row-bg-hover, var(--dm-bg-subtle));
+  background: var(--dm-table-row-bg-hover, color-mix(in srgb, var(--dm-fg) 4%, transparent));
 }
 
 // ---- Variants --------------------------------------------------------------
 
 .dm-table[data-variant='striped'] .dm-table__body .dm-table__tr:nth-child(even) .dm-table__td {
-  background: var(--dm-table-stripe-bg, var(--dm-bg-subtle));
+  background: var(--dm-table-stripe-bg, color-mix(in srgb, var(--dm-fg) 2.5%, transparent));
 }
 
 .dm-table[data-variant='striped'][data-hover] .dm-table__body .dm-table__tr:hover .dm-table__td {
-  background: var(--dm-table-row-bg-hover, var(--dm-bg-muted));
+  background: var(--dm-table-row-bg-hover, color-mix(in srgb, var(--dm-fg) 6%, transparent));
 }
 
 .dm-table[data-variant='bordered'] {
@@ -381,43 +438,62 @@
 }
 
 .dm-table[data-hover] .dm-table__body .dm-table__tr[data-selected]:hover .dm-table__td {
-  background: color-mix(in srgb, var(--dm-primary-subtle) 70%, var(--dm-primary) 12%);
+  background: color-mix(
+    in srgb,
+    var(--dm-primary) 6%,
+    var(--dm-table-row-bg-selected, var(--dm-primary-subtle))
+  );
 }
 
 // ---- Density ---------------------------------------------------------------
 
 .dm-table[data-density='compact'] {
-  --dm-cell-py: var(--dm-space-2);
-  --dm-cell-px: var(--dm-space-3);
+  --dm-row-h: var(--dm-table-row-height, 2.25rem);
+  --dm-head-h: var(--dm-table-header-height, 2rem);
+  --dm-cell-py: var(--dm-space-1);
+  --dm-cell-px: var(--dm-space-2);
+  --dm-cell-edge: var(--dm-space-3);
 }
 
 .dm-table[data-density='spacious'] {
-  --dm-cell-py: var(--dm-space-4);
-  --dm-cell-px: var(--dm-space-5);
+  --dm-row-h: var(--dm-table-row-height, 3.25rem);
+  --dm-head-h: var(--dm-table-header-height, 3rem);
+  --dm-cell-py: var(--dm-space-3);
+  --dm-cell-px: var(--dm-space-4);
+  --dm-cell-edge: var(--dm-space-5);
 }
 
 // ---- Sticky header ---------------------------------------------------------
+// The pinned header needs an opaque surface to cover the rows sliding under it.
 
 .dm-table__scroll--sticky .dm-table__head .dm-table__th {
   position: sticky;
   top: 0;
   z-index: 1;
+  background: var(--dm-table-header-bg, var(--dm-table-bg, var(--dm-bg)));
+}
+
+.dm-table__scroll--sticky .dm-table__head .dm-table__th[data-sortable]:hover {
+  background: color-mix(
+    in srgb,
+    var(--dm-fg) 4%,
+    var(--dm-table-header-bg, var(--dm-table-bg, var(--dm-bg)))
+  );
 }
 
 // ---- Sort control ----------------------------------------------------------
 
 .dm-table__sort-btn {
   display: inline-flex;
-  gap: 0.25rem;
+  gap: 0.375rem;
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: var(--dm-cell-py) var(--dm-cell-px);
+  padding-block: 0;
+  padding-inline: var(--dm-cell-ps, var(--dm-cell-px)) var(--dm-cell-pe, var(--dm-cell-px));
   margin: 0;
   color: inherit;
   font: inherit;
-  text-transform: inherit;
-  letter-spacing: inherit;
   cursor: pointer;
   background: transparent;
   border: 0;
@@ -441,6 +517,8 @@
 // column is the active sort; it turns over for descending.
 .dm-table__sort-icon {
   flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
   opacity: 0;
   transition:
     opacity var(--dm-duration-base) var(--dm-ease-out),
@@ -450,7 +528,7 @@
 
 .dm-table__th[data-sortable]:hover .dm-table__sort-icon,
 .dm-table__vcell--head[data-sortable]:hover .dm-table__sort-icon {
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 // `[data-sortable]` is repeated on purpose: it lifts the rule to the hover
@@ -478,36 +556,40 @@
   gap: var(--dm-space-3);
   align-items: center;
   justify-content: center;
-  padding: var(--dm-space-12) var(--dm-space-6);
+  padding: var(--dm-space-10) var(--dm-space-6);
   color: var(--dm-fg-subtle);
   text-align: center;
   animation: dm-table-fade var(--dm-duration-base) var(--dm-ease-out) both;
 }
 
 .dm-table__empty-icon {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   opacity: 0.6;
 }
 
 .dm-table__empty-text {
+  margin: 0;
   font-size: var(--dm-text-sm);
   color: var(--dm-fg-muted);
 }
 
 // ---- Footer / pagination ---------------------------------------------------
+// Range summary on the left; page-size field + dm-pagination on the right.
 
 .dm-table__footer {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--dm-space-3);
+  gap: var(--dm-space-2) var(--dm-space-4);
   align-items: center;
   justify-content: space-between;
-  padding: var(--dm-space-3) var(--dm-space-4);
+  min-height: 3rem;
+  padding: var(--dm-space-2) var(--dm-cell-edge);
   border-top: 1px solid var(--dm-table-border, var(--dm-border));
 }
 
 .dm-table__footer-info {
+  margin: 0;
   font-size: var(--dm-text-sm);
   font-variant-numeric: tabular-nums;
   color: var(--dm-fg-muted);
@@ -516,8 +598,9 @@
 .dm-table__footer-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--dm-space-4);
+  gap: var(--dm-space-2) var(--dm-space-4);
   align-items: center;
+  margin-inline-start: auto;
 }
 
 .dm-table__page-size {
@@ -528,7 +611,8 @@
   color: var(--dm-fg-muted);
 }
 
-// Custom-styled native select: hide the native chevron, draw our own.
+// Custom-styled native select on the field-family contract (flat, elevates
+// with a primary ring on focus); the native chevron is replaced by ours.
 .dm-table__page-size-field {
   position: relative;
   display: inline-flex;
@@ -537,26 +621,30 @@
 
 .dm-table__page-size-select {
   height: 2rem;
-  padding: 0 1.75rem 0 var(--dm-space-2);
+  padding: 0 1.625rem 0 0.625rem;
   font-family: var(--dm-font-sans);
   font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
+  font-variant-numeric: tabular-nums;
   color: var(--dm-fg);
   appearance: none;
-  background: var(--dm-bg);
-  border: 1px solid var(--dm-border);
-  border-radius: var(--dm-radius-md);
   cursor: pointer;
+  background: var(--dm-bg-muted);
+  border: 1px solid transparent;
+  border-radius: var(--dm-radius-md);
+  box-shadow: 0 0 0 0 var(--dm-primary-subtle);
 
-  @include mixins.transition(border-color, box-shadow);
+  @include mixins.transition(background-color, border-color, box-shadow);
 
-  &:hover {
-    border-color: var(--dm-border-strong, var(--dm-fg-subtle));
+  &:hover:not(:focus-visible) {
+    background: color-mix(in srgb, var(--dm-fg) 6%, var(--dm-bg-muted));
   }
 
   &:focus-visible {
     outline: none;
+    background: var(--dm-bg-elevated);
     border-color: var(--dm-primary);
-    box-shadow: 0 0 0 3px var(--dm-primary-subtle);
+    box-shadow: 0 0 0 3.5px var(--dm-primary-subtle);
   }
 }
 
@@ -569,86 +657,12 @@
   pointer-events: none;
 }
 
-// Numbered pager — prev / page numbers (active filled) / next.
-.dm-table__pager {
-  display: inline-flex;
-  gap: 0.25rem;
-  align-items: center;
-}
-
-.dm-table__pager-arrow,
-.dm-table__page {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0;
-  font-family: var(--dm-font-sans);
-  font-size: var(--dm-text-sm);
-  font-variant-numeric: tabular-nums;
-  color: var(--dm-fg-muted);
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--dm-radius-md);
-
-  @include mixins.transition(color, background-color, border-color, box-shadow);
-
-  &:hover:not(:disabled, .dm-table__page--active) {
-    color: var(--dm-fg);
-    background: var(--dm-bg-subtle);
-    border-color: var(--dm-border);
-  }
-
-  &:focus-visible {
-    @include mixins.focus-ring;
-  }
-}
-
-.dm-table__pager-arrow {
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  &:disabled {
-    color: var(--dm-fg-subtle);
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-}
-
-.dm-table__page {
-  padding-inline: 0.375rem;
-  font-weight: var(--dm-font-medium);
-
-  &--active {
-    color: var(--dm-primary-fg);
-    background: var(--dm-primary);
-    border-color: var(--dm-primary);
-    box-shadow: 0 2px 6px -2px color-mix(in srgb, var(--dm-primary) 55%, transparent);
-    cursor: default;
-  }
-}
-
-.dm-table__page-gap {
-  display: inline-flex;
-  align-items: flex-end;
-  justify-content: center;
-  min-width: 1.25rem;
-  height: 2rem;
-  padding-bottom: 0.35rem;
-  color: var(--dm-fg-subtle);
-  user-select: none;
-}
-
 // ============================================================================
 // Virtual-scroll mode — a CSS-grid "table" of <div>s wrapped in a
 // cdk-virtual-scroll-viewport. Header and body rows share ONE grid template
 // (the --dm-table-cols custom property, set on .dm-table__grid) so their
 // columns stay aligned across the sticky header / scrolled body boundary.
-// Reuses the same --dm-cell-* padding, tokens and sort/hover/selected visuals
+// Reuses the same --dm-cell-* rhythm, tokens and sort/hover/selected visuals
 // as the native path — only the box model differs (grid rows vs table rows).
 // ============================================================================
 
@@ -661,8 +675,7 @@
 
 // The header row sits above the viewport and never scrolls with the body.
 .dm-table__vhead {
-  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
-  border-bottom: 1px solid var(--dm-table-border, var(--dm-border));
+  background: var(--dm-table-header-bg, transparent);
 }
 
 .dm-table__vrow {
@@ -690,8 +703,10 @@
   gap: 0.375rem;
   align-items: center;
   min-width: 0;
-  padding: var(--dm-cell-py) var(--dm-cell-px);
+  padding-block: var(--dm-cell-py);
+  padding-inline: var(--dm-cell-ps, var(--dm-cell-px)) var(--dm-cell-pe, var(--dm-cell-px));
   font-size: var(--dm-text-sm);
+  line-height: var(--dm-leading-normal);
   color: var(--dm-table-fg, var(--dm-fg));
 
   @include mixins.transition(background-color);
@@ -700,6 +715,14 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  &:first-child {
+    --dm-cell-ps: var(--dm-cell-edge);
+  }
+
+  &:last-child {
+    --dm-cell-pe: var(--dm-cell-edge);
+  }
 
   &[data-align='center'] {
     justify-content: center;
@@ -710,21 +733,23 @@
     justify-content: flex-end;
     text-align: end;
   }
+}
 
-  // Faint tint down the active sort column (matches the native td rule).
-  &[data-sorted] {
-    background: color-mix(in srgb, var(--dm-primary) 4%, transparent);
-  }
+// Plain values get their own box so `text-overflow` can actually clip them.
+.dm-table__vcell-text {
+  min-width: 0;
+
+  @include mixins.truncate;
 }
 
 .dm-table__vcell--head {
   position: relative;
-  font-size: var(--dm-text-xs);
-  font-weight: var(--dm-font-semibold);
+  min-height: var(--dm-head-h);
+  padding-block: 0;
+  font-size: var(--dm-text-sm);
+  font-weight: var(--dm-font-medium);
   color: var(--dm-table-header-fg, var(--dm-fg-muted));
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  background: var(--dm-table-header-bg, var(--dm-bg-subtle));
+  background: var(--dm-table-header-bg, transparent);
 
   @include mixins.transition(background-color, color);
 
@@ -734,14 +759,16 @@
 
     &:hover {
       color: var(--dm-fg);
-      background: var(--dm-bg-muted);
+      background: color-mix(in srgb, var(--dm-fg) 4%, transparent);
     }
 
+    // `bottom: 0` (not -1px): the cell clips overflow and the row owns the
+    // divider, so the underline sits right above it.
     &::after {
       content: '';
       position: absolute;
       inset-inline: 0;
-      bottom: -1px;
+      bottom: 0;
       height: 2px;
       background: var(--dm-primary);
       transform: scaleX(0);
@@ -751,7 +778,6 @@
 
   &[data-sorted] {
     color: var(--dm-fg);
-    background: var(--dm-table-header-bg, var(--dm-bg-subtle));
 
     &::after {
       transform: scaleX(1);
@@ -760,9 +786,10 @@
 }
 
 .dm-table__vcell--select {
+  --dm-cell-pe: var(--dm-space-2);
+
   justify-content: center;
   min-width: 0;
-  padding-inline: var(--dm-space-4);
 }
 
 // Sort button alignment inside the grid header cells (mirrors the native th
@@ -788,18 +815,18 @@
   cursor: pointer;
 
   &:hover {
-    background: var(--dm-table-row-bg-hover, var(--dm-bg-subtle));
+    background: var(--dm-table-row-bg-hover, color-mix(in srgb, var(--dm-fg) 4%, transparent));
   }
 }
 
 // ---- Variants --------------------------------------------------------------
 
 .dm-table[data-variant='striped'] .dm-table__viewport .dm-table__vrow[data-even] {
-  background: var(--dm-table-stripe-bg, var(--dm-bg-subtle));
+  background: var(--dm-table-stripe-bg, color-mix(in srgb, var(--dm-fg) 2.5%, transparent));
 }
 
 .dm-table[data-variant='striped'][data-hover] .dm-table__viewport .dm-table__vrow:hover {
-  background: var(--dm-table-row-bg-hover, var(--dm-bg-muted));
+  background: var(--dm-table-row-bg-hover, color-mix(in srgb, var(--dm-fg) 6%, transparent));
 }
 
 .dm-table[data-variant='bordered'] {
@@ -819,7 +846,11 @@
 }
 
 .dm-table[data-hover] .dm-table__viewport .dm-table__vrow[data-selected]:hover {
-  background: color-mix(in srgb, var(--dm-primary-subtle) 70%, var(--dm-primary) 12%);
+  background: color-mix(
+    in srgb,
+    var(--dm-primary) 6%,
+    var(--dm-table-row-bg-selected, var(--dm-primary-subtle))
+  );
 }
 
 // ---- Empty state row (spans the whole grid) --------------------------------

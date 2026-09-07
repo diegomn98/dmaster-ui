@@ -119,6 +119,7 @@ describe('DmTableComponent', () => {
   it('renders / omits the caption', () => {
     create({ caption: 'Team roster' });
     expect(el('caption')?.textContent?.trim()).toBe('Team roster');
+    expect(el('.dm-table__title')?.textContent?.trim()).toBe('Team roster');
     create();
     expect(fixture.nativeElement.querySelector('caption')).toBeNull();
   });
@@ -306,7 +307,7 @@ describe('DmTableComponent', () => {
     expect(fixture.componentInstance.page()).toBe(2);
     expect(nameCells()).toEqual(['Katherine']);
     expect(el('.dm-table__footer-info').textContent).toContain('3–3 of 3');
-    expect(el('[aria-label="Page 2"]').classList.contains('dm-table__page--active')).toBe(true);
+    expect(el('[aria-label="Page 2"]').getAttribute('aria-current')).toBe('page');
 
     // Prev arrow goes back to page 1.
     (el('[aria-label="Previous page"]') as HTMLButtonElement).click();
