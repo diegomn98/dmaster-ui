@@ -114,9 +114,7 @@ export class DmChipSetComponent implements ControlValueAccessor {
 
   /** True when the given chip value is currently selected (single/multiple). */
   isSelected(value: unknown): boolean {
-    return this.selection() === 'multiple'
-      ? this.values().includes(value)
-      : this.value() === value;
+    return this.selection() === 'multiple' ? this.values().includes(value) : this.value() === value;
   }
 
   /** Single mode: exclusive select. Multiple mode: toggle membership. */
