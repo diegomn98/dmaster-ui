@@ -79,6 +79,29 @@ describe('DmIconComponent', () => {
     expect(host.style.width).toBe('1em');
   });
 
+  it('matches the optical-size axis to the rendered size, clamped to 20–48', () => {
+    setup();
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--dm-icon-opsz')).toBe('24'); // md
+
+    fixture.componentRef.setInput('size', 'sm');
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--dm-icon-opsz')).toBe('20'); // 16px → floor 20
+
+    fixture.componentRef.setInput('size', 36);
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--dm-icon-opsz')).toBe('36');
+
+    fixture.componentRef.setInput('size', '4rem');
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--dm-icon-opsz')).toBe('48'); // 64px → cap 48
+
+    // Sizes that don't resolve to pixels leave the axis to its CSS default.
+    fixture.componentRef.setInput('size', '1em');
+    fixture.detectChanges();
+    expect(host.style.getPropertyValue('--dm-icon-opsz')).toBe('');
+  });
+
   it('resolves color: semantic tokens to CSS vars, everything else verbatim', () => {
     setup();
     fixture.detectChanges();

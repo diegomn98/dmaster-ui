@@ -40,6 +40,27 @@ Then style it via the variable-font axes:
 
 Point `--dm-icon-font` at a different font to use any other icon font.
 
+Two details you get for free in font mode:
+
+- **Optical size.** The `opsz` axis follows the rendered size (16px → 20, 24 →
+  24, 32 → 32, capped at 48), so small icons keep legible strokes and large
+  ones stay crisp. Sizes that don't resolve to pixels (`1em`, `%`) use 24.
+- **State changes morph.** `fill`, `weight` and `color` transition on the motion
+  tokens: a heart fills in, a status icon changes color — no snap.
+
+## Inline with text
+
+`size="1em"` follows the surrounding text, and the icon sits on the x-height
+(`vertical-align: middle`) instead of the baseline, so it reads as part of the
+sentence. Inside flex parents (buttons, badges) alignment is handled by the
+parent.
+
+```html
+<p>
+  Deployments <dm-icon size="1em" color="warning" [fill]="true">bolt</dm-icon> run in 12 regions.
+</p>
+```
+
 ## Color
 
 One-liner: a semantic token (`primary`, `secondary`, `success`, `warning`,
@@ -91,7 +112,7 @@ You can also register at runtime via `DmIconRegistry.register(name, svg)`.
 
 - **Decorative by default:** no `label` → the host is `aria-hidden`.
 - Pass a `label` for a meaningful stand-alone icon → `role="img"` + `aria-label`.
-- Spinning icons stop under `prefers-reduced-motion`.
+- Spinning icons stop under `prefers-reduced-motion`; fill/color transitions collapse to a cut.
 
 ## Defaults
 

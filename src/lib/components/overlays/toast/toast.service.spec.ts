@@ -160,4 +160,172 @@ describe('DmToastService', () => {
     service.dismissAll();
     expect(service.toasts().length).toBe(0);
   });
+
+  // ---- Queue, pause, update, promise ----------------------------------------
+
+  it('queues toasts beyond maxVisible and promotes them (timer starting then) as slots free', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection(), provideToastDefaults({ maxVisible: 2 })],
+    });
+    service = TestBed.inject(DmToastService);
+    overlayContainer = TestBed.inject(OverlayContainer);
+
+    const a = service.show('a', { duration: 1000 });
+    service.show('b', { duration: 1000 });
+    const c = service.show('c', { duration: 1000 });
+    expect(service.toasts().map((t) => t.message)).toEqual(['a', 'b']);
+    expect(service.queued()).toBe(1);
+
+    // c waits: its timer has not started, so it outlives a's.
+    vi.advanceTimersByTime(999);
+    a.dismiss();
+    expect(service.toasts().map((t) => t.message)).toEqual(['b', 'c']);
+    expect(service.queued()).toBe(0);
+    vi.advanceTimersByTime(1);
+    expect(service.toasts().map((t) => t.message)).toEqual(['c']);
+    vi.advanceTimersByTime(999);
+    expect(service.toasts().length).toBe(0);
+
+    let cDone = false;
+    c.afterDismissed.then(() => (cDone = true));
+    return Promise.resolve().then(() => expect(cDone).toBe(true));
+  });
+
+  it('pause() freezes the timers and resume() continues with the time left', () => {
+    service.show('Hold on', { duration: 1000 });
+    vi.advanceTimersByTime(600);
+    service.pause();
+    expect(service.paused()).toBe(true);
+    vi.advanceTimersByTime(5000);
+    expect(service.toasts().length).toBe(1);
+
+    service.resume();
+    vi.advanceTimersByTime(399);
+    expect(service.toasts().length).toBe(1);
+    vi.advanceTimersByTime(1);
+    expect(service.toasts().length).toBe(0);
+  });
+
+  it('a toast shown while paused waits for resume() before its timer runs', () => {
+    service.pause();
+    service.show('Later', { duration: 500 });
+    vi.advanceTimersByTime(2000);
+    expect(service.toasts().length).toBe(1);
+    service.resume();
+    vi.advanceTimersByTime(500);
+    expect(service.toasts().length).toBe(0);
+  });
+
+  it('update() changes a live toast in place and a new duration restarts its timer', () => {
+    const ref = service.loading('Uploading…');
+    expect(service.toasts()[0]).toMatchObject({ variant: 'loading', duration: 0 });
+    vi.advanceTimersByTime(10000);
+    expect(service.toasts().length).toBe(1);
+
+    ref.update({ message: 'Done', variant: 'success', duration: 1000 });
+    expect(service.toasts()[0]).toMatchObject({ message: 'Done', variant: 'success' });
+    vi.advanceTimersByTime(1000);
+    expect(service.toasts().length).toBe(0);
+    expect(service.update(ref.id, { message: 'gone' })).toBe(false);
+  });
+
+  it('promise() shows a loading toast, then settles it to success in place', async () => {
+    let resolve!: (v: number) => void;
+    const ref = service.promise(new Promise<number>((r) => (resolve = r)), {
+      loading: 'Saving…',
+      success: (n) => `Saved ${n} rows`,
+      error: 'Failed',
+    });
+    expect(service.toasts()[0]).toMatchObject({
+      variant: 'loading',
+      dismissible: false,
+      duration: 0,
+    });
+
+    resolve(3);
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(service.toasts()[0]).toMatchObject({
+      id: ref.id,
+      message: 'Saved 3 rows',
+      variant: 'success',
+      dismissible: true,
+    });
+    vi.advanceTimersByTime(4000);
+    expect(service.toasts().length).toBe(0);
+  });
+
+  it('promise() settles to danger on rejection, with the error message function', async () => {
+    let reject!: (e: unknown) => void;
+    service.promise(new Promise<void>((_r, rj) => (reject = rj)), {
+      loading: 'Saving…',
+      success: 'Saved',
+      error: (e) => `Failed: ${String(e)}`,
+    });
+    reject('offline');
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(service.toasts()[0]).toMatchObject({ message: 'Failed: offline', variant: 'danger' });
+  });
+
+  // ---- Container: roles, loading icon, exit ---------------------------------
+
+  it('announces danger toasts as role=alert and renders a spinner for loading', () => {
+    service.danger('Boom');
+    service.loading('Working');
+    TestBed.inject(ApplicationRef).tick();
+
+    const toasts = overlayContainer.getContainerElement().querySelectorAll('.dm-toast');
+    expect(toasts[0].getAttribute('role')).toBe('alert');
+    expect(toasts[1].getAttribute('role')).toBe('status');
+    expect(toasts[1].querySelector('dm-spinner')).not.toBeNull();
+  });
+
+  it('keeps a dismissed toast on screen as leaving until its exit animation ends', () => {
+    const ref = service.show('Bye', { duration: 0 });
+    TestBed.inject(ApplicationRef).tick();
+    ref.dismiss();
+    expect(service.toasts().length).toBe(0);
+    TestBed.inject(ApplicationRef).tick();
+
+    const container = overlayContainer.getContainerElement();
+    const leaving = container.querySelector<HTMLElement>('.dm-toast[data-leaving]');
+    expect(leaving).not.toBeNull();
+
+    // Prefixed keyframe name, as emulated encapsulation emits it.
+    leaving?.dispatchEvent(
+      Object.assign(new Event('animationend', { bubbles: true }), {
+        animationName: '_ngcontent-ng-c1_dm-toast-out',
+      }),
+    );
+    TestBed.inject(ApplicationRef).tick();
+    expect(container.querySelector('.dm-toast')).toBeNull();
+  });
+
+  it('removes a leaving toast anyway if no animationend ever arrives', () => {
+    const ref = service.show('Bye', { duration: 0 });
+    TestBed.inject(ApplicationRef).tick();
+    ref.dismiss();
+    TestBed.inject(ApplicationRef).tick();
+    expect(overlayContainer.getContainerElement().querySelector('.dm-toast')).not.toBeNull();
+
+    vi.advanceTimersByTime(600);
+    TestBed.inject(ApplicationRef).tick();
+    expect(overlayContainer.getContainerElement().querySelector('.dm-toast')).toBeNull();
+  });
+
+  it('pauses the timers while the stack is hovered', () => {
+    service.show('Read me', { duration: 1000 });
+    TestBed.inject(ApplicationRef).tick();
+    const stack = overlayContainer.getContainerElement().querySelector('.dm-toasts') as HTMLElement;
+
+    stack.dispatchEvent(new Event('pointerenter'));
+    vi.advanceTimersByTime(5000);
+    expect(service.toasts().length).toBe(1);
+
+    stack.dispatchEvent(new Event('pointerleave'));
+    vi.advanceTimersByTime(1000);
+    expect(service.toasts().length).toBe(0);
+  });
 });

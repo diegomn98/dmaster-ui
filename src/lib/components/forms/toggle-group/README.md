@@ -47,17 +47,17 @@ or the array of values in multiple mode:
 
 ### `dm-toggle-group`
 
-| Input         | Type                                      | Default        | Description                                        |
-| ------------- | ----------------------------------------- | -------------- | -------------------------------------------------- |
-| `multiple`    | `boolean` (attribute)                     | `false`        | Multi-select mode (`aria-pressed` toggle buttons). |
-| `value`       | `unknown`                                 | `null`         | Selected value (single). Two-way `[(value)]`.      |
-| `values`      | `unknown[]`                               | `[]`           | Selected values (multiple). Two-way `[(values)]`.  |
-| `color`       | `'default' \| 'primary' \| … \| 'danger'` | `'default'`    | Color of the selected segment(s).                  |
-| `size`        | `'sm' \| 'md' \| 'lg'`                    | `'md'`         | Control height (28 / 34 / 42 px inner).            |
-| `orientation` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Layout direction.                                  |
-| `fullWidth`   | `boolean` (attribute)                     | `false`        | Stretch to fill, segments share the width.         |
-| `disabled`    | `boolean` (attribute)                     | `false`        | Disables every segment.                            |
-| `ariaLabel`   | `string`                                  | `''`           | Accessible label with no visible caption.          |
+| Input         | Type                                      | Default        | Description                                                   |
+| ------------- | ----------------------------------------- | -------------- | ------------------------------------------------------------- |
+| `multiple`    | `boolean` (attribute)                     | `false`        | Multi-select mode (`aria-pressed` toggle buttons).            |
+| `value`       | `unknown`                                 | `null`         | Selected value (single). Two-way `[(value)]`.                 |
+| `values`      | `unknown[]`                               | `[]`           | Selected values (multiple). Two-way `[(values)]`.             |
+| `color`       | `'default' \| 'primary' \| … \| 'danger'` | `'default'`    | Color of the selected segment(s).                             |
+| `size`        | `'sm' \| 'md' \| 'lg'`                    | `'md'`         | Outer height 32 / 40 / 48 px — flush with buttons and fields. |
+| `orientation` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Layout direction.                                             |
+| `fullWidth`   | `boolean` (attribute)                     | `false`        | Stretch to fill, segments share the width.                    |
+| `disabled`    | `boolean` (attribute)                     | `false`        | Disables every segment.                                       |
+| `ariaLabel`   | `string`                                  | `''`           | Accessible label with no visible caption.                     |
 
 ### `dm-toggle`
 
@@ -73,10 +73,24 @@ or the array of values in multiple mode:
 providers: [provideToggleGroupDefaults({ color: 'primary', size: 'lg' })];
 ```
 
+## Motion
+
+- **Single mode** draws the selection with **one sliding thumb**: it glides and
+  resizes from the previous segment to the new one (`--dm-ease-snappy`), works
+  in both orientations and with `fullWidth`, and re-measures itself on resize
+  and font load. The thumb is measured after render in the browser only; on
+  the server and before hydration the selected segment fills itself, so the
+  prerendered HTML shows the selection and nothing flashes. The first paint
+  never slides in — the slide is enabled one frame later.
+- **Multiple mode** has no thumb: each pressed segment fills on its own.
+- A pressed segment dips its label (`scale(0.96)`) and springs back on release.
+- Under `prefers-reduced-motion` the thumb only fades between positions.
+
 ## Accessibility
 
 - **Single** mode is a `radiogroup` with `radio` children (`aria-checked`), the
-  standard roving-tabindex arrow-key pattern, and one tab stop.
+  standard roving-tabindex arrow-key pattern, and one tab stop. The thumb is
+  `aria-hidden` — purely visual.
 - **Multiple** mode is a `group` of `button`s with `aria-pressed`; each segment
   is independently reachable by Tab and toggled with Space/Enter.
 - Icon-only segments need `ariaLabel`; disabled segments are skipped by the
@@ -84,11 +98,11 @@ providers: [provideToggleGroupDefaults({ color: 'primary', size: 'lg' })];
 
 ## Design tokens
 
-| Token                        | Default                                 | Description                                 |
-| ---------------------------- | --------------------------------------- | ------------------------------------------- |
-| `--dm-toggle-track-bg`       | `var(--dm-bg-muted)`                    | Muted track behind the segments.            |
-| `--dm-toggle-inset`          | `0.1875rem`                             | Padding between the track and the segments. |
-| `--dm-toggle-border`         | `var(--dm-border)`                      | Border color of the track.                  |
-| `--dm-toggle-radius`         | `var(--dm-radius-md)`                   | Corner radius of the track.                 |
-| `--dm-toggle-segment-radius` | `calc(var(--dm-radius-md) - 0.1875rem)` | Corner radius of each segment.              |
-| `--dm-toggle-segment-fg`     | `var(--dm-fg-muted)`                    | Text color of an unselected segment.        |
+| Token                        | Default                                 | Description                                  |
+| ---------------------------- | --------------------------------------- | -------------------------------------------- |
+| `--dm-toggle-track-bg`       | `var(--dm-bg-muted)`                    | Muted track behind the segments.             |
+| `--dm-toggle-inset`          | `0.1875rem`                             | Padding between the track and the segments.  |
+| `--dm-toggle-border`         | `var(--dm-border)`                      | Border color of the track.                   |
+| `--dm-toggle-radius`         | `var(--dm-radius-md)`                   | Corner radius of the track.                  |
+| `--dm-toggle-segment-radius` | `calc(var(--dm-radius-md) - 0.1875rem)` | Corner radius of each segment and the thumb. |
+| `--dm-toggle-segment-fg`     | `var(--dm-fg-muted)`                    | Text color of an unselected segment.         |

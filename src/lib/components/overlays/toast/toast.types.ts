@@ -1,5 +1,7 @@
-/** Semantic variant of the toast. */
-export type DmToastVariant = 'neutral' | 'success' | 'warning' | 'danger';
+import { Observable } from 'rxjs';
+
+/** Semantic variant of the toast. `loading` shows a spinner (used by `promise()`). */
+export type DmToastVariant = 'neutral' | 'success' | 'warning' | 'danger' | 'loading';
 
 /** Viewport placement of the (single, global) toast stack. */
 export type DmToastPosition =
@@ -26,20 +28,39 @@ export interface DmToastOptions {
   action?: DmToastAction;
 }
 
-/** Handle returned by `show()` and its variant helpers. */
+/** Fields `update()` can change on a live toast. `undefined` leaves a field as is. */
+export interface DmToastUpdate extends DmToastOptions {
+  message?: string;
+}
+
+/** Copy for the three states of `promise()`. Functions receive the value / error. */
+export interface DmToastPromiseMessages<T> {
+  loading: string;
+  success: string | ((value: T) => string);
+  error: string | ((error: unknown) => string);
+}
+
+/** Handle returned by `show()`, the variant helpers and `promise()`. */
 export interface DmToastRef {
   id: number;
   dismiss(): void;
+  /** Change message / variant / duration… of a live toast (no-op once dismissed). */
+  update(patch: DmToastUpdate): void;
   /** Resolves once the toast is gone (auto-dismiss, manual, or `dismissAll`). */
   readonly afterDismissed: Promise<void>;
 }
 
-/** Internal representation of an active toast. */
+/** Internal representation of a toast (visible or waiting in the queue). */
 export interface DmToastData {
   id: number;
   message: string;
   variant: DmToastVariant;
   dismissible: boolean;
+  /** Auto-dismiss delay in ms (`0` = sticky); restarted by `update({ duration })`. */
+  duration: number;
   title?: string;
   action?: DmToastAction;
 }
+
+/** What `promise()` accepts: a Promise, or an Observable (its first value). */
+export type DmToastPromiseInput<T> = Promise<T> | Observable<T>;

@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 /** Sort direction cycled by clicking a sortable column header. */
 export type DmTableSortDirection = 'asc' | 'desc';
 
@@ -75,3 +77,39 @@ export interface DmTablePageState {
 
 /** `trackBy`-style row identity used by the `@for` block and by selection. */
 export type DmTableRowKey<T = unknown> = (row: T, index: number) => DmTableKey;
+
+// ---------------------------------------------------------------------------
+// Server-driven (async) mode — the table loads one page at a time via `loadFn`.
+// ---------------------------------------------------------------------------
+
+/** One page as answered by the server. */
+export interface DmTableLoadResult<T = unknown> {
+  /** The rows of the requested page. */
+  items: T[];
+  /** Matching rows across every page — drives the footer range and the page count. */
+  total: number;
+}
+
+/** What the table asks the server for. `page` is 1-indexed, like `[(page)]`. */
+export interface DmTableLoadParams {
+  page: number;
+  pageSize: number;
+  /** The debounced search term (`''` when the box is empty). */
+  query: string;
+  sort: DmTableSortState | null;
+}
+
+/**
+ * Fetches one page. Returns an Observable so `rxResource` can cancel a request
+ * superseded by typing, paging or sorting — works directly with `HttpClient`.
+ *
+ * ```ts
+ * loadUsers: DmTableLoadFn<User> = ({ page, pageSize, query, sort }) =>
+ *   this.http
+ *     .get<{ data: User[]; total: number }>('/api/users', { params: { page, pageSize, query } })
+ *     .pipe(map((res) => ({ items: res.data, total: res.total })));
+ * ```
+ */
+export type DmTableLoadFn<T = unknown> = (
+  params: DmTableLoadParams,
+) => Observable<DmTableLoadResult<T>>;

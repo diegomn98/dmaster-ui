@@ -1,34 +1,115 @@
 @use 'mixins';
 
+// Component tokens (all with fallback, see the README table):
+//   --dm-toast-bg / -fg / -border / -radius / -shadow / -width / -gap
+//   --dm-toast-title-weight / -action-fg / -action-bg-hover
+
+// ---- Position-aware motion -------------------------------------------------
+// The stack enters from and leaves toward the edge it is anchored to. The
+// service stamps `data-position` on the host; these vars drive the keyframes.
+
 :host {
+  --dm-toast-enter-x: var(--dm-space-4);
+  --dm-toast-enter-y: 0px;
+  --dm-toast-exit-x: var(--dm-space-4);
+  --dm-toast-exit-y: 0px;
+  --dm-toast-origin: 100% 50%;
+
   display: block;
 }
 
+:host([data-position$='-left']) {
+  --dm-toast-enter-x: calc(var(--dm-space-4) * -1);
+  --dm-toast-exit-x: calc(var(--dm-space-4) * -1);
+  --dm-toast-origin: 0 50%;
+}
+
+:host([data-position='top-center']) {
+  --dm-toast-enter-x: 0px;
+  --dm-toast-enter-y: calc(var(--dm-space-4) * -1);
+  --dm-toast-exit-x: 0px;
+  --dm-toast-exit-y: calc(var(--dm-space-4) * -1);
+  --dm-toast-origin: 50% 0;
+}
+
+:host([data-position='bottom-center']) {
+  --dm-toast-enter-x: 0px;
+  --dm-toast-enter-y: var(--dm-space-4);
+  --dm-toast-exit-x: 0px;
+  --dm-toast-exit-y: var(--dm-space-4);
+  --dm-toast-origin: 50% 100%;
+}
+
+// ---- Stack -------------------------------------------------------------------
+
 .dm-toasts {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--dm-toast-gap, var(--dm-space-3));
   width: var(--dm-toast-width, min(22rem, calc(100vw - 2rem)));
 }
 
+// Top-anchored stacks grow downwards with the newest toast nearest the edge.
+:host([data-position^='top']) .dm-toasts {
+  flex-direction: column-reverse;
+}
+
+// Each toast sits in a one-row grid so its height can fold to 0fr on exit
+// (and give back the stack gap) — the neighbours slide instead of jumping.
+.dm-toasts__item {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows var(--dm-duration-base) var(--dm-ease-in-out),
+    margin var(--dm-duration-base) var(--dm-ease-in-out);
+
+  &[data-leaving] {
+    grid-template-rows: 0fr;
+    margin-block-end: calc(var(--dm-toast-gap, var(--dm-space-3)) * -1);
+  }
+}
+
+// ---- Toast -------------------------------------------------------------------
+
 .dm-toast {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--dm-space-3);
+  min-height: 0;
   padding: var(--dm-space-3) var(--dm-space-4);
   border-radius: var(--dm-toast-radius, var(--dm-radius-lg));
 
-  // Glass: una superficie translúcida limpia con blur + saturate sobre
-  // el contenido de detrás. saturate() enriquece los colores que atraviesan el
-  // cristal en vez de limitarse a esmerilarlos.
+  // Glass: a translucent surface with blur + saturate over what lies behind
+  // (saturate enriches the colours that pass through instead of just frosting).
   background: var(--dm-toast-bg, color-mix(in srgb, var(--dm-bg-elevated) 85%, transparent));
   backdrop-filter: blur(16px) saturate(160%);
   color: var(--dm-toast-fg, var(--dm-fg));
-  transform-origin: 100% 50%;
 
-  // Elevación: una única sombra amplia, suave y difusa. Sin hairline
-  // duro, sin sheen interior.
-  box-shadow: var(--dm-toast-shadow, var(--dm-shadow-lg));
+  // Elevation: a hairline ring marks the edge on any background (a white
+  // toast over a white page needs it), then one broad, soft shadow.
+  box-shadow:
+    0 0 0 1px var(--dm-toast-border, var(--dm-border)),
+    var(--dm-toast-shadow, var(--dm-shadow-lg));
+  transform-origin: var(--dm-toast-origin);
+
+  // The drag offset (swipe to dismiss); snaps back with a snappy transition.
+  transform: translateX(var(--dm-toast-drag, 0));
+  touch-action: pan-y;
+  transition: transform var(--dm-duration-base) var(--dm-ease-snappy);
   animation: dm-toast-in var(--dm-duration-slow) var(--dm-ease-out);
+
+  &[data-dragging] {
+    cursor: grabbing;
+    user-select: none;
+    transition: none;
+  }
+
+  &[data-leaving] {
+    overflow: hidden;
+    pointer-events: none;
+    animation: dm-toast-out var(--dm-duration-base) var(--dm-ease-in-out) forwards;
+  }
 
   &[data-variant='success'] .dm-toast__icon {
     background: var(--dm-success-subtle);
@@ -49,6 +130,11 @@
     background: var(--dm-bg-muted);
     color: var(--dm-fg-muted);
   }
+
+  &[data-variant='loading'] .dm-toast__icon {
+    background: var(--dm-primary-subtle);
+    color: var(--dm-primary);
+  }
 }
 
 .dm-toast__icon {
@@ -60,6 +146,8 @@
   height: 1.5rem;
   border-radius: var(--dm-radius-full);
 
+  @include mixins.transition(background-color, color);
+
   svg {
     width: 0.875rem;
     height: 0.875rem;
@@ -70,7 +158,7 @@
   flex: 1;
   min-width: 0;
 
-  // Centra ópticamente la primera línea con el círculo del icono (1.5rem).
+  // Optically centres the first line with the 1.5rem icon circle.
   padding-block-start: calc((1.5rem - var(--dm-leading-snug) * 1em) / 2);
   font-size: var(--dm-text-sm);
   line-height: var(--dm-leading-snug);
@@ -87,8 +175,8 @@
   overflow-wrap: break-word;
 }
 
-// Compact action button, styled like a `light` dm-button: colored label on
-// transparent, subtle wash on hover.
+// Compact action button, styled like a `light` dm-button: coloured label on
+// transparent, subtle wash on hover, elastic press.
 .dm-toast__action {
   position: relative;
   flex-shrink: 0;
@@ -104,11 +192,16 @@
   line-height: var(--dm-leading-tight);
   cursor: pointer;
 
-  @include mixins.transition(background-color, color);
+  @include mixins.transition(background-color, color, transform);
   @include mixins.touch-target;
 
   &:hover {
     background: var(--dm-toast-action-bg-hover, var(--dm-primary-subtle));
+  }
+
+  &:active {
+    transform: scale(0.95);
+    transition-duration: var(--dm-duration-fast);
   }
 
   &:focus-visible {
@@ -127,12 +220,12 @@
   padding: 0;
   margin: 0 -0.25rem 0 0;
   border: none;
-  border-radius: var(--dm-radius-sm);
+  border-radius: var(--dm-radius-full);
   background: transparent;
   color: var(--dm-fg-subtle);
   cursor: pointer;
 
-  @include mixins.transition(background-color, color);
+  @include mixins.transition(background-color, color, transform);
   @include mixins.touch-target;
 
   svg {
@@ -141,8 +234,13 @@
   }
 
   &:hover {
-    background: var(--dm-bg-muted);
+    background: color-mix(in srgb, var(--dm-fg) 8%, transparent);
     color: var(--dm-fg);
+  }
+
+  &:active {
+    transform: scale(0.9);
+    transition-duration: var(--dm-duration-fast);
   }
 
   &:focus-visible {
@@ -150,11 +248,27 @@
   }
 }
 
-// Entra deslizándose desde el borde derecho mientras crece desde ese mismo
-// borde (transform-origin 100% 50%): un único gesto, no dos movimientos.
+// ---- Keyframes ---------------------------------------------------------------
+// Enter: slides in from the anchored edge while growing from it — one gesture.
+// Exit: fades and slips back towards that edge (or flies out along a swipe);
+// the item above folds its row at the same time. Both run on the duration
+// tokens, so reduced motion collapses them to a cut (animationend still fires).
+
 @keyframes dm-toast-in {
   from {
     opacity: 0;
-    transform: translateX(var(--dm-space-4)) scale(0.95);
+    transform: translate(var(--dm-toast-enter-x), var(--dm-toast-enter-y)) scale(0.95);
+  }
+}
+
+@keyframes dm-toast-out {
+  from {
+    opacity: 1;
+    transform: translate(var(--dm-toast-drag, 0), 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(var(--dm-toast-exit-x), var(--dm-toast-exit-y)) scale(0.95);
   }
 }

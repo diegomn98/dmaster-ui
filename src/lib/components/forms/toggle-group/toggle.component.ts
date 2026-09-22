@@ -40,6 +40,7 @@ import { DmToggleGroupComponent } from './toggle-group.component';
     '[attr.data-color]': 'group.color()',
     '[attr.data-size]': 'group.size()',
     '[attr.data-selected]': 'selected() ? "true" : "false"',
+    '[attr.data-thumbed]': 'group.hasThumb() ? "" : null',
     '[attr.data-disabled]': 'isDisabled() ? "true" : null',
     '[attr.tabindex]': 'tabIndex()',
     '(click)': 'onClick()',
@@ -51,6 +52,9 @@ export class DmToggleComponent implements OnInit, OnDestroy {
     forwardRef(() => DmToggleGroupComponent),
   );
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** The segment's host element — the group measures it to place the thumb. */
+  readonly hostElement: HTMLElement = this.hostRef.nativeElement;
 
   /** Value carried by this segment; the group compares by strict equality. */
   readonly value = input.required<unknown>();

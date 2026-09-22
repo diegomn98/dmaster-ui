@@ -2,13 +2,20 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { of, Subject, throwError } from 'rxjs';
 
 import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
 import { DmTableComponent } from './table.component';
 import { DmTableCellDirective } from './table-cell.directive';
 import { DmTableEmptyDirective } from './table-empty.directive';
 import { TABLE_DEFAULTS } from './table.tokens';
-import { DmTableColumn, DmTableRowClickEvent, DmTableSortState } from './table.types';
+import {
+  DmTableColumn,
+  DmTableLoadParams,
+  DmTableLoadResult,
+  DmTableRowClickEvent,
+  DmTableSortState,
+} from './table.types';
 
 interface Row {
   id: number;
@@ -502,6 +509,195 @@ describe('DmTableComponent', () => {
   });
 
   // ---- Content templates ---------------------------------------------------
+
+  // ---- Async (loadFn) mode -------------------------------------------------
+
+  describe('async (loadFn) mode — server-side pagination', () => {
+    const PAGE_1: DmTableLoadResult<Row> = { items: [ROWS[0], ROWS[1]], total: 3 };
+    const PAGE_2: DmTableLoadResult<Row> = { items: [ROWS[2]], total: 3 };
+
+    /** No `data` on purpose: async mode must not require it. */
+    function createAsync(
+      loadFn = vi.fn().mockReturnValue(of(PAGE_1)),
+      overrides: Record<string, unknown> = {},
+    ) {
+      fixture = TestBed.createComponent(DmTableComponent<Row>);
+      fixture.componentRef.setInput('columns', COLUMNS);
+      fixture.componentRef.setInput('rowKey', byId);
+      fixture.componentRef.setInput('pageSize', 2);
+      fixture.componentRef.setInput('loadFn', loadFn);
+      for (const [key, value] of Object.entries(overrides)) {
+        fixture.componentRef.setInput(key, value);
+      }
+      fixture.detectChanges();
+      return loadFn;
+    }
+
+    /** Flush microtasks so rxResource can settle, re-rendering in between. */
+    async function flushLoad(): Promise<void> {
+      for (let i = 0; i < 3; i++) {
+        await Promise.resolve();
+        fixture.detectChanges();
+      }
+    }
+
+    function lastParams(loadFn: ReturnType<typeof vi.fn>): DmTableLoadParams {
+      return loadFn.mock.calls.at(-1)![0] as DmTableLoadParams;
+    }
+
+    it('fetches page 1 on init and renders the page and the total from the result', async () => {
+      const loadFn = createAsync();
+      await flushLoad();
+      expect(loadFn).toHaveBeenCalledTimes(1);
+      expect(lastParams(loadFn)).toEqual({ page: 1, pageSize: 2, query: '', sort: null });
+      expect(nameCells()).toEqual(['Ada', 'Grace']);
+      expect(el('.dm-table__footer-info').textContent).toContain('1–2 of 3');
+      expect(el('[aria-label="Page 2"]')).not.toBeNull();
+    });
+
+    it('shows the skeleton and aria-busy while the first page is in flight', () => {
+      const pending = new Subject<DmTableLoadResult<Row>>();
+      createAsync(vi.fn().mockReturnValue(pending.asObservable()));
+      fixture.detectChanges();
+      expect(all('.dm-table__tr--skeleton').length).toBeGreaterThan(0);
+      expect(tableEl().getAttribute('aria-busy')).toBe('true');
+    });
+
+    it('keeps the current rows, dimmed, while a later page loads — no skeleton', async () => {
+      const pending = new Subject<DmTableLoadResult<Row>>();
+      const loadFn = vi
+        .fn()
+        .mockReturnValueOnce(of(PAGE_1))
+        .mockReturnValueOnce(pending.asObservable());
+      createAsync(loadFn);
+      await flushLoad();
+
+      (el('[aria-label="Page 2"]') as HTMLButtonElement).click();
+      fixture.detectChanges();
+      await flushLoad();
+
+      expect(lastParams(loadFn)).toMatchObject({ page: 2 });
+      expect(nameCells()).toEqual(['Ada', 'Grace']);
+      expect(all('.dm-table__tr--skeleton').length).toBe(0);
+      expect(el('.dm-table__body').hasAttribute('data-refreshing')).toBe(true);
+      expect(tableEl().getAttribute('aria-busy')).toBe('true');
+
+      pending.next(PAGE_2);
+      pending.complete();
+      await flushLoad();
+      expect(nameCells()).toEqual(['Katherine']);
+      expect(el('.dm-table__body').hasAttribute('data-refreshing')).toBe(false);
+      expect(tableEl().hasAttribute('aria-busy')).toBe(false);
+    });
+
+    it('debounces the search into ONE request for page 1 with the query', async () => {
+      vi.useFakeTimers();
+      try {
+        const loadFn = createAsync(vi.fn().mockReturnValue(of(PAGE_1)), {
+          searchable: true,
+          searchDebounceMs: 200,
+        });
+        await flushLoad();
+        (el('[aria-label="Page 2"]') as HTMLButtonElement).click();
+        fixture.detectChanges();
+        await flushLoad();
+        expect(loadFn).toHaveBeenCalledTimes(2);
+
+        const input = el('.dm-table__search-input') as HTMLInputElement;
+        input.value = 'ad';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        vi.advanceTimersByTime(100);
+        await flushLoad();
+        // Typing alone fires nothing — not even a page reset for the old query.
+        expect(loadFn).toHaveBeenCalledTimes(2);
+
+        vi.advanceTimersByTime(150);
+        await flushLoad();
+        expect(loadFn).toHaveBeenCalledTimes(3);
+        expect(lastParams(loadFn)).toMatchObject({ page: 1, query: 'ad' });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('sorting re-fetches from page 1 with the sort state', async () => {
+      const loadFn = createAsync();
+      await flushLoad();
+      (el('[aria-label="Page 2"]') as HTMLButtonElement).click();
+      fixture.detectChanges();
+      await flushLoad();
+
+      (dataThs()[1].querySelector('button') as HTMLButtonElement).click();
+      fixture.detectChanges();
+      await flushLoad();
+      expect(loadFn).toHaveBeenCalledTimes(3);
+      expect(lastParams(loadFn)).toEqual({
+        page: 1,
+        pageSize: 2,
+        query: '',
+        sort: { column: 'name', direction: 'asc' },
+      });
+    });
+
+    it('renders the error state, emits loadError and retries via the button', async () => {
+      const loadFn = vi
+        .fn()
+        .mockReturnValueOnce(throwError(() => new Error('503')))
+        .mockReturnValueOnce(of(PAGE_1));
+      createAsync(loadFn, { loadErrorText: 'Nope', retryLabel: 'Again' });
+      const errors: unknown[] = [];
+      fixture.componentInstance.loadError.subscribe((e) => errors.push(e));
+      await flushLoad();
+
+      expect(errors.length).toBe(1);
+      const error = el('.dm-table__empty--error');
+      expect(error.getAttribute('role')).toBe('alert');
+      expect(error.querySelector('.dm-table__empty-text')?.textContent?.trim()).toBe('Nope');
+      const retry = error.querySelector('button') as HTMLButtonElement;
+      expect(retry.textContent?.trim()).toBe('Again');
+
+      retry.click();
+      fixture.detectChanges();
+      await flushLoad();
+      expect(loadFn).toHaveBeenCalledTimes(2);
+      expect(el('.dm-table__empty--error')).toBeNull();
+      expect(nameCells()).toEqual(['Ada', 'Grace']);
+    });
+
+    it('select-all covers the loaded page and selectionChange resolves rows from earlier pages', async () => {
+      const loadFn = vi.fn().mockReturnValueOnce(of(PAGE_1)).mockReturnValueOnce(of(PAGE_2));
+      createAsync(loadFn, { selectionMode: 'multiple' });
+      await flushLoad();
+      const emitted: Row[][] = [];
+      fixture.componentInstance.selectionChange.subscribe((rows) => emitted.push(rows));
+
+      selectAllCheckbox().click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.selectedKeys()).toEqual([1, 2]);
+
+      (el('[aria-label="Page 2"]') as HTMLButtonElement).click();
+      fixture.detectChanges();
+      await flushLoad();
+      expect(nameCells()).toEqual(['Katherine']);
+      expect(selectAllCheckbox().checked).toBe(false);
+
+      rowCheckboxes()[0].click();
+      fixture.detectChanges();
+      expect(fixture.componentInstance.selectedKeys()).toEqual([1, 2, 3]);
+      expect(emitted.at(-1)).toEqual([ROWS[0], ROWS[1], ROWS[2]]);
+    });
+
+    it('reload() fetches the current page again', async () => {
+      const loadFn = createAsync();
+      await flushLoad();
+      fixture.componentInstance.reload();
+      fixture.detectChanges();
+      await flushLoad();
+      expect(loadFn).toHaveBeenCalledTimes(2);
+      expect(lastParams(loadFn)).toMatchObject({ page: 1 });
+    });
+  });
 
   describe('content templates', () => {
     @Component({

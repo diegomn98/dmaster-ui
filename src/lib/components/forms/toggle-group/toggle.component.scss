@@ -1,10 +1,15 @@
 @use 'mixins';
 
+// The color → fill mapping lives on the group host (`--dm-toggle-fill*`) and
+// is inherited here, so the thumb and the segments always agree.
+
 :host {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--dm-space-2);
+  height: 2rem;
   padding: 0 var(--dm-space-3);
   border-radius: var(--dm-toggle-segment-radius, calc(var(--dm-radius-md) - 0.1875rem));
   background: transparent;
@@ -15,36 +20,51 @@
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
-  @include mixins.transition(background-color, color, box-shadow);
+  @include mixins.transition(background-color, color, box-shadow, transform);
+  @include mixins.touch-target;
 }
 
-// Full-width group: segments share the row/column equally.
+// Full-width group: segments share the row equally. Only across the main
+// axis of a ROW — in a column `flex: 1` (basis 0) would collapse the segment
+// heights; there the segments keep their height and stretch to the width.
 :host-context([data-full-width='true']) {
   flex: 1;
 }
 
-// ---- Sizes (aligned with the field family: 32 / 40 / 48) -------------------
+:host-context([data-full-width='true'][data-orientation='vertical']) {
+  flex: 0 0 auto;
+}
+
+// ---- Sizes — 32 / 40 / 48px outer with the track's inset + border ----------
 :host([data-size='sm']) {
-  height: 1.75rem;
+  height: 1.5rem;
   padding: 0 var(--dm-space-2);
   font-size: var(--dm-text-xs);
 }
 
 :host([data-size='md']) {
-  height: 2.125rem;
+  height: 2rem;
 }
 
 :host([data-size='lg']) {
-  height: 2.625rem;
+  height: 2.5rem;
   padding: 0 var(--dm-space-4);
   font-size: var(--dm-text-base);
 }
 
-// ---- Interaction on the unselected state -----------------------------------
+// ---- States -----------------------------------------------------------------
 :host(:hover:not([data-selected='true'], [data-disabled])) {
   color: var(--dm-fg);
   background: color-mix(in srgb, var(--dm-fg) 6%, transparent);
+}
+
+// Elastic press: the label dips while held, springs back on release. The
+// thumb is a separate element, so it keeps its shape and then glides over.
+:host(:active:not([data-disabled])) {
+  transform: scale(0.96);
+  transition-duration: var(--dm-duration-fast);
 }
 
 :host(:focus-visible) {
@@ -58,52 +78,15 @@
   opacity: 0.5;
 }
 
-// ---- Colors → generic fill vars --------------------------------------------
-// default keeps the neutral "raised chip" look; the rest fill with their
-// solid color so the selected label reads on a vivid background.
-:host([data-color='default']) {
-  --dm-toggle-fill: var(--dm-bg-elevated);
-  --dm-toggle-fill-fg: var(--dm-fg);
-
-  // The raised chip gets a hairline ring on top of the soft shadow: elevated
-  // vs the muted track is a subtle step, so the ring marks the edge on both
-  // themes without shifting layout (shadow, not border).
-  --dm-toggle-fill-shadow: 0 0 0 1px var(--dm-border), var(--dm-shadow-sm);
-}
-
-:host([data-color='primary']) {
-  --dm-toggle-fill: var(--dm-primary);
-  --dm-toggle-fill-fg: var(--dm-primary-fg);
-  --dm-toggle-fill-shadow: none;
-}
-
-:host([data-color='secondary']) {
-  --dm-toggle-fill: var(--dm-secondary);
-  --dm-toggle-fill-fg: var(--dm-secondary-fg);
-  --dm-toggle-fill-shadow: none;
-}
-
-:host([data-color='success']) {
-  --dm-toggle-fill: var(--dm-success);
-  --dm-toggle-fill-fg: var(--dm-success-fg);
-  --dm-toggle-fill-shadow: none;
-}
-
-:host([data-color='warning']) {
-  --dm-toggle-fill: var(--dm-warning);
-  --dm-toggle-fill-fg: var(--dm-warning-fg);
-  --dm-toggle-fill-shadow: none;
-}
-
-:host([data-color='danger']) {
-  --dm-toggle-fill: var(--dm-danger);
-  --dm-toggle-fill-fg: var(--dm-danger-fg);
-  --dm-toggle-fill-shadow: none;
-}
-
-// ---- Selected --------------------------------------------------------------
+// ---- Selected ---------------------------------------------------------------
+// The label color always flips. The fill is drawn by the group's sliding thumb
+// once it has measured (`data-thumbed`); until then — server render, before
+// hydration, multiple mode — the segment fills itself, so nothing ever flashes.
 :host([data-selected='true']) {
-  background: var(--dm-toggle-fill);
   color: var(--dm-toggle-fill-fg);
+}
+
+:host([data-selected='true']:not([data-thumbed])) {
+  background: var(--dm-toggle-fill);
   box-shadow: var(--dm-toggle-fill-shadow);
 }

@@ -1,4 +1,4 @@
-import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
+import { ApplicationRef, Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -187,6 +187,47 @@ describe('DmToggleGroupComponent', () => {
     create();
     expect(groupEl().getAttribute('data-orientation')).toBe('horizontal');
     expect(groupEl().getAttribute('data-size')).toBe('md');
+  });
+
+  // ---- Sliding thumb -------------------------------------------------------
+
+  /** Flushes after-render hooks (the thumb is measured in afterRenderEffect). */
+  function render(): void {
+    fixture.detectChanges();
+    TestBed.inject(ApplicationRef).tick();
+  }
+
+  it('draws the selection with one thumb in single mode and lets segments defer to it', () => {
+    create();
+    host.value.set('grid');
+    render();
+
+    const group = groupEl();
+    expect(group.querySelector('.dm-toggle-group__thumb')).not.toBeNull();
+    expect(group.hasAttribute('data-thumb')).toBe(true);
+    // Geometry is written as CSS variables on the host (jsdom measures 0px).
+    expect(group.style.getPropertyValue('--dm-tg-w')).toMatch(/px$/);
+    expect(group.style.getPropertyValue('--dm-tg-x')).toMatch(/px$/);
+    // Every segment knows the thumb owns the fill now.
+    expect(toggles().every((t) => t.hasAttribute('data-thumbed'))).toBe(true);
+  });
+
+  it('has no thumb with nothing selected, in multiple mode, or on the server-style first paint', () => {
+    create();
+    render();
+    expect(groupEl().hasAttribute('data-thumb')).toBe(false);
+    expect(toggles().some((t) => t.hasAttribute('data-thumbed'))).toBe(false);
+
+    host.value.set('list');
+    render();
+    expect(groupEl().hasAttribute('data-thumb')).toBe(true);
+
+    host.multiple.set(true);
+    host.values.set(['list']);
+    render();
+    expect(groupEl().hasAttribute('data-thumb')).toBe(false);
+    expect(toggles()[0].getAttribute('data-selected')).toBe('true');
+    expect(toggles()[0].hasAttribute('data-thumbed')).toBe(false);
   });
 
   it('honors defaults injected via TOGGLE_GROUP_DEFAULTS', () => {

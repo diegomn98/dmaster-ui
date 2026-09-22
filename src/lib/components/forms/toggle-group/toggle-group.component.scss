@@ -1,12 +1,28 @@
 @use 'mixins';
 
 // Component tokens (overridable globally or per-instance, all with fallback):
-//   --dm-toggle-track-bg   muted track behind the segments
-//   --dm-toggle-inset      padding between the track and the segments
-//   --dm-toggle-border     border color of the track
-//   --dm-toggle-radius     corner radius of the track
+//   --dm-toggle-track-bg       muted track behind the segments
+//   --dm-toggle-inset          padding between the track and the segments
+//   --dm-toggle-border         border color of the track
+//   --dm-toggle-radius         corner radius of the track
+//   --dm-toggle-segment-radius corner radius of each segment / the thumb
+//
+// Outer heights follow the field family (32 / 40 / 48px) so a group sits flush
+// next to a button or a select of the same size: segment + 2×inset + 2×border.
 
 :host {
+  // Color → generic fill vars, inherited by the thumb AND the segments.
+  // `default` keeps the neutral raised chip; the rest fill with their solid
+  // color so the selected label reads on a vivid background.
+  --dm-toggle-fill: var(--dm-bg-elevated);
+  --dm-toggle-fill-fg: var(--dm-fg);
+
+  // The raised chip gets a hairline ring on top of the soft shadow: elevated
+  // vs the muted track is a subtle step, so the ring marks the edge on both
+  // themes without shifting layout (shadow, not border).
+  --dm-toggle-fill-shadow: 0 0 0 1px var(--dm-border), var(--dm-shadow-sm);
+
+  position: relative;
   display: inline-flex;
   flex-direction: row;
   gap: 0;
@@ -16,6 +32,37 @@
   background: var(--dm-toggle-track-bg, var(--dm-bg-muted));
   font-family: var(--dm-font-sans);
   vertical-align: middle;
+  isolation: isolate;
+}
+
+:host([data-color='primary']) {
+  --dm-toggle-fill: var(--dm-primary);
+  --dm-toggle-fill-fg: var(--dm-primary-fg);
+  --dm-toggle-fill-shadow: var(--dm-shadow-sm);
+}
+
+:host([data-color='secondary']) {
+  --dm-toggle-fill: var(--dm-secondary);
+  --dm-toggle-fill-fg: var(--dm-secondary-fg);
+  --dm-toggle-fill-shadow: var(--dm-shadow-sm);
+}
+
+:host([data-color='success']) {
+  --dm-toggle-fill: var(--dm-success);
+  --dm-toggle-fill-fg: var(--dm-success-fg);
+  --dm-toggle-fill-shadow: var(--dm-shadow-sm);
+}
+
+:host([data-color='warning']) {
+  --dm-toggle-fill: var(--dm-warning);
+  --dm-toggle-fill-fg: var(--dm-warning-fg);
+  --dm-toggle-fill-shadow: var(--dm-shadow-sm);
+}
+
+:host([data-color='danger']) {
+  --dm-toggle-fill: var(--dm-danger);
+  --dm-toggle-fill-fg: var(--dm-danger-fg);
+  --dm-toggle-fill-shadow: var(--dm-shadow-sm);
 }
 
 :host([data-orientation='vertical']) {
@@ -28,8 +75,47 @@
   width: 100%;
 }
 
-:host([data-disabled='true']),
 :host([aria-disabled='true']) {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+// ---- Sliding thumb (single mode) -------------------------------------------
+// One element that glides and resizes to sit under the selected segment. Its
+// geometry comes from CSS variables the component writes after each render.
+// Hidden until measured — on the server and before hydration the selected
+// segment draws its own fill instead (see toggle.component.scss).
+
+.dm-toggle-group__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: var(--dm-tg-w, 0);
+  height: var(--dm-tg-h, 0);
+  background: var(--dm-toggle-fill);
+  border-radius: var(--dm-toggle-segment-radius, calc(var(--dm-radius-md) - 0.1875rem));
+  box-shadow: var(--dm-toggle-fill-shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--dm-tg-x, 0), var(--dm-tg-y, 0));
+  transition: opacity var(--dm-duration-fast) var(--dm-ease-out);
+}
+
+:host([data-thumb]) .dm-toggle-group__thumb {
+  opacity: 1;
+}
+
+// The slide is enabled one frame after the first geometry painted, so the
+// thumb appears in place instead of travelling in from the corner.
+:host([data-thumb-ready]) .dm-toggle-group__thumb {
+  transition:
+    transform var(--dm-duration-base) var(--dm-ease-snappy),
+    width var(--dm-duration-base) var(--dm-ease-snappy),
+    height var(--dm-duration-base) var(--dm-ease-snappy),
+    opacity var(--dm-duration-fast) var(--dm-ease-out);
+
+  @include mixins.reduced-motion {
+    transition: opacity var(--dm-duration-fast) var(--dm-ease-out);
+  }
 }

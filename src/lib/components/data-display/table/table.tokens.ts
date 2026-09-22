@@ -12,6 +12,8 @@ export interface DmTableDefaults {
   pageSize: number;
   /** Options offered by the rows-per-page selector in the footer. */
   pageSizeOptions: number[];
+  /** Async mode (`loadFn`): quiet milliseconds before the search term is sent to the server. */
+  searchDebounceMs: number;
 }
 
 export const DM_TABLE_FALLBACK_DEFAULTS: DmTableDefaults = {
@@ -21,6 +23,7 @@ export const DM_TABLE_FALLBACK_DEFAULTS: DmTableDefaults = {
   sticky: false,
   pageSize: 0,
   pageSizeOptions: [10, 25, 50],
+  searchDebounceMs: 250,
 };
 
 /** Injection token holding the defaults every `dm-table` starts from. */

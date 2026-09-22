@@ -47,6 +47,7 @@ const TOKEN_COLORS = new Set(['primary', 'secondary', 'success', 'warning', 'dan
     '[style.color]': 'cssColor()',
     '[style.--dm-icon-fill]': 'fill() ? 1 : 0',
     '[style.--dm-icon-weight]': 'weight()',
+    '[style.--dm-icon-opsz]': 'opticalSize()',
   },
 })
 export class DmIconComponent {
@@ -95,6 +96,25 @@ export class DmIconComponent {
       return '2rem';
     }
     return toCssSize(size) ?? '1.5rem';
+  });
+
+  /**
+   * Font mode: the Material Symbols `opsz` axis, matched to the rendered size
+   * (20–48) so small icons keep legible strokes and large ones stay crisp.
+   * Only sizes that resolve to pixels are mapped; `em`/`%` fall back to 24.
+   */
+  protected readonly opticalSize = computed<number | null>(() => {
+    const size = this.size();
+    let px: number | null = null;
+    if (size === 'sm') px = 16;
+    else if (size === 'md') px = 24;
+    else if (size === 'lg') px = 32;
+    else if (typeof size === 'number') px = size;
+    else {
+      const m = /^(\d*\.?\d+)(px|rem)$/.exec(size.trim());
+      if (m) px = parseFloat(m[1]) * (m[2] === 'rem' ? 16 : 1);
+    }
+    return px === null ? null : Math.min(48, Math.max(20, Math.round(px)));
   });
 
   protected readonly cssColor = computed(() => {

@@ -543,7 +543,28 @@
   transform: rotate(180deg);
 }
 
-// ---- Empty state -----------------------------------------------------------
+// ---- Refreshing (async) ----------------------------------------------------
+// A later page fetch keeps the current rows on screen and dims them instead of
+// flashing the skeleton, so the table never jumps while the server answers.
+// The dim waits 150ms: a fast response never flickers.
+
+.dm-table__body {
+  @include mixins.transition(opacity);
+}
+
+.dm-table__body[data-refreshing],
+.dm-table__viewport[data-refreshing] {
+  pointer-events: none;
+  opacity: 0.5;
+  transition-delay: 150ms;
+}
+
+// ---- Empty / error states ----------------------------------------------------
+
+.dm-table__empty--error .dm-table__empty-icon {
+  color: var(--dm-danger);
+  opacity: 1;
+}
 
 .dm-table__empty-cell {
   padding: 0;
@@ -692,6 +713,8 @@
   display: block;
   width: 100%;
   overflow-x: auto;
+
+  @include mixins.transition(opacity);
 
   .dm-table__vrow:last-child {
     border-bottom: 0;

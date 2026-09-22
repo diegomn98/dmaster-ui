@@ -20,9 +20,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   groups them with wrapping layout, roving-tabindex keyboard and optional
   `single`/`multiple` selection (CVA). Fully token-pure and WCAG-2.1-AA
   accessible (`role="group"` + `aria-pressed`, no nested buttons).
+- **`dm-table` — server-side pagination via `loadFn`.** Pass
+  `[loadFn]="({ page, pageSize, query, sort }) => Observable<{ items, total }>"`
+  instead of `data` and the table becomes server-driven — the same contract as
+  `dm-select`'s async mode: search (debounced by `searchDebounceMs`), sort,
+  page and page size all round-trip to the API one page at a time through
+  `rxResource`, so a superseded request is cancelled. The skeleton shows only
+  for the first fetch; later pages keep the current rows on screen, dimmed
+  after a 150 ms grace period, until the new page lands. A failed request shows
+  an error state (`loadErrorText`, `role="alert"`) with a retry button
+  (`retryLabel`), emits `(loadError)` and never auto-retries. Selection works
+  across pages (`selectionChange` resolves rows loaded earlier). New public
+  `reload()` re-fetches the current page after a mutation; `data` is no longer
+  required. Types: `DmTableLoadFn`, `DmTableLoadParams`, `DmTableLoadResult`.
+  Docs: a live "Server-side pagination" demo with a request readout, a Reload
+  button and a "fail next request" button that shows the error state.
 
 ### Changed
 
+- **`dm-toast` — queue, pause-on-hover, swipe, `promise()` and animated exit.**
+  The service now owns a real queue: at most `maxVisible` toasts (default 4)
+  show at once and the rest wait, each timer starting only when its toast
+  appears. Hovering or focusing the stack **pauses** every auto-dismiss timer
+  (`pause()` / `resume()`) so a toast never vanishes mid-read, and a toast can
+  be **swiped away** with the pointer. Dismissed toasts now play an **exit
+  animation** and the stack folds its row instead of jumping. New
+  `loading(message)` (a spinner variant), `promise(input, { loading, success,
+error })` that tracks a Promise **or** Observable in one toast (updating it in
+  place from spinner to success/danger), and `DmToastRef.update(patch)` to
+  change a live toast (a new `duration` restarts its timer). Danger toasts are
+  announced as `role="alert"`; the surface gains a hairline ring
+  (`--dm-toast-border`) so a light toast reads over a light page. Position-aware
+  motion (the stack enters from and leaves toward its anchored edge). Docs page:
+  a `promise()` demo and hints for the pause/swipe behaviour.
+- **`dm-toggle-group`** — the selection now moves. In single mode one sliding
+  thumb glides and resizes between segments (`--dm-ease-snappy`, both
+  orientations, `fullWidth`, re-measured on resize / font load via
+  `ResizeObserver`); the segment fills itself only while there is no thumb —
+  server render, before hydration, multiple mode — so the prerendered HTML
+  already shows the selection and nothing flashes, and the first paint never
+  slides in. Pressed segments dip their label and spring back. Outer heights
+  are now **32 / 40 / 48 px** (were 36 / 42 / 50) so a group sits flush next
+  to a button or a field of the same size. Docs page reworked: a view switcher
+  that switches a live list / grid / table, a formatting toolbar that formats
+  a sentence, icon + icon-only segments, sizes next to matching buttons,
+  full-width + vertical, and a pricing composition with a monthly / yearly
+  switch.
+- **`dm-icon`** — optical precision and motion with intent. The Material
+  Symbols `opsz` axis now follows the rendered size (16px → 20 … capped at 48)
+  so small icons keep legible strokes; `fill`, `weight` and `color` transition
+  on the motion tokens (a heart fills in instead of snapping); and the host is
+  `vertical-align: middle`, so a `size="1em"` icon sits on the x-height of
+  running text. Docs page: inline-with-text, a like / save button that morphs
+  its fill, and icons in buttons (leading, trailing, icon-only).
 - **`dm-button-group`** — segment states designed for a rigid bar. Inside a
   group the standalone button's opacity dim (near-invisible on flat fills) and
   elastic scale (would deform the bar) are replaced by fill-based feedback:

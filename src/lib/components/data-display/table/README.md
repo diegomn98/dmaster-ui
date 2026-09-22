@@ -2,7 +2,7 @@
 
 A premium, data-driven table with a declarative column API. Out of the box it **searches, sorts, selects and paginates** — all internally, all controllable through two-way models. It renders native `<table>` / `<caption>` / `<thead>` / `<tbody>` / `<th scope="col">` markup and exposes `aria-sort`, `aria-selected` and `aria-busy`, so assistive tech gets the real thing. Selection composes `dm-checkbox`; the loading state composes `dm-skeleton`.
 
-`data` is always the **full dataset** — the table derives the visible rows via a `filter → sort → paginate` pipeline. For server-side data set `[manualProcessing]="true"` and feed already filtered/sorted/paged rows in; the table then only renders and emits events.
+`data` is always the **full dataset** — the table derives the visible rows via a `filter → sort → paginate` pipeline. For server-side data give it a **`loadFn`** instead (see [Server-side pagination](#server-side-pagination-loadfn)): the table asks the server for one page at a time. `manualProcessing` remains as the low-level escape hatch — feed already filtered/sorted/paged rows in and the table only renders and emits events.
 
 ## Usage
 
@@ -41,31 +41,37 @@ readonly columns: DmTableColumn<User>[] = [
 
 ## API
 
-| Input              | Type                                       | Default         | Description                                                      |
-| ------------------ | ------------------------------------------ | --------------- | ---------------------------------------------------------------- |
-| `columns`          | `DmTableColumn<T>[]` _(required)_          | —               | Column definitions.                                              |
-| `data`             | `T[]` _(required)_                         | —               | The **full** dataset — the table derives visible rows.           |
-| `rowKey`           | `(row: T, i: number) => string \| number`  | `index`         | Row identity for `trackBy` and selection.                        |
-| `searchable`       | `boolean`                                  | `false`         | Show the search box and filter rows by the term.                 |
-| `searchTerm`       | `model<string>`                            | `''`            | Two-way search term.                                             |
-| `selectionMode`    | `'none' \| 'single' \| 'multiple'`         | `'none'`        | Row-selection behaviour.                                         |
-| `selectedKeys`     | `model<(string \| number)[]>`              | `[]`            | Two-way array of selected row keys.                              |
-| `pageSize`         | `model<number>`                            | `0`             | Rows per page; `0` disables pagination.                          |
-| `page`             | `model<number>`                            | `1`             | 1-indexed current page (two-way).                                |
-| `pageSizeOptions`  | `number[]`                                 | `[10, 25, 50]`  | Options for the rows-per-page selector.                          |
-| `loading`          | `boolean`                                  | `false`         | Show a skeleton loading state.                                   |
-| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Cell padding scale.                                              |
-| `variant`          | `'default' \| 'striped' \| 'bordered'`     | `'default'`     | Visual variant.                                                  |
-| `hover`            | `boolean`                                  | `true`          | Highlight the row under the pointer.                             |
-| `sticky`           | `boolean`                                  | `false`         | Pin the header; the body scrolls inside `--dm-table-max-height`. |
-| `virtualScroll`    | `boolean`                                  | `false`         | Virtualize rows (see [Virtual scroll](#virtual-scroll)).         |
-| `rowHeight`        | `number`                                   | `44`            | Fixed row height (px) used as the viewport `itemSize`.           |
-| `viewportHeight`   | `string`                                   | `'24rem'`       | CSS height of the scroll viewport in virtual mode.               |
-| `caption`          | `string`                                   | `''`            | Table title: shown in the toolbar, exposed as the `<caption>`.   |
-| `ariaLabel`        | `string`                                   | `''`            | Applied to the `<table>`.                                        |
-| `sortState`        | `model<DmTableSortState \| null>`          | `null`          | Two-way sort state.                                              |
-| `manualProcessing` | `boolean`                                  | `false`         | Disable internal filter/sort/paginate (server-side).             |
-| `totalItems`       | `number \| null`                           | `null`          | Total count for the footer in manual mode.                       |
+| Input              | Type                                       | Default                 | Description                                                                   |
+| ------------------ | ------------------------------------------ | ----------------------- | ----------------------------------------------------------------------------- |
+| `columns`          | `DmTableColumn<T>[]` _(required)_          | —                       | Column definitions.                                                           |
+| `data`             | `T[]`                                      | `[]`                    | The **full** dataset — the table derives visible rows. Ignored with `loadFn`. |
+| `rowKey`           | `(row: T, i: number) => string \| number`  | `index`                 | Row identity for `trackBy` and selection.                                     |
+| `searchable`       | `boolean`                                  | `false`                 | Show the search box and filter rows by the term.                              |
+| `searchTerm`       | `model<string>`                            | `''`                    | Two-way search term.                                                          |
+| `selectionMode`    | `'none' \| 'single' \| 'multiple'`         | `'none'`                | Row-selection behaviour.                                                      |
+| `selectedKeys`     | `model<(string \| number)[]>`              | `[]`                    | Two-way array of selected row keys.                                           |
+| `pageSize`         | `model<number>`                            | `0`                     | Rows per page; `0` disables pagination.                                       |
+| `page`             | `model<number>`                            | `1`                     | 1-indexed current page (two-way).                                             |
+| `pageSizeOptions`  | `number[]`                                 | `[10, 25, 50]`          | Options for the rows-per-page selector.                                       |
+| `loading`          | `boolean`                                  | `false`                 | Show a skeleton loading state.                                                |
+| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`         | Cell padding scale.                                                           |
+| `variant`          | `'default' \| 'striped' \| 'bordered'`     | `'default'`             | Visual variant.                                                               |
+| `hover`            | `boolean`                                  | `true`                  | Highlight the row under the pointer.                                          |
+| `sticky`           | `boolean`                                  | `false`                 | Pin the header; the body scrolls inside `--dm-table-max-height`.              |
+| `virtualScroll`    | `boolean`                                  | `false`                 | Virtualize rows (see [Virtual scroll](#virtual-scroll)).                      |
+| `rowHeight`        | `number`                                   | `44`                    | Fixed row height (px) used as the viewport `itemSize`.                        |
+| `viewportHeight`   | `string`                                   | `'24rem'`               | CSS height of the scroll viewport in virtual mode.                            |
+| `caption`          | `string`                                   | `''`                    | Table title: shown in the toolbar, exposed as the `<caption>`.                |
+| `ariaLabel`        | `string`                                   | `''`                    | Applied to the `<table>`.                                                     |
+| `sortState`        | `model<DmTableSortState \| null>`          | `null`                  | Two-way sort state.                                                           |
+| `manualProcessing` | `boolean`                                  | `false`                 | Disable internal filter/sort/paginate (server-side).                          |
+| `totalItems`       | `number \| null`                           | `null`                  | Total count for the footer in manual mode.                                    |
+| `loadFn`           | `DmTableLoadFn<T> \| null`                 | `null`                  | Server-side mode: fetch one page (see below). `data` is ignored.              |
+| `searchDebounceMs` | `number`                                   | `250`                   | Async: quiet ms before the search term is sent to the server.                 |
+| `loadErrorText`    | `string`                                   | `'Could not load rows'` | Async: message of the error state.                                            |
+| `retryLabel`       | `string`                                   | `'Retry'`               | Async: label of the retry button.                                             |
+
+Methods: `reload()` — async mode: fetch the current page again (after a mutation, or to retry a failed request).
 
 Copy inputs (the library ships no baked-in text — override for i18n): `searchPlaceholder`, `emptyText`, `noResultsText`, `rangeLabel`, `pageLabel`, `selectedLabel`, `rowsPerPageLabel`, `clearSelectionLabel`, `selectRowLabel`, `selectAllLabel`, `firstPageLabel`, `prevPageLabel`, `nextPageLabel`, `lastPageLabel`.
 
@@ -76,6 +82,9 @@ Copy inputs (the library ships no baked-in text — override for i18n): `searchP
 | `sortChange`      | `DmTableSortState \| null`  | The sort changes.                         |
 | `pageChange`      | `DmTablePageState`          | The page or page size changes.            |
 | `searchChange`    | `string`                    | The search term changes.                  |
+| `loadError`       | `unknown`                   | A page request failed (async mode).       |
+
+Types: `DmTableColumn<T>`, `DmTableSortState`, `DmTablePageState`, `DmTableLoadFn<T>`, `DmTableLoadParams`, `DmTableLoadResult<T>` (`{ items, total }`).
 
 Content projection: place any element with the `dmTableActions` attribute to render it on the right of the toolbar (e.g. an “Export” or “Invite” button).
 
@@ -142,6 +151,48 @@ providers: [
 ```
 
 Or provide `TABLE_DEFAULTS` directly.
+
+## Server-side pagination (`loadFn`)
+
+Give the table a `loadFn` instead of `data` and it becomes **server-driven**: search, sort, page and page size all round-trip to your API, one page at a time. The function receives `{ page, pageSize, query, sort }` (`page` is 1-indexed, like `[(page)]`) and returns an `Observable<{ items, total }>` — so it works directly with `HttpClient`. Under the hood it is Angular's `rxResource`: a request superseded by typing, paging or sorting is cancelled, never raced. Same contract as `dm-select`'s async mode.
+
+```ts
+import { DmTableLoadFn } from '@dmaster/ui';
+
+loadUsers: DmTableLoadFn<User> = ({ page, pageSize, query, sort }) =>
+  this.http
+    .get<{ data: User[]; total: number }>('/api/users', {
+      params: { page, pageSize, q: query, sort: sort ? `${sort.column}:${sort.direction}` : '' },
+    })
+    .pipe(map((res) => ({ items: res.data, total: res.total })));
+```
+
+```html
+<dm-table
+  #users
+  [loadFn]="loadUsers"
+  [columns]="columns"
+  [rowKey]="byId"
+  [pageSize]="20"
+  [searchable]="true"
+  selectionMode="multiple"
+  [(selectedKeys)]="selected"
+  (loadError)="toast.danger('Could not load users')"
+/>
+
+<dm-button (clicked)="users.reload()">Refresh</dm-button>
+```
+
+What the table does for you:
+
+- **Search** is debounced (`searchDebounceMs`, 250 ms) and sent as `query`; the page resets to 1 in the same request, so a keystroke never fetches the old query. Clearing the box refetches immediately.
+- **Sort** and **page size** changes reset to page 1 too, so you never land past the end.
+- **No flashing**: the skeleton shows only for the first fetch. Later pages keep the current rows on screen — dimmed after a 150 ms grace period, so a fast server never flickers — until the new page lands (`aria-busy` throughout).
+- **Errors** replace the body with an error state (`role="alert"`, `loadErrorText`) and a **retry** button (`retryLabel`) that calls `reload()`; `(loadError)` fires with the error so you can toast it. A failed request never auto-retries.
+- **Selection** works across pages: select-all covers the loaded page, and `selectionChange` resolves rows selected on earlier pages (the table remembers every row it has loaded, by `rowKey` — so give it a stable one).
+- `reload()` re-fetches the current page — call it after a mutation.
+
+`total` is the full match count across every page; it drives the footer range and the page count. `manualProcessing` is still there for the fully manual variant (you own the fetching and hand the table the current page plus `totalItems`).
 
 ## Layout
 
@@ -218,6 +269,7 @@ Virtual mode needs the CDK **scrolling** structural styles. These ship **inside 
 - Sortable columns expose `aria-sort`; selected rows expose `aria-selected`; the table sets `aria-busy` while loading.
 - The search box is a real `<input type="search">`; selection checkboxes and pager buttons carry descriptive, overridable ARIA labels.
 - All controls are real `<button>` / `<input>` elements — keyboard-activatable with focus rings.
+- Async mode: the table is `aria-busy` while a request is in flight, and a failed request renders a `role="alert"` block with a real retry button.
 
 ## Design tokens
 

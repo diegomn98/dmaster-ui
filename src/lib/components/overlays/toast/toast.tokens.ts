@@ -19,6 +19,11 @@ export interface DmToastDefaults {
    * first toast creates it — later changes have no effect.
    */
   position: DmToastPosition;
+  /**
+   * How many toasts are on screen at once. Further toasts wait in a queue and
+   * appear (their timer starting then) as slots free up.
+   */
+  maxVisible: number;
 }
 
 export const DM_TOAST_FALLBACK_DEFAULTS: DmToastDefaults = {
@@ -26,6 +31,7 @@ export const DM_TOAST_FALLBACK_DEFAULTS: DmToastDefaults = {
   dismissible: true,
   dismissLabel: 'Dismiss',
   position: 'bottom-right',
+  maxVisible: 4,
 };
 
 /** Injection token holding the defaults `DmToastService` starts from. */

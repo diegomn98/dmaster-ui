@@ -1,91 +1,119 @@
-<div class="dm-toasts">
-  @for (toast of service.toasts(); track toast.id) {
-    <div class="dm-toast" [attr.data-variant]="toast.variant" role="status">
-      <span class="dm-toast__icon" aria-hidden="true">
-        @switch (toast.variant) {
-          @case ('success') {
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+<!-- Hovering or focusing the stack freezes every auto-dismiss timer. -->
+<div
+  class="dm-toasts"
+  (pointerenter)="onPointerEnter()"
+  (pointerleave)="onPointerLeave()"
+  (focusin)="onFocusIn()"
+  (focusout)="onFocusOut($event)"
+>
+  @for (item of rendered(); track item.data.id) {
+    <!-- The item folds its row to 0 while the toast plays its exit, so the
+         stack reflows instead of jumping. -->
+    <div class="dm-toasts__item" [attr.data-leaving]="item.leaving ? '' : null">
+      <div
+        class="dm-toast"
+        [attr.data-variant]="item.data.variant"
+        [attr.data-leaving]="item.leaving ? '' : null"
+        [attr.role]="item.data.variant === 'danger' ? 'alert' : 'status'"
+        (pointerdown)="onPointerDown($event, item.data)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointercancel)="onPointerCancel($event)"
+        (animationend)="onAnimationEnd($event, item.data.id)"
+      >
+        <span class="dm-toast__icon" aria-hidden="true">
+          @switch (item.data.variant) {
+            @case ('success') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="m8.5 12.5 2.4 2.4 4.6-5.3" />
+              </svg>
+            }
+            @case ('warning') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 3 2 20h20L12 3Z" />
+                <path d="M12 10v4m0 3.5v.01" />
+              </svg>
+            }
+            @case ('danger') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="m9.4 9.4 5.2 5.2m0-5.2-5.2 5.2" />
+              </svg>
+            }
+            @case ('loading') {
+              <dm-spinner size="1rem" />
+            }
+            @default {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 11v5m0-8v.01" />
+              </svg>
+            }
           }
-          @case ('warning') {
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 3 2 20h20L12 3Zm0 7v4m0 3.5v.5" />
-            </svg>
+        </span>
+
+        <div class="dm-toast__body">
+          @if (item.data.title) {
+            <span class="dm-toast__title">{{ item.data.title }}</span>
           }
-          @case ('danger') {
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 8v4m0 4v.01" />
-            </svg>
-          }
-          @default {
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 11v5m0-8v.01" />
-            </svg>
-          }
+          <span class="dm-toast__message">{{ item.data.message }}</span>
+        </div>
+
+        @if (item.data.action; as action) {
+          <button type="button" class="dm-toast__action" (click)="runAction(item.data)">
+            {{ action.label }}
+          </button>
         }
-      </span>
 
-      <div class="dm-toast__body">
-        @if (toast.title) {
-          <span class="dm-toast__title">{{ toast.title }}</span>
-        }
-        <span class="dm-toast__message">{{ toast.message }}</span>
-      </div>
-
-      @if (toast.action; as action) {
-        <button type="button" class="dm-toast__action" (click)="runAction(toast)">
-          {{ action.label }}
-        </button>
-      }
-
-      @if (toast.dismissible) {
-        <button
-          type="button"
-          class="dm-toast__dismiss"
-          [attr.aria-label]="defaults.dismissLabel"
-          (click)="service.dismiss(toast.id)"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
+        @if (item.data.dismissible) {
+          <button
+            type="button"
+            class="dm-toast__dismiss"
+            [attr.aria-label]="defaults.dismissLabel"
+            (click)="service.dismiss(item.data.id)"
           >
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
-        </button>
-      }
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        }
+      </div>
     </div>
   }
 </div>

@@ -118,7 +118,7 @@
       [style.--dm-table-cols]="gridTemplate()"
       [attr.aria-label]="ariaLabel() || null"
       [attr.aria-labelledby]="!ariaLabel() && caption() ? captionId : null"
-      [attr.aria-busy]="loading() ? 'true' : null"
+      [attr.aria-busy]="isBusy() ? 'true' : null"
     >
       @if (caption()) {
         <div [id]="captionId" class="dm-table__caption dm-table__caption--grid">
@@ -171,7 +171,7 @@
         </div>
       </div>
 
-      @if (loading()) {
+      @if (showSkeleton()) {
         <div class="dm-table__vbody" role="rowgroup">
           @for (r of skeletonRows(); track r) {
             <div
@@ -191,6 +191,32 @@
               }
             </div>
           }
+        </div>
+      } @else if (hasLoadError()) {
+        <div class="dm-table__vbody" role="rowgroup">
+          <div class="dm-table__vrow dm-table__vrow--empty" role="row">
+            <div class="dm-table__empty-cell" role="cell">
+              <div class="dm-table__empty dm-table__empty--error" role="alert">
+                <svg
+                  class="dm-table__empty-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8v4M12 16h.01" />
+                </svg>
+                <p class="dm-table__empty-text">{{ loadErrorText() }}</p>
+                <dm-button size="sm" variant="bordered" (clicked)="reload()">
+                  {{ retryLabel() }}
+                </dm-button>
+              </div>
+            </div>
+          </div>
         </div>
       } @else if (isEmpty()) {
         <div class="dm-table__vbody" role="rowgroup">
@@ -235,6 +261,7 @@
           [itemSize]="rowHeight()"
           [style.height]="viewportHeight()"
           [attr.data-revealing]="revealing() ? '' : null"
+          [attr.data-refreshing]="refreshing() ? '' : null"
           (scroll)="onViewportScroll()"
           (animationend)="onRowsAnimationEnd($event)"
         >
@@ -300,7 +327,7 @@
       <table
         class="dm-table__table"
         [attr.aria-label]="ariaLabel() || null"
-        [attr.aria-busy]="loading() ? 'true' : null"
+        [attr.aria-busy]="isBusy() ? 'true' : null"
       >
         @if (caption()) {
           <caption class="dm-table__caption">
@@ -355,9 +382,10 @@
         <tbody
           class="dm-table__body"
           [attr.data-revealing]="revealing() ? '' : null"
+          [attr.data-refreshing]="refreshing() ? '' : null"
           (animationend)="onRowsAnimationEnd($event)"
         >
-          @if (loading()) {
+          @if (showSkeleton()) {
             @for (r of skeletonRows(); track r) {
               <tr class="dm-table__tr dm-table__tr--skeleton">
                 @if (hasSelection()) {
@@ -372,6 +400,30 @@
                 }
               </tr>
             }
+          } @else if (hasLoadError()) {
+            <tr>
+              <td [attr.colspan]="colspan()" class="dm-table__empty-cell">
+                <div class="dm-table__empty dm-table__empty--error" role="alert">
+                  <svg
+                    class="dm-table__empty-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 8v4M12 16h.01" />
+                  </svg>
+                  <p class="dm-table__empty-text">{{ loadErrorText() }}</p>
+                  <dm-button size="sm" variant="bordered" (clicked)="reload()">
+                    {{ retryLabel() }}
+                  </dm-button>
+                </div>
+              </td>
+            </tr>
           } @else if (isEmpty()) {
             <tr>
               <td [attr.colspan]="colspan()" class="dm-table__empty-cell">

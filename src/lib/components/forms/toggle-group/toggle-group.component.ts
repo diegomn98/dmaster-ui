@@ -1,9 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import {
+  afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  ElementRef,
   forwardRef,
   inject,
   input,
@@ -26,8 +30,10 @@ import type { DmToggleComponent } from './toggle.component';
  *
  * - **single** (default) — behaves like a radio group: one active segment,
  *   `[(value)]`, `role="radiogroup"` with a roving-tabindex arrow-key model.
+ *   The selection is drawn by ONE sliding thumb that glides between segments.
  * - **multiple** (bare `multiple` attribute) — independent on/off toggles,
- *   `[(values)]` (an array), `role="group"` with `aria-pressed` buttons.
+ *   `[(values)]` (an array), `role="group"` with `aria-pressed` buttons; each
+ *   pressed segment fills on its own.
  *
  * Both models are separate so switching to `multiple` never rewrites the
  * single `value`. Integrates with Angular forms via `ControlValueAccessor`
@@ -68,11 +74,15 @@ import type { DmToggleComponent } from './toggle.component';
     '[attr.data-size]': 'size()',
     '[attr.data-color]': 'color()',
     '[attr.data-full-width]': 'fullWidth() ? "true" : null',
+    '[attr.data-thumb]': 'hasThumb() ? "" : null',
+    '[attr.data-thumb-ready]': 'thumbReady() ? "" : null',
   },
 })
 export class DmToggleGroupComponent implements ControlValueAccessor {
   private readonly defaults = inject(TOGGLE_GROUP_DEFAULTS);
   private readonly document = inject(DOCUMENT);
+  private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   /** Multi-select mode: independent toggles instead of one exclusive choice. */
   readonly multiple = input(false, { transform: booleanAttribute });
@@ -107,14 +117,85 @@ export class DmToggleGroupComponent implements ControlValueAccessor {
   private readonly cvaDisabled = signal(false);
   readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
 
+  /**
+   * True once the sliding thumb has been measured onto the selected segment
+   * (single mode, browser only). While false — server render, multiple mode,
+   * nothing selected — each segment draws its own fill, so the prerendered
+   * HTML already shows the selection and hydration never flashes.
+   */
+  readonly hasThumb = signal(false);
+
+  /** Set one frame after the first geometry painted, so the thumb never slides in from 0. */
+  protected readonly thumbReady = signal(false);
+
+  /** Bumped by the ResizeObserver so the thumb re-measures on resize / font load. */
+  private readonly resizeTick = signal(0);
+  private resizeObserver: ResizeObserver | undefined;
+
   private onChange: (value: unknown) => void = () => undefined;
   private onTouched: () => void = () => undefined;
+
+  constructor() {
+    // Re-position the thumb after every render that can move the selected
+    // segment: selection, mode, layout inputs, (un)registration, resize.
+    afterRenderEffect(() => {
+      this.value();
+      this.multiple();
+      this.orientation();
+      this.size();
+      this.fullWidth();
+      this._registeredToggles();
+      this.resizeTick();
+      this.positionThumb();
+    });
+
+    // Segment widths change without a signal (font load, container resize,
+    // a label switching language) — observe the track and every segment.
+    afterNextRender(() => {
+      const win = this.document.defaultView;
+      if (!win?.ResizeObserver) return;
+      this.resizeObserver = new win.ResizeObserver(() => this.resizeTick.update((n) => n + 1));
+      this.resizeObserver.observe(this.hostRef.nativeElement);
+      this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
+      this.resizeTick.update((n) => n + 1);
+    });
+  }
+
+  /** Measures the selected segment and writes the thumb geometry as CSS variables. */
+  private positionThumb(): void {
+    const selected = this.multiple()
+      ? undefined
+      : this._registeredToggles().find((t) => t.selected());
+    if (!selected) {
+      this.hasThumb.set(false);
+      return;
+    }
+    for (const toggle of this._registeredToggles()) {
+      this.resizeObserver?.observe(toggle.hostElement);
+    }
+    // Offsets are relative to the group's padding box (the host is positioned),
+    // which is also where the absolutely positioned thumb originates.
+    const el = selected.hostElement;
+    const style = this.hostRef.nativeElement.style;
+    style.setProperty('--dm-tg-x', `${el.offsetLeft}px`);
+    style.setProperty('--dm-tg-y', `${el.offsetTop}px`);
+    style.setProperty('--dm-tg-w', `${el.offsetWidth}px`);
+    style.setProperty('--dm-tg-h', `${el.offsetHeight}px`);
+    if (!this.hasThumb()) {
+      this.hasThumb.set(true);
+      if (!this.thumbReady()) {
+        const win = this.document.defaultView;
+        if (win) win.requestAnimationFrame(() => this.thumbReady.set(true));
+      }
+    }
+  }
 
   register(toggle: DmToggleComponent): void {
     this._registeredToggles.update((toggles) => [...toggles, toggle]);
   }
 
   unregister(toggle: DmToggleComponent): void {
+    this.resizeObserver?.unobserve(toggle.hostElement);
     this._registeredToggles.update((toggles) => toggles.filter((t) => t !== toggle));
   }
 
