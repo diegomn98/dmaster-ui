@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-11-16
+
+### Changed
+
+- **Published with npm trusted publishing.** Releases now go to npm from the
+  `dmaster-ui` repository's GitHub workflow over OIDC, with no long-lived npm
+  token; the signed provenance attestation comes from that trusted publisher.
+  No API, runtime or packaging change — the package is the same as 0.12.0.
+
 ## [0.12.0] - 2026-11-16
 
 ### Added
@@ -907,6 +916,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.12.1]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.3...v0.11.0
 [0.10.3]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.2...v0.10.3
