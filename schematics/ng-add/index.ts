@@ -300,7 +300,7 @@ function logNextSteps(context: SchematicContext, options: NgAddOptions): void {
     '',
     'Optional next step — configure the global defaults in app.config.ts:',
     '',
-    "  import { provideDmasterUI } from '@dmaster/ui';",
+    "  import { provideDmasterUI } from '@dmaster/ui/core';",
     '',
     '  export const appConfig: ApplicationConfig = {',
     '    providers: [',

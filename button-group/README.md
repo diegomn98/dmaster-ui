@@ -1,5 +1,9 @@
 # dm-button-group
 
+```ts
+import { DmButtonGroupComponent } from '@dmaster/ui/button-group';
+```
+
 Joins a row (or column) of `<dm-button>`s into one attached control: outer
 corners keep the pill radius, inner corners flatten, and the group draws a
 subtle 1px seam between segments (bordered buttons collapse their shared

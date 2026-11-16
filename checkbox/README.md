@@ -1,5 +1,9 @@
 # Checkbox (`dm-checkbox`)
 
+```ts
+import { DmCheckboxComponent } from '@dmaster/ui/checkbox';
+```
+
 Checkbox built on a real native `<input type="checkbox">` (form semantics intact) with a custom box. Supports indeterminate and Angular forms via `ControlValueAccessor`.
 
 ```html

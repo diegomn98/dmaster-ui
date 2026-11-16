@@ -5,7 +5,7 @@ Contextual feedback banner with a color × variant API, a semantic icon per colo
 ## Usage
 
 ```ts
-import { DmAlertComponent } from '@dmaster/ui';
+import { DmAlertComponent } from '@dmaster/ui/alert';
 ```
 
 ```html

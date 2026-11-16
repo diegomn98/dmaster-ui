@@ -5,7 +5,7 @@ Page navigation with a windowed list of page numbers: boundary pages at the extr
 ## Usage
 
 ```ts
-import { DmPaginationComponent } from '@dmaster/ui';
+import { DmPaginationComponent } from '@dmaster/ui/pagination';
 ```
 
 ```html

@@ -5,7 +5,7 @@ Linear progress bar with an optional label row, determinate and indeterminate mo
 ## Usage
 
 ```ts
-import { DmProgressComponent } from '@dmaster/ui';
+import { DmProgressComponent } from '@dmaster/ui/progress';
 ```
 
 ```html

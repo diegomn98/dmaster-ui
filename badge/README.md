@@ -1,5 +1,9 @@
 # Badge / Chip (`dm-badge`)
 
+```ts
+import { DmBadgeComponent } from '@dmaster/ui/badge';
+```
+
 Status label / chip with a **color × variant** API. No logic, pure theming.
 
 ```html

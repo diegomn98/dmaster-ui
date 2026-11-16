@@ -9,7 +9,7 @@ plain text.
 ## Usage
 
 ```ts
-import { DmBreadcrumbsComponent, DmBreadcrumbItemComponent } from '@dmaster/ui';
+import { DmBreadcrumbsComponent, DmBreadcrumbItemComponent } from '@dmaster/ui/breadcrumbs';
 ```
 
 ```html

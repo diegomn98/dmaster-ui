@@ -7,7 +7,7 @@ its header is activated.
 ## Usage
 
 ```ts
-import { DmAccordionComponent, DmAccordionItemComponent } from '@dmaster/ui';
+import { DmAccordionComponent, DmAccordionItemComponent } from '@dmaster/ui/accordion';
 ```
 
 ```html

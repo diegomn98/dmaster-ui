@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 46-component library ~102 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — one entry point per component (`@dmaster/ui/button`, `@dmaster/ui/menu`…), so a component used only in a lazy route stays out of your initial bundle; fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 46-component library ~102 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -76,17 +76,18 @@ No Sass in your build? Use the precompiled CSS instead — add it to the `styles
 **3. Register the provider** (optional — sets default theme and density):
 
 ```ts
-import { provideDmasterUI } from '@dmaster/ui';
+import { provideDmasterUI } from '@dmaster/ui/core';
 
 bootstrapApplication(AppComponent, {
   providers: [provideDmasterUI({ theme: 'auto', density: 'comfortable' })],
 });
 ```
 
-**4. Import and use any component:**
+**4. Import and use any component** — each one from its own entry point, `@dmaster/ui/<component>`:
 
 ```ts
-import { DmButtonComponent, DmBadgeComponent } from '@dmaster/ui';
+import { DmButtonComponent } from '@dmaster/ui/button';
+import { DmBadgeComponent } from '@dmaster/ui/badge';
 
 @Component({
   imports: [DmButtonComponent, DmBadgeComponent],
@@ -96,6 +97,73 @@ import { DmButtonComponent, DmBadgeComponent } from '@dmaster/ui';
   `,
 })
 export class MyComponent {}
+```
+
+Importing per component is what lets your bundler code-split the library: a component used only in a lazy route ships in that route's chunk, not in your initial bundle. The [Components](#components) tables list every import path.
+
+---
+
+## Entry points
+
+Since 0.12.0 every component is published as its own **secondary entry point** (its own module in the package), named after the component: `@dmaster/ui/button`, `@dmaster/ui/menu`, `@dmaster/ui/toggle-group`… Bundlers split code by module, so with one entry point per component each lazy route only loads the components it actually uses. Before 0.12 the whole library was a single module, so anything a lazy route imported ended up in the initial bundle — even with `"sideEffects": false`.
+
+| Import path               | What's in it                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@dmaster/ui/<component>` | The component(s), their types, defaults token and `provide…Defaults()` helper — e.g. `DmSelectComponent`, `DmSelectItem`, `provideSelectDefaults` |
+| `@dmaster/ui/core`        | Cross-cutting API: `provideDmasterUI`, `ThemeService`, `DensityService`, `ReducedMotionService`, shared types (`DmSize`, `DmTheme`…)              |
+| `@dmaster/ui/icon`        | The `dm-icon` component, `DmIconRegistry` and `provideDmasterIcons()`                                                                             |
+| `@dmaster/ui/icons`       | The curated set of ~53 outline SVG icons (`DM_ICONS` and one export per icon) — data, not a component                                             |
+| `@dmaster/ui/styles/*`    | Sass sources and the precompiled `dmaster-ui.css`                                                                                                 |
+| `@dmaster/ui/themes/*`    | Prebuilt color themes (one small CSS file each)                                                                                                   |
+
+**`icon` vs `icons`.** They are two different entry points that work together: `@dmaster/ui/icon` is the component that draws an icon (by font ligature, registered name or projected `<svg>`); `@dmaster/ui/icons` is an optional set of SVG drawings you can register with it. An app that only uses font icons never imports `@dmaster/ui/icons`.
+
+```ts
+import { DmIconComponent, provideDmasterIcons } from '@dmaster/ui/icon'; // the component + registry
+import { DM_ICONS } from '@dmaster/ui/icons'; // the curated SVG set
+```
+
+**Overlays share the CDK dialog symbols.** `DIALOG_DATA` and `DialogRef` are re-exported by both `@dmaster/ui/dialog` and `@dmaster/ui/drawer` (they're the same `@angular/cdk/dialog` symbols), so import them from whichever service you use.
+
+### The root `@dmaster/ui` import is deprecated
+
+`import { … } from '@dmaster/ui'` **still works** in 0.12 — the root entry point re-exports every component entry point, so nothing breaks when you upgrade. It is **deprecated** and will be **removed in a future version**. Its symbols aren't individually marked `@deprecated`, so your editor won't flag them: plan the switch now.
+
+### Migration guide
+
+Replace each root import with one import per entry point. The entry point is the component's name (the folder in the [Components](#components) tables); providers, services and shared types come from `@dmaster/ui/core`.
+
+```ts
+// Before (deprecated)
+import {
+  provideDmasterUI,
+  ThemeService,
+  DmButtonComponent,
+  DmSelectComponent,
+  DmSelectItem,
+  DmToggleComponent,
+  DmToggleGroupComponent,
+  DmDialogService,
+  DialogRef,
+} from '@dmaster/ui';
+
+// After
+import { provideDmasterUI, ThemeService } from '@dmaster/ui/core';
+import { DmButtonComponent } from '@dmaster/ui/button';
+import { DmSelectComponent, DmSelectItem } from '@dmaster/ui/select';
+import { DmToggleComponent, DmToggleGroupComponent } from '@dmaster/ui/toggle-group';
+import { DialogRef, DmDialogService } from '@dmaster/ui/dialog';
+```
+
+Every composite lives with its parts (`DmTabsComponent`, `DmTabComponent` and `DmTabPanelComponent` all come from `@dmaster/ui/tabs`; `DmFormFieldComponent` and `DmInputDirective` from `@dmaster/ui/form-field`). Styles (`@dmaster/ui/styles/*`), themes (`@dmaster/ui/themes/*`) and `@dmaster/ui/icons` are unchanged. To stop new root imports creeping back in, add an ESLint rule:
+
+```js
+// eslint.config.js
+rules: {
+  'no-restricted-imports': ['error', {
+    paths: [{ name: '@dmaster/ui', message: "Import from the component's entry point, e.g. '@dmaster/ui/button'." }],
+  }],
+}
 ```
 
 ---
@@ -117,93 +185,93 @@ The four CI jobs — build/test/lint/publint, integration, a11y and visual — r
 
 ## Components
 
-46 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes).
+46 components across 8 categories. Every row links to its live docs page (playground, API table, a11y notes) and names the entry point to import it from (see [Entry points](#entry-points)).
 
 ### Primitives
 
-| Component                                             | Selector      | Highlights                                                                  |
-| ----------------------------------------------------- | ------------- | --------------------------------------------------------------------------- |
-| [Skeleton](https://dmasterui.com/components/skeleton) | `dm-skeleton` | Shimmer placeholder, wave animation                                         |
-| [Spinner](https://dmasterui.com/components/spinner)   | `dm-spinner`  | Animated indicator, 3 sizes                                                 |
-| [Badge](https://dmasterui.com/components/badge)       | `dm-badge`    | Static status label — 6 variants · 6 colors · dot, shadow, bordered         |
-| [Chip](https://dmasterui.com/components/chip)         | `dm-chip`     | Interactive: removable, filter/choice, action · `dm-chip-set` with keyboard |
-| [Avatar](https://dmasterui.com/components/avatar)     | `dm-avatar`   | Image + fallback initials, 5 sizes                                          |
-| [Keyboard Key](https://dmasterui.com/components/kbd)  | `dm-kbd`      | Named keys resolve to their symbol (⌘, ⇧…), content projection              |
-| [Icon](https://dmasterui.com/components/icon)         | `dm-icon`     | Font ligature, registered SVG, or projected `<svg>` — 3 modes, 1 primitive  |
+| Component                                             | Import                 | Selector      | Highlights                                                                  |
+| ----------------------------------------------------- | ---------------------- | ------------- | --------------------------------------------------------------------------- |
+| [Skeleton](https://dmasterui.com/components/skeleton) | `@dmaster/ui/skeleton` | `dm-skeleton` | Shimmer placeholder, wave animation                                         |
+| [Spinner](https://dmasterui.com/components/spinner)   | `@dmaster/ui/spinner`  | `dm-spinner`  | Animated indicator, 3 sizes                                                 |
+| [Badge](https://dmasterui.com/components/badge)       | `@dmaster/ui/badge`    | `dm-badge`    | Static status label — 6 variants · 6 colors · dot, shadow, bordered         |
+| [Chip](https://dmasterui.com/components/chip)         | `@dmaster/ui/chip`     | `dm-chip`     | Interactive: removable, filter/choice, action · `dm-chip-set` with keyboard |
+| [Avatar](https://dmasterui.com/components/avatar)     | `@dmaster/ui/avatar`   | `dm-avatar`   | Image + fallback initials, 5 sizes                                          |
+| [Keyboard Key](https://dmasterui.com/components/kbd)  | `@dmaster/ui/kbd`      | `dm-kbd`      | Named keys resolve to their symbol (⌘, ⇧…), content projection              |
+| [Icon](https://dmasterui.com/components/icon)         | `@dmaster/ui/icon`     | `dm-icon`     | Font ligature, registered SVG, or projected `<svg>` — 3 modes, 1 primitive  |
 
 ### Layout
 
-| Component                                               | Selector       | Highlights                                    |
-| ------------------------------------------------------- | -------------- | --------------------------------------------- |
-| [Card](https://dmasterui.com/components/card)           | `dm-card`      | Container queries, shadow variants            |
-| [Accordion](https://dmasterui.com/components/accordion) | `dm-accordion` | Animated, single/multiple open, keyboard nav  |
-| [Divider](https://dmasterui.com/components/divider)     | `dm-divider`   | Horizontal/vertical, optional projected label |
+| Component                                               | Import                  | Selector       | Highlights                                    |
+| ------------------------------------------------------- | ----------------------- | -------------- | --------------------------------------------- |
+| [Card](https://dmasterui.com/components/card)           | `@dmaster/ui/card`      | `dm-card`      | Container queries, shadow variants            |
+| [Accordion](https://dmasterui.com/components/accordion) | `@dmaster/ui/accordion` | `dm-accordion` | Animated, single/multiple open, keyboard nav  |
+| [Divider](https://dmasterui.com/components/divider)     | `@dmaster/ui/divider`   | `dm-divider`   | Horizontal/vertical, optional projected label |
 
 ### Feedback
 
-| Component                                             | Selector      | Highlights                                               |
-| ----------------------------------------------------- | ------------- | -------------------------------------------------------- |
-| [Progress](https://dmasterui.com/components/progress) | `dm-progress` | Determinate/indeterminate, striped, value label          |
-| [Alert](https://dmasterui.com/components/alert)       | `dm-alert`    | Color × variant, semantic icon, dismissible, action slot |
+| Component                                             | Import                 | Selector      | Highlights                                               |
+| ----------------------------------------------------- | ---------------------- | ------------- | -------------------------------------------------------- |
+| [Progress](https://dmasterui.com/components/progress) | `@dmaster/ui/progress` | `dm-progress` | Determinate/indeterminate, striped, value label          |
+| [Alert](https://dmasterui.com/components/alert)       | `@dmaster/ui/alert`    | `dm-alert`    | Color × variant, semantic icon, dismissible, action slot |
 
 ### Buttons
 
-| Component                                                     | Selector          | Highlights                                                                        |
-| ------------------------------------------------------------- | ----------------- | --------------------------------------------------------------------------------- |
-| [Button](https://dmasterui.com/components/button)             | `dm-button`       | 7 variants · 6 colors · idle/loading/success/error states · live region           |
-| [Button Group](https://dmasterui.com/components/button-group) | `dm-button-group` | Attached bar with 1px seams, group-level color/variant/size cascade, split-button |
-| [Copy Button](https://dmasterui.com/components/copy-button)   | `dm-copy-button`  | Copies text with a copy→check flip · `dmCopyToClipboard` directive · SSR-safe     |
+| Component                                                     | Import                     | Selector          | Highlights                                                                        |
+| ------------------------------------------------------------- | -------------------------- | ----------------- | --------------------------------------------------------------------------------- |
+| [Button](https://dmasterui.com/components/button)             | `@dmaster/ui/button`       | `dm-button`       | 7 variants · 6 colors · idle/loading/success/error states · live region           |
+| [Button Group](https://dmasterui.com/components/button-group) | `@dmaster/ui/button-group` | `dm-button-group` | Attached bar with 1px seams, group-level color/variant/size cascade, split-button |
+| [Copy Button](https://dmasterui.com/components/copy-button)   | `@dmaster/ui/copy-button`  | `dm-copy-button`  | Copies text with a copy→check flip · `dmCopyToClipboard` directive · SSR-safe     |
 
 ### Forms
 
-| Component                                                     | Selector                        | Highlights                                                                                                                                                                     |
-| ------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Switch](https://dmasterui.com/components/switch)             | `dm-switch`                     | ControlValueAccessor, 3 sizes                                                                                                                                                  |
-| [Checkbox](https://dmasterui.com/components/checkbox)         | `dm-checkbox`                   | ControlValueAccessor, indeterminate state                                                                                                                                      |
-| [Radio Group](https://dmasterui.com/components/radio-group)   | `dm-radio-group` + `dm-radio`   | ControlValueAccessor, horizontal/vertical                                                                                                                                      |
-| [Select](https://dmasterui.com/components/select)             | `dm-select`                     | Single or multiple (chips), inline filter, groups, select-all, CVA — or **server-driven**: `loadFn` pages via rxResource, infinite scroll / load-more, debounced server search |
-| [Autocomplete](https://dmasterui.com/components/autocomplete) | `dm-autocomplete`               | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA                                                                                           |
-| [Search Field](https://dmasterui.com/components/search-field) | `dm-search-field`               | Leading icon, clear button, Escape clears, Enter submits                                                                                                                       |
-| [Date Picker](https://dmasterui.com/components/date-picker)   | `dm-date-picker`                | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`)                                                                                     |
-| [Color Picker](https://dmasterui.com/components/color-picker) | `dm-color-picker`               | Saturation/hue/alpha area, editable hex, swatches                                                                                                                              |
-| [Slider](https://dmasterui.com/components/slider)             | `dm-slider`                     | Pointer drag + full keyboard map, value bubble, marks                                                                                                                          |
-| [Rating](https://dmasterui.com/components/rating)             | `dm-rating`                     | Star rating, half stars, readonly fractional average, custom glyph, `role="slider"`, CVA                                                                                       |
-| [Number Input](https://dmasterui.com/components/number-input) | `dm-number-input`               | Spinbutton with ± controls, keyboard map, clamp/precision, `Intl` formatting, CVA                                                                                              |
-| [OTP Input](https://dmasterui.com/components/otp)             | `dm-otp`                        | One-time-code / PIN cells, 4 surface variants, group separators, paste distribution, CVA                                                                                       |
-| [Toggle Group](https://dmasterui.com/components/toggle-group) | `dm-toggle-group` + `dm-toggle` | Segmented control, single/multiple, radiogroup or aria-pressed, roving keyboard, CVA                                                                                           |
-| [File Upload](https://dmasterui.com/components/file-upload)   | `dm-file-upload`                | Drag-and-drop dropzone, thumbnails, per-file progress, accept/size/count validation                                                                                            |
-| [Form Field](https://dmasterui.com/components/form-field)     | `dm-form-field` + `dmInput`     | Label, hint, error, wraps any native input/textarea/select                                                                                                                     |
-| [Error](https://dmasterui.com/components/error-message)       | `dm-error`                      | Validation line, `role="alert"`, no built-in icon (project your own)                                                                                                           |
+| Component                                                     | Import                     | Selector                        | Highlights                                                                                                                                                                     |
+| ------------------------------------------------------------- | -------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Switch](https://dmasterui.com/components/switch)             | `@dmaster/ui/switch`       | `dm-switch`                     | ControlValueAccessor, 3 sizes                                                                                                                                                  |
+| [Checkbox](https://dmasterui.com/components/checkbox)         | `@dmaster/ui/checkbox`     | `dm-checkbox`                   | ControlValueAccessor, indeterminate state                                                                                                                                      |
+| [Radio Group](https://dmasterui.com/components/radio-group)   | `@dmaster/ui/radio-group`  | `dm-radio-group` + `dm-radio`   | ControlValueAccessor, horizontal/vertical                                                                                                                                      |
+| [Select](https://dmasterui.com/components/select)             | `@dmaster/ui/select`       | `dm-select`                     | Single or multiple (chips), inline filter, groups, select-all, CVA — or **server-driven**: `loadFn` pages via rxResource, infinite scroll / load-more, debounced server search |
+| [Autocomplete](https://dmasterui.com/components/autocomplete) | `@dmaster/ui/autocomplete` | `dm-autocomplete`               | Free-text input with filtered suggestions, `optionSelected` event, keyboard nav, CVA                                                                                           |
+| [Search Field](https://dmasterui.com/components/search-field) | `@dmaster/ui/search-field` | `dm-search-field`               | Leading icon, clear button, Escape clears, Enter submits                                                                                                                       |
+| [Date Picker](https://dmasterui.com/components/date-picker)   | `@dmaster/ui/date-picker`  | `dm-date-picker`                | Day→month→year calendar, `Intl`-only (no date library), reactive locale (`DM_DATE_LOCALE`)                                                                                     |
+| [Color Picker](https://dmasterui.com/components/color-picker) | `@dmaster/ui/color-picker` | `dm-color-picker`               | Saturation/hue/alpha area, editable hex, swatches                                                                                                                              |
+| [Slider](https://dmasterui.com/components/slider)             | `@dmaster/ui/slider`       | `dm-slider`                     | Pointer drag + full keyboard map, value bubble, marks                                                                                                                          |
+| [Rating](https://dmasterui.com/components/rating)             | `@dmaster/ui/rating`       | `dm-rating`                     | Star rating, half stars, readonly fractional average, custom glyph, `role="slider"`, CVA                                                                                       |
+| [Number Input](https://dmasterui.com/components/number-input) | `@dmaster/ui/number-input` | `dm-number-input`               | Spinbutton with ± controls, keyboard map, clamp/precision, `Intl` formatting, CVA                                                                                              |
+| [OTP Input](https://dmasterui.com/components/otp)             | `@dmaster/ui/otp`          | `dm-otp`                        | One-time-code / PIN cells, 4 surface variants, group separators, paste distribution, CVA                                                                                       |
+| [Toggle Group](https://dmasterui.com/components/toggle-group) | `@dmaster/ui/toggle-group` | `dm-toggle-group` + `dm-toggle` | Segmented control, single/multiple, radiogroup or aria-pressed, roving keyboard, CVA                                                                                           |
+| [File Upload](https://dmasterui.com/components/file-upload)   | `@dmaster/ui/file-upload`  | `dm-file-upload`                | Drag-and-drop dropzone, thumbnails, per-file progress, accept/size/count validation                                                                                            |
+| [Form Field](https://dmasterui.com/components/form-field)     | `@dmaster/ui/form-field`   | `dm-form-field` + `dmInput`     | Label, hint, error, wraps any native input/textarea/select                                                                                                                     |
+| [Error](https://dmasterui.com/components/error-message)       | `@dmaster/ui/error`        | `dm-error`                      | Validation line, `role="alert"`, no built-in icon (project your own)                                                                                                           |
 
 ### Navigation
 
-| Component                                                   | Selector                                | Highlights                                             |
-| ----------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------ |
-| [Breadcrumbs](https://dmasterui.com/components/breadcrumbs) | `dm-breadcrumbs` + `dm-breadcrumb-item` | Router-agnostic, collapsible                           |
-| [Tabs](https://dmasterui.com/components/tabs)               | `dm-tabs` + `dm-tab` + `dm-tab-panel`   | 5 variants, sliding indicator, full-width, scroll-fade |
-| [Pagination](https://dmasterui.com/components/pagination)   | `dm-pagination`                         | Windowed pager, two-way page binding                   |
-| [Stepper](https://dmasterui.com/components/stepper)         | `dm-stepper` + `dm-step`                | Horizontal/vertical wizard, linear mode, step states   |
+| Component                                                   | Import                    | Selector                                | Highlights                                             |
+| ----------------------------------------------------------- | ------------------------- | --------------------------------------- | ------------------------------------------------------ |
+| [Breadcrumbs](https://dmasterui.com/components/breadcrumbs) | `@dmaster/ui/breadcrumbs` | `dm-breadcrumbs` + `dm-breadcrumb-item` | Router-agnostic, collapsible                           |
+| [Tabs](https://dmasterui.com/components/tabs)               | `@dmaster/ui/tabs`        | `dm-tabs` + `dm-tab` + `dm-tab-panel`   | 5 variants, sliding indicator, full-width, scroll-fade |
+| [Pagination](https://dmasterui.com/components/pagination)   | `@dmaster/ui/pagination`  | `dm-pagination`                         | Windowed pager, two-way page binding                   |
+| [Stepper](https://dmasterui.com/components/stepper)         | `@dmaster/ui/stepper`     | `dm-stepper` + `dm-step`                | Horizontal/vertical wizard, linear mode, step states   |
 
 ### Data Display
 
-| Component                                                   | Selector                           | Highlights                                                       |
-| ----------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
-| [Table](https://dmasterui.com/components/table)             | `dm-table`                         | Search → sort → paginate pipeline, row selection, virtual scroll |
-| [Tree](https://dmasterui.com/components/tree)               | `dm-tree`                          | WAI-ARIA tree view, roving focus, single/multiple selection      |
-| [Timeline](https://dmasterui.com/components/timeline)       | `dm-timeline` + `dm-timeline-item` | Vertical/horizontal events, states, custom markers, alternate    |
-| [Empty state](https://dmasterui.com/components/empty-state) | `dm-empty-state`                   | Icon + title + description + actions, custom icon slot, 3 sizes  |
+| Component                                                   | Import                    | Selector                           | Highlights                                                       |
+| ----------------------------------------------------------- | ------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
+| [Table](https://dmasterui.com/components/table)             | `@dmaster/ui/table`       | `dm-table`                         | Search → sort → paginate pipeline, row selection, virtual scroll |
+| [Tree](https://dmasterui.com/components/tree)               | `@dmaster/ui/tree`        | `dm-tree`                          | WAI-ARIA tree view, roving focus, single/multiple selection      |
+| [Timeline](https://dmasterui.com/components/timeline)       | `@dmaster/ui/timeline`    | `dm-timeline` + `dm-timeline-item` | Vertical/horizontal events, states, custom markers, alternate    |
+| [Empty state](https://dmasterui.com/components/empty-state) | `@dmaster/ui/empty-state` | `dm-empty-state`                   | Icon + title + description + actions, custom icon slot, 3 sizes  |
 
 ### Overlays (require CDK)
 
-| Component                                           | Selector / Service    | Highlights                                        |
-| --------------------------------------------------- | --------------------- | ------------------------------------------------- |
-| [Tooltip](https://dmasterui.com/components/tooltip) | `dmTooltip` directive | 12 placements, open/close delay                   |
-| [Popover](https://dmasterui.com/components/popover) | `dm-popover`          | Rich floating panel, arrow follows the real flip  |
-| [Menu](https://dmasterui.com/components/menu)       | `dm-menu`             | WAI-ARIA menu, `FocusKeyManager`, typeahead       |
-| [Dialog](https://dmasterui.com/components/dialog)   | `DmDialogService`     | Typed data, typed return, backdrop click to close |
-| [Drawer](https://dmasterui.com/components/drawer)   | `DmDrawerService`     | Slide-in panel over `cdk/dialog`                  |
-| [Toast](https://dmasterui.com/components/toast)     | `DmToastService`      | Queued notifications, signal-driven state         |
-| [Command](https://dmasterui.com/components/command) | `dm-command`          | ⌘K command palette, fuzzy filter                  |
+| Component                                           | Import                | Selector / Service    | Highlights                                        |
+| --------------------------------------------------- | --------------------- | --------------------- | ------------------------------------------------- |
+| [Tooltip](https://dmasterui.com/components/tooltip) | `@dmaster/ui/tooltip` | `dmTooltip` directive | 12 placements, open/close delay                   |
+| [Popover](https://dmasterui.com/components/popover) | `@dmaster/ui/popover` | `dm-popover`          | Rich floating panel, arrow follows the real flip  |
+| [Menu](https://dmasterui.com/components/menu)       | `@dmaster/ui/menu`    | `dm-menu`             | WAI-ARIA menu, `FocusKeyManager`, typeahead       |
+| [Dialog](https://dmasterui.com/components/dialog)   | `@dmaster/ui/dialog`  | `DmDialogService`     | Typed data, typed return, backdrop click to close |
+| [Drawer](https://dmasterui.com/components/drawer)   | `@dmaster/ui/drawer`  | `DmDrawerService`     | Slide-in panel over `cdk/dialog`                  |
+| [Toast](https://dmasterui.com/components/toast)     | `@dmaster/ui/toast`   | `DmToastService`      | Queued notifications, signal-driven state         |
+| [Command](https://dmasterui.com/components/command) | `@dmaster/ui/command` | `dm-command`          | ⌘K command palette, fuzzy filter                  |
 
 ---
 

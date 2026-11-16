@@ -1,5 +1,9 @@
 # DmError
 
+```ts
+import { DmErrorComponent } from '@dmaster/ui/error';
+```
+
 A validation error line for form fields — the standalone,
 A projected, accessible validation-error line for form fields.
 

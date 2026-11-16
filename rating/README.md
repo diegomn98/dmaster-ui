@@ -5,7 +5,7 @@ Star rating control. Hover to preview, click to commit, or drive it entirely fro
 ## Usage
 
 ```ts
-import { DmRatingComponent } from '@dmaster/ui';
+import { DmRatingComponent } from '@dmaster/ui/rating';
 ```
 
 ```html

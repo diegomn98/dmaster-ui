@@ -1,5 +1,9 @@
 # Card (`dm-card`)
 
+```ts
+import { DmCardComponent } from '@dmaster/ui/card';
+```
+
 Surface primitive. Declares `container-type: inline-size` so its content can use container queries against the card instead of the viewport.
 
 ```html

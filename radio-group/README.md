@@ -1,5 +1,9 @@
 # Radio group (`dm-radio-group` + `dm-radio`)
 
+```ts
+import { DmRadioComponent, DmRadioGroupComponent } from '@dmaster/ui/radio-group';
+```
+
 Single-choice radio group with a color × size API. The group is the
 `ControlValueAccessor` — items just declare their `value`. Keyboard navigation
 follows the WAI-ARIA roving-tabindex pattern (only the selected radio is a tab

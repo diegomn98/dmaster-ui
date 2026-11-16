@@ -1,5 +1,9 @@
 # DmColorPicker
 
+```ts
+import { DmColorPickerComponent } from '@dmaster/ui/color-picker';
+```
+
 Rich color picker with a saturation/value plane, a hue rail, an optional alpha
 rail, a hex field and preset swatches — all wrapped in a
 color × variant trigger that reads as a sibling of the rest of the field family

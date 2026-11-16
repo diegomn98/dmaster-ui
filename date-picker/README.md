@@ -1,5 +1,9 @@
 # DmDatePicker
 
+```ts
+import { DmDatePickerComponent, DmDatePickerDayDirective } from '@dmaster/ui/date-picker';
+```
+
 Single-date **or date-range** calendar picker with a color × variant API. Reads
 as a sibling of the rest of the field family (`dmInput`, `dm-select`,
 `dm-search-field`) and is fully keyboard- and screen-reader-driven.

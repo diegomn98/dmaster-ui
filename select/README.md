@@ -6,7 +6,7 @@ Dropdown with a **color × variant** API. Single or multiple selection with chip
 > `"styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", ...]`
 
 ```ts
-import { DmSelectComponent, DmSelectItem, DmSelectGroup } from '@dmaster/ui';
+import { DmSelectComponent, DmSelectItem, DmSelectGroup } from '@dmaster/ui/select';
 
 const pets: DmSelectItem<string>[] = [
   { value: 'cat', label: 'Cat' },
@@ -71,7 +71,7 @@ every option under it. A plain `DmSelectItem[]` remains valid — grouping is pu
 additive.
 
 ```ts
-import { DmSelectGroup } from '@dmaster/ui';
+import { DmSelectGroup } from '@dmaster/ui/select';
 
 const grouped: DmSelectGroup<string>[] = [
   {
@@ -116,7 +116,7 @@ request is cancelled automatically whenever the query or page changes (via
 Angular's `rxResource`). Works with single **and** `multiple` selection.
 
 ```ts
-import { DmSelectComponent, DmSelectLoadFn, DmSelectLoadResult } from '@dmaster/ui';
+import { DmSelectComponent, DmSelectLoadFn, DmSelectLoadResult } from '@dmaster/ui/select';
 
 // Works directly with HttpClient — no wrappers needed.
 loadUsers: DmSelectLoadFn<string> = ({ page, pageSize, query }) =>

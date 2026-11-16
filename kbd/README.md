@@ -7,7 +7,7 @@ digits come through content projection.
 ## Usage
 
 ```ts
-import { DmKbdComponent } from '@dmaster/ui';
+import { DmKbdComponent } from '@dmaster/ui/kbd';
 ```
 
 ```html

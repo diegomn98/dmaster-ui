@@ -7,7 +7,7 @@ A premium, data-driven table with a declarative column API. Out of the box it **
 ## Usage
 
 ```ts
-import { DmTableComponent, DmTableColumn } from '@dmaster/ui';
+import { DmTableComponent, DmTableColumn } from '@dmaster/ui/table';
 ```
 
 ```ts
@@ -157,7 +157,7 @@ Or provide `TABLE_DEFAULTS` directly.
 Give the table a `loadFn` instead of `data` and it becomes **server-driven**: search, sort, page and page size all round-trip to your API, one page at a time. The function receives `{ page, pageSize, query, sort }` (`page` is 1-indexed, like `[(page)]`) and returns an `Observable<{ items, total }>` — so it works directly with `HttpClient`. Under the hood it is Angular's `rxResource`: a request superseded by typing, paging or sorting is cancelled, never raced. Same contract as `dm-select`'s async mode.
 
 ```ts
-import { DmTableLoadFn } from '@dmaster/ui';
+import { DmTableLoadFn } from '@dmaster/ui/table';
 
 loadUsers: DmTableLoadFn<User> = ({ page, pageSize, query, sort }) =>
   this.http

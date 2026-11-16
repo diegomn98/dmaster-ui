@@ -44,7 +44,7 @@ one shows; a slot you do not project falls back to its built-in glyph. Projected
 icons are not auto-sized — size them yourself (the built-ins are `1.125em`).
 
 ```ts
-import { DmCopyIconDirective, DmCopiedIconDirective } from '@dmaster/ui';
+import { DmCopyIconDirective, DmCopiedIconDirective } from '@dmaster/ui/copy-button';
 ```
 
 ```html

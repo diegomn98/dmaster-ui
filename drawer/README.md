@@ -40,7 +40,7 @@ export class FiltersComponent {
 ## Global defaults
 
 ```ts
-import { provideDrawerDefaults } from '@dmaster/ui';
+import { provideDrawerDefaults } from '@dmaster/ui/drawer';
 
 providers: [provideDrawerDefaults({ placement: 'left', size: 'lg' })];
 ```

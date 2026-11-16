@@ -14,7 +14,7 @@ import {
   DmTimelineComponent,
   DmTimelineItemComponent,
   DmTimelineMarkerDirective,
-} from '@dmaster/ui';
+} from '@dmaster/ui/timeline';
 ```
 
 ```html

@@ -201,7 +201,7 @@ function logNextSteps(context: SchematicContext, info: NextStepsInfo): void {
     lines.push(
       `Register it so ThemeService.setTheme('${info.name}') works — in your ApplicationConfig:`,
       '',
-      "  import { provideDmasterUI } from '@dmaster/ui';",
+      "  import { provideDmasterUI } from '@dmaster/ui/core';",
       '',
       '  providers: [',
       `    provideDmasterUI({ themes: { '${info.name}': { scheme: '${info.scheme}', label: '${info.label}' } } }),`,

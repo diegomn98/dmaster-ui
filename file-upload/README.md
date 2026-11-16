@@ -10,7 +10,7 @@ cleanly onto forms, so the current selection is a two-way `[(files)]` model.
 ## Usage
 
 ```ts
-import { DmFileUploadComponent } from '@dmaster/ui';
+import { DmFileUploadComponent } from '@dmaster/ui/file-upload';
 ```
 
 ```html

@@ -6,7 +6,7 @@ Enter submits). A `color × variant` API, and a `ControlValueAccessor`
 so it works with template- and reactive-driven forms.
 
 ```ts
-import { DmSearchFieldComponent } from '@dmaster/ui';
+import { DmSearchFieldComponent } from '@dmaster/ui/search-field';
 ```
 
 ## Usage

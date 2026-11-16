@@ -1,5 +1,9 @@
 # Tooltip (`dmTooltip`)
 
+```ts
+import { DmTooltipDirective } from '@dmaster/ui/tooltip';
+```
+
 Text tooltip on any element, built on the CDK Overlay. Shows on hover (with delay) and keyboard focus (immediate); Escape closes it. Flips to the opposite side when there is no room.
 
 > Requires the CDK structural styles once per app:

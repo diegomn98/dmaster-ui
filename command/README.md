@@ -1,5 +1,9 @@
 # Command palette (`dm-command`)
 
+```ts
+import { DmCommandComponent, DmCommandItemDirective } from '@dmaster/ui/command';
+```
+
 A ⌘K command palette — a centered modal with a search box over a flat, grouped
 list of actions, in the spirit of Linear / Vercel / Raycast. Declared **once**
 (typically at the app root), controlled by state, and toggled from anywhere by a

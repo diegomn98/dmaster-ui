@@ -8,7 +8,7 @@ active one carries `aria-current="step"`, and each connects to its own panel via
 ## Usage
 
 ```ts
-import { DmStepperComponent, DmStepComponent } from '@dmaster/ui';
+import { DmStepperComponent, DmStepComponent } from '@dmaster/ui/stepper';
 ```
 
 ```html
@@ -59,7 +59,7 @@ header. The indicator circle, its state styling and the header button semantics
 are kept — the template only swaps what is drawn inside.
 
 ```ts
-import { DmStepIndicatorDirective } from '@dmaster/ui';
+import { DmStepIndicatorDirective } from '@dmaster/ui/stepper';
 ```
 
 ```html

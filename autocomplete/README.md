@@ -7,7 +7,7 @@ one or keeps their own text. The value is always a plain `string`, and a
 `ControlValueAccessor` wires it into template- and reactive-driven forms.
 
 ```ts
-import { DmAutocompleteComponent } from '@dmaster/ui';
+import { DmAutocompleteComponent } from '@dmaster/ui/autocomplete';
 ```
 
 ## Usage

@@ -5,7 +5,7 @@ Thin rule that separates content, with an optional projected label. No third-par
 ## Usage
 
 ```ts
-import { DmDividerComponent } from '@dmaster/ui';
+import { DmDividerComponent } from '@dmaster/ui/divider';
 ```
 
 ```html

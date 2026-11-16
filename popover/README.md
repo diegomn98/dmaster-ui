@@ -1,5 +1,9 @@
 # Popover (`dm-popover` + `dmPopoverTrigger`)
 
+```ts
+import { DmPopoverComponent, DmPopoverTriggerDirective } from '@dmaster/ui/popover';
+```
+
 Rich floating panel anchored to a trigger, built on the CDK Overlay — the
 tooltip's bigger sibling. It opens on **click**, holds arbitrary interactive
 content (headings, inputs, buttons…), flips to fit, closes on outside click /

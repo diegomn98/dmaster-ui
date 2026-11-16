@@ -1,5 +1,9 @@
 # Dialog (`DmDialogService`)
 
+```ts
+import { DmConfirmDialogComponent, DmDialogService } from '@dmaster/ui/dialog';
+```
+
 Thin wrapper over the CDK Dialog with the library look. Focus trap, Escape/backdrop handling and `aria-modal` come from the CDK; panel/backdrop styling ships in the library's global stylesheet.
 
 > Requires the CDK structural styles once per app:

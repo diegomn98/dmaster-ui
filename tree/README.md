@@ -7,7 +7,7 @@ every node. No third-party UI dependencies.
 ## Usage
 
 ```ts
-import { DmTreeComponent, DmTreeNode } from '@dmaster/ui';
+import { DmTreeComponent, DmTreeNode } from '@dmaster/ui/tree';
 ```
 
 ```ts

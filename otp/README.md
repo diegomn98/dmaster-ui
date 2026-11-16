@@ -1,5 +1,9 @@
 # dm-otp
 
+```ts
+import { DmOtpComponent } from '@dmaster/ui/otp';
+```
+
 One-time-code / PIN field: a row of single-character cells that behaves as one
 control. Typing advances to the next cell, Backspace clears and steps back,
 arrows/Home/End move between cells and a paste is distributed across them.

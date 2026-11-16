@@ -1,5 +1,9 @@
 # Toast (`DmToastService`)
 
+```ts
+import { DmToastService } from '@dmaster/ui/toast';
+```
+
 Notification queue. Toasts stack bottom-right by default (configurable via the `position` default), auto-dismiss (configurable) and are announced politely (`role="status"`; `role="alert"` for the danger variant).
 
 > Requires the CDK structural styles once per app:

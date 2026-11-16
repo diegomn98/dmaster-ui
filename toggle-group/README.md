@@ -1,5 +1,9 @@
 # dm-toggle-group
 
+```ts
+import { DmToggleComponent, DmToggleGroupComponent } from '@dmaster/ui/toggle-group';
+```
+
 Segmented control / toggle group: a row of `<dm-toggle>` items inside one flat,
 rounded surface. Two independent modes — an exclusive **single** choice (view
 switchers) or independent **multiple** toggles (a formatting toolbar).

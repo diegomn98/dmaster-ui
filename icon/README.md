@@ -1,5 +1,9 @@
 # Icon (`dm-icon`)
 
+```ts
+import { DmIconComponent } from '@dmaster/ui/icon';
+```
+
 One icon component, three ways to draw an icon — simplest first:
 
 ```html
@@ -88,12 +92,17 @@ One-liner: a semantic token (`primary`, `secondary`, `success`, `warning`,
 
 ## Registering SVG icons
 
+> **`icon` vs `icons`.** `@dmaster/ui/icon` (singular, this entry point) is the
+> component, the registry and `provideDmasterIcons()`. `@dmaster/ui/icons`
+> (plural) is an optional set of ~53 curated SVG drawings you can register with
+> it — data, not a component.
+
 `provideDmasterIcons(icons)` merges a `Record<name, svgString>` into the global
 registry. It is callable many times — the curated `@dmaster/ui/icons` set plus
 your own:
 
 ```ts
-import { provideDmasterIcons } from '@dmaster/ui';
+import { provideDmasterIcons } from '@dmaster/ui/icon';
 import { DM_ICONS } from '@dmaster/ui/icons';
 
 providers: [
@@ -117,7 +126,7 @@ You can also register at runtime via `DmIconRegistry.register(name, svg)`.
 ## Defaults
 
 ```ts
-import { provideIconDefaults } from '@dmaster/ui';
+import { provideIconDefaults } from '@dmaster/ui/icon';
 
 providers: [provideIconDefaults({ size: 'sm', weight: 500 })];
 ```

@@ -5,7 +5,7 @@ Composite tabs with a color × variant API, an **animated sliding indicator**, r
 ## Usage
 
 ```ts
-import { DmTabPanelComponent, DmTabComponent, DmTabsComponent } from '@dmaster/ui';
+import { DmTabPanelComponent, DmTabComponent, DmTabsComponent } from '@dmaster/ui/tabs';
 ```
 
 ```html

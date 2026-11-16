@@ -1,5 +1,9 @@
 # Switch (`dm-switch`)
 
+```ts
+import { DmSwitchComponent } from '@dmaster/ui/switch';
+```
+
 Toggle switch (`role="switch"`). Works standalone with `[(checked)]` and with Angular forms via `ControlValueAccessor`.
 
 ```html

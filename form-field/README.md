@@ -1,5 +1,9 @@
 # Form Field (`dm-form-field`) + `dmInput`
 
+```ts
+import { DmFormFieldComponent, DmInputDirective } from '@dmaster/ui/form-field';
+```
+
 Composite form field: label + projected native control + hint/error. The `dmInput` directive styles native `input`/`textarea`/`select`; the wrapper wires `id`, `for`, `aria-describedby` and `aria-invalid` automatically.
 
 ```html

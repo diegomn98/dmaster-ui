@@ -8,12 +8,17 @@ components.
 These icons are **original artwork**, not derived from any third-party set — no
 attribution or extra license applies (MIT, same as the library).
 
+> **`icons` vs `icon`.** This entry point (`@dmaster/ui/icons`) is only the SVG
+> **drawings** — data, no component. The component that draws them, its
+> registry and `provideDmasterIcons()` live in `@dmaster/ui/icon` (singular). An
+> app that only uses font-ligature icons never needs `@dmaster/ui/icons`.
+
 ## Usage
 
 Register the whole set once, then draw any icon by name with `dm-icon`:
 
 ```ts
-import { provideDmasterIcons } from '@dmaster/ui';
+import { provideDmasterIcons } from '@dmaster/ui/icon';
 import { DM_ICONS } from '@dmaster/ui/icons';
 
 // app.config.ts

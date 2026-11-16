@@ -5,7 +5,7 @@ Loading placeholder that mirrors the shape of the content it replaces. No third-
 ## Usage
 
 ```ts
-import { DmSkeletonComponent } from '@dmaster/ui';
+import { DmSkeletonComponent } from '@dmaster/ui/skeleton';
 ```
 
 ```html

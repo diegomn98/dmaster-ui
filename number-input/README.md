@@ -8,7 +8,7 @@ precision rounding and optional `Intl.NumberFormat` display while blurred. A
 `ControlValueAccessor` so it works with template- and reactive-driven forms.
 
 ```ts
-import { DmNumberInputComponent } from '@dmaster/ui';
+import { DmNumberInputComponent } from '@dmaster/ui/number-input';
 ```
 
 ## Usage

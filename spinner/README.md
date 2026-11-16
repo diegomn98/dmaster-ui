@@ -1,5 +1,9 @@
 # Spinner (`dm-spinner`)
 
+```ts
+import { DmSpinnerComponent } from '@dmaster/ui/spinner';
+```
+
 Indeterminate loading indicator. Inherits `currentColor`; `dm-button` uses it internally.
 
 ```html

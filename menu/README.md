@@ -12,7 +12,7 @@ import {
   DmMenuItemComponent,
   DmMenuSectionComponent,
   DmMenuDividerComponent,
-} from '@dmaster/ui';
+} from '@dmaster/ui/menu';
 ```
 
 ```html

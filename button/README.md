@@ -5,7 +5,7 @@ Button with a **color × variant** API and built-in loading / success / error st
 ## Usage
 
 ```ts
-import { DmButtonComponent } from '@dmaster/ui';
+import { DmButtonComponent } from '@dmaster/ui/button';
 ```
 
 ```html

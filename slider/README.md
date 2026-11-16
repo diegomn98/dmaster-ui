@@ -5,7 +5,7 @@ Single-value range slider with an elastic thumb. Drag it, click anywhere on the 
 ## Usage
 
 ```ts
-import { DmSliderComponent } from '@dmaster/ui';
+import { DmSliderComponent } from '@dmaster/ui/slider';
 ```
 
 ```html

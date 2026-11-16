@@ -1,5 +1,9 @@
 # Avatar (`dm-avatar`)
 
+```ts
+import { DmAvatarComponent, DmAvatarFallbackDirective } from '@dmaster/ui/avatar';
+```
+
 Avatar with automatic fallback chain: image → initials → custom fallback (`[dmAvatarFallback]`) → generic icon. A failed image load falls back silently; changing `src` retries.
 
 ```html

@@ -1,5 +1,9 @@
 # dm-empty-state
 
+```ts
+import { DmEmptyStateComponent } from '@dmaster/ui/empty-state';
+```
+
 Placeholder for "there is nothing here yet": an icon, a short explanation and
 an optional call to action. Use it inside tables, lists, search results or
 entire pages when the data set is empty.

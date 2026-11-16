@@ -1,5 +1,9 @@
 # Chip (`dm-chip`, `dm-chip-set`)
 
+```ts
+import { DmChipComponent, DmChipSetComponent } from '@dmaster/ui/chip';
+```
+
 The interactive sibling of `dm-badge`. One `dm-chip` covers the three chip
 archetypes; `dm-chip-set` groups them with wrapping layout, roving-tabindex
 keyboard support and optional selection.
