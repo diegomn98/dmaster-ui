@@ -129,7 +129,7 @@ import { DM_ICONS } from '@dmaster/ui/icons'; // the curated SVG set
 
 `import { … } from '@dmaster/ui'` **still works** in 0.12 — the root entry point re-exports every component entry point, so nothing breaks when you upgrade. It is **deprecated** and will be **removed in a future version**. Its symbols aren't individually marked `@deprecated`, so your editor won't flag them: plan the switch now.
 
-The root import also **doesn't code-split**. Its re-export puts every entry point in your app's static import graph, so a component used only in a lazy route still lands in the initial bundle, just as in 0.11. Your startup bundle only gets smaller once you import from the entry points.
+Code-splitting already works through the root import too: it only re-exports the side-effect-free entry points, so the bundler drops what you don't use and splits the rest per route. Measured on a real Angular 22 app that uses 18 of the components, upgrading from 0.11 moved 10 of them (toggle group, checkbox, switch, progress, search field, form field…) out of the initial bundle, with root and per-component imports alike. Migrate anyway: the root import is deprecated and will be removed.
 
 ### Migration guide
 
@@ -488,7 +488,7 @@ Fully tree-shakeable, and **code-split per component**: every component is its o
 
 The entire-library figure assumes every component lands in a single bundle. Its minified size is the same as in 0.11 (~633 kB), but split into one module per component it gzips about 9 kB worse than the old single module did. Real apps don't hit that case: they import some components and lazy-load others, and each of those got slightly smaller.
 
-`npm run size` reproduces the full per-entry-point table. It also checks code-splitting with a synthetic app that loads `dm-button` at startup and `dm-checkbox` only in a lazy chunk: through the subpaths, the checkbox stays in the lazy chunk. Through the deprecated root `@dmaster/ui` import, it lands in the initial bundle, as it did in 0.11.
+`npm run size` reproduces the full per-entry-point table. It also checks code-splitting with a synthetic app that loads `dm-button` at startup and `dm-checkbox` only in a lazy chunk: the checkbox stays in the lazy chunk through the subpaths and through the deprecated root import alike (with 0.11's single module it landed in the initial bundle).
 
 ---
 

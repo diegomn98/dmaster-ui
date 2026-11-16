@@ -21,9 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with that route instead of your initial bundle. Until 0.11 the whole library
   was a single module, so anything a lazy route imported landed in the initial
   bundle — `"sideEffects": false` (already set) couldn't prevent that.
-  Measured on a synthetic app with `dm-button` at startup and `dm-checkbox`
-  behind a lazy route: the checkbox now stays in its lazy chunk and the initial
-  chunk drops from 4.9 to 3.5 kB gzip. `@dmaster/ui/styles/*`,
+  Measured on a real Angular 22 app that uses 18 of the components: 10 of them
+  (toggle group, checkbox, switch, progress, search field, form field, card,
+  menu, kbd, error) moved out of the initial bundle into the lazy routes that
+  use them — initial bundle −72 kB raw, −6.6 kB transferred. `@dmaster/ui/styles/*`,
   `@dmaster/ui/themes/*` and `@dmaster/ui/icons` are unchanged.
 - `@dmaster/ui/drawer` re-exports `DIALOG_DATA` and `DialogRef` too (the same
   `@angular/cdk/dialog` symbols `@dmaster/ui/dialog` re-exports), so a
@@ -38,11 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **The root `@dmaster/ui` import.** `import { … } from '@dmaster/ui'` keeps
   working in 0.12 — the root entry point re-exports every component entry
-  point, with the same classes and tokens — so upgrading breaks nothing. But it
-  **does not code-split** (its re-export puts every entry point in your app's
-  static import graph, so lazy-only components still land in the initial
-  bundle, as in 0.11), and it **will be removed in a future version**. Its
-  symbols aren't individually marked `@deprecated`, so editors won't flag them.
+  point, with the same classes and tokens — so upgrading breaks nothing, and
+  it even code-splits like the subpaths do (it only re-exports side-effect-free
+  modules, which the bundler drops when unused; the measurement above is the
+  same with root and per-component imports). It **will be removed in a future
+  version**. Its symbols aren't individually marked `@deprecated`, so editors
+  won't flag them.
   Migrate by importing each symbol from its component's entry point, and
   providers, services and shared types from `@dmaster/ui/core`:
 
