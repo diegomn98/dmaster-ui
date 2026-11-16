@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-11-16
+
+### Added
+
+- **One entry point per component.** Every component is now published as its
+  own secondary entry point, named after it — `@dmaster/ui/button`,
+  `@dmaster/ui/menu`, `@dmaster/ui/toggle-group`… (46 in all) — plus
+  `@dmaster/ui/core` for the cross-cutting API (`provideDmasterUI`,
+  `ThemeService`, `DensityService`, `ReducedMotionService`, the shared types
+  and utilities). Each one is its own module in the package, so bundlers can
+  finally code-split the library: a component used only in a lazy route ships
+  with that route instead of your initial bundle. Until 0.11 the whole library
+  was a single module, so anything a lazy route imported landed in the initial
+  bundle — `"sideEffects": false` (already set) couldn't prevent that.
+  Measured on a synthetic app with `dm-button` at startup and `dm-checkbox`
+  behind a lazy route: the checkbox now stays in its lazy chunk and the initial
+  chunk drops from 4.9 to 3.5 kB gzip. `@dmaster/ui/styles/*`,
+  `@dmaster/ui/themes/*` and `@dmaster/ui/icons` are unchanged.
+- `@dmaster/ui/drawer` re-exports `DIALOG_DATA` and `DialogRef` too (the same
+  `@angular/cdk/dialog` symbols `@dmaster/ui/dialog` re-exports), so a
+  drawer-only app doesn't need the dialog entry point.
+- Every component README (shipped next to its entry point) opens with its
+  import line, and `@dmaster/ui/core` ships its own README. `icon` and `icons`
+  explain each other: `@dmaster/ui/icon` is the `dm-icon` component, its
+  registry and `provideDmasterIcons()`; `@dmaster/ui/icons` is the optional
+  set of curated SVG drawings.
+
+### Deprecated
+
+- **The root `@dmaster/ui` import.** `import { … } from '@dmaster/ui'` keeps
+  working in 0.12 — the root entry point re-exports every component entry
+  point, with the same classes and tokens — so upgrading breaks nothing. But it
+  **does not code-split** (its re-export puts every entry point in your app's
+  static import graph, so lazy-only components still land in the initial
+  bundle, as in 0.11), and it **will be removed in a future version**. Its
+  symbols aren't individually marked `@deprecated`, so editors won't flag them.
+  Migrate by importing each symbol from its component's entry point, and
+  providers, services and shared types from `@dmaster/ui/core`:
+
+  ```ts
+  // Before (deprecated)
+  import { provideDmasterUI, DmButtonComponent, DmToggleGroupComponent } from '@dmaster/ui';
+
+  // After
+  import { provideDmasterUI } from '@dmaster/ui/core';
+  import { DmButtonComponent } from '@dmaster/ui/button';
+  import { DmToggleGroupComponent } from '@dmaster/ui/toggle-group';
+  ```
+
+  The full migration guide — including an ESLint `no-restricted-imports` rule
+  that keeps root imports out — is in the README ("Entry points" › "Migration
+  guide") and in the docs' Getting Started.
+
+### Changed
+
+- `DM_BUTTON_GROUP` and `DmButtonGroupContext` are exported by
+  `@dmaster/ui/button` (the group depends on the button; keeping the token in
+  the group's entry point would make the two entry points a cycle). Still
+  available from the root import.
+- `ng add` and `ng generate @dmaster/ui:theme` print
+  `import { provideDmasterUI } from '@dmaster/ui/core'`.
+- Bundle figures re-measured per entry point (whole entry, gzip): card
+  ~0.9 kB, badge ~1.4 kB, button ~3.6 kB, select ~10.7 kB, table ~18.9 kB,
+  core ~1.0 kB — each the same as or slightly below 0.11. The "entire library
+  in one bundle" figure is ~119 kB: the minified code is the same size as in
+  0.11 (~633 kB), but laid out as one module per component it gzips ~9 kB
+  worse when everything lands in a single file — a case code-split apps don't
+  hit.
+
+### Fixed
+
+- The StackBlitz starter (`examples/starter`) asked for `@dmaster/ui@^0.5.0` —
+  on 0.x that means `<0.6.0` — so it kept installing 0.5.x. It now asks for
+  `^0.12.0` and imports per entry point.
+
 ## [0.11.0] - 2026-09-22
 
 ### Added
@@ -826,6 +901,7 @@ Initial public surface.
 - Per-component injectable defaults (`provideXxxDefaults()`), global `provideDmasterUI()`.
 - Flat, pill-radius design language: flat fills, pill radii, elastic press, color × variant tokens.
 
+[0.12.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.3...v0.11.0
 [0.10.3]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/diegomn98/dmaster-ui-workspace/compare/v0.10.1...v0.10.2
