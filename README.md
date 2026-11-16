@@ -33,7 +33,7 @@
 - **Accessible by default** — ARIA attributes on host elements, `:focus-visible` focus rings, touch targets ≥ 44px, `prefers-reduced-motion` support
 - **CDK-powered overlays** — tooltip, popover, menu, dialog, drawer, toast and command palette built on `@angular/cdk`, no third-party overlay dependencies
 - **Three density levels** — `compact`, `comfortable`, `spacious` via `data-dm-density`
-- **Pay only for what you import** — one entry point per component (`@dmaster/ui/button`, `@dmaster/ui/menu`…), so a component used only in a lazy route stays out of your initial bundle; fully tree-shakeable: a button costs ~4.0 kB gzip, a card ~1.4 kB, the entire 46-component library ~102 kB (see [Bundle size](#bundle-size))
+- **Pay only for what you import** — one entry point per component (`@dmaster/ui/button`, `@dmaster/ui/menu`…), so a component used only in a lazy route stays out of your initial bundle; fully tree-shakeable: a button costs ~3.6 kB gzip, a card ~0.9 kB (see [Bundle size](#bundle-size))
 
 ---
 
@@ -128,6 +128,8 @@ import { DM_ICONS } from '@dmaster/ui/icons'; // the curated SVG set
 ### The root `@dmaster/ui` import is deprecated
 
 `import { … } from '@dmaster/ui'` **still works** in 0.12 — the root entry point re-exports every component entry point, so nothing breaks when you upgrade. It is **deprecated** and will be **removed in a future version**. Its symbols aren't individually marked `@deprecated`, so your editor won't flag them: plan the switch now.
+
+The root import also **doesn't code-split**. Its re-export puts every entry point in your app's static import graph, so a component used only in a lazy route still lands in the initial bundle, just as in 0.11. Your startup bundle only gets smaller once you import from the entry points.
 
 ### Migration guide
 
@@ -471,19 +473,22 @@ npm run build:app && npm run test:a11y
 
 ## Bundle size
 
-Fully tree-shakeable — your app only pays for the components it imports. Measured with the same pipeline the Angular CLI applies to published libraries (linker + minify + gzip, `@angular/*` and `rxjs` external):
+Fully tree-shakeable, and **code-split per component**: every component is its own entry point, so your app only pays for the components it imports — and a component used only in a lazy route is paid for when that route loads, not at startup. Measured with the same pipeline the Angular CLI applies to published libraries (linker + minify + gzip, `@angular/*` and `rxjs` excluded):
 
-| Import                    | Gzip     |
-| ------------------------- | -------- |
-| `DmCardComponent`         | ~1.4 kB  |
-| `DmBadgeComponent`        | ~1.9 kB  |
-| `DmButtonComponent`       | ~4.0 kB  |
-| `DmSelectComponent`       | ~10.9 kB |
-| `DmTableComponent`        | ~12.8 kB |
-| **Entire library** (45)   | ~102 kB  |
-| Global CSS (tokens+reset) | ~4.9 kB  |
+| Import (whole entry point)          | Gzip     |
+| ----------------------------------- | -------- |
+| `@dmaster/ui/card`                  | ~0.9 kB  |
+| `@dmaster/ui/badge`                 | ~1.4 kB  |
+| `@dmaster/ui/button`                | ~3.6 kB  |
+| `@dmaster/ui/select`                | ~10.7 kB |
+| `@dmaster/ui/table`                 | ~18.9 kB |
+| `@dmaster/ui/core`                  | ~1.0 kB  |
+| **Entire library** (46), one bundle | ~119 kB  |
+| Global CSS (tokens+reset)           | ~4.9 kB  |
 
-Reproduce the full per-component table from the repo with `npm run size`.
+The entire-library figure assumes every component lands in a single bundle. Its minified size is the same as in 0.11 (~633 kB), but split into one module per component it gzips about 9 kB worse than the old single module did. Real apps don't hit that case: they import some components and lazy-load others, and each of those got slightly smaller.
+
+`npm run size` reproduces the full per-entry-point table. It also checks code-splitting with a synthetic app that loads `dm-button` at startup and `dm-checkbox` only in a lazy chunk: through the subpaths, the checkbox stays in the lazy chunk. Through the deprecated root `@dmaster/ui` import, it lands in the initial bundle, as it did in 0.11.
 
 ---
 
@@ -507,7 +512,7 @@ There's no shortage of component libraries in the Angular ecosystem. Here's how 
 | **API style**       | `input()`/`output()`/`model()` signals, standalone, no NgModules | Mix of legacy + newer APIs, NgModule-based         | NgModule + standalone hybrid                 | Signals, standalone                      | Signals, standalone                                                      |
 | **What you get**    | Pre-styled components, own flat/pill design language             | Pre-styled components (Material Design)            | Pre-styled components, several theme presets | Pre-styled components, own design system | **Unstyled primitives** — copy-paste styled blocks you own, shadcn-style |
 | **Theming**         | CSS custom properties only, no runtime engine                    | Sass theming API + Material 3 design tokens        | Runtime theme switcher + design tokens       | CSS custom properties                    | Tailwind-based, per-component                                            |
-| **Component count** | 45                                                               | Comprehensive Material Design set (CDK + Material) | Very large surface area                      | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
+| **Component count** | 46                                                               | Comprehensive Material Design set (CDK + Material) | Very large surface area                      | 130+ (their own count)                   | 55+ primitives (their own count)                                         |
 | **Zoneless**        | Built for it from day one                                        | Supported                                          | Supported                                    | Supported                                | Supported                                                                |
 | **Install model**   | `ng add`, then import & use                                      | `ng add`, then import & use                        | Install & import                             | Install & import                         | CLI **copies component source into your repo**                           |
 
