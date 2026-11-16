@@ -13,7 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmStepIndicatorContext } from './step-indicator.directive';
 import { DmStepperComponent } from './stepper.component';
 import { DmStepState } from './stepper.types';

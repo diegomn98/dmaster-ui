@@ -1,4 +1,4 @@
-import type { DmButtonColor, DmButtonRadius, DmButtonVariant } from '../button/button.types';
+import type { DmButtonColor, DmButtonRadius, DmButtonVariant } from '@dmaster/ui/button';
 
 /**
  * `dm-copy-button` is a thin, opinionated wrapper over `dm-button`, so its

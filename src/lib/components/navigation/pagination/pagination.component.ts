@@ -8,7 +8,7 @@ import {
   model,
 } from '@angular/core';
 
-import { DmSize } from '../../../core/types/common.types';
+import { DmSize } from '@dmaster/ui/core';
 import { PAGINATION_DEFAULTS } from './pagination.tokens';
 import { DmPaginationColor, DmPaginationItem } from './pagination.types';
 

@@ -3,7 +3,7 @@
  */
 
 // Core: configuration, providers, services, base types, utilities
-export * from './lib/core';
+export * from '@dmaster/ui/core';
 
 // Components · primitives
 export * from './lib/components/primitives/avatar';
@@ -12,7 +12,7 @@ export * from './lib/components/primitives/chip';
 export * from './lib/components/primitives/icon';
 export * from './lib/components/primitives/kbd';
 export * from './lib/components/primitives/skeleton';
-export * from './lib/components/primitives/spinner';
+export * from '@dmaster/ui/spinner';
 
 // Components · layout
 export * from './lib/components/layout/accordion';
@@ -20,7 +20,7 @@ export * from './lib/components/layout/card';
 export * from './lib/components/layout/divider';
 
 // Components · buttons
-export * from './lib/components/buttons/button';
+export * from '@dmaster/ui/button';
 export * from './lib/components/buttons/button-group';
 export * from './lib/components/buttons/copy-button';
 

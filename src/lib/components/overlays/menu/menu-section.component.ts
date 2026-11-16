@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 
 /**
  * Groups related `<dm-menu-item>`s under an optional uppercase heading.

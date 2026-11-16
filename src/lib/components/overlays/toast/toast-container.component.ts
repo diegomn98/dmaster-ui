@@ -8,7 +8,7 @@ import {
   untracked,
 } from '@angular/core';
 
-import { DmSpinnerComponent } from '../../primitives/spinner';
+import { DmSpinnerComponent } from '@dmaster/ui/spinner';
 import { TOAST_DEFAULTS } from './toast.tokens';
 import { DmToastService } from './toast.service';
 import { DmToastData } from './toast.types';

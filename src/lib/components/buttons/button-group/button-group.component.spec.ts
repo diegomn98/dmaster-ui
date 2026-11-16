@@ -1,7 +1,7 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DmButtonComponent } from '../button';
+import { DmButtonComponent } from '@dmaster/ui/button';
 import { DmButtonGroupComponent } from './button-group.component';
 import { BUTTON_GROUP_DEFAULTS } from './button-group.tokens';
 

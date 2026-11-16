@@ -1,5 +1,5 @@
-import { DmSize } from '../../../core/types/common.types';
-import type { DmButtonColor } from '../../buttons/button';
+import { DmSize } from '@dmaster/ui/core';
+import type { DmButtonColor } from '@dmaster/ui/button';
 
 /** Configuration for `DmDialogService.open()`. */
 export interface DmDialogConfig<D = unknown> {

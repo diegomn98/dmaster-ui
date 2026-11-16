@@ -1,6 +1,6 @@
 import { InjectionToken, Provider, Signal } from '@angular/core';
 
-import { DmSize } from '../../../core/types/common.types';
+import { DmSize } from '@dmaster/ui/core';
 import {
   DmDatePickerColor,
   DmDatePickerRadius,

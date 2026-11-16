@@ -10,7 +10,7 @@ import {
   input,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmTooltipPanelComponent } from './tooltip-panel.component';
 import { TOOLTIP_DEFAULTS } from './tooltip.tokens';
 import { DmTooltipPosition } from './tooltip.types';

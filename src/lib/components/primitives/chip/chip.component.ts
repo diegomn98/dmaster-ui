@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
+import { ReducedMotionService } from '@dmaster/ui/core';
 import { DmChipSetComponent } from './chip-set.component';
 import { CHIP_DEFAULTS } from './chip.tokens';
 import { DmChipColor, DmChipRadius, DmChipSize, DmChipVariant } from './chip.types';

@@ -8,7 +8,7 @@ import {
   input,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmAccordionComponent } from './accordion.component';
 
 /**

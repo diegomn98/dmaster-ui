@@ -8,7 +8,7 @@ import {
   linkedSignal,
 } from '@angular/core';
 
-import { toCssSize } from '../../../core/utils/css';
+import { toCssSize } from '@dmaster/ui/core';
 import { DmAvatarFallbackDirective } from './avatar-fallback.directive';
 import { AVATAR_DEFAULTS } from './avatar.tokens';
 import { DmAvatarColor, DmAvatarShape, DmAvatarSize } from './avatar.types';

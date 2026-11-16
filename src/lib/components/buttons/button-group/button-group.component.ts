@@ -9,14 +9,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { DmSize } from '../../../core/types/common.types';
-import { DmButtonColor, DmButtonRadius, DmButtonVariant } from '../button/button.types';
-import { BUTTON_GROUP_DEFAULTS } from './button-group.tokens';
+import { DmSize } from '@dmaster/ui/core';
 import {
   DM_BUTTON_GROUP,
+  DmButtonColor,
   DmButtonGroupContext,
-  DmButtonGroupOrientation,
-} from './button-group.types';
+  DmButtonRadius,
+  DmButtonVariant,
+} from '@dmaster/ui/button';
+import { BUTTON_GROUP_DEFAULTS } from './button-group.tokens';
+import { DmButtonGroupOrientation } from './button-group.types';
 
 /**
  * Joins a row (or column) of `<dm-button>`s into a single attached control:

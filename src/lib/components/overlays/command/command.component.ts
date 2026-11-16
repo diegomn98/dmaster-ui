@@ -21,7 +21,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmKbdComponent } from '../../primitives/kbd';
 import { DmCommandItemContext, DmCommandItemDirective } from './command-item.directive';
 import { COMMAND_DEFAULTS } from './command.tokens';

@@ -23,7 +23,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { POPOVER_DEFAULTS } from './popover.tokens';
 import { DmPopoverPlacement, DmPopoverSide } from './popover.types';
 

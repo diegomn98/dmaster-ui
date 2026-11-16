@@ -20,8 +20,8 @@ import {
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 
-import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
-import { DmButtonComponent } from '../../buttons/button';
+import { ReducedMotionService } from '@dmaster/ui/core';
+import { DmButtonComponent } from '@dmaster/ui/button';
 import { DmCheckboxComponent } from '../../forms/checkbox';
 import { DmPaginationComponent } from '../../navigation/pagination';
 import { DmSkeletonComponent } from '../../primitives/skeleton';

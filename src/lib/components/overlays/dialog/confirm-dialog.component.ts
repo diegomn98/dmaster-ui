@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { DmButtonColor, DmButtonComponent } from '../../buttons/button';
+import { DmButtonColor, DmButtonComponent } from '@dmaster/ui/button';
 import { DmConfirmOptions } from './dialog.types';
 
 /**

@@ -8,9 +8,9 @@ import {
   output,
 } from '@angular/core';
 
-import { DmSize } from '../../../core/types/common.types';
-import { DmSpinnerComponent } from '../../primitives/spinner';
-import { DM_BUTTON_GROUP } from '../button-group/button-group.types';
+import { DmSize } from '@dmaster/ui/core';
+import { DmSpinnerComponent } from '@dmaster/ui/spinner';
+import { DM_BUTTON_GROUP } from './button.types';
 import { BUTTON_DEFAULTS } from './button.tokens';
 import {
   DmButtonColor,

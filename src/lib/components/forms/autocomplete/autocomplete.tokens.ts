@@ -1,6 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import { DmSize } from '../../../core/types/common.types';
+import { DmSize } from '@dmaster/ui/core';
 import {
   DmAutocompleteColor,
   DmAutocompleteRadius,

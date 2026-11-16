@@ -7,7 +7,7 @@ import {
   input,
 } from '@angular/core';
 
-import { toCssSize } from '../../../core/utils/css';
+import { toCssSize } from '@dmaster/ui/core';
 import { DmIconRegistry } from './icon.registry';
 import { ICON_DEFAULTS } from './icon.tokens';
 import { DmIconColor, DmIconFamily, DmIconSize } from './icon.types';

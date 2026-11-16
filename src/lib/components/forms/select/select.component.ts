@@ -22,9 +22,8 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DmBadgeComponent } from '../../primitives/badge';
-import { DmSpinnerComponent } from '../../primitives/spinner';
-import { DmSize } from '../../../core/types/common.types';
-import { dmUid } from '../../../core/utils/uid';
+import { DmSpinnerComponent } from '@dmaster/ui/spinner';
+import { DmSize, dmUid } from '@dmaster/ui/core';
 import { DmSelectOptionContext, DmSelectOptionDirective } from './select-option.directive';
 import { SELECT_DEFAULTS } from './select.tokens';
 import {

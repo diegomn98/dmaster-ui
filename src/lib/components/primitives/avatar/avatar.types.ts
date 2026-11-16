@@ -1,4 +1,4 @@
-import { DmCssSize, DmSize } from '../../../core/types/common.types';
+import { DmCssSize, DmSize } from '@dmaster/ui/core';
 
 /** Avatar shape. */
 export type DmAvatarShape = 'circle' | 'square';

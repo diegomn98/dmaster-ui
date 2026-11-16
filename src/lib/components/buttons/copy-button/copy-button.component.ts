@@ -9,8 +9,8 @@ import {
   output,
 } from '@angular/core';
 
-import type { DmSize } from '../../../core/types/common.types';
-import { DmButtonComponent } from '../button';
+import type { DmSize } from '@dmaster/ui/core';
+import { DmButtonComponent } from '@dmaster/ui/button';
 import { DmCopiedIconDirective, DmCopyIconDirective } from './copy-button-icons.directive';
 import { COPY_BUTTON_DEFAULTS } from './copy-button.tokens';
 import type {

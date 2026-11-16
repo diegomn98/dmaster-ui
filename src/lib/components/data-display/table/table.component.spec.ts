@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of, Subject, throwError } from 'rxjs';
 
-import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
+import { ReducedMotionService } from '@dmaster/ui/core';
 import { DmTableComponent } from './table.component';
 import { DmTableCellDirective } from './table-cell.directive';
 import { DmTableEmptyDirective } from './table-empty.directive';

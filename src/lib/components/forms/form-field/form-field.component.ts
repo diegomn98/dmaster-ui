@@ -9,7 +9,7 @@ import {
   input,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmErrorComponent } from '../error/error.component';
 import { DmInputDirective } from './input.directive';
 

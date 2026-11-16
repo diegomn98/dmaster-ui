@@ -15,8 +15,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { DmSize } from '../../../core/types/common.types';
-import { dmUid } from '../../../core/utils/uid';
+import { DmSize, dmUid } from '@dmaster/ui/core';
 import { HSVA, formatColor, formatHex, formatRgb, parseColor } from './color-utils';
 import { COLOR_PICKER_DEFAULTS } from './color-picker.tokens';
 import {

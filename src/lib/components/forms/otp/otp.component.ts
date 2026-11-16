@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { OTP_DEFAULTS } from './otp.tokens';
 import { DmOtpColor, DmOtpMode, DmOtpSize, DmOtpVariant } from './otp.types';
 

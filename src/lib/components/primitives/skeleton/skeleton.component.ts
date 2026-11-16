@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
-import { DmCssSize } from '../../../core/types/common.types';
-import { toCssSize } from '../../../core/utils/css';
+import { DmCssSize, toCssSize } from '@dmaster/ui/core';
 import { SKELETON_DEFAULTS } from './skeleton.tokens';
 import { DmSkeletonAnimation, DmSkeletonRounded, DmSkeletonVariant } from './skeleton.types';
 

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { RADIO_DEFAULTS } from './radio-group.tokens';
 import { DmRadioColor, DmRadioOrientation, DmRadioSize } from './radio-group.types';
 import type { DmRadioComponent } from './radio.component';

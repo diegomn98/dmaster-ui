@@ -1,7 +1,7 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReducedMotionService } from '../../../core/services/reduced-motion.service';
+import { ReducedMotionService } from '@dmaster/ui/core';
 import { DmChipSetComponent } from './chip-set.component';
 import { DmChipComponent } from './chip.component';
 import { CHIP_DEFAULTS } from './chip.tokens';

@@ -16,8 +16,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { DmSize } from '../../../core/types/common.types';
-import { dmUid } from '../../../core/utils/uid';
+import { DmSize, dmUid } from '@dmaster/ui/core';
 import { NUMBER_INPUT_DEFAULTS } from './number-input.tokens';
 import {
   DmNumberInputColor,

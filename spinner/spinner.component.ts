@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
-import { toCssSize } from '../../../core/utils/css';
+import { toCssSize } from '@dmaster/ui/core';
 import { SPINNER_DEFAULTS } from './spinner.tokens';
 import { DmSpinnerSize } from './spinner.types';
 

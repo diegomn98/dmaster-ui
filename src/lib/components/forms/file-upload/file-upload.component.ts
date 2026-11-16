@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmDropzoneContentDirective } from './dropzone-content.directive';
 import { FILE_UPLOAD_DEFAULTS } from './file-upload.tokens';
 import { DmFileRejectReason, DmFileRejection, DmFileUploadMessages } from './file-upload.types';

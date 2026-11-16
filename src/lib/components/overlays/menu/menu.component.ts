@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { dmUid } from '../../../core/utils/uid';
+import { dmUid } from '@dmaster/ui/core';
 import { DmMenuItemComponent } from './menu-item.component';
 import { MENU_DEFAULTS } from './menu.tokens';
 import { DM_MENU_PANEL, DmMenuCloseHandle, DmMenuPanel, DmMenuPlacement } from './menu.types';

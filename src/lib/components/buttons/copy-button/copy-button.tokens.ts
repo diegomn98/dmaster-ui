@@ -1,6 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-import type { DmSize } from '../../../core/types/common.types';
+import type { DmSize } from '@dmaster/ui/core';
 import type {
   DmCopyButtonColor,
   DmCopyButtonRadius,
