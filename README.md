@@ -135,6 +135,17 @@ Code-splitting already works through the root import too: it only re-exports the
 
 Replace each root import with one import per entry point. The entry point is the component's name (the folder in the [Components](#components) tables); providers, services and shared types come from `@dmaster/ui/core`.
 
+**Let a codemod do it.** With 0.12 installed, run this from your project's root — it rewrites every root import under `src` (pass other folders as arguments, or `--dry-run` to only list the changes):
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/diegomn98/dmaster-ui-workspace/main/scripts/migrate-to-entry-points.mjs
+node migrate-to-entry-points.mjs
+```
+
+It reads the entry points from your installed `@dmaster/ui` and parses your files with your project's own TypeScript, so multi-line imports, `import type`, aliases and re-exports are handled. A statement with a name no entry point exports is left untouched and reported, and a namespace import (`import * as ui from '@dmaster/ui'`) is flagged for a manual fix — nothing is dropped. Run your formatter afterwards. ([source](https://github.com/diegomn98/dmaster-ui-workspace/blob/main/scripts/migrate-to-entry-points.mjs))
+
+By hand, the change looks like this:
+
 ```ts
 // Before (deprecated)
 import {

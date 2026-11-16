@@ -58,9 +58,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   import { DmToggleGroupComponent } from '@dmaster/ui/toggle-group';
   ```
 
-  The full migration guide — including an ESLint `no-restricted-imports` rule
-  that keeps root imports out — is in the README ("Entry points" › "Migration
-  guide") and in the docs' Getting Started.
+  A codemod does it for you: with 0.12 installed, download
+  [`scripts/migrate-to-entry-points.mjs`](https://github.com/diegomn98/dmaster-ui-workspace/blob/main/scripts/migrate-to-entry-points.mjs)
+  and run `node migrate-to-entry-points.mjs` from your project's root (it
+  rewrites `src`; `--dry-run` only lists the changes). The full migration
+  guide — including an ESLint `no-restricted-imports` rule that keeps root
+  imports out — is in the README ("Entry points" › "Migration guide") and in the
+  docs' Getting Started.
 
 ### Changed
 
